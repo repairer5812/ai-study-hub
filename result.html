@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="bento">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="SW AI 융합정보대학원 61기 최경찬">
+<meta name="description" content="기계학습 중간고사 모의고사 결과">
+<meta name="theme-color" content="#234E70">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<title>결과 · 기계학습 모의고사</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/theme-bento.css">
+<link rel="stylesheet" href="css/theme-dark.css">
+</head>
+<body>
+<div class="page">
+
+<header class="app-header">
+  <div class="brand">
+    <a href="index.html" class="brand-title">← 기계학습 모의고사</a>
+  </div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="result-hero" id="result-hero">
+    <div class="result-emoji">🎉</div>
+    <div>
+      <span class="score-big" id="score-big">—</span>
+      <span class="score-max" id="score-max"> / 30</span>
+    </div>
+    <div class="percent" id="percent">정답률 —%</div>
+    <div class="muted small" id="duration-line">소요 시간 —</div>
+  </section>
+
+  <section class="stats-grid" id="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">환산 점수</div>
+      <div class="stat-value" id="stat-score100">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">정답</div>
+      <div class="stat-value" id="stat-correct">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">오답</div>
+      <div class="stat-value" id="stat-wrong">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">개인 최고</div>
+      <div class="stat-value" id="stat-best">—</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="h2" style="margin-bottom:12px">주차별 정답률</h2>
+    <div class="week-chart" id="week-chart">
+      <div class="muted small">결과 데이터가 없습니다</div>
+    </div>
+  </section>
+
+  <section style="margin-top:24px">
+    <h2 class="h2" style="margin-bottom:12px">랭킹 등록</h2>
+    <div class="nickname-box" id="nickname-box">
+      <label for="nickname-input">닉네임</label>
+      <input id="nickname-input" type="text" maxlength="16" placeholder="1~16자 · 한글/영문/숫자">
+      <button class="btn btn-primary" id="submit-rank-btn">🏆 랭킹에 등록</button>
+    </div>
+  </section>
+
+  <section style="margin-top:24px">
+    <h2 class="h2" style="margin-bottom:12px">랭킹 TOP 20</h2>
+    <div id="ranking-wrap">
+      <table class="rank-table">
+        <thead>
+          <tr>
+            <th>순위</th>
+            <th>닉네임</th>
+            <th>점수</th>
+            <th>소요시간</th>
+            <th>일시</th>
+          </tr>
+        </thead>
+        <tbody id="ranking-tbody">
+          <tr><td colspan="5" class="muted small" style="text-align:center; padding:24px">랭킹 로딩 중…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="display:flex; gap:10px; justify-content:center; margin:32px 0; flex-wrap:wrap">
+    <button class="btn btn-secondary btn-lg" id="share-img-btn">📷 결과 이미지 저장</button>
+    <a class="btn btn-secondary btn-lg" href="exam.html?set=1&mode=instant&review=1">오답 다시 보기</a>
+    <a class="btn btn-secondary btn-lg" href="index.html">홈으로</a>
+  </section>
+
+</main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script type="module" src="js/theme.js"></script>
+<script type="module">
+  import { getBest, saveBest, getNickname, saveNickname } from "./js/storage.js";
+  import { initLeaderboard, submitScore, fetchTopRanking } from "./js/leaderboard.js";
+
+  // ── 토스트 ─────────────────────────────────
+  window.showToast = (msg) => {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2200);
+  };
+
+  // ── 포맷 헬퍼 ─────────────────────────────
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function formatDuration(sec) {
+    const s = Math.max(0, Math.floor(sec || 0));
+    return `${pad2(Math.floor(s / 60))}:${pad2(s % 60)}`;
+  }
+  function formatDurationKo(sec) {
+    const s = Math.max(0, Math.floor(sec || 0));
+    if (s < 30) return "30초 이내";
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return `${m}분 ${pad2(r)}초`;
+  }
+  function formatDate(d) {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
+    return `${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  }
+
+  // ── 결과 로드 ─────────────────────────────
+  const RESULT_KEY = "ml-exam:lastResult";
+  let raw = null;
+  try { raw = sessionStorage.getItem(RESULT_KEY); } catch {}
+  let result = null;
+  if (raw) { try { result = JSON.parse(raw); } catch {} }
+
+  if (!result || typeof result !== "object") {
+    showToast("결과가 없습니다");
+    setTimeout(() => { location.href = "index.html"; }, 2000);
+  } else {
+    renderAll(result);
+  }
+
+  function renderAll(r) {
+    const setId = r.setId ?? 1;
+    const total = r.total ?? 0;
+    const correct = r.correct ?? 0;
+    const wrong = r.wrong ?? Math.max(0, total - correct);
+    const score100 = r.score100 ?? 0;
+    const durationSec = r.durationSec ?? 0;
+    const byWeek = r.byWeek || {};
+
+    // 헤더
+    document.getElementById("score-big").textContent = correct;
+    document.getElementById("score-max").textContent = ` / ${total}`;
+    const pct = total ? Math.round(correct / total * 100) : 0;
+    document.getElementById("percent").textContent = `정답률 ${pct}%`;
+    document.getElementById("duration-line").textContent = `소요 시간 ${formatDurationKo(durationSec)}`;
+
+    // 통계
+    document.getElementById("stat-score100").textContent = `${score100} / 100`;
+    document.getElementById("stat-correct").textContent = correct;
+    document.getElementById("stat-wrong").textContent = wrong;
+
+    // 개인 최고 갱신
+    const nowIso = new Date().toISOString();
+    const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso });
+    const best = getBest(setId);
+    const bestEl = document.getElementById("stat-best");
+    if (best) {
+      bestEl.textContent = `${best.score} / 100`;
+      if (isNewRecord) {
+        const tag = document.createElement("div");
+        tag.className = "muted small";
+        tag.style.marginTop = "4px";
+        tag.textContent = "🎉 New Record!";
+        bestEl.appendChild(tag);
+      }
+    } else {
+      bestEl.textContent = "—";
+    }
+
+    // 주차별 바 차트
+    renderWeekChart(byWeek);
+
+    // 닉네임 프리필
+    const nickInput = document.getElementById("nickname-input");
+    nickInput.value = getNickname() || "";
+
+    // 랭킹 등록
+    const submitBtn = document.getElementById("submit-rank-btn");
+    const originalBtnText = submitBtn.textContent;
+    submitBtn.addEventListener("click", async () => {
+      const name = (nickInput.value || "").trim();
+      if (!/^[가-힣a-zA-Z0-9_]{1,16}$/.test(name)) {
+        showToast("닉네임은 1~16자, 한글/영문/숫자/밑줄만 가능합니다.");
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = "⏳ 등록 중…";
+      try {
+        saveNickname(name);
+        const res = await submitScore({
+          setId,
+          nickname: name,
+          score: score100,
+          totalQuestions: total,
+          durationSec,
+        });
+        if (res && res.ok) {
+          showToast("🏆 랭킹 등록 성공!");
+          submitBtn.style.display = "none";
+          await loadRanking(setId, name, score100, durationSec);
+        } else {
+          const err = (res && res.error) ? res.error : "알 수 없는 오류";
+          showToast("랭킹 등록 실패: " + err);
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
+      } catch (e) {
+        showToast("랭킹 등록 실패: " + (e?.message || e));
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
+
+    // 리더보드 초기화 + 로드
+    (async () => {
+      try {
+        await initLeaderboard();
+      } catch (e) {
+        // Firebase 실패해도 결과 화면은 유지
+      }
+      await loadRanking(setId, null, score100, durationSec);
+    })();
+  }
+
+  // ── 주차별 차트 ───────────────────────────
+  function renderWeekChart(byWeek) {
+    const host = document.getElementById("week-chart");
+    const weeks = byWeek ? Object.keys(byWeek) : [];
+    if (!weeks.length) {
+      host.innerHTML = `<div class="muted small">결과 데이터가 없습니다</div>`;
+      return;
+    }
+    // 주차 번호 오름차순
+    weeks.sort((a, b) => parseInt(a) - parseInt(b));
+    host.innerHTML = "";
+    for (const w of weeks) {
+      const d = byWeek[w] || { total: 0, correct: 0 };
+      const t = d.total || 0;
+      const c = d.correct || 0;
+      const p = t ? Math.round(c / t * 100) : 0;
+
+      const row = document.createElement("div");
+      row.className = "week-row";
+
+      const label = document.createElement("div");
+      label.className = "week-label";
+      label.textContent = `Week ${w}`;
+
+      const bg = document.createElement("div");
+      bg.className = "week-bar-bg";
+      const fill = document.createElement("div");
+      fill.className = "week-bar-fill";
+      fill.style.width = p + "%";
+      bg.appendChild(fill);
+
+      const sc = document.createElement("div");
+      sc.className = "week-score";
+      sc.textContent = `${c} / ${t}`;
+
+      row.appendChild(label);
+      row.appendChild(bg);
+      row.appendChild(sc);
+      host.appendChild(row);
+    }
+  }
+
+  // ── 랭킹 조회·렌더링 ──────────────────────
+  async function loadRanking(setId, myNick, myScore, myDuration) {
+    const tbody = document.getElementById("ranking-tbody");
+    let entries = [];
+    try {
+      entries = await fetchTopRanking(setId, 20);
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" class="muted small" style="text-align:center; padding:24px">랭킹을 불러올 수 없습니다</td></tr>`;
+      return;
+    }
+    if (!entries || entries.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="muted small" style="text-align:center; padding:24px">아직 등록된 기록이 없습니다</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = "";
+    entries.forEach((e, i) => {
+      const tr = document.createElement("tr");
+      const rank = i + 1;
+
+      // 내 기록 하이라이트
+      if (myNick && e.nickname === myNick &&
+          Number(e.score) === Number(myScore) &&
+          Math.abs(Number(e.durationSec || 0) - Number(myDuration || 0)) <= 2) {
+        tr.className = "me";
+      }
+
+      const tdRank = document.createElement("td");
+      tdRank.className = "rank-rank" + (rank <= 3 ? ` medal-${rank}` : "");
+      tdRank.textContent = rank;
+
+      const tdNick = document.createElement("td");
+      tdNick.textContent = e.nickname ?? "—";
+
+      const tdScore = document.createElement("td");
+      const totalQ = e.totalQuestions ?? e.total ?? 100;
+      tdScore.textContent = `${e.score ?? 0}/${totalQ}`;
+
+      const tdDur = document.createElement("td");
+      tdDur.textContent = formatDuration(e.durationSec || 0);
+
+      const tdAt = document.createElement("td");
+      let when = e.at || e.createdAt || e.timestamp;
+      let d = null;
+      if (when && typeof when === "object" && typeof when.toDate === "function") {
+        try { d = when.toDate(); } catch {}
+      } else if (when) {
+        d = new Date(when);
+      }
+      tdAt.textContent = d ? formatDate(d) : "—";
+
+      tr.appendChild(tdRank);
+      tr.appendChild(tdNick);
+      tr.appendChild(tdScore);
+      tr.appendChild(tdDur);
+      tr.appendChild(tdAt);
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── 결과 이미지 저장 (html2canvas) ─────────────────
+  document.getElementById("share-img-btn")?.addEventListener("click", async () => {
+    if (typeof html2canvas !== "function") {
+      showToast("이미지 라이브러리 로드 실패");
+      return;
+    }
+    showToast("이미지 생성 중…");
+    try {
+      // 헤더·통계·주차차트만 캡처
+      const hero = document.querySelector(".result-hero");
+      const stats = document.querySelector(".stats-grid");
+      const week = document.querySelector(".week-chart");
+      const wrap = document.createElement("div");
+      wrap.style.background = getComputedStyle(document.body).backgroundColor;
+      wrap.style.padding = "24px";
+      wrap.style.width = "560px";
+      wrap.appendChild(hero.cloneNode(true));
+      wrap.appendChild(stats.cloneNode(true));
+      if (week) wrap.appendChild(week.cloneNode(true));
+      // 푸터 크레딧
+      const credit = document.createElement("div");
+      credit.style.marginTop = "16px";
+      credit.style.textAlign = "center";
+      credit.style.fontSize = "12px";
+      credit.style.opacity = "0.6";
+      credit.textContent = "SW AI 융합정보대학원 61기 최경찬 · 기계학습 중간고사 모의고사";
+      wrap.appendChild(credit);
+      document.body.appendChild(wrap);
+      const canvas = await html2canvas(wrap, { scale: 2, backgroundColor: null, useCORS: true });
+      document.body.removeChild(wrap);
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ml-midterm-set${new URLSearchParams(location.search).get("set") || "1"}-result.png`;
+      a.click();
+      showToast("✅ 이미지 저장 완료");
+    } catch (err) {
+      console.error(err);
+      showToast("이미지 저장 실패: " + err.message);
+    }
+  });
+</script>
+
+</body>
+</html>

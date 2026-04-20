@@ -1,0 +1,32 @@
+/* ═══ Bento 테마 (라이트) ═══ */
+[data-theme="bento"] {
+  --c-bg: #F2F3F5;
+  --c-surface: #FFFFFF;
+  --c-surface-2: #F2F3F5;
+  --c-surface-3: #E6E8EC;
+
+  --c-heading: #234E70;
+  --c-text: #5A6A7A;
+
+  --c-accent: #6FB5A5;
+  --c-accent-strong: #3A8576;
+  --c-accent-soft: rgba(111, 181, 165, 0.15);
+
+  --c-radius: 20px;
+  --c-radius-sm: 12px;
+
+  --c-border: 1px solid #E0E4E8;
+  --c-border-soft: #EDEFF2;
+
+  --c-shadow: 0 2px 10px -4px rgba(35, 78, 112, 0.08);
+  --c-shadow-hover: 0 8px 24px -8px rgba(35, 78, 112, 0.18);
+}
+
+[data-theme="bento"] .question-body {
+  border-top: 3px solid var(--c-heading);
+}
+[data-theme="bento"] .set-card { border-top: none; }
+[data-theme="bento"] .set-card::before {
+  background: linear-gradient(90deg, var(--c-heading) 0%, var(--c-heading) 60%, var(--c-accent) 60%);
+  opacity: 1;
+}

@@ -1,0 +1,53 @@
+rules_version = '2';
+
+// Firestore 보안 규칙
+// 배포 방법: Firebase 콘솔 → Firestore Database → 규칙 탭에 붙여넣고 "게시"
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 랭킹 컬렉션: /leaderboards/{setId}/entries/{entryId}
+    match /leaderboards/{setId}/entries/{entryId} {
+
+      // 누구나 읽기 가능 (TOP 랭킹 표시)
+      allow read: if true;
+
+      // 쓰기는 엄격하게 검증
+      allow create: if
+        // 필수 필드 타입 체크
+        request.resource.data.nickname is string &&
+        request.resource.data.score is int &&
+        request.resource.data.totalQuestions is int &&
+        request.resource.data.durationSec is int &&
+        request.resource.data.setId is int &&
+        request.resource.data.recordedAt is timestamp &&
+
+        // 닉네임 길이 (1~16자)
+        request.resource.data.nickname.size() >= 1 &&
+        request.resource.data.nickname.size() <= 16 &&
+
+        // 점수 범위 (0~100)
+        request.resource.data.score >= 0 &&
+        request.resource.data.score <= 100 &&
+
+        // 세트 ID 범위 (1~5)
+        request.resource.data.setId >= 1 &&
+        request.resource.data.setId <= 5 &&
+
+        // 문항 수 (30 고정)
+        request.resource.data.totalQuestions == 30 &&
+
+        // 소요시간: 너무 짧으면 봇/장난 의심 (30초 이상, 3시간 이하)
+        request.resource.data.durationSec >= 30 &&
+        request.resource.data.durationSec <= 10800 &&
+
+        // 불필요한 필드 차단 (추가 필드 금지)
+        request.resource.data.keys().hasOnly([
+          'nickname', 'score', 'totalQuestions',
+          'durationSec', 'setId', 'recordedAt'
+        ]);
+
+      // 등록된 기록은 수정/삭제 불가 (랭킹 조작 방지)
+      allow update, delete: if false;
+    }
+  }
+}

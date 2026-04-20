@@ -1,0 +1,58 @@
+/* ═══ Dark 테마 ═══ */
+[data-theme="dark"] {
+  --c-bg: #151A24;
+  --c-surface: #1E2430;
+  --c-surface-2: #262D3A;
+  --c-surface-3: #323A4A;
+
+  --c-heading: #F2F5F9;
+  --c-text: #9AA4B0;
+
+  --c-accent: #6FB5A5;
+  --c-accent-strong: #A8D8CC;
+  --c-accent-soft: rgba(111, 181, 165, 0.14);
+
+  --c-radius: 16px;
+  --c-radius-sm: 10px;
+
+  --c-border: 1px solid rgba(255, 255, 255, 0.06);
+  --c-border-soft: rgba(255, 255, 255, 0.05);
+
+  --c-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --c-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] body {
+  background: radial-gradient(ellipse at top right, rgba(111, 181, 165, 0.06) 0%, transparent 50%), var(--c-bg);
+}
+
+[data-theme="dark"] .app-header {
+  background: rgba(30, 36, 48, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .question-body {
+  border-left: 3px solid var(--c-accent);
+}
+
+[data-theme="dark"] .choice.correct {
+  background: rgba(80, 170, 110, 0.18);
+  border-color: #5ec878;
+}
+[data-theme="dark"] .choice.incorrect {
+  background: rgba(220, 80, 80, 0.18);
+  border-color: #e26666;
+}
+
+[data-theme="dark"] .set-card::before {
+  background: var(--c-accent);
+  opacity: 0.8;
+}
+
+[data-theme="dark"] .q-image {
+  filter: brightness(0.92);
+}
+
+[data-theme="dark"] .tag-difficulty-easy { background: rgba(100, 200, 130, 0.2); color: #7edd95; }
+[data-theme="dark"] .tag-difficulty-medium { background: rgba(220, 180, 80, 0.2); color: #e5c473; }
+[data-theme="dark"] .tag-difficulty-hard { background: rgba(230, 100, 100, 0.2); color: #ef7e7e; }

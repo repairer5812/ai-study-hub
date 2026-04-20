@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="bento">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="SW AI 융합정보대학원 61기 최경찬">
+<meta name="description" content="기계학습 중간고사 모의고사 풀이">
+<meta name="theme-color" content="#234E70">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<title>시험 풀이 · 기계학습 모의고사</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/theme-bento.css">
+<link rel="stylesheet" href="css/theme-dark.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+</head>
+<body>
+<div class="page">
+
+<header class="exam-bar">
+  <div class="set-info" id="set-info">SET 1</div>
+  <div class="qno" id="qno">문제 1 / 30</div>
+  <div class="timer"><span class="timer-icon">⏱</span><span id="timer">00:00</span></div>
+  <div class="spacer"></div>
+  <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
+  <button class="btn btn-ghost btn-sm" onclick="window.__exam.confirmExit()">나가기</button>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+<main class="question-area" id="question-area">
+  <div class="q-meta">
+    <div class="q-tags">
+      <span class="tag" id="tag-week">Week —</span>
+      <span class="tag tag-topic" id="tag-topic">주제</span>
+      <span class="tag" id="tag-difficulty">난이도</span>
+    </div>
+    <button class="bookmark-btn" id="bookmark-btn" aria-label="북마크" title="나중에 다시 보기">🔖</button>
+  </div>
+
+  <article class="question-body">
+    <div class="q-num" id="q-num">Q 1</div>
+    <div class="q-text" id="q-text">문제 로딩 중…</div>
+    <img class="q-image" id="q-image" style="display:none;" alt="">
+    <div id="answer-area">
+      <!-- 객관식: .choices / 주관식: .short-input -->
+    </div>
+  </article>
+
+  <div id="explain-area"></div>
+</main>
+
+<nav class="exam-nav">
+  <button class="btn btn-secondary" id="prev-btn">← 이전</button>
+  <div class="nav-center">
+    <span class="muted small" id="nav-status"></span>
+  </div>
+  <button class="btn btn-primary" id="next-btn">다음 →</button>
+</nav>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<script type="module" src="js/theme.js"></script>
+<script type="module">
+  // 타이머
+  let elapsed = 0;
+  const timerEl = document.getElementById("timer");
+  setInterval(() => {
+    elapsed++;
+    const m = Math.floor(elapsed / 60), s = elapsed % 60;
+    timerEl.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }, 1000);
+
+  // KaTeX 수식 렌더링 훅 (exam.js가 호출)
+  window.renderMath = () => {
+    if (typeof renderMathInElement !== "undefined") {
+      renderMathInElement(document.getElementById("question-area"), {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  };
+  setTimeout(() => window.renderMath(), 50);
+
+  // 전역 API (나가기 확인)
+  window.__exam = {
+    confirmExit: () => {
+      if (confirm("시험을 중단하고 홈으로 돌아가시겠습니까? 진행 상황은 저장됩니다.")) {
+        location.href = "index.html";
+      }
+    }
+  };
+
+  // 토스트
+  window.showToast = (msg) => {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2000);
+  };
+</script>
+
+<script type="module" src="js/exam.js"></script>
+
+</body>
+</html>
