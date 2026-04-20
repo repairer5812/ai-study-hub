@@ -437,15 +437,20 @@ ul, ol { list-style: none; }
   letter-spacing: 1px;
   margin-bottom: 8px;
 }
-.explain-brief { color: var(--c-heading); font-size: 15px; line-height: 1.65; }
+.explain-brief { color: var(--c-heading); font-size: 15px; line-height: 1.7; }
+.explain-brief p { margin: 0; }
+.explain-brief p + p { margin-top: 8px; }
 .explain-detailed {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px dashed var(--c-border-soft);
   color: var(--c-text);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.8;
 }
+.explain-detailed p { margin: 0; }
+.explain-detailed p + p { margin-top: 10px; }
+.explain-brief strong, .explain-detailed strong { color: var(--c-heading); font-weight: 700; }
 .explain-source {
   display: inline-block;
   margin-top: 10px;

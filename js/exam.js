@@ -358,11 +358,11 @@ function showExplain(q) {
   const html = `
     <div class="explain">
       <div class="explain-title">${correctMark} · 해설</div>
-      <div class="explain-brief">${escapeHtml(q.brief)}</div>
+      <div class="explain-brief">${formatExplain(q.brief)}</div>
       ${q.detailed ? `
         <details class="explain-toggle">
           <summary>자세한 해설 보기</summary>
-          <div class="explain-detailed">${escapeHtml(q.detailed)}</div>
+          <div class="explain-detailed">${formatExplain(q.detailed)}</div>
         </details>
       ` : ""}
       ${q.source ? `<span class="explain-source">출처 · ${escapeHtml(q.source)}</span>` : ""}
@@ -377,6 +377,21 @@ function escapeHtml(s) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+// 해설용 경량 마크다운: **bold**, 자동 문단 분할, 줄바꿈
+function formatExplain(s) {
+  let t = escapeHtml(s);
+  // **bold** → <strong>bold</strong>
+  t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  // 자동 문단 분할: 원본에 개행이 거의 없는 긴 문장을 읽기 좋게 쪼갬
+  // ". " 뒤에 영문 대문자/한글/⑴⑵⑶/①②③ 같은 새 문장 시작이 오면 문단 나눔
+  t = t.replace(/(\.)(\s+)(?=(?:[A-Z가-힣]|⑴|⑵|⑶|⑷|⑸|①|②|③|④|⑤|\*\*|\d+\.|\())/g, "$1\n\n");
+  // 두 줄 이상 연속 개행 → 문단 구분
+  t = t.replace(/\n{2,}/g, "</p><p>");
+  // 단일 개행 → <br>
+  t = t.replace(/\n/g, "<br>");
+  return `<p>${t}</p>`;
 }
 
 // ── 답안 헬퍼 ──────────────────────────────────────────

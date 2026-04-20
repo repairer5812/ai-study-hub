@@ -1973,7 +1973,7 @@ export const set4 = [
     choices: [
       "① L1은 일부 파라미터를 정확히 0으로 만드는 Sparsity(희소성)를 유도하고, L2는 파라미터 전체 크기를 완만하게 축소(Shrinking)하되 0으로 만들지는 않는다",
       "② L1과 L2는 수학적으로 동일한 효과를 낸다",
-      "③ L1은 Shrinking, L2는 Sparsity를 유도한다 (뒤바꿈)",
+      "③ L1은 Shrinking, L2는 Sparsity를 유도한다",
       "④ 두 정규화 모두 파라미터를 정확히 0으로 만들어 Sparsity를 생성한다"
     ],
     answer: 0,
@@ -2104,7 +2104,7 @@ export const set4 = [
     question: "Bagging과 Boosting의 주된 차이는?",
     choices: [
       "① Bagging은 분류기들을 독립적·병렬로 학습해 다수결로 합치고, Boosting은 이전 분류기의 오답에 가중치를 부여하며 순차적으로 학습한다",
-      "② Bagging이 순차, Boosting이 병렬 (뒤바꿈)",
+      "② Bagging이 순차, Boosting이 병렬",
       "③ 두 방법은 완전히 동일한 방식이다",
       "④ Bagging은 SVM에만, Boosting은 Decision Tree에만 사용 가능하다"
     ],
