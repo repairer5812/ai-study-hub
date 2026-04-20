@@ -39,11 +39,25 @@ if (reviewMode) {
 
 // ── 상태 ────────────────────────────────────────────────
 let currentIdx = 0;
-const answers = {};            // { [qid]: {choice} | {text} }
+const answers = {};            // { [qid]: {choice} | {text} }  — choice는 원본 정답 기준
 const bookmarks = new Set();   // Set<qid>
 const lockedInstant = new Set(); // instant 모드에서 답 확정된 qid
+const shuffleMaps = {};        // { [qid]: [displayIdx → originalIdx] }  셔플 순서 유지
 const startTime = Date.now();
 let endTime = null;
+
+// 셔플 매핑 생성: 최초 1회, 세션 동안 유지
+function getShuffleMap(q) {
+  if (shuffleMaps[q.id]) return shuffleMaps[q.id];
+  const indices = q.choices.map((_, i) => i);
+  // Fisher-Yates
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  shuffleMaps[q.id] = indices;
+  return indices;
+}
 
 // ── 세션 복구 ──────────────────────────────────────────
 (function restoreSession() {
@@ -163,56 +177,59 @@ function renderChoices(q) {
   container.className = "choices";
 
   const saved = getAnswer(q.id);
-  const selectedIdx = saved?.choice;
+  const selectedOrigIdx = saved?.choice;  // 원본 정답 기준 저장값
   const locked = mode === "instant" && lockedInstant.has(q.id);
 
-  q.choices.forEach((text, idx) => {
+  const shuffle = getShuffleMap(q);  // displayIdx → originalIdx
+
+  shuffle.forEach((origIdx, displayIdx) => {
+    // 원본 선택지에 하드코딩된 ①②③④ 기호 제거 (셔플된 순서와 안 맞으니까)
+    const text = q.choices[origIdx].replace(/^[①②③④⑤⑥⑦⑧⑨⑩]\s*/, "");
     const btn = document.createElement("button");
     btn.className = "choice";
-    btn.dataset.idx = idx;
+    btn.dataset.origIdx = origIdx;
     btn.innerHTML = `
-      <span class="choice-index">${idx + 1}</span>
-      <span class="choice-text">${text}</span>
+      <span class="choice-index">${displayIdx + 1}</span>
+      <span class="choice-text">${escapeHtml(text)}</span>
     `;
 
     if (locked) {
       btn.classList.add("locked");
       btn.disabled = true;
-      if (idx === q.answer) btn.classList.add("correct");
-      else if (idx === selectedIdx) btn.classList.add("incorrect");
-    } else if (selectedIdx === idx) {
+      if (origIdx === q.answer) btn.classList.add("correct");
+      else if (origIdx === selectedOrigIdx) btn.classList.add("incorrect");
+    } else if (selectedOrigIdx === origIdx) {
       btn.classList.add("selected");
     }
 
-    btn.addEventListener("click", () => handleChoiceClick(q, idx, container));
+    btn.addEventListener("click", () => handleChoiceClick(q, origIdx, container));
     container.appendChild(btn);
   });
 
   el.answerArea.appendChild(container);
 }
 
-function handleChoiceClick(q, idx, container) {
-  if (mode === "instant" && lockedInstant.has(q.id)) return; // 이미 확정
+function handleChoiceClick(q, origIdx, container) {
+  if (mode === "instant" && lockedInstant.has(q.id)) return;
 
-  setMultiChoice(q.id, idx);
+  setMultiChoice(q.id, origIdx);  // 원본 정답 기준으로 저장 (채점 정확성 유지)
 
   if (mode === "instant") {
-    // 즉시 채점: 정답 표시 + 해설
     lockedInstant.add(q.id);
-    container.querySelectorAll(".choice").forEach((btn, i) => {
+    container.querySelectorAll(".choice").forEach((btn) => {
+      const bOrig = parseInt(btn.dataset.origIdx, 10);
       btn.disabled = true;
       btn.classList.add("locked");
       btn.classList.remove("selected");
-      if (i === q.answer) btn.classList.add("correct");
-      else if (i === idx) btn.classList.add("incorrect");
+      if (bOrig === q.answer) btn.classList.add("correct");
+      else if (bOrig === origIdx) btn.classList.add("incorrect");
     });
-    // 오답노트 기록
-    if (idx !== q.answer) addWrong(q.id); else removeWrong(q.id);
+    if (origIdx !== q.answer) addWrong(q.id); else removeWrong(q.id);
     showExplain(q);
   } else {
-    // 일괄 채점: 선택 표시만
-    container.querySelectorAll(".choice").forEach((btn, i) => {
-      btn.classList.toggle("selected", i === idx);
+    container.querySelectorAll(".choice").forEach((btn) => {
+      const bOrig = parseInt(btn.dataset.origIdx, 10);
+      btn.classList.toggle("selected", bOrig === origIdx);
     });
   }
 
@@ -380,10 +397,12 @@ document.addEventListener("keydown", (e) => {
   else if (!isInput && /^[1-4]$/.test(e.key)) {
     const q = questions[currentIdx];
     if (q.type === "multiple_choice") {
-      const idx = parseInt(e.key, 10) - 1;
-      if (idx < q.choices.length) {
+      const displayIdx = parseInt(e.key, 10) - 1;
+      const shuffle = getShuffleMap(q);
+      const origIdx = shuffle[displayIdx];
+      if (origIdx !== undefined) {
         const container = el.answerArea.querySelector(".choices");
-        if (container) handleChoiceClick(q, idx, container);
+        if (container) handleChoiceClick(q, origIdx, container);
       }
     }
   }
