@@ -93,7 +93,7 @@
 
   <section style="display:flex; gap:10px; justify-content:center; margin:32px 0; flex-wrap:wrap">
     <button class="btn btn-secondary btn-lg" id="share-img-btn">📷 결과 이미지 저장</button>
-    <a class="btn btn-secondary btn-lg" href="exam.html?set=1&mode=instant&review=1">오답 다시 보기</a>
+    <a class="btn btn-secondary btn-lg" id="review-wrong-btn" href="exam.html?mode=wrong&review=1&all=1">오답 다시 보기</a>
     <a class="btn btn-secondary btn-lg" href="index.html">홈으로</a>
   </section>
 
@@ -136,17 +136,61 @@
   }
 
   // ── 결과 로드 ─────────────────────────────
+  const urlParams = new URLSearchParams(location.search);
+  const viewMode = urlParams.get("view");           // "ranking" = 랭킹 조회 전용
+  const urlSetId = parseInt(urlParams.get("set") || "1", 10);
+
   const RESULT_KEY = "ml-exam:lastResult";
   let raw = null;
   try { raw = sessionStorage.getItem(RESULT_KEY); } catch {}
   let result = null;
   if (raw) { try { result = JSON.parse(raw); } catch {} }
 
-  if (!result || typeof result !== "object") {
+  if (viewMode === "ranking") {
+    // 랭킹 전용 모드: 점수 영역 숨기고 세트 선택 + TOP 20만 표시
+    renderRankingOnly(urlSetId);
+  } else if (!result || typeof result !== "object") {
     showToast("결과가 없습니다");
     setTimeout(() => { location.href = "index.html"; }, 2000);
   } else {
     renderAll(result);
+  }
+
+  function renderRankingOnly(initialSet) {
+    // 결과 섹션 숨기기
+    document.getElementById("result-hero").style.display = "none";
+    document.getElementById("stats-grid").style.display = "none";
+    document.querySelector("section > .week-chart")?.parentElement?.style?.setProperty?.("display", "none");
+    document.getElementById("nickname-box")?.parentElement?.style?.setProperty?.("display", "none");
+
+    // 상단에 안내 + 세트 선택 토글 주입
+    const main = document.querySelector("main.container");
+    const head = document.createElement("section");
+    head.className = "result-hero";
+    head.innerHTML = `
+      <div class="result-emoji">🏆</div>
+      <div class="h1" style="margin-top:8px">전체 랭킹</div>
+      <div class="muted small" style="margin-top:6px">세트를 선택해서 TOP 20을 확인하세요</div>
+    `;
+    main.insertBefore(head, main.firstChild);
+
+    const switcher = document.createElement("div");
+    switcher.className = "mode-selector";
+    switcher.style.marginBottom = "20px";
+    [1,2,3,4,5].forEach(n => {
+      const b = document.createElement("button");
+      b.className = "mode-btn" + (n === initialSet ? " active" : "");
+      b.textContent = `SET ${n}`;
+      b.addEventListener("click", () => {
+        switcher.querySelectorAll(".mode-btn").forEach(x => x.classList.remove("active"));
+        b.classList.add("active");
+        loadRanking(n, null, 0, 0);
+      });
+      switcher.appendChild(b);
+    });
+    main.insertBefore(switcher, document.getElementById("ranking-wrap").parentElement);
+
+    loadRanking(initialSet, null, 0, 0);
   }
 
   function renderAll(r) {
@@ -157,6 +201,10 @@
     const score100 = r.score100 ?? 0;
     const durationSec = r.durationSec ?? 0;
     const byWeek = r.byWeek || {};
+
+    // 오답 다시 보기 버튼: 방금 푼 세트 오답만 보도록 setId 반영
+    const reviewBtn = document.getElementById("review-wrong-btn");
+    if (reviewBtn) reviewBtn.href = `exam.html?set=${setId}&mode=wrong&review=1`;
 
     // 헤더
     document.getElementById("score-big").textContent = correct;
@@ -326,14 +374,16 @@
       tdDur.textContent = formatDuration(e.durationSec || 0);
 
       const tdAt = document.createElement("td");
-      let when = e.at || e.createdAt || e.timestamp;
+      let when = e.recordedAt ?? e.at ?? e.createdAt ?? e.timestamp;
       let d = null;
-      if (when && typeof when === "object" && typeof when.toDate === "function") {
+      if (when instanceof Date) {
+        d = when;
+      } else if (when && typeof when === "object" && typeof when.toDate === "function") {
         try { d = when.toDate(); } catch {}
       } else if (when) {
         d = new Date(when);
       }
-      tdAt.textContent = d ? formatDate(d) : "—";
+      tdAt.textContent = d && !isNaN(d.getTime()) ? formatDate(d) : "—";
 
       tr.appendChild(tdRank);
       tr.appendChild(tdNick);
