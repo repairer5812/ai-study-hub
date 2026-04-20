@@ -98,7 +98,7 @@
     grid.innerHTML = SETS.map(s => {
       const best = getBest(s.id);
       const bestHtml = best
-        ? `<span class="set-best">${best.score} / ${best.total}</span><span class="muted small">${formatTime(best.durationSec)}</span>`
+        ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
         : `<span class="set-best unplayed">미응시</span>`;
       return `
         <a class="set-card" href="exam.html?set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">

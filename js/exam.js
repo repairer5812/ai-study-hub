@@ -43,8 +43,13 @@ const answers = {};            // { [qid]: {choice} | {text} }  — choice는 �
 const bookmarks = new Set();   // Set<qid>
 const lockedInstant = new Set(); // instant 모드에서 답 확정된 qid
 const shuffleMaps = {};        // { [qid]: [displayIdx → originalIdx] }  셔플 순서 유지
-const startTime = Date.now();
+let startTime = Date.now();    // 현재 세션 시작 시각 (세션 복구 시 재설정)
+let priorElapsedMs = 0;        // 이전 세션들에서 누적된 경과 시간
 let endTime = null;
+
+function getTotalDurationSec() {
+  return Math.round((priorElapsedMs + (Date.now() - startTime)) / 1000);
+}
 
 // 셔플 매핑 생성: 최초 1회, 세션 동안 유지
 function getShuffleMap(q) {
@@ -69,6 +74,8 @@ function getShuffleMap(q) {
     (saved.bookmarks || []).forEach(id => bookmarks.add(id));
     (saved.lockedInstant || []).forEach(id => lockedInstant.add(id));
     currentIdx = Math.min(saved.currentIdx || 0, questions.length - 1);
+    priorElapsedMs = Number(saved.priorElapsedMs) || 0;
+    startTime = Date.now(); // 새 세션 시작
   } else {
     clearProgress(setId);
   }
@@ -82,6 +89,7 @@ function persistProgress() {
     answers,
     bookmarks: [...bookmarks],
     lockedInstant: [...lockedInstant],
+    priorElapsedMs: priorElapsedMs + (Date.now() - startTime),
     updatedAt: Date.now(),
   });
 }
@@ -417,7 +425,7 @@ function handleSubmit() {
   }
 
   endTime = Date.now();
-  const durationSec = Math.round((endTime - startTime) / 1000);
+  const durationSec = getTotalDurationSec();
 
   // 채점
   const result = scoreSet(questions, answers);
