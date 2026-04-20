@@ -4,9 +4,6 @@ import {
   collection,
   addDoc,
   getDocs,
-  query,
-  orderBy,
-  limit,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { firebaseConfig } from "../firebase-config.js";
@@ -68,29 +65,37 @@ export async function submitScore({ setId, nickname, score, totalQuestions, dura
 }
 
 export async function fetchTopRanking(setId, max = 20) {
-  try {
-    const db = ensureDb();
-    const ref = collection(db, "leaderboards", String(setId), "entries");
-    const q = query(ref, orderBy("score", "desc"), orderBy("durationSec", "asc"), limit(max));
-    const snap = await getDocs(q);
-    const out = [];
-    snap.forEach((doc) => {
-      const d = doc.data();
-      out.push({
-        id: doc.id,
-        nickname: d.nickname,
-        score: d.score,
-        totalQuestions: d.totalQuestions,
-        durationSec: d.durationSec,
-        setId: d.setId,
-        recordedAt: d.recordedAt && typeof d.recordedAt.toDate === "function"
-          ? d.recordedAt.toDate()
-          : (d.recordedAt instanceof Date ? d.recordedAt : null)
-      });
+  const db = ensureDb();
+  const ref = collection(db, "leaderboards", String(setId), "entries");
+  const snap = await getDocs(ref);
+  const out = [];
+
+  snap.forEach((doc) => {
+    const d = doc.data();
+    out.push({
+      id: doc.id,
+      nickname: d.nickname,
+      score: d.score,
+      totalQuestions: d.totalQuestions,
+      durationSec: d.durationSec,
+      setId: d.setId,
+      recordedAt: d.recordedAt && typeof d.recordedAt.toDate === "function"
+        ? d.recordedAt.toDate()
+        : (d.recordedAt instanceof Date ? d.recordedAt : null)
     });
-    return out;
-  } catch (e) {
-    console.error("fetchTopRanking failed:", e);
-    return [];
-  }
+  });
+
+  out.sort((a, b) => {
+    const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
+    if (scoreDiff !== 0) return scoreDiff;
+
+    const durationDiff = Number(a.durationSec || 0) - Number(b.durationSec || 0);
+    if (durationDiff !== 0) return durationDiff;
+
+    const timeA = a.recordedAt instanceof Date ? a.recordedAt.getTime() : Number.MAX_SAFE_INTEGER;
+    const timeB = b.recordedAt instanceof Date ? b.recordedAt.getTime() : Number.MAX_SAFE_INTEGER;
+    return timeA - timeB;
+  });
+
+  return out.slice(0, Math.max(0, max));
 }
