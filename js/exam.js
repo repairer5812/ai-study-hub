@@ -159,9 +159,11 @@ function render() {
   el.qno.textContent = `문제 ${currentIdx + 1} / ${questions.length}`;
   el.progress.style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
 
-  // 메타 태그
+  // 메타 태그 — 주제(topic)는 정답 힌트가 될 수 있어 해설 이후에만 노출
   el.tagWeek.textContent = `Week ${q.week}`;
   el.tagTopic.textContent = q.topic || "";
+  const isLocked = mode === "instant" && lockedInstant.has(q.id);
+  el.tagTopic.style.display = isLocked ? "" : "none";
   el.tagDiff.textContent = {
     easy: "쉬움", medium: "보통", hard: "어려움"
   }[q.difficulty] || q.difficulty;
@@ -350,6 +352,9 @@ function confirmShortAnswer(q) {
 
 // ── 해설 패널 ──────────────────────────────────────────
 function showExplain(q) {
+  // 해설 단계에서 주제 태그 노출 (풀이 중엔 정답 힌트가 되어 숨겨둔 상태)
+  if (el.tagTopic) el.tagTopic.style.display = "";
+
   const saved = getAnswer(q.id);
   const userAns = q.type === "multiple_choice" ? saved?.choice : (saved?.text ?? "");
   const g = grade(q, userAns);
