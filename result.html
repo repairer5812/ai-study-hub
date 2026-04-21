@@ -201,10 +201,22 @@
     const score100 = r.score100 ?? 0;
     const durationSec = r.durationSec ?? 0;
     const byWeek = r.byWeek || {};
+    const isReview = !!r.isReview;
 
     // 오답 다시 보기 버튼: 방금 푼 세트 오답만 보도록 setId 반영
     const reviewBtn = document.getElementById("review-wrong-btn");
     if (reviewBtn) reviewBtn.href = `exam.html?set=${setId}&mode=wrong&review=1`;
+
+    // 리뷰 모드 배지
+    if (isReview) {
+      const emoji = document.querySelector(".result-hero .result-emoji");
+      if (emoji) emoji.textContent = "📒";
+      const tag = document.createElement("div");
+      tag.className = "tag";
+      tag.style.marginTop = "8px";
+      tag.textContent = "오답 리뷰 (점수·랭킹 기록 없음)";
+      document.querySelector(".result-hero")?.appendChild(tag);
+    }
 
     // 헤더
     document.getElementById("score-big").textContent = correct;
@@ -218,26 +230,49 @@
     document.getElementById("stat-correct").textContent = correct;
     document.getElementById("stat-wrong").textContent = wrong;
 
-    // 개인 최고 갱신
-    const nowIso = new Date().toISOString();
-    const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso });
-    const best = getBest(setId);
+    // 개인 최고: 리뷰 모드는 갱신 안 함 (전체 30문제 한 세트가 아닐 수 있고 점수 의미가 다름)
     const bestEl = document.getElementById("stat-best");
-    if (best) {
-      bestEl.textContent = `${best.score} / 100`;
-      if (isNewRecord) {
-        const tag = document.createElement("div");
-        tag.className = "muted small";
-        tag.style.marginTop = "4px";
-        tag.textContent = "🎉 New Record!";
-        bestEl.appendChild(tag);
-      }
+    if (isReview) {
+      const prev = getBest(setId);
+      bestEl.textContent = prev ? `${prev.score} / 100` : "—";
+      const tag = document.createElement("div");
+      tag.className = "muted small";
+      tag.style.marginTop = "4px";
+      tag.textContent = "(리뷰는 기록 안 함)";
+      bestEl.appendChild(tag);
     } else {
-      bestEl.textContent = "—";
+      const nowIso = new Date().toISOString();
+      const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso });
+      const best = getBest(setId);
+      if (best) {
+        bestEl.textContent = `${best.score} / 100`;
+        if (isNewRecord) {
+          const tag = document.createElement("div");
+          tag.className = "muted small";
+          tag.style.marginTop = "4px";
+          tag.textContent = "🎉 New Record!";
+          bestEl.appendChild(tag);
+        }
+      } else {
+        bestEl.textContent = "—";
+      }
     }
 
     // 주차별 바 차트
     renderWeekChart(byWeek);
+
+    // 리뷰 모드: 랭킹 등록·TOP 20 섹션 모두 숨김 (학습 전용 화면)
+    if (isReview) {
+      const nickBox = document.getElementById("nickname-box");
+      if (nickBox?.parentElement?.tagName === "SECTION") {
+        nickBox.parentElement.style.display = "none";
+      }
+      const rankWrap = document.getElementById("ranking-wrap");
+      if (rankWrap?.parentElement?.tagName === "SECTION") {
+        rankWrap.parentElement.style.display = "none";
+      }
+      return;
+    }
 
     // 닉네임 프리필
     const nickInput = document.getElementById("nickname-input");

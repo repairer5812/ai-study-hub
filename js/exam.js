@@ -10,8 +10,10 @@ import {
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const setId = parseInt(params.get("set") || "1", 10);
-const mode = params.get("mode") || "batch";  // "instant" | "batch"
+const rawMode = params.get("mode") || "batch";  // "instant" | "batch" | "wrong"
 const reviewMode = params.get("review") === "1" || params.get("mode") === "wrong";
+// 리뷰 모드는 학습이 목적이므로 즉시 채점 + 해설 노출 강제
+const mode = reviewMode ? "instant" : rawMode;
 const allSets = params.get("all") === "1";   // 세트 무관 전역 오답 모드
 const weekFilter = parseInt(params.get("week") || "0", 10); // 0이면 주차 필터 없음
 
@@ -494,6 +496,7 @@ function handleSubmit() {
     durationSec,
     byWeek: result.byWeek,
     wrongQids,
+    isReview: reviewMode,  // 리뷰 모드면 결과 화면에서 최고점·랭킹 갱신 스킵
   };
   try {
     sessionStorage.setItem("ml-exam:lastResult", JSON.stringify(payload));
