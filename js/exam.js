@@ -1,6 +1,6 @@
-// exam.js — 시험 풀이 로직 (5.01~5.14 통합)
+// exam.js — 시험 풀이 로직 (5.01~5.14 통합, subject-aware)
 
-import { getSetQuestions, ALL_QUESTIONS } from "./questions.js";
+import { getSubjectModule, getSubjectMeta } from "./subjects/index.js";
 import { grade, scoreSet, collectWrongIds } from "./scoring.js";
 import {
   saveProgress, loadProgress, clearProgress,
@@ -10,6 +10,7 @@ import { recordAttempt, fetchQuestionStats } from "./leaderboard.js";
 
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
+const subjectId = params.get("s") || "ml";
 const setId = parseInt(params.get("set") || "1", 10);
 const rawMode = params.get("mode") || "batch";  // "instant" | "batch" | "wrong"
 const reviewMode = params.get("review") === "1" || params.get("mode") === "wrong";
@@ -18,8 +19,24 @@ const mode = reviewMode ? "instant" : rawMode;
 const allSets = params.get("all") === "1";   // 세트 무관 전역 오답 모드
 const weekFilter = parseInt(params.get("week") || "0", 10); // 0이면 주차 필터 없음
 
+// ── 과목 유효성 검증 ──────────────────────────────────
+let subject, subjectMeta;
+try {
+  subject = getSubjectModule(subjectId);
+  subjectMeta = getSubjectMeta(subjectId);
+} catch (_) {
+  alert("알 수 없는 과목입니다. 홈으로 이동합니다.");
+  location.href = "index.html";
+  throw new Error("Unknown subject");
+}
+if (!subjectMeta.hasExam && !reviewMode) {
+  alert("이 과목의 모의고사는 아직 준비 중입니다.");
+  location.href = `subject.html?s=${subjectId}`;
+  throw new Error("Exam not ready");
+}
+
 // ── 문제 로드 ───────────────────────────────────────────
-let questions = allSets ? ALL_QUESTIONS : getSetQuestions(setId);
+let questions = allSets ? subject.getAllQuestions() : subject.getSetQuestions(setId);
 
 // 주차별 필터 모드
 if (weekFilter >= 2 && weekFilter <= 7) {
@@ -32,7 +49,7 @@ if (weekFilter >= 2 && weekFilter <= 7) {
 
 // 오답 리뷰 모드: 저장된 오답 ID 목록에서 해당 범위의 문제만 필터
 if (reviewMode) {
-  const wrongIds = new Set(getWrongList());
+  const wrongIds = new Set(getWrongList(subjectId));
   questions = questions.filter(q => wrongIds.has(q.id));
   if (!questions.length) {
     alert("오답노트가 비어 있습니다. 홈으로 돌아갑니다.");
@@ -124,7 +141,7 @@ function getShuffleMap(q) {
 
 // ── 세션 복구 ──────────────────────────────────────────
 (function restoreSession() {
-  const saved = loadProgress(setId);
+  const saved = loadProgress(setId, subjectId);
   if (!saved || reviewMode) return;
   if (saved.mode !== mode) return; // 모드 다르면 복구 안 함
   if (confirm("이전 풀이 내용이 있습니다. 이어서 풀까요?")) {
@@ -135,7 +152,7 @@ function getShuffleMap(q) {
     priorElapsedMs = Number(saved.priorElapsedMs) || 0;
     startTime = Date.now(); // 새 세션 시작
   } else {
-    clearProgress(setId);
+    clearProgress(setId, subjectId);
   }
 })();
 
@@ -149,7 +166,7 @@ function persistProgress() {
     lockedInstant: [...lockedInstant],
     priorElapsedMs: priorElapsedMs + (Date.now() - startTime),
     updatedAt: Date.now(),
-  });
+  }, subjectId);
 }
 
 function persistProgressOnPageHide() {
@@ -303,7 +320,7 @@ function handleChoiceClick(q, origIdx, container) {
       else if (bOrig === origIdx) btn.classList.add("incorrect");
     });
     const isCorrect = origIdx === q.answer;
-    if (!isCorrect) addWrong(q.id); else removeWrong(q.id);
+    if (!isCorrect) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
     tryRecordAttempt(q.id, isCorrect);
     showExplain(q);
   } else {
@@ -386,7 +403,7 @@ function confirmShortAnswer(q) {
   lockedInstant.add(q.id);
   const userText = getAnswer(q.id)?.text ?? "";
   const g = grade(q, userText);
-  if (!g.correct) addWrong(q.id); else removeWrong(q.id);
+  if (!g.correct) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
   tryRecordAttempt(q.id, g.correct);
   persistProgress();
   render(); // 잠금 상태로 다시 렌더
@@ -533,8 +550,8 @@ function handleSubmit() {
   const wrongQids = collectWrongIds(result);
 
   // 오답노트 업데이트 (이미 instant 모드에서 진행 중이지만 batch 모드 대응)
-  wrongQids.forEach(id => addWrong(id));
-  result.perQuestion.filter(p => p.correct).forEach(p => removeWrong(p.qid));
+  wrongQids.forEach(id => addWrong(id, subjectId));
+  result.perQuestion.filter(p => p.correct).forEach(p => removeWrong(p.qid, subjectId));
 
   // 익명 통계 기록: 답한 문항만 (미응답은 제외)
   result.perQuestion.forEach(p => {
@@ -562,10 +579,10 @@ function handleSubmit() {
   // 세션 클리어
   sessionFinalized = true;
   stopTimer();
-  clearProgress(setId);
+  clearProgress(setId, subjectId);
 
-  // 결과 페이지로
-  location.href = `result.html?set=${setId}`;
+  // 결과 페이지로 (subject 파라미터 보존)
+  location.href = `result.html?s=${subjectId}&set=${setId}`;
 }
 
 // ── 나가기 확인 오버라이드 ────────────────────────────

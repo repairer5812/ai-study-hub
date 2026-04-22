@@ -3,25 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="author" content="인공지능융합학과 61기 최경찬">
-<meta name="description" content="기계학습 중간고사 대비 모의고사 · Week 2~7 · 150문제 · 5세트 · 랭킹">
-<meta property="og:title" content="기계학습 중간고사 모의고사">
-<meta property="og:description" content="Week 2~7 전범위 · 150문제 · 5세트 · 즉시/일괄 채점 · 실시간 랭킹">
+<meta name="author" content="SW AI 융합정보대학원 61기 최경찬">
+<meta name="description" content="AI Study Hub · 복습 + 모의고사 · 기계학습·딥러닝·자료구조">
+<meta property="og:title" content="AI Study Hub">
+<meta property="og:description" content="과목별 복습 노트 + 모의고사 · 기계학습·딥러닝·자료구조·AI 보안기술">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#234E70">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<title>기계학습 중간고사 모의고사</title>
+<title>AI Study Hub</title>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/theme-bento.css">
 <link rel="stylesheet" href="css/theme-dark.css">
+<style>
+  .hub-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; margin:24px 0; }
+  .hub-card { position:relative; display:flex; flex-direction:column; gap:12px; padding:24px; border:1px solid var(--c-border-soft); border-radius:16px; background:var(--c-surface); text-decoration:none; color:inherit; transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+  .hub-card:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,0.08); border-color:var(--c-accent); }
+  .hub-card.locked { opacity:0.55; pointer-events:none; }
+  .hub-card .emoji { font-size:40px; line-height:1; }
+  .hub-card .title { font-size:20px; font-weight:700; }
+  .hub-card .sub { color:var(--c-text-muted); font-size:14px; }
+  .hub-card .actions { display:flex; gap:8px; margin-top:auto; }
+  .hub-card .actions a { flex:1; text-align:center; padding:10px 12px; border-radius:10px; font-size:14px; font-weight:600; text-decoration:none; border:1px solid var(--c-border-soft); }
+  .hub-card .actions a.primary { background:var(--c-accent); color:white; border-color:var(--c-accent); }
+  .hub-card .actions a.ghost { background:transparent; color:var(--c-text); }
+  .hub-card .actions a.disabled { opacity:0.45; pointer-events:none; }
+  .hub-card .badge-wip { position:absolute; top:14px; right:14px; font-size:11px; padding:4px 8px; border-radius:10px; background:var(--c-border-soft); color:var(--c-text-muted); }
+</style>
 </head>
 <body>
 <div class="page">
 
 <header class="app-header">
   <div class="brand">
-    <div class="brand-title">기계학습 모의고사</div>
-    <div class="brand-sub">Week 2~7 · 150문제</div>
+    <div class="brand-title">AI Study Hub</div>
+    <div class="brand-sub">복습 · 모의고사 · 랭킹</div>
   </div>
   <div class="header-actions">
     <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
@@ -31,30 +46,18 @@
 <main class="container">
 
   <section class="hero">
-    <div class="hero-badge">MIDTERM PREP · 2026</div>
-    <h1 class="hero-title">중간고사 모의고사</h1>
-    <p class="hero-sub">5세트 × 30문제 · Week 2부터 Week 7까지 전범위</p>
+    <div class="hero-badge">AI STUDY · 2026</div>
+    <h1 class="hero-title">과목을 선택하세요</h1>
+    <p class="hero-sub">학습 노트 복습 · 모의고사 풀이 · 실시간 랭킹</p>
   </section>
 
-  <section>
-    <div class="mode-selector" role="tablist" aria-label="풀이 모드 선택">
-      <button class="mode-btn" data-mode="instant" role="tab">1문제씩 즉시 채점</button>
-      <button class="mode-btn active" data-mode="batch" role="tab">30문제 일괄 채점</button>
-    </div>
-  </section>
-
-  <section class="set-grid" id="set-grid">
-    <!-- JS로 렌더링됨 -->
-  </section>
-
-  <section style="display:flex; gap:12px; justify-content:center; margin:40px 0 24px; flex-wrap:wrap;">
-    <a class="btn btn-secondary btn-lg" href="result.html?view=ranking">🏆 전체 랭킹</a>
-    <a class="btn btn-secondary btn-lg" href="exam.html?mode=wrong&all=1&review=1">📒 오답노트 (전 세트)</a>
+  <section class="hub-grid" id="hub-grid">
+    <!-- JS 렌더 -->
   </section>
 
   <section style="margin-top:56px; padding:24px; border-top:1px dashed var(--c-border-soft); text-align:center;">
     <div class="muted small">
-      인공지능융합학과 61기 최경찬 · <a href="mailto:repairer5812@gmail.com" style="color:inherit;text-decoration:underline;">repairer5812@gmail.com</a><br>
+      SW AI 융합정보대학원 61기 최경찬 · <a href="mailto:repairer5812@gmail.com" style="color:inherit;text-decoration:underline;">repairer5812@gmail.com</a><br>
       학습 목적 비영리 프로젝트 · 문제는 강의 노트·슬라이드 기반으로 작성된 복습용 연습 문제입니다
     </div>
   </section>
@@ -65,52 +68,39 @@
 
 <script type="module" src="js/theme.js"></script>
 <script type="module">
-  import { getBest } from "./js/storage.js";
+  import { getAllSubjectMetas } from "./js/subjects/index.js";
 
-  const SETS = [
-    { id: 1, title: "SET 1", label: "기본 구성", desc: "전범위 균형" },
-    { id: 2, title: "SET 2", label: "계산 중심", desc: "Week 7 비중↑" },
-    { id: 3, title: "SET 3", label: "개념 중심", desc: "용어 구별" },
-    { id: 4, title: "SET 4", label: "비교 유형", desc: "모델 대비" },
-    { id: 5, title: "SET 5", label: "종합 심화", desc: "난이도 상" },
-  ];
+  const grid = document.getElementById("hub-grid");
+  const metas = getAllSubjectMetas();
 
-  // 모드 토글
-  let mode = localStorage.getItem("ml-exam:mode") || "batch";
-  const modeBtns = document.querySelectorAll(".mode-btn");
-  modeBtns.forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.mode === mode);
-    btn.addEventListener("click", () => {
-      mode = btn.dataset.mode;
-      localStorage.setItem("ml-exam:mode", mode);
-      modeBtns.forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
-      renderSets();
+  grid.innerHTML = metas.map(m => {
+    const locked = !m.available;
+    const examHref = m.hasExam ? `subject.html?s=${m.id}` : "#";
+    const reviewHref = m.noteIndex.length ? `review.html?s=${m.id}` : "#";
+    const examClass = m.hasExam ? "primary" : "primary disabled";
+    const reviewClass = m.noteIndex.length ? "ghost" : "ghost disabled";
+    const wipText = locked ? "자료 준비중" : (m.hasExam ? "" : "시험 준비중");
+    return `
+      <div class="hub-card ${locked ? "locked" : ""}" data-review="${reviewHref}" role="group" aria-label="${m.title}">
+        ${wipText ? `<span class="badge-wip">${wipText}</span>` : ""}
+        <span class="emoji">${m.emoji}</span>
+        <div class="title">${m.title}</div>
+        <div class="sub">${m.subtitle}</div>
+        <div class="actions">
+          <a class="${reviewClass}" href="${reviewHref}">📖 복습</a>
+          <a class="${examClass}" href="${examHref}">📝 모의고사</a>
+        </div>
+      </div>`;
+  }).join("");
+
+  // 카드 본체(버튼 외 영역) 클릭 시 복습으로 이동
+  grid.querySelectorAll(".hub-card").forEach(card => {
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("a")) return;                  // 버튼 클릭은 기본 동작 유지
+      const href = card.dataset.review;
+      if (href && href !== "#" && !card.classList.contains("locked")) location.href = href;
     });
   });
-
-  function formatTime(sec) {
-    const m = Math.floor(sec / 60), s = sec % 60;
-    return `${m}:${String(s).padStart(2, "0")}`;
-  }
-
-  function renderSets() {
-    const grid = document.getElementById("set-grid");
-    grid.innerHTML = SETS.map(s => {
-      const best = getBest(s.id);
-      const bestHtml = best
-        ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
-        : `<span class="set-best unplayed">미응시</span>`;
-      return `
-        <a class="set-card" href="exam.html?set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">
-          <div class="set-num">${s.label.toUpperCase()}</div>
-          <div class="set-title">${s.title}</div>
-          <div class="muted small">${s.desc}</div>
-          <div class="set-meta">${bestHtml}</div>
-        </a>`;
-    }).join("");
-  }
-
-  renderSets();
 </script>
 
 </body>
