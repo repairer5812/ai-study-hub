@@ -35,6 +35,9 @@ if (!subjectMeta.hasExam && !reviewMode) {
   throw new Error("Exam not ready");
 }
 
+// ── 탭 제목 · 메타 동적 갱신 ─────────────────────────
+document.title = `${subjectMeta.title} 시험 · AI Study Hub`;
+
 // ── 문제 로드 ───────────────────────────────────────────
 let questions = allSets ? subject.getAllQuestions() : subject.getSetQuestions(setId);
 
