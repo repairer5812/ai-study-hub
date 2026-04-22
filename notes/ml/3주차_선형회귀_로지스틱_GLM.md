@@ -378,3 +378,267 @@ $L(\theta) = -\frac{1}{n} \sum_{i=1}^n \sum_{c=1}^C y_c^{(i)} \log p_c^{(i)}$
     - A: 도함수가 0이 되는 포인트가 딱 하나일 때(Convex한 2차 함수 등) 쓸 수 있습니다. 현실의 대부분 문제는 예쁘지 않아 Analytic Solution이 존재하지 않기 때문에 Gradient Descent(경사하강법)가 필수적입니다.
 - Q: Linear Regression에서 쓴 Identity Function이 뭔가요?
     - A: "아무것도 없는 거예요." 즉, 입력된 값($\theta^T x$)을 변형 없이 그대로 출력으로 내보내는 함수($y = x$)를 의미합니다.
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### Week 3a · Discriminative-1
+
+<details><summary>슬라이드 56장 펼치기</summary>
+
+![w3a p1](assets/images/ml/ml_w3a_p01.jpg)
+
+![w3a p2](assets/images/ml/ml_w3a_p02.jpg)
+
+![w3a p3](assets/images/ml/ml_w3a_p03.jpg)
+
+![w3a p4](assets/images/ml/ml_w3a_p04.jpg)
+
+![w3a p5](assets/images/ml/ml_w3a_p05.jpg)
+
+![w3a p6](assets/images/ml/ml_w3a_p06.jpg)
+
+![w3a p7](assets/images/ml/ml_w3a_p07.jpg)
+
+![w3a p8](assets/images/ml/ml_w3a_p08.jpg)
+
+![w3a p9](assets/images/ml/ml_w3a_p09.jpg)
+
+![w3a p10](assets/images/ml/ml_w3a_p10.jpg)
+
+![w3a p11](assets/images/ml/ml_w3a_p11.jpg)
+
+![w3a p12](assets/images/ml/ml_w3a_p12.jpg)
+
+![w3a p13](assets/images/ml/ml_w3a_p13.jpg)
+
+![w3a p14](assets/images/ml/ml_w3a_p14.jpg)
+
+![w3a p15](assets/images/ml/ml_w3a_p15.jpg)
+
+![w3a p16](assets/images/ml/ml_w3a_p16.jpg)
+
+![w3a p17](assets/images/ml/ml_w3a_p17.jpg)
+
+![w3a p18](assets/images/ml/ml_w3a_p18.jpg)
+
+![w3a p19](assets/images/ml/ml_w3a_p19.jpg)
+
+![w3a p20](assets/images/ml/ml_w3a_p20.jpg)
+
+![w3a p21](assets/images/ml/ml_w3a_p21.jpg)
+
+![w3a p22](assets/images/ml/ml_w3a_p22.jpg)
+
+![w3a p23](assets/images/ml/ml_w3a_p23.jpg)
+
+![w3a p24](assets/images/ml/ml_w3a_p24.jpg)
+
+![w3a p25](assets/images/ml/ml_w3a_p25.jpg)
+
+![w3a p26](assets/images/ml/ml_w3a_p26.jpg)
+
+![w3a p27](assets/images/ml/ml_w3a_p27.jpg)
+
+![w3a p28](assets/images/ml/ml_w3a_p28.jpg)
+
+![w3a p29](assets/images/ml/ml_w3a_p29.jpg)
+
+![w3a p30](assets/images/ml/ml_w3a_p30.jpg)
+
+![w3a p31](assets/images/ml/ml_w3a_p31.jpg)
+
+![w3a p32](assets/images/ml/ml_w3a_p32.jpg)
+
+![w3a p33](assets/images/ml/ml_w3a_p33.jpg)
+
+![w3a p34](assets/images/ml/ml_w3a_p34.jpg)
+
+![w3a p35](assets/images/ml/ml_w3a_p35.jpg)
+
+![w3a p36](assets/images/ml/ml_w3a_p36.jpg)
+
+![w3a p37](assets/images/ml/ml_w3a_p37.jpg)
+
+![w3a p38](assets/images/ml/ml_w3a_p38.jpg)
+
+![w3a p39](assets/images/ml/ml_w3a_p39.jpg)
+
+![w3a p40](assets/images/ml/ml_w3a_p40.jpg)
+
+![w3a p41](assets/images/ml/ml_w3a_p41.jpg)
+
+![w3a p42](assets/images/ml/ml_w3a_p42.jpg)
+
+![w3a p43](assets/images/ml/ml_w3a_p43.jpg)
+
+![w3a p44](assets/images/ml/ml_w3a_p44.jpg)
+
+![w3a p45](assets/images/ml/ml_w3a_p45.jpg)
+
+![w3a p46](assets/images/ml/ml_w3a_p46.jpg)
+
+![w3a p47](assets/images/ml/ml_w3a_p47.jpg)
+
+![w3a p48](assets/images/ml/ml_w3a_p48.jpg)
+
+![w3a p49](assets/images/ml/ml_w3a_p49.jpg)
+
+![w3a p50](assets/images/ml/ml_w3a_p50.jpg)
+
+![w3a p51](assets/images/ml/ml_w3a_p51.jpg)
+
+![w3a p52](assets/images/ml/ml_w3a_p52.jpg)
+
+![w3a p53](assets/images/ml/ml_w3a_p53.jpg)
+
+![w3a p54](assets/images/ml/ml_w3a_p54.jpg)
+
+![w3a p55](assets/images/ml/ml_w3a_p55.jpg)
+
+![w3a p56](assets/images/ml/ml_w3a_p56.jpg)
+
+</details>
+
+### Week 3b · Discriminative-2
+
+<details><summary>슬라이드 66장 펼치기</summary>
+
+![w3b p1](assets/images/ml/ml_w3b_p01.jpg)
+
+![w3b p2](assets/images/ml/ml_w3b_p02.jpg)
+
+![w3b p3](assets/images/ml/ml_w3b_p03.jpg)
+
+![w3b p4](assets/images/ml/ml_w3b_p04.jpg)
+
+![w3b p5](assets/images/ml/ml_w3b_p05.jpg)
+
+![w3b p6](assets/images/ml/ml_w3b_p06.jpg)
+
+![w3b p7](assets/images/ml/ml_w3b_p07.jpg)
+
+![w3b p8](assets/images/ml/ml_w3b_p08.jpg)
+
+![w3b p9](assets/images/ml/ml_w3b_p09.jpg)
+
+![w3b p10](assets/images/ml/ml_w3b_p10.jpg)
+
+![w3b p11](assets/images/ml/ml_w3b_p11.jpg)
+
+![w3b p12](assets/images/ml/ml_w3b_p12.jpg)
+
+![w3b p13](assets/images/ml/ml_w3b_p13.jpg)
+
+![w3b p14](assets/images/ml/ml_w3b_p14.jpg)
+
+![w3b p15](assets/images/ml/ml_w3b_p15.jpg)
+
+![w3b p16](assets/images/ml/ml_w3b_p16.jpg)
+
+![w3b p17](assets/images/ml/ml_w3b_p17.jpg)
+
+![w3b p18](assets/images/ml/ml_w3b_p18.jpg)
+
+![w3b p19](assets/images/ml/ml_w3b_p19.jpg)
+
+![w3b p20](assets/images/ml/ml_w3b_p20.jpg)
+
+![w3b p21](assets/images/ml/ml_w3b_p21.jpg)
+
+![w3b p22](assets/images/ml/ml_w3b_p22.jpg)
+
+![w3b p23](assets/images/ml/ml_w3b_p23.jpg)
+
+![w3b p24](assets/images/ml/ml_w3b_p24.jpg)
+
+![w3b p25](assets/images/ml/ml_w3b_p25.jpg)
+
+![w3b p26](assets/images/ml/ml_w3b_p26.jpg)
+
+![w3b p27](assets/images/ml/ml_w3b_p27.jpg)
+
+![w3b p28](assets/images/ml/ml_w3b_p28.jpg)
+
+![w3b p29](assets/images/ml/ml_w3b_p29.jpg)
+
+![w3b p30](assets/images/ml/ml_w3b_p30.jpg)
+
+![w3b p31](assets/images/ml/ml_w3b_p31.jpg)
+
+![w3b p32](assets/images/ml/ml_w3b_p32.jpg)
+
+![w3b p33](assets/images/ml/ml_w3b_p33.jpg)
+
+![w3b p34](assets/images/ml/ml_w3b_p34.jpg)
+
+![w3b p35](assets/images/ml/ml_w3b_p35.jpg)
+
+![w3b p36](assets/images/ml/ml_w3b_p36.jpg)
+
+![w3b p37](assets/images/ml/ml_w3b_p37.jpg)
+
+![w3b p38](assets/images/ml/ml_w3b_p38.jpg)
+
+![w3b p39](assets/images/ml/ml_w3b_p39.jpg)
+
+![w3b p40](assets/images/ml/ml_w3b_p40.jpg)
+
+![w3b p41](assets/images/ml/ml_w3b_p41.jpg)
+
+![w3b p42](assets/images/ml/ml_w3b_p42.jpg)
+
+![w3b p43](assets/images/ml/ml_w3b_p43.jpg)
+
+![w3b p44](assets/images/ml/ml_w3b_p44.jpg)
+
+![w3b p45](assets/images/ml/ml_w3b_p45.jpg)
+
+![w3b p46](assets/images/ml/ml_w3b_p46.jpg)
+
+![w3b p47](assets/images/ml/ml_w3b_p47.jpg)
+
+![w3b p48](assets/images/ml/ml_w3b_p48.jpg)
+
+![w3b p49](assets/images/ml/ml_w3b_p49.jpg)
+
+![w3b p50](assets/images/ml/ml_w3b_p50.jpg)
+
+![w3b p51](assets/images/ml/ml_w3b_p51.jpg)
+
+![w3b p52](assets/images/ml/ml_w3b_p52.jpg)
+
+![w3b p53](assets/images/ml/ml_w3b_p53.jpg)
+
+![w3b p54](assets/images/ml/ml_w3b_p54.jpg)
+
+![w3b p55](assets/images/ml/ml_w3b_p55.jpg)
+
+![w3b p56](assets/images/ml/ml_w3b_p56.jpg)
+
+![w3b p57](assets/images/ml/ml_w3b_p57.jpg)
+
+![w3b p58](assets/images/ml/ml_w3b_p58.jpg)
+
+![w3b p59](assets/images/ml/ml_w3b_p59.jpg)
+
+![w3b p60](assets/images/ml/ml_w3b_p60.jpg)
+
+![w3b p61](assets/images/ml/ml_w3b_p61.jpg)
+
+![w3b p62](assets/images/ml/ml_w3b_p62.jpg)
+
+![w3b p63](assets/images/ml/ml_w3b_p63.jpg)
+
+![w3b p64](assets/images/ml/ml_w3b_p64.jpg)
+
+![w3b p65](assets/images/ml/ml_w3b_p65.jpg)
+
+![w3b p66](assets/images/ml/ml_w3b_p66.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

@@ -284,3 +284,135 @@ LDA는 데이터를 가장 잘 구별할 수 있는 선형 함수(Linear Functio
 - 결과: 맞춘 데이터는 가중치가 감소하고, 틀린 데이터는 가중치가 증가합니다.
 - 정규화: 가중치들의 합이 1이 되도록 다시 나눠줌.
 - 최종 예측: 라운드가 끝난 후, 각 분류기의 예측값에 분류기 가중치($\alpha_j$)를 곱하여 부호(Sign)를 판별하는 가중치 다수결 투표 진행.
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### Week 5 · Non-parametric
+
+<details><summary>슬라이드 59장 펼치기</summary>
+
+![w5 p1](assets/images/ml/ml_w5_p01.jpg)
+
+![w5 p2](assets/images/ml/ml_w5_p02.jpg)
+
+![w5 p3](assets/images/ml/ml_w5_p03.jpg)
+
+![w5 p4](assets/images/ml/ml_w5_p04.jpg)
+
+![w5 p5](assets/images/ml/ml_w5_p05.jpg)
+
+![w5 p6](assets/images/ml/ml_w5_p06.jpg)
+
+![w5 p7](assets/images/ml/ml_w5_p07.jpg)
+
+![w5 p8](assets/images/ml/ml_w5_p08.jpg)
+
+![w5 p9](assets/images/ml/ml_w5_p09.jpg)
+
+![w5 p10](assets/images/ml/ml_w5_p10.jpg)
+
+![w5 p11](assets/images/ml/ml_w5_p11.jpg)
+
+![w5 p12](assets/images/ml/ml_w5_p12.jpg)
+
+![w5 p13](assets/images/ml/ml_w5_p13.jpg)
+
+![w5 p14](assets/images/ml/ml_w5_p14.jpg)
+
+![w5 p15](assets/images/ml/ml_w5_p15.jpg)
+
+![w5 p16](assets/images/ml/ml_w5_p16.jpg)
+
+![w5 p17](assets/images/ml/ml_w5_p17.jpg)
+
+![w5 p18](assets/images/ml/ml_w5_p18.jpg)
+
+![w5 p19](assets/images/ml/ml_w5_p19.jpg)
+
+![w5 p20](assets/images/ml/ml_w5_p20.jpg)
+
+![w5 p21](assets/images/ml/ml_w5_p21.jpg)
+
+![w5 p22](assets/images/ml/ml_w5_p22.jpg)
+
+![w5 p23](assets/images/ml/ml_w5_p23.jpg)
+
+![w5 p24](assets/images/ml/ml_w5_p24.jpg)
+
+![w5 p25](assets/images/ml/ml_w5_p25.jpg)
+
+![w5 p26](assets/images/ml/ml_w5_p26.jpg)
+
+![w5 p27](assets/images/ml/ml_w5_p27.jpg)
+
+![w5 p28](assets/images/ml/ml_w5_p28.jpg)
+
+![w5 p29](assets/images/ml/ml_w5_p29.jpg)
+
+![w5 p30](assets/images/ml/ml_w5_p30.jpg)
+
+![w5 p31](assets/images/ml/ml_w5_p31.jpg)
+
+![w5 p32](assets/images/ml/ml_w5_p32.jpg)
+
+![w5 p33](assets/images/ml/ml_w5_p33.jpg)
+
+![w5 p34](assets/images/ml/ml_w5_p34.jpg)
+
+![w5 p35](assets/images/ml/ml_w5_p35.jpg)
+
+![w5 p36](assets/images/ml/ml_w5_p36.jpg)
+
+![w5 p37](assets/images/ml/ml_w5_p37.jpg)
+
+![w5 p38](assets/images/ml/ml_w5_p38.jpg)
+
+![w5 p39](assets/images/ml/ml_w5_p39.jpg)
+
+![w5 p40](assets/images/ml/ml_w5_p40.jpg)
+
+![w5 p41](assets/images/ml/ml_w5_p41.jpg)
+
+![w5 p42](assets/images/ml/ml_w5_p42.jpg)
+
+![w5 p43](assets/images/ml/ml_w5_p43.jpg)
+
+![w5 p44](assets/images/ml/ml_w5_p44.jpg)
+
+![w5 p45](assets/images/ml/ml_w5_p45.jpg)
+
+![w5 p46](assets/images/ml/ml_w5_p46.jpg)
+
+![w5 p47](assets/images/ml/ml_w5_p47.jpg)
+
+![w5 p48](assets/images/ml/ml_w5_p48.jpg)
+
+![w5 p49](assets/images/ml/ml_w5_p49.jpg)
+
+![w5 p50](assets/images/ml/ml_w5_p50.jpg)
+
+![w5 p51](assets/images/ml/ml_w5_p51.jpg)
+
+![w5 p52](assets/images/ml/ml_w5_p52.jpg)
+
+![w5 p53](assets/images/ml/ml_w5_p53.jpg)
+
+![w5 p54](assets/images/ml/ml_w5_p54.jpg)
+
+![w5 p55](assets/images/ml/ml_w5_p55.jpg)
+
+![w5 p56](assets/images/ml/ml_w5_p56.jpg)
+
+![w5 p57](assets/images/ml/ml_w5_p57.jpg)
+
+![w5 p58](assets/images/ml/ml_w5_p58.jpg)
+
+![w5 p59](assets/images/ml/ml_w5_p59.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

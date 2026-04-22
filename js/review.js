@@ -72,9 +72,33 @@ async function loadNote(slug) {
     if (!resp.ok) throw new Error(`${resp.status}`);
     const md = await resp.text();
 
+    // ── 수식 보호 ─────────────────────────────────────
+    // marked가 `$h_t$`의 `_`를 <em>으로 해석해 KaTeX 파싱을 깨뜨리는 문제 방지.
+    // $$...$$ 와 $...$ 블록을 placeholder로 치환 → marked 렌더 → 복원.
+    const mathBlocks = [];
+    const MATH_SENTINEL = "§§MATH§§";
+    let protectedMd = md;
+
+    // 1) $$...$$ 블록 수식 (여러 줄 가능)
+    protectedMd = protectedMd.replace(/\$\$[\s\S]+?\$\$/g, (m) => {
+      mathBlocks.push(m);
+      return `${MATH_SENTINEL}${mathBlocks.length - 1}${MATH_SENTINEL}`;
+    });
+    // 2) $...$ 인라인 수식 (같은 줄 내, $ 미포함)
+    protectedMd = protectedMd.replace(/\$(?!\s)[^\n$]*?(?<!\s)\$/g, (m) => {
+      mathBlocks.push(m);
+      return `${MATH_SENTINEL}${mathBlocks.length - 1}${MATH_SENTINEL}`;
+    });
+
     // marked 렌더 (GFM + 체크박스)
     marked.setOptions({ gfm: true, breaks: false });
-    const html = marked.parse(md);
+    let html = marked.parse(protectedMd);
+
+    // placeholder 복원
+    html = html.replace(
+      new RegExp(`${MATH_SENTINEL}(\\d+)${MATH_SENTINEL}`, "g"),
+      (_, idx) => mathBlocks[+idx] ?? ""
+    );
     body.innerHTML = html;
 
     // 체크박스 진행도 복원 + 저장

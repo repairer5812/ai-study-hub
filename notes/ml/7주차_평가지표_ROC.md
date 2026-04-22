@@ -304,3 +304,115 @@
 - 수학 및 계산 문제 (핵심 출제 포인트):
     - 복잡한 수학 증명 문제는 절대 안 냄.
     - 🚨 단, Confusion Matrix(혼동 행렬)를 주고 Rate(Error rate, Precision, Recall 등)를 계산하는 문제는 무조건 출제됨! (공식 암기 필수)
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### Week 7 · Evaluation
+
+<details><summary>슬라이드 49장 펼치기</summary>
+
+![w7 p1](assets/images/ml/ml_w7_p01.jpg)
+
+![w7 p2](assets/images/ml/ml_w7_p02.jpg)
+
+![w7 p3](assets/images/ml/ml_w7_p03.jpg)
+
+![w7 p4](assets/images/ml/ml_w7_p04.jpg)
+
+![w7 p5](assets/images/ml/ml_w7_p05.jpg)
+
+![w7 p6](assets/images/ml/ml_w7_p06.jpg)
+
+![w7 p7](assets/images/ml/ml_w7_p07.jpg)
+
+![w7 p8](assets/images/ml/ml_w7_p08.jpg)
+
+![w7 p9](assets/images/ml/ml_w7_p09.jpg)
+
+![w7 p10](assets/images/ml/ml_w7_p10.jpg)
+
+![w7 p11](assets/images/ml/ml_w7_p11.jpg)
+
+![w7 p12](assets/images/ml/ml_w7_p12.jpg)
+
+![w7 p13](assets/images/ml/ml_w7_p13.jpg)
+
+![w7 p14](assets/images/ml/ml_w7_p14.jpg)
+
+![w7 p15](assets/images/ml/ml_w7_p15.jpg)
+
+![w7 p16](assets/images/ml/ml_w7_p16.jpg)
+
+![w7 p17](assets/images/ml/ml_w7_p17.jpg)
+
+![w7 p18](assets/images/ml/ml_w7_p18.jpg)
+
+![w7 p19](assets/images/ml/ml_w7_p19.jpg)
+
+![w7 p20](assets/images/ml/ml_w7_p20.jpg)
+
+![w7 p21](assets/images/ml/ml_w7_p21.jpg)
+
+![w7 p22](assets/images/ml/ml_w7_p22.jpg)
+
+![w7 p23](assets/images/ml/ml_w7_p23.jpg)
+
+![w7 p24](assets/images/ml/ml_w7_p24.jpg)
+
+![w7 p25](assets/images/ml/ml_w7_p25.jpg)
+
+![w7 p26](assets/images/ml/ml_w7_p26.jpg)
+
+![w7 p27](assets/images/ml/ml_w7_p27.jpg)
+
+![w7 p28](assets/images/ml/ml_w7_p28.jpg)
+
+![w7 p29](assets/images/ml/ml_w7_p29.jpg)
+
+![w7 p30](assets/images/ml/ml_w7_p30.jpg)
+
+![w7 p31](assets/images/ml/ml_w7_p31.jpg)
+
+![w7 p32](assets/images/ml/ml_w7_p32.jpg)
+
+![w7 p33](assets/images/ml/ml_w7_p33.jpg)
+
+![w7 p34](assets/images/ml/ml_w7_p34.jpg)
+
+![w7 p35](assets/images/ml/ml_w7_p35.jpg)
+
+![w7 p36](assets/images/ml/ml_w7_p36.jpg)
+
+![w7 p37](assets/images/ml/ml_w7_p37.jpg)
+
+![w7 p38](assets/images/ml/ml_w7_p38.jpg)
+
+![w7 p39](assets/images/ml/ml_w7_p39.jpg)
+
+![w7 p40](assets/images/ml/ml_w7_p40.jpg)
+
+![w7 p41](assets/images/ml/ml_w7_p41.jpg)
+
+![w7 p42](assets/images/ml/ml_w7_p42.jpg)
+
+![w7 p43](assets/images/ml/ml_w7_p43.jpg)
+
+![w7 p44](assets/images/ml/ml_w7_p44.jpg)
+
+![w7 p45](assets/images/ml/ml_w7_p45.jpg)
+
+![w7 p46](assets/images/ml/ml_w7_p46.jpg)
+
+![w7 p47](assets/images/ml/ml_w7_p47.jpg)
+
+![w7 p48](assets/images/ml/ml_w7_p48.jpg)
+
+![w7 p49](assets/images/ml/ml_w7_p49.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

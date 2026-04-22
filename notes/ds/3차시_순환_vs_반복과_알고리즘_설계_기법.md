@@ -323,3 +323,91 @@ factorial(4)
 - [ ] 팩토리얼 순환/반복 $T(n)$ 유도
 - [ ] 피보나치 $\text{fib}(6)$에서 $\text{fib}(0)$이 8번 호출됨 확인
 - [ ] 이진 검색 $n = 2^k$에서 $k = \log_2 n$ 유도
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### 3차시 — 순환 vs 반복
+
+<details><summary>슬라이드 37장 펼치기</summary>
+
+![w3 p1](assets/images/ds/ds_w3_p01.jpg)
+
+![w3 p2](assets/images/ds/ds_w3_p02.jpg)
+
+![w3 p3](assets/images/ds/ds_w3_p03.jpg)
+
+![w3 p4](assets/images/ds/ds_w3_p04.jpg)
+
+![w3 p5](assets/images/ds/ds_w3_p05.jpg)
+
+![w3 p6](assets/images/ds/ds_w3_p06.jpg)
+
+![w3 p7](assets/images/ds/ds_w3_p07.jpg)
+
+![w3 p8](assets/images/ds/ds_w3_p08.jpg)
+
+![w3 p9](assets/images/ds/ds_w3_p09.jpg)
+
+![w3 p10](assets/images/ds/ds_w3_p10.jpg)
+
+![w3 p11](assets/images/ds/ds_w3_p11.jpg)
+
+![w3 p12](assets/images/ds/ds_w3_p12.jpg)
+
+![w3 p13](assets/images/ds/ds_w3_p13.jpg)
+
+![w3 p14](assets/images/ds/ds_w3_p14.jpg)
+
+![w3 p15](assets/images/ds/ds_w3_p15.jpg)
+
+![w3 p16](assets/images/ds/ds_w3_p16.jpg)
+
+![w3 p17](assets/images/ds/ds_w3_p17.jpg)
+
+![w3 p18](assets/images/ds/ds_w3_p18.jpg)
+
+![w3 p19](assets/images/ds/ds_w3_p19.jpg)
+
+![w3 p20](assets/images/ds/ds_w3_p20.jpg)
+
+![w3 p21](assets/images/ds/ds_w3_p21.jpg)
+
+![w3 p22](assets/images/ds/ds_w3_p22.jpg)
+
+![w3 p23](assets/images/ds/ds_w3_p23.jpg)
+
+![w3 p24](assets/images/ds/ds_w3_p24.jpg)
+
+![w3 p25](assets/images/ds/ds_w3_p25.jpg)
+
+![w3 p26](assets/images/ds/ds_w3_p26.jpg)
+
+![w3 p27](assets/images/ds/ds_w3_p27.jpg)
+
+![w3 p28](assets/images/ds/ds_w3_p28.jpg)
+
+![w3 p29](assets/images/ds/ds_w3_p29.jpg)
+
+![w3 p30](assets/images/ds/ds_w3_p30.jpg)
+
+![w3 p31](assets/images/ds/ds_w3_p31.jpg)
+
+![w3 p32](assets/images/ds/ds_w3_p32.jpg)
+
+![w3 p33](assets/images/ds/ds_w3_p33.jpg)
+
+![w3 p34](assets/images/ds/ds_w3_p34.jpg)
+
+![w3 p35](assets/images/ds/ds_w3_p35.jpg)
+
+![w3 p36](assets/images/ds/ds_w3_p36.jpg)
+
+![w3 p37](assets/images/ds/ds_w3_p37.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->
