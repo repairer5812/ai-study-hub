@@ -32,10 +32,10 @@
     - 가로축(Row): Classifier label (예측 값)
     - 세로축(Column): Actual label (실제 값)
 - 🔍 4가지 케이스
-- **True Positive (TP)**: 실제 Positive를 Positive로 올바르게 예측.
-- **True Negative (TN)**: 실제 Negative를 Negative로 올바르게 예측.
-- **False Positive (FP)**: 실제 Negative인데 Positive로 잘못 예측 💡 (Type 1 Error, 제1종 오류)
-- **False Negative (FN)**: 실제 Positive인데 Negative로 잘못 예측 💡 (Type 2 Error, 제2종 오류)
+- True Positive (TP): 실제 Positive를 Positive로 올바르게 예측.
+- True Negative (TN): 실제 Negative를 Negative로 올바르게 예측.
+- False Positive (FP): 실제 Negative인데 Positive로 잘못 예측 💡 (Type 1 Error, 제1종 오류)
+- False Negative (FN): 실제 Positive인데 Negative로 잘못 예측 💡 (Type 2 Error, 제2종 오류)
 - 에러 간의 Trade-off: FP가 높아지면 FN이 떨어지는 등 두 에러 사이에는 트레이드 오프 관계가 존재함.
 - 활용 분야: 의료(Medical) 분야에서 CT 이미지를 보고 암의 유무를 판단할 때 매우 자주 사용됨.
 
@@ -45,7 +45,7 @@
 
 ### 1) 직관적인 기본 지표
 
-- **Error Rate (오류율)**
+- Error Rate (오류율)
     - 수식:
         
         $$
@@ -53,7 +53,7 @@
         $$
         
     - 의미: 전체 데이터 중 잘못 예측한 비율. (가장 좋을 때 0.0, 가장 나쁠 때 1.0)
-- **Accuracy (정확도)**
+- Accuracy (정확도)
     - 수식:
         
         $$
@@ -64,7 +64,7 @@
 
 ### 2) 심화 지표 💡 (시험 출제 확률 매우 높음)
 
-- **Sensitivity (민감도) = Recall (재현율) = True Positive Rate (TPR)**
+- Sensitivity (민감도) = Recall (재현율) = True Positive Rate (TPR)
     - 수식:
         
         $$
@@ -72,7 +72,7 @@
         $$
         
     - 의미: 실제 양성(Positive)인 데이터 중 모델이 양성으로 올바르게 예측한 비율. (모델이 얼마나 양성에 민감하게 반응하는가)
-- **Precision (정밀도) = Positive Predictive Value (PPV)**
+- Precision (정밀도) = Positive Predictive Value (PPV)
     - 수식:
         
         $$
@@ -91,7 +91,7 @@
     F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
     $$
     
-- **Miss Rate (누락률)**
+- Miss Rate (누락률)
     - 수식:
         
         $$
@@ -99,7 +99,7 @@
         $$
         
     - 의미: 실제 양성 중에서 놓친(음성으로 잘못 예측한) 비율.
-- **Specificity (특이도) = True Negative Rate (TNR)**
+- Specificity (특이도) = True Negative Rate (TNR)
     - 수식:
         
         $$
@@ -107,7 +107,7 @@
         $$
         
     - 의미: 실제 음성(Negative) 중에서 올바르게 음성으로 예측한 비율.
-- **False Positive Rate (FPR)**
+- False Positive Rate (FPR)
     - 수식:
     또는
         
