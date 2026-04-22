@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="bento">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Study Hub</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/theme-bento.css">
+<link rel="stylesheet" href="css/theme-dark.css">
+</head>
+<body>
+<div class="page">
+
+<header class="app-header">
+  <div class="brand">
+    <a href="index.html" style="text-decoration:none;color:inherit;">
+      <div class="brand-title">AI Study Hub</div>
+      <div class="brand-sub" id="crumb">← 홈</div>
+    </a>
+  </div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-badge" id="hero-badge">MIDTERM PREP · 2026</div>
+    <h1 class="hero-title" id="hero-title">과목</h1>
+    <p class="hero-sub" id="hero-sub">로딩…</p>
+  </section>
+
+  <section style="display:flex; gap:12px; justify-content:center; margin:16px 0 24px; flex-wrap:wrap;">
+    <a class="btn btn-secondary btn-lg" id="link-review" href="#">📖 주차별 복습</a>
+  </section>
+
+  <section id="exam-section" style="display:none;">
+    <div class="mode-selector" role="tablist" aria-label="풀이 모드 선택">
+      <button class="mode-btn" data-mode="instant" role="tab">1문제씩 즉시 채점</button>
+      <button class="mode-btn active" data-mode="batch" role="tab">30문제 일괄 채점</button>
+    </div>
+
+    <div class="set-grid" id="set-grid" style="margin-top:16px;">
+      <!-- 동적 렌더 -->
+    </div>
+
+    <div style="display:flex; gap:12px; justify-content:center; margin:40px 0 24px; flex-wrap:wrap;">
+      <a class="btn btn-secondary btn-lg" id="link-ranking" href="result.html?view=ranking">🏆 전체 랭킹</a>
+      <a class="btn btn-secondary btn-lg" id="link-wrong" href="#">📒 오답노트 (전 세트)</a>
+    </div>
+  </section>
+
+  <section id="no-exam-section" style="display:none; text-align:center; padding:40px 20px; border:1px dashed var(--c-border-soft); border-radius:16px;">
+    <div style="font-size:48px; margin-bottom:12px;">⏳</div>
+    <h2 style="margin:0 0 8px;">모의고사 준비 중</h2>
+    <p class="muted">현재는 <strong>복습 자료</strong>만 이용 가능합니다. 모의고사 문제는 곧 업로드 예정.</p>
+  </section>
+
+</main>
+
+</div>
+
+<script type="module" src="js/theme.js"></script>
+<script type="module" src="js/subject.js"></script>
+
+</body>
+</html>

@@ -17,7 +17,7 @@
 
 <header class="app-header">
   <div class="brand">
-    <a href="index.html" class="brand-title">← 기계학습 모의고사</a>
+    <a id="brand-link" href="index.html" class="brand-title">← AI Study Hub</a>
   </div>
   <div class="header-actions">
     <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
@@ -94,7 +94,7 @@
   <section style="display:flex; gap:10px; justify-content:center; margin:32px 0; flex-wrap:wrap">
     <button class="btn btn-secondary btn-lg" id="share-img-btn">📷 결과 이미지 저장</button>
     <a class="btn btn-secondary btn-lg" id="review-wrong-btn" href="exam.html?mode=wrong&review=1&all=1">오답 다시 보기</a>
-    <a class="btn btn-secondary btn-lg" href="index.html">홈으로</a>
+    <a class="btn btn-secondary btn-lg" id="home-btn" href="index.html">홈으로</a>
   </section>
 
 </main>
@@ -108,6 +108,7 @@
 <script type="module">
   import { getBest, saveBest, getNickname, saveNickname } from "./js/storage.js";
   import { initLeaderboard, submitScore, fetchTopRanking } from "./js/leaderboard.js";
+  import { getSubjectMeta } from "./js/subjects/index.js";
 
   // ── 토스트 ─────────────────────────────────
   window.showToast = (msg) => {
@@ -139,6 +140,15 @@
   const urlParams = new URLSearchParams(location.search);
   const viewMode = urlParams.get("view");           // "ranking" = 랭킹 조회 전용
   const urlSetId = parseInt(urlParams.get("set") || "1", 10);
+  const subjectId = urlParams.get("s") || "ml";
+
+  // 브레드크럼 · 홈 버튼 · 오답 버튼에 subject 반영
+  try {
+    const m = getSubjectMeta(subjectId);
+    document.getElementById("brand-link").textContent = `← ${m.title} · AI Study Hub`;
+    document.title = `결과 · ${m.title}`;
+  } catch {}
+  document.getElementById("home-btn").href = `subject.html?s=${subjectId}`;
 
   const RESULT_KEY = "ml-exam:lastResult";
   let raw = null;
@@ -151,7 +161,7 @@
     renderRankingOnly(urlSetId);
   } else if (!result || typeof result !== "object") {
     showToast("결과가 없습니다");
-    setTimeout(() => { location.href = "index.html"; }, 2000);
+    setTimeout(() => { location.href = `subject.html?s=${subjectId}`; }, 2000);
   } else {
     renderAll(result);
   }
@@ -205,7 +215,7 @@
 
     // 오답 다시 보기 버튼: 방금 푼 세트 오답만 보도록 setId 반영
     const reviewBtn = document.getElementById("review-wrong-btn");
-    if (reviewBtn) reviewBtn.href = `exam.html?set=${setId}&mode=wrong&review=1`;
+    if (reviewBtn) reviewBtn.href = `exam.html?s=${subjectId}&set=${setId}&mode=wrong&review=1`;
 
     // 리뷰 모드 배지
     if (isReview) {
@@ -233,7 +243,7 @@
     // 개인 최고: 리뷰 모드는 갱신 안 함 (전체 30문제 한 세트가 아닐 수 있고 점수 의미가 다름)
     const bestEl = document.getElementById("stat-best");
     if (isReview) {
-      const prev = getBest(setId);
+      const prev = getBest(setId, subjectId);
       bestEl.textContent = prev ? `${prev.score} / 100` : "—";
       const tag = document.createElement("div");
       tag.className = "muted small";
@@ -242,8 +252,8 @@
       bestEl.appendChild(tag);
     } else {
       const nowIso = new Date().toISOString();
-      const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso });
-      const best = getBest(setId);
+      const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso }, subjectId);
+      const best = getBest(setId, subjectId);
       if (best) {
         bestEl.textContent = `${best.score} / 100`;
         if (isNewRecord) {

@@ -1,84 +1,105 @@
-# 기계학습 중간고사 모의고사
+# AI Study Hub
 
-**🌐 배포: https://repairer5812.github.io/ml-midterm-mock/**
+**🌐 배포: https://repairer5812.github.io/ai-study-hub/** (리네임 예정)
+**현재 URL: https://repairer5812.github.io/ml-midterm-mock/**
 
-Week 2~7 전범위 · 150문제 · 5세트 · 실시간 랭킹
+다과목 학습 허브 · 복습 노트 · 모의고사 · 실시간 랭킹
 
-> 인공지능융합학과 61기 최경찬 · repairer5812@gmail.com
+> SW AI 융합정보대학원 61기 최경찬 · repairer5812@gmail.com
 
-## 기능
+## 과목
 
-- **150문제 × 5세트** (각 세트 30문제, Week 2~7 전범위 균형 배분)
-  - SET 1 — 기본 균형 | SET 2 — 계산 중심 | SET 3 — 개념 중심 | SET 4 — 비교 유형 | SET 5 — 종합 심화
-- **2가지 풀이 모드** — 즉시 채점(1문제씩 피드백) / 일괄 채점(30문제 후 제출)
-- **주관식 20개** (계산형 11 + 서술형 9)
-- **간단 해설 + 상세 해설 펼침**, 각 문제마다 출처(Week N § X) 표기
-- **주차별 정답률 대시보드**
-- **오답노트** — 세트별 또는 전 세트 통합 리뷰
-- **주차별 필터 학습 모드** (`?week=N`)
-- **실시간 랭킹** — Firebase Firestore, 닉네임·점수·소요시간 TOP 20
-- **결과 이미지 저장** — html2canvas PNG 다운로드
-- **키보드 단축키** — 1~4 선택, Enter 다음, ←/→ 이동, B 북마크
-- **세션 복구** — 풀이 중 이탈해도 이어 풀기 (LocalStorage)
-- **라이트/다크 테마 전환**
-- **반응형 디자인** — 모바일 뷰 지원
+| 과목 | 복습 노트 | 모의고사 |
+|------|---------|---------|
+| 🤖 기계학습 | ✅ 7주차 | ✅ 150문제 · 5세트 |
+| 💻 딥러닝 | ✅ 7주차 + 예상문제·모범답안 | 🔜 서술형 준비 중 |
+| 📊 자료구조 | ✅ 7차시 + INDEX | 🔜 3세트 준비 중 |
+| 🔒 AI 보안기술 | 🔒 자료 수집 예정 | 🔒 |
 
-## 기술 스택
+## 화면 구조
 
-- Vanilla HTML + CSS + ES Modules (프레임워크 없음)
-- KaTeX 0.16.9 — 수식 렌더링
-- Firebase Firestore v10.13.2 — 랭킹 저장 (ESM CDN)
-- html2canvas 1.4.1 — 결과 이미지 출력
-- Pretendard — 한글 폰트
-- GitHub Pages — 정적 호스팅
+```
+index.html                  ← 허브 (과목 카드 4개)
+├─ subject.html?s=ml        ← 과목 랜딩 (복습/시험 메뉴, 세트 그리드)
+├─ review.html?s=ml&w=…     ← 주차별 복습 뷰어 (marked + KaTeX, 체크박스 저장)
+├─ exam.html?s=ml&set=1     ← 시험 화면 (기존 기계학습 150문제)
+└─ result.html?s=ml&set=1   ← 결과·랭킹·오답 복기
+```
+
+## 주요 기능
+
+### 학습 (복습)
+- **주차별 md 뷰어**: 사이드바 + 본문 2단 구조
+- **마크다운 렌더**: `marked.js` (GFM·체크박스)
+- **수식 렌더**: `KaTeX` auto-render (`$...$`, `$$...$$`)
+- **체크박스 진행도**: 각 문서의 체크리스트를 localStorage에 자동 저장
+- **URL 딥링크**: `?s=dl&w=7주차_RNN_Recurrent_Neural_Networks`로 특정 노트 직진입
+
+### 시험 (기계학습)
+- **150문제 × 5세트** (Week 2~7 전범위 균형 배분)
+- 2가지 풀이 모드 — 즉시 채점 / 일괄 채점
+- 주관식 20개 (계산형 11 + 서술형 9)
+- 해설 (간단·상세), 출처 표기
+- 주차별 정답률 대시보드
+- 오답노트 (세트별·전 세트 통합)
+- 실시간 랭킹 — Firebase Firestore TOP 20
+- 결과 이미지 저장 (html2canvas PNG)
+
+## 아키텍처
+
+### 프론트엔드
+- Vanilla HTML + ES Modules (빌드 도구 없음)
+- CSS 테마: `theme-bento.css`, `theme-dark.css`
+- 과목별 모듈: `js/subjects/{ml,dl,ds,sec}.js` + `index.js` 레지스트리
+- 과목 추가 = 모듈 파일 하나 + 노트 폴더 + `SUBJECT_LIST` 등록
+
+### 데이터
+- 문제: `js/questions.js` (기계학습 150문제, 향후 과목별 분리)
+- 노트: `notes/{subject}/*.md`
+- 저장: localStorage (subject-aware 키, 기계학습은 기존 `ml-exam:*` 유지)
+- 랭킹: Firebase Firestore (기계학습 전용, 향후 subject별 컬렉션 확장)
+
+### 서버
+- 호스팅: GitHub Pages
+- LLM 채점 프록시: Cloudflare Worker (`../worker/`, 서술형 채점용)
 
 ## 로컬 실행
 
 ```bash
-python -X utf8 -m http.server 8080
-# 브라우저에서 http://localhost:8080
+# 이 폴더에서 (모듈 import를 위해 HTTP 서버 필요)
+python -m http.server 8000
+# → http://localhost:8000
 ```
 
-## 파일 구조
+## 보안·프라이버시
+
+- API 키는 전부 Cloudflare Worker secret에 보관 (저장소·브라우저에 노출 0)
+- Firestore Rules로 점수 위·변조 차단
+- 사용자 제출 이미지는 채점 후 즉시 폐기, 저장하지 않음
+
+## 폴더 구조
 
 ```
-mock-exam/
-├── index.html           홈 (5 세트 카드 + 모드 선택)
-├── exam.html            시험 풀이 화면
-├── result.html          결과 + 랭킹
-├── firebase-config.js   Firebase 공개 설정 (보안은 firestore.rules)
-├── firestore.rules      Firestore 보안 규칙 (수정·삭제 금지·필드 검증)
-├── css/
-│   ├── base.css
-│   ├── theme-bento.css  라이트 테마
-│   └── theme-dark.css   다크 테마
-├── js/
-│   ├── questions.js     150문제 데이터
-│   ├── exam.js          풀이 로직
-│   ├── scoring.js       채점·점수 환산
-│   ├── leaderboard.js   Firebase 연동
-│   ├── storage.js       LocalStorage 래퍼
-│   ├── theme.js         테마 전환
-│   └── app.js           (예약)
-├── assets/
-│   ├── favicon.svg
-│   └── images/          (confusion_matrix, roc_curve)
-└── tools/
-    └── extract_images.py  PDF 페이지 → PNG 추출 스크립트
+mock-exam/                  ← GitHub에서 ai-study-hub 로 rename 예정
+├─ index.html               # 허브
+├─ subject.html             # 과목 랜딩
+├─ review.html              # 복습 뷰어
+├─ exam.html                # 시험
+├─ result.html              # 결과
+├─ css/
+├─ js/
+│  ├─ app.js, exam.js, scoring.js, storage.js, leaderboard.js, theme.js
+│  ├─ hub 로직은 index.html 인라인
+│  ├─ subject.js, review.js
+│  └─ subjects/
+│     ├─ ml.js, dl.js, ds.js, sec.js
+│     └─ index.js            # 레지스트리
+├─ notes/
+│  ├─ ml/ *.md  (7개)
+│  ├─ dl/ *.md  (7개 + 예상문제·모범답안)
+│  ├─ ds/ *.md  (7개 + INDEX)
+│  └─ sec/ (빈 폴더)
+├─ assets/
+├─ firebase-config.js
+└─ firestore.rules
 ```
-
-## Firebase 설정
-
-`firebase-config.js`의 API 키는 **공개해도 안전**합니다. 보안은 `firestore.rules`로 담당합니다.
-
-Firestore 규칙 배포:
-1. Firebase 콘솔 → Firestore Database → 규칙 탭
-2. `firestore.rules` 내용 붙여넣기 → [게시]
-
-## 라이선스
-
-학습 목적 비영리 개인 프로젝트.
-
----
-
-**제작**: 인공지능융합학과 61기 최경찬 · repairer5812@gmail.com
