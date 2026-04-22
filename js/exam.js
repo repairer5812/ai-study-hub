@@ -6,6 +6,7 @@ import {
   saveProgress, loadProgress, clearProgress,
   getWrongList, addWrong, removeWrong
 } from "./storage.js";
+import { recordAttempt, fetchQuestionStats } from "./leaderboard.js";
 
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
@@ -69,6 +70,42 @@ function stopTimer() {
   if (timerIntervalId !== null) {
     clearInterval(timerIntervalId);
     timerIntervalId = null;
+  }
+}
+
+// 문항별 정답률 캐시 + 중복 기록 방지
+const statsCache = {};             // { [qid]: {attempts, correct} }
+const recordedThisSession = new Set(); // 이번 세션에 이미 기록한 qid
+
+async function loadStatsForQuestions() {
+  const qids = questions.map(q => q.id);
+  const stats = await fetchQuestionStats(qids);
+  Object.assign(statsCache, stats);
+  // 이미 해설이 열려 있는 문제가 있으면 통계 표시 갱신
+  refreshStatsInExplain();
+}
+
+function tryRecordAttempt(qid, isCorrect) {
+  if (recordedThisSession.has(qid)) return;
+  recordedThisSession.add(qid);
+  // 로컬 캐시 선반영 (네트워크 성공 여부와 무관하게 화면 갱신용)
+  if (!statsCache[qid]) statsCache[qid] = { attempts: 0, correct: 0 };
+  statsCache[qid].attempts += 1;
+  if (isCorrect) statsCache[qid].correct += 1;
+  // Firestore 비동기 기록 (실패해도 UX 영향 없음)
+  recordAttempt(qid, !!isCorrect);
+}
+
+function refreshStatsInExplain() {
+  const line = document.querySelector(".explain-stats");
+  if (!line) return;
+  const qid = line.dataset.qid;
+  const s = statsCache[qid];
+  if (!s || s.attempts === 0) {
+    line.textContent = "아직 집계된 응답이 없습니다.";
+  } else {
+    const pct = Math.round((s.correct / s.attempts) * 100);
+    line.textContent = `전체 응답자 ${s.attempts}명 · 정답률 ${pct}%`;
   }
 }
 
@@ -265,7 +302,9 @@ function handleChoiceClick(q, origIdx, container) {
       if (bOrig === q.answer) btn.classList.add("correct");
       else if (bOrig === origIdx) btn.classList.add("incorrect");
     });
-    if (origIdx !== q.answer) addWrong(q.id); else removeWrong(q.id);
+    const isCorrect = origIdx === q.answer;
+    if (!isCorrect) addWrong(q.id); else removeWrong(q.id);
+    tryRecordAttempt(q.id, isCorrect);
     showExplain(q);
   } else {
     container.querySelectorAll(".choice").forEach((btn) => {
@@ -348,6 +387,7 @@ function confirmShortAnswer(q) {
   const userText = getAnswer(q.id)?.text ?? "";
   const g = grade(q, userText);
   if (!g.correct) addWrong(q.id); else removeWrong(q.id);
+  tryRecordAttempt(q.id, g.correct);
   persistProgress();
   render(); // 잠금 상태로 다시 렌더
 }
@@ -362,6 +402,15 @@ function showExplain(q) {
   const g = grade(q, userAns);
   const correctMark = g.correct ? "✅ 정답" : "❌ 오답";
 
+  const s = statsCache[q.id];
+  let statsText;
+  if (!s || s.attempts === 0) {
+    statsText = "집계 중…";
+  } else {
+    const pct = Math.round((s.correct / s.attempts) * 100);
+    statsText = `전체 응답자 ${s.attempts}명 · 정답률 ${pct}%`;
+  }
+
   const html = `
     <div class="explain">
       <div class="explain-title">${correctMark} · 해설</div>
@@ -372,6 +421,7 @@ function showExplain(q) {
           <div class="explain-detailed">${formatExplain(q.detailed)}</div>
         </details>
       ` : ""}
+      <div class="explain-stats muted small" data-qid="${escapeHtml(q.id)}" style="margin-top:10px">📊 ${statsText}</div>
       ${q.source ? `<span class="explain-source">출처 · ${escapeHtml(q.source)}</span>` : ""}
     </div>
   `;
@@ -486,6 +536,11 @@ function handleSubmit() {
   wrongQids.forEach(id => addWrong(id));
   result.perQuestion.filter(p => p.correct).forEach(p => removeWrong(p.qid));
 
+  // 익명 통계 기록: 답한 문항만 (미응답은 제외)
+  result.perQuestion.forEach(p => {
+    if (answers[p.qid]) tryRecordAttempt(p.qid, p.correct);
+  });
+
   // sessionStorage에 결과 저장
   const payload = {
     setId,
@@ -530,6 +585,9 @@ window.__exam = {
 // ── 초기 렌더링 ────────────────────────────────────────
 startTimer();
 render();
+
+// 정답률 통계 백그라운드 로드 (네트워크 실패해도 UX 영향 없음)
+loadStatsForQuestions();
 
 // 디버깅용
 window.__examState = { setId, mode, questions, answers, bookmarks, get currentIdx() { return currentIdx; } };

@@ -49,5 +49,36 @@ service cloud.firestore {
       // 등록된 기록은 수정/삭제 불가 (랭킹 조작 방지)
       allow update, delete: if false;
     }
+
+    // 문항별 익명 정답률 통계: /questionStats/{qid}
+    // 스키마: { attempts: int, correct: int, updatedAt: timestamp }
+    match /questionStats/{qid} {
+      // 누구나 읽기 가능 (통계 표시용)
+      allow read: if true;
+
+      // 최초 생성: attempts == 1, correct ∈ {0,1}
+      allow create: if
+        request.resource.data.keys().hasOnly(['attempts','correct','updatedAt']) &&
+        request.resource.data.attempts is int &&
+        request.resource.data.correct is int &&
+        request.resource.data.attempts == 1 &&
+        request.resource.data.correct >= 0 &&
+        request.resource.data.correct <= 1 &&
+        request.resource.data.updatedAt is timestamp;
+
+      // 증분 업데이트: attempts·correct 모두 정확히 기존값+0 또는 +1, 감소 금지
+      allow update: if
+        request.resource.data.keys().hasOnly(['attempts','correct','updatedAt']) &&
+        request.resource.data.attempts is int &&
+        request.resource.data.correct is int &&
+        request.resource.data.attempts == resource.data.attempts + 1 &&
+        (request.resource.data.correct == resource.data.correct ||
+         request.resource.data.correct == resource.data.correct + 1) &&
+        request.resource.data.correct <= request.resource.data.attempts &&
+        request.resource.data.updatedAt is timestamp;
+
+      // 삭제 불가
+      allow delete: if false;
+    }
   }
 }

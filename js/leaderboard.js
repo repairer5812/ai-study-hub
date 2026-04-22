@@ -4,6 +4,10 @@ import {
   collection,
   addDoc,
   getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { firebaseConfig } from "../firebase-config.js";
@@ -98,4 +102,57 @@ export async function fetchTopRanking(setId, max = 20) {
   });
 
   return out.slice(0, Math.max(0, max));
+}
+
+// ──────────────────────────────────────────────
+// 문항별 익명 정답률 통계
+// Collection: /questionStats/{qid} → { attempts, correct, updatedAt }
+// ──────────────────────────────────────────────
+
+export async function recordAttempt(qid, isCorrect) {
+  if (typeof qid !== "string" || !qid) return { ok: false };
+  try {
+    const db = ensureDb();
+    const ref = doc(db, "questionStats", qid);
+    await setDoc(
+      ref,
+      {
+        attempts: increment(1),
+        correct: increment(isCorrect ? 1 : 0),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    return { ok: true };
+  } catch (e) {
+    console.warn("recordAttempt failed:", qid, e.message);
+    return { ok: false, error: e.message };
+  }
+}
+
+export async function fetchQuestionStats(qids) {
+  if (!Array.isArray(qids) || qids.length === 0) return {};
+  try {
+    const db = ensureDb();
+    const results = await Promise.all(
+      qids.map((id) => getDoc(doc(db, "questionStats", id)).catch(() => null))
+    );
+    const out = {};
+    results.forEach((snap, i) => {
+      const id = qids[i];
+      if (snap && snap.exists()) {
+        const d = snap.data();
+        out[id] = {
+          attempts: Number(d.attempts) || 0,
+          correct: Number(d.correct) || 0,
+        };
+      } else {
+        out[id] = { attempts: 0, correct: 0 };
+      }
+    });
+    return out;
+  } catch (e) {
+    console.warn("fetchQuestionStats failed:", e.message);
+    return {};
+  }
 }
