@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="author" content="인공지능융합학과 61기 최경찬">
-<meta name="description" content="기계학습 중간고사 모의고사 결과">
+<meta name="author" content="SW AI 융합정보대학원 61기 최경찬">
+<meta name="description" content="AI Study Hub 모의고사 결과">
 <meta name="theme-color" content="#234E70">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<title>결과 · 기계학습 모의고사</title>
+<title>결과 · AI Study Hub</title>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/theme-bento.css">
 <link rel="stylesheet" href="css/theme-dark.css">
@@ -464,7 +464,9 @@
       credit.style.textAlign = "center";
       credit.style.fontSize = "12px";
       credit.style.opacity = "0.6";
-      credit.textContent = "인공지능융합학과 61기 최경찬 · 기계학습 중간고사 모의고사";
+      let subjectTitle = "모의고사";
+      try { subjectTitle = `${getSubjectMeta(subjectId).title} 모의고사`; } catch {}
+      credit.textContent = `SW AI 융합정보대학원 61기 최경찬 · ${subjectTitle} · AI Study Hub`;
       wrap.appendChild(credit);
       document.body.appendChild(wrap);
       const canvas = await html2canvas(wrap, { scale: 2, backgroundColor: null, useCORS: true });
