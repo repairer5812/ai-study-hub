@@ -250,6 +250,8 @@ function render() {
     renderChoices(q);
   } else if (q.type === "short_answer") {
     renderShortAnswer(q);
+  } else if (q.type === "essay") {
+    renderEssay(q);
   }
 
   // 이전/다음 버튼
@@ -412,12 +414,145 @@ function confirmShortAnswer(q) {
   render(); // 잠금 상태로 다시 렌더
 }
 
+// ═══════════════════════════════════════════════════════════════
+// 서술형 (essay) — Cloudflare Worker /grade-text 채점
+// ═══════════════════════════════════════════════════════════════
+const ESSAY_GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade-text";
+
+function renderEssay(q) {
+  const wrap = document.createElement("div");
+  wrap.className = "short-answer-wrap";
+  wrap.style.cssText = "display:flex; flex-direction:column; gap:8px;";
+
+  const textarea = document.createElement("textarea");
+  textarea.rows = 12;
+  textarea.style.cssText =
+    "width:100%; min-height:220px; padding:12px 14px; font-family:inherit; " +
+    "font-size:14px; line-height:1.7; border:1px solid var(--c-border-soft); " +
+    "border-radius:10px; background:var(--c-surface); color:var(--c-text); resize:vertical;";
+  textarea.placeholder =
+    "답안을 작성하세요. 오픈북 시험이므로 강의자료를 참고하되 직접 논리적으로 서술해야 합니다.";
+
+  const saved = getAnswer(q.id);
+  if (saved?.text) textarea.value = saved.text;
+
+  const locked = lockedInstant.has(q.id);
+  if (locked) textarea.disabled = true;
+
+  const counter = document.createElement("div");
+  counter.className = "muted small";
+  counter.style.cssText = "text-align:right;";
+  const updateCounter = () => { counter.textContent = `${textarea.value.length}자`; };
+  updateCounter();
+
+  textarea.addEventListener("input", () => {
+    setShortAnswer(q.id, textarea.value);
+    persistProgress();
+    updateCounter();
+  });
+
+  wrap.appendChild(textarea);
+  wrap.appendChild(counter);
+
+  // 키워드·채점기준 힌트 (접힘)
+  if (q.keywords?.length || q.rubric) {
+    const hint = document.createElement("details");
+    hint.style.cssText =
+      "margin-top:8px; padding:10px 14px; background:var(--c-border-soft); " +
+      "border-radius:8px; font-size:13px;";
+    const kwHtml = q.keywords?.length
+      ? `<div style="margin-top:8px;"><strong>참고 키워드:</strong> ${
+          q.keywords.map(k => `<code style="padding:2px 6px; background:var(--c-surface); border-radius:4px;">${escapeHtml(k)}</code>`).join(" ")
+        }</div>`
+      : "";
+    const rubricHtml = q.rubric
+      ? `<div style="margin-top:8px;"><strong>배점 기준:</strong> ${escapeHtml(q.rubric)}</div>`
+      : "";
+    hint.innerHTML = `<summary style="cursor:pointer; font-weight:600;">🔑 채점 힌트 펼치기 (선택)</summary>${kwHtml}${rubricHtml}`;
+    wrap.appendChild(hint);
+  }
+
+  // 제출 버튼 (instant 모드 + 미잠금일 때만)
+  if (!locked) {
+    const btn = document.createElement("button");
+    btn.className = "btn btn-primary";
+    btn.style.cssText = "margin-top:8px; align-self:flex-start;";
+    btn.textContent = "🤖 LLM 채점받기";
+    btn.addEventListener("click", () => submitEssay(q, btn));
+    wrap.appendChild(btn);
+
+    const note = document.createElement("div");
+    note.className = "muted small";
+    note.style.cssText = "margin-top:4px;";
+    note.textContent = "채점 후에는 수정할 수 없으며 모범답안이 공개됩니다.";
+    wrap.appendChild(note);
+  }
+
+  el.answerArea.appendChild(wrap);
+}
+
+async function submitEssay(q, btn) {
+  const userText = (getAnswer(q.id)?.text ?? "").trim();
+  if (userText.length < 30) {
+    alert("답안이 너무 짧습니다. 최소 30자 이상 작성해주세요.");
+    return;
+  }
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.textContent = "⏳ 채점 중… (5~15초)";
+
+  try {
+    const resp = await fetch(ESSAY_GRADER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: q.question,
+        correctAnswer: q.modelAnswer || "",
+        userAnswer: userText,
+        criteria: q.rubric || "",
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(`서버 오류 ${resp.status}: ${err.slice(0, 200)}`);
+    }
+    const result = await resp.json();
+
+    // answer에 결과 통합 저장
+    answers[q.id] = {
+      text: userText,
+      graded: true,
+      correct: Boolean(result.correct),
+      confidence: Number(result.confidence || 0),
+      feedback: String(result.feedback || ""),
+    };
+    lockedInstant.add(q.id);
+    if (!result.correct) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
+    persistProgress();
+    render(); // 잠금 + 해설 공개
+  } catch (e) {
+    console.error("Essay grade error:", e);
+    alert("채점 실패: " + (e?.message || e) + "\n(Worker가 배포·가동 중인지 확인하세요)");
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
 // ── 해설 패널 ──────────────────────────────────────────
 function showExplain(q) {
   // 해설 단계에서 주제 태그 노출 (풀이 중엔 정답 힌트가 되어 숨겨둔 상태)
   if (el.tagTopic) el.tagTopic.style.display = "";
 
   const saved = getAnswer(q.id);
+
+  // ── 서술형(essay) 전용 해설 ──
+  if (q.type === "essay") {
+    renderEssayExplain(q, saved);
+    return;
+  }
+
   const userAns = q.type === "multiple_choice" ? saved?.choice : (saved?.text ?? "");
   const g = grade(q, userAns);
   const correctMark = g.correct ? "✅ 정답" : "❌ 오답";
@@ -442,6 +577,46 @@ function showExplain(q) {
         </details>
       ` : ""}
       <div class="explain-stats muted small" data-qid="${escapeHtml(q.id)}" style="margin-top:10px">📊 ${statsText}</div>
+      ${q.source ? `<span class="explain-source">출처 · ${escapeHtml(q.source)}</span>` : ""}
+    </div>
+  `;
+  el.explainArea.innerHTML = html;
+  if (typeof window.renderMath === "function") window.renderMath();
+}
+
+// 서술형 해설: LLM 채점 결과 + 모범답안 + 채점 기준
+function renderEssayExplain(q, saved) {
+  const graded = saved?.graded;
+  const correct = Boolean(saved?.correct);
+  const conf = Number(saved?.confidence || 0);
+  const feedback = String(saved?.feedback || "");
+
+  const mark = !graded ? "⏳ 미채점" : (correct ? "✅ 통과" : "❌ 보완 필요");
+  const confPct = graded ? Math.round(conf * 100) : 0;
+
+  const html = `
+    <div class="explain">
+      <div class="explain-title">${mark} · LLM 채점 결과</div>
+      ${graded ? `
+        <div class="explain-brief">
+          <strong>신뢰도:</strong> ${confPct}%
+          <div style="margin-top:6px;"><strong>LLM 피드백:</strong> ${escapeHtml(feedback)}</div>
+          <div class="muted small" style="margin-top:8px;">※ LLM 채점은 참고용입니다. 실제 교수님 채점과는 차이가 있을 수 있어요.</div>
+        </div>
+      ` : `<div class="muted">아직 채점 요청을 하지 않았습니다.</div>`}
+
+      <details class="explain-toggle" open>
+        <summary>📘 모범답안 보기</summary>
+        <div class="explain-detailed" style="white-space:pre-wrap;">${formatExplain(q.modelAnswer || "")}</div>
+      </details>
+
+      ${q.rubric ? `
+        <details class="explain-toggle">
+          <summary>🎯 배점·채점 기준</summary>
+          <div class="explain-detailed">${formatExplain(q.rubric)}</div>
+        </details>
+      ` : ""}
+
       ${q.source ? `<span class="explain-source">출처 · ${escapeHtml(q.source)}</span>` : ""}
     </div>
   `;

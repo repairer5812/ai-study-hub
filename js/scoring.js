@@ -2,12 +2,25 @@
 
 const MC_POINTS = 3;
 const SA_POINTS = 5;
+const ESSAY_POINTS = 10;
 
 function isEmpty(v) {
   return v === undefined || v === null || (typeof v === "string" && v.trim() === "");
 }
 
+// 서술형은 exam.js에서 Worker 응답을 answers[qid]에 {graded, correct, ...} 로 저장함.
+// grade()에 직접 answer 객체가 올 때도 있고(서술형: saved 전체), 값만 올 때도 있음.
+// 안전하게 두 케이스 모두 처리.
 export function grade(question, userAnswer) {
+  if (question.type === "essay") {
+    // userAnswer가 {graded,correct,...} 객체이거나, text 문자열일 수 있음
+    const obj = (userAnswer && typeof userAnswer === "object") ? userAnswer : null;
+    if (!obj || !obj.graded) {
+      return { correct: false, reason: "미채점" };
+    }
+    return { correct: Boolean(obj.correct), reason: null, confidence: obj.confidence };
+  }
+
   if (question.type === "multiple_choice") {
     if (isEmpty(userAnswer)) {
       return { correct: false, reason: "미응답" };
@@ -62,11 +75,16 @@ export function scoreSet(questions, answersMap) {
     let userAnswer;
     if (q.type === "multiple_choice") {
       userAnswer = entry && entry.choice !== undefined ? entry.choice : undefined;
+    } else if (q.type === "essay") {
+      // 서술형은 entry 전체를 grade()에 넘겨 graded/correct 판독
+      userAnswer = entry;
     } else {
       userAnswer = entry && entry.text !== undefined ? entry.text : undefined;
     }
 
-    const points = q.type === "multiple_choice" ? MC_POINTS : SA_POINTS;
+    const points =
+      q.type === "multiple_choice" ? MC_POINTS :
+      q.type === "essay" ? ESSAY_POINTS : SA_POINTS;
     maxPoints += points;
 
     const res = grade(q, userAnswer);
@@ -74,6 +92,8 @@ export function scoreSet(questions, answersMap) {
     let correctAnswer;
     if (q.type === "multiple_choice") {
       correctAnswer = q.answer;
+    } else if (q.type === "essay") {
+      correctAnswer = q.modelAnswer || q.keywords || null;
     } else if (q.answer_type === "text") {
       correctAnswer = q.keywords;
     } else {
