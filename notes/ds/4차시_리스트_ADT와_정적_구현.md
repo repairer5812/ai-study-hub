@@ -330,3 +330,111 @@ $$\boxed{\text{삽입·삭제 시 } O(n) \text{의 데이터 이동 오버헤드
 | `malloc` / `free` | 힙 할당 / 반환 |
 | Memory Leak | `free` 안 해서 발생 |
 | Data Shift | 배열 삽입/삭제 시 데이터 이동 |
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### 4차시 — 리스트·정적 구현
+
+<details><summary>슬라이드 47장 펼치기</summary>
+
+![w4 p1](assets/images/ds/ds_w4_p01.jpg)
+
+![w4 p2](assets/images/ds/ds_w4_p02.jpg)
+
+![w4 p3](assets/images/ds/ds_w4_p03.jpg)
+
+![w4 p4](assets/images/ds/ds_w4_p04.jpg)
+
+![w4 p5](assets/images/ds/ds_w4_p05.jpg)
+
+![w4 p6](assets/images/ds/ds_w4_p06.jpg)
+
+![w4 p7](assets/images/ds/ds_w4_p07.jpg)
+
+![w4 p8](assets/images/ds/ds_w4_p08.jpg)
+
+![w4 p9](assets/images/ds/ds_w4_p09.jpg)
+
+![w4 p10](assets/images/ds/ds_w4_p10.jpg)
+
+![w4 p11](assets/images/ds/ds_w4_p11.jpg)
+
+![w4 p12](assets/images/ds/ds_w4_p12.jpg)
+
+![w4 p13](assets/images/ds/ds_w4_p13.jpg)
+
+![w4 p14](assets/images/ds/ds_w4_p14.jpg)
+
+![w4 p15](assets/images/ds/ds_w4_p15.jpg)
+
+![w4 p16](assets/images/ds/ds_w4_p16.jpg)
+
+![w4 p17](assets/images/ds/ds_w4_p17.jpg)
+
+![w4 p18](assets/images/ds/ds_w4_p18.jpg)
+
+![w4 p19](assets/images/ds/ds_w4_p19.jpg)
+
+![w4 p20](assets/images/ds/ds_w4_p20.jpg)
+
+![w4 p21](assets/images/ds/ds_w4_p21.jpg)
+
+![w4 p22](assets/images/ds/ds_w4_p22.jpg)
+
+![w4 p23](assets/images/ds/ds_w4_p23.jpg)
+
+![w4 p24](assets/images/ds/ds_w4_p24.jpg)
+
+![w4 p25](assets/images/ds/ds_w4_p25.jpg)
+
+![w4 p26](assets/images/ds/ds_w4_p26.jpg)
+
+![w4 p27](assets/images/ds/ds_w4_p27.jpg)
+
+![w4 p28](assets/images/ds/ds_w4_p28.jpg)
+
+![w4 p29](assets/images/ds/ds_w4_p29.jpg)
+
+![w4 p30](assets/images/ds/ds_w4_p30.jpg)
+
+![w4 p31](assets/images/ds/ds_w4_p31.jpg)
+
+![w4 p32](assets/images/ds/ds_w4_p32.jpg)
+
+![w4 p33](assets/images/ds/ds_w4_p33.jpg)
+
+![w4 p34](assets/images/ds/ds_w4_p34.jpg)
+
+![w4 p35](assets/images/ds/ds_w4_p35.jpg)
+
+![w4 p36](assets/images/ds/ds_w4_p36.jpg)
+
+![w4 p37](assets/images/ds/ds_w4_p37.jpg)
+
+![w4 p38](assets/images/ds/ds_w4_p38.jpg)
+
+![w4 p39](assets/images/ds/ds_w4_p39.jpg)
+
+![w4 p40](assets/images/ds/ds_w4_p40.jpg)
+
+![w4 p41](assets/images/ds/ds_w4_p41.jpg)
+
+![w4 p42](assets/images/ds/ds_w4_p42.jpg)
+
+![w4 p43](assets/images/ds/ds_w4_p43.jpg)
+
+![w4 p44](assets/images/ds/ds_w4_p44.jpg)
+
+![w4 p45](assets/images/ds/ds_w4_p45.jpg)
+
+![w4 p46](assets/images/ds/ds_w4_p46.jpg)
+
+![w4 p47](assets/images/ds/ds_w4_p47.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

@@ -320,3 +320,151 @@ $b = -\frac{1}{2}\mu_1^T \Sigma^{-1} \mu_1 + \frac{1}{2}\mu_2^T \Sigma^{-1} \mu_
 - $\hat{\Sigma}$**(풀링된 공분산, Pooled Covariance):**
     
     LDA는 공분산이 같다고 가정했으므로, 각 클래스별로 공분산을 따로 구하지 않습니다. 대신, 모든 클래스의 데이터를 합쳐서 하나의 통합된(Pooled) 공분산 추정치를 구합니다.
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### Week 4 · Generative
+
+<details><summary>슬라이드 67장 펼치기</summary>
+
+![w4 p1](assets/images/ml/ml_w4_p01.jpg)
+
+![w4 p2](assets/images/ml/ml_w4_p02.jpg)
+
+![w4 p3](assets/images/ml/ml_w4_p03.jpg)
+
+![w4 p4](assets/images/ml/ml_w4_p04.jpg)
+
+![w4 p5](assets/images/ml/ml_w4_p05.jpg)
+
+![w4 p6](assets/images/ml/ml_w4_p06.jpg)
+
+![w4 p7](assets/images/ml/ml_w4_p07.jpg)
+
+![w4 p8](assets/images/ml/ml_w4_p08.jpg)
+
+![w4 p9](assets/images/ml/ml_w4_p09.jpg)
+
+![w4 p10](assets/images/ml/ml_w4_p10.jpg)
+
+![w4 p11](assets/images/ml/ml_w4_p11.jpg)
+
+![w4 p12](assets/images/ml/ml_w4_p12.jpg)
+
+![w4 p13](assets/images/ml/ml_w4_p13.jpg)
+
+![w4 p14](assets/images/ml/ml_w4_p14.jpg)
+
+![w4 p15](assets/images/ml/ml_w4_p15.jpg)
+
+![w4 p16](assets/images/ml/ml_w4_p16.jpg)
+
+![w4 p17](assets/images/ml/ml_w4_p17.jpg)
+
+![w4 p18](assets/images/ml/ml_w4_p18.jpg)
+
+![w4 p19](assets/images/ml/ml_w4_p19.jpg)
+
+![w4 p20](assets/images/ml/ml_w4_p20.jpg)
+
+![w4 p21](assets/images/ml/ml_w4_p21.jpg)
+
+![w4 p22](assets/images/ml/ml_w4_p22.jpg)
+
+![w4 p23](assets/images/ml/ml_w4_p23.jpg)
+
+![w4 p24](assets/images/ml/ml_w4_p24.jpg)
+
+![w4 p25](assets/images/ml/ml_w4_p25.jpg)
+
+![w4 p26](assets/images/ml/ml_w4_p26.jpg)
+
+![w4 p27](assets/images/ml/ml_w4_p27.jpg)
+
+![w4 p28](assets/images/ml/ml_w4_p28.jpg)
+
+![w4 p29](assets/images/ml/ml_w4_p29.jpg)
+
+![w4 p30](assets/images/ml/ml_w4_p30.jpg)
+
+![w4 p31](assets/images/ml/ml_w4_p31.jpg)
+
+![w4 p32](assets/images/ml/ml_w4_p32.jpg)
+
+![w4 p33](assets/images/ml/ml_w4_p33.jpg)
+
+![w4 p34](assets/images/ml/ml_w4_p34.jpg)
+
+![w4 p35](assets/images/ml/ml_w4_p35.jpg)
+
+![w4 p36](assets/images/ml/ml_w4_p36.jpg)
+
+![w4 p37](assets/images/ml/ml_w4_p37.jpg)
+
+![w4 p38](assets/images/ml/ml_w4_p38.jpg)
+
+![w4 p39](assets/images/ml/ml_w4_p39.jpg)
+
+![w4 p40](assets/images/ml/ml_w4_p40.jpg)
+
+![w4 p41](assets/images/ml/ml_w4_p41.jpg)
+
+![w4 p42](assets/images/ml/ml_w4_p42.jpg)
+
+![w4 p43](assets/images/ml/ml_w4_p43.jpg)
+
+![w4 p44](assets/images/ml/ml_w4_p44.jpg)
+
+![w4 p45](assets/images/ml/ml_w4_p45.jpg)
+
+![w4 p46](assets/images/ml/ml_w4_p46.jpg)
+
+![w4 p47](assets/images/ml/ml_w4_p47.jpg)
+
+![w4 p48](assets/images/ml/ml_w4_p48.jpg)
+
+![w4 p49](assets/images/ml/ml_w4_p49.jpg)
+
+![w4 p50](assets/images/ml/ml_w4_p50.jpg)
+
+![w4 p51](assets/images/ml/ml_w4_p51.jpg)
+
+![w4 p52](assets/images/ml/ml_w4_p52.jpg)
+
+![w4 p53](assets/images/ml/ml_w4_p53.jpg)
+
+![w4 p54](assets/images/ml/ml_w4_p54.jpg)
+
+![w4 p55](assets/images/ml/ml_w4_p55.jpg)
+
+![w4 p56](assets/images/ml/ml_w4_p56.jpg)
+
+![w4 p57](assets/images/ml/ml_w4_p57.jpg)
+
+![w4 p58](assets/images/ml/ml_w4_p58.jpg)
+
+![w4 p59](assets/images/ml/ml_w4_p59.jpg)
+
+![w4 p60](assets/images/ml/ml_w4_p60.jpg)
+
+![w4 p61](assets/images/ml/ml_w4_p61.jpg)
+
+![w4 p62](assets/images/ml/ml_w4_p62.jpg)
+
+![w4 p63](assets/images/ml/ml_w4_p63.jpg)
+
+![w4 p64](assets/images/ml/ml_w4_p64.jpg)
+
+![w4 p65](assets/images/ml/ml_w4_p65.jpg)
+
+![w4 p66](assets/images/ml/ml_w4_p66.jpg)
+
+![w4 p67](assets/images/ml/ml_w4_p67.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

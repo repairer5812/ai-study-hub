@@ -522,7 +522,7 @@ export const set1 = [
     topic: "Confusion Matrix · Type 1/2 오류",
     type: "multiple_choice",
     difficulty: "easy",
-    image: "assets/images/confusion_matrix.png",
+    image: "assets/images/confusion_matrix.jpg",
     question: "Confusion Matrix에서 실제로는 Negative(음성)인 데이터를 모델이 Positive(양성)로 잘못 예측한 경우의 명칭과 오류 유형으로 올바른 것은?",
     choices: [
       "① True Positive(TP)로 실제 양성을 정확히 양성으로 맞춘 경우이며, 제1종 오류(Type 1 Error)에 해당한다",
@@ -561,7 +561,7 @@ export const set1 = [
     topic: "ROC Curve",
     type: "multiple_choice",
     difficulty: "medium",
-    image: "assets/images/roc_curve.png",
+    image: "assets/images/roc_curve.jpg",
     question: "ROC(Receiver Operating Characteristic) Curve에 대한 설명으로 가장 적절한 것은?",
     choices: [
       "① X축은 Precision이고 Y축은 Recall이며, 곡선이 대각선 $y = x$ 위에 위치하기만 하면 Random Guess보다 우수한 분류기로 판정된다",

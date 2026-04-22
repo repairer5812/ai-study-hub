@@ -168,3 +168,133 @@
 - ResNet 구조를 쓰고 싶다면 클래스에 직접 레이어를 짜서 구현해야 함.
 - 평가 기준: 성능이 무조건 높아야 하는 것은 아님. 레이어를 더 쌓아보고, 활성화 함수를 바꿔보고, 증강 기법을 넣고 빼보는 등 **"어떤 시도를 했을 때 어떤 차이가 있었는지 그 이유를 설명"**하는 것이 핵심.
 - 성능이 오히려 떨어졌더라도, 떨어진 이유를 논리적으로 분석해서 적으면 점수에 불이익 없음.
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### CNN (실습 관련)
+
+<details><summary>슬라이드 58장 펼치기</summary>
+
+![cnn p1](assets/images/dl/dl_cnn_p01.jpg)
+
+![cnn p2](assets/images/dl/dl_cnn_p02.jpg)
+
+![cnn p3](assets/images/dl/dl_cnn_p03.jpg)
+
+![cnn p4](assets/images/dl/dl_cnn_p04.jpg)
+
+![cnn p5](assets/images/dl/dl_cnn_p05.jpg)
+
+![cnn p6](assets/images/dl/dl_cnn_p06.jpg)
+
+![cnn p7](assets/images/dl/dl_cnn_p07.jpg)
+
+![cnn p8](assets/images/dl/dl_cnn_p08.jpg)
+
+![cnn p9](assets/images/dl/dl_cnn_p09.jpg)
+
+![cnn p10](assets/images/dl/dl_cnn_p10.jpg)
+
+![cnn p11](assets/images/dl/dl_cnn_p11.jpg)
+
+![cnn p12](assets/images/dl/dl_cnn_p12.jpg)
+
+![cnn p13](assets/images/dl/dl_cnn_p13.jpg)
+
+![cnn p14](assets/images/dl/dl_cnn_p14.jpg)
+
+![cnn p15](assets/images/dl/dl_cnn_p15.jpg)
+
+![cnn p16](assets/images/dl/dl_cnn_p16.jpg)
+
+![cnn p17](assets/images/dl/dl_cnn_p17.jpg)
+
+![cnn p18](assets/images/dl/dl_cnn_p18.jpg)
+
+![cnn p19](assets/images/dl/dl_cnn_p19.jpg)
+
+![cnn p20](assets/images/dl/dl_cnn_p20.jpg)
+
+![cnn p21](assets/images/dl/dl_cnn_p21.jpg)
+
+![cnn p22](assets/images/dl/dl_cnn_p22.jpg)
+
+![cnn p23](assets/images/dl/dl_cnn_p23.jpg)
+
+![cnn p24](assets/images/dl/dl_cnn_p24.jpg)
+
+![cnn p25](assets/images/dl/dl_cnn_p25.jpg)
+
+![cnn p26](assets/images/dl/dl_cnn_p26.jpg)
+
+![cnn p27](assets/images/dl/dl_cnn_p27.jpg)
+
+![cnn p28](assets/images/dl/dl_cnn_p28.jpg)
+
+![cnn p29](assets/images/dl/dl_cnn_p29.jpg)
+
+![cnn p30](assets/images/dl/dl_cnn_p30.jpg)
+
+![cnn p31](assets/images/dl/dl_cnn_p31.jpg)
+
+![cnn p32](assets/images/dl/dl_cnn_p32.jpg)
+
+![cnn p33](assets/images/dl/dl_cnn_p33.jpg)
+
+![cnn p34](assets/images/dl/dl_cnn_p34.jpg)
+
+![cnn p35](assets/images/dl/dl_cnn_p35.jpg)
+
+![cnn p36](assets/images/dl/dl_cnn_p36.jpg)
+
+![cnn p37](assets/images/dl/dl_cnn_p37.jpg)
+
+![cnn p38](assets/images/dl/dl_cnn_p38.jpg)
+
+![cnn p39](assets/images/dl/dl_cnn_p39.jpg)
+
+![cnn p40](assets/images/dl/dl_cnn_p40.jpg)
+
+![cnn p41](assets/images/dl/dl_cnn_p41.jpg)
+
+![cnn p42](assets/images/dl/dl_cnn_p42.jpg)
+
+![cnn p43](assets/images/dl/dl_cnn_p43.jpg)
+
+![cnn p44](assets/images/dl/dl_cnn_p44.jpg)
+
+![cnn p45](assets/images/dl/dl_cnn_p45.jpg)
+
+![cnn p46](assets/images/dl/dl_cnn_p46.jpg)
+
+![cnn p47](assets/images/dl/dl_cnn_p47.jpg)
+
+![cnn p48](assets/images/dl/dl_cnn_p48.jpg)
+
+![cnn p49](assets/images/dl/dl_cnn_p49.jpg)
+
+![cnn p50](assets/images/dl/dl_cnn_p50.jpg)
+
+![cnn p51](assets/images/dl/dl_cnn_p51.jpg)
+
+![cnn p52](assets/images/dl/dl_cnn_p52.jpg)
+
+![cnn p53](assets/images/dl/dl_cnn_p53.jpg)
+
+![cnn p54](assets/images/dl/dl_cnn_p54.jpg)
+
+![cnn p55](assets/images/dl/dl_cnn_p55.jpg)
+
+![cnn p56](assets/images/dl/dl_cnn_p56.jpg)
+
+![cnn p57](assets/images/dl/dl_cnn_p57.jpg)
+
+![cnn p58](assets/images/dl/dl_cnn_p58.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

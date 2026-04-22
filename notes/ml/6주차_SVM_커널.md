@@ -334,3 +334,163 @@ SVM은 태생적으로 클래스가 2개인 이진 분류(Binary Classification)
 
 > 💡 교수님 코멘트: Scikit-learn 공식 문서에 따르면 두 방식의 예측 성능 자체는 거의 비슷(Similar)하기 때문에, 속도가 더 빠른 One-vs-Rest 방식을 실무에서 더 선호하는 경향이 있습니다.
 >
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### Week 6 · SVM
+
+<details><summary>슬라이드 73장 펼치기</summary>
+
+![w6 p1](assets/images/ml/ml_w6_p01.jpg)
+
+![w6 p2](assets/images/ml/ml_w6_p02.jpg)
+
+![w6 p3](assets/images/ml/ml_w6_p03.jpg)
+
+![w6 p4](assets/images/ml/ml_w6_p04.jpg)
+
+![w6 p5](assets/images/ml/ml_w6_p05.jpg)
+
+![w6 p6](assets/images/ml/ml_w6_p06.jpg)
+
+![w6 p7](assets/images/ml/ml_w6_p07.jpg)
+
+![w6 p8](assets/images/ml/ml_w6_p08.jpg)
+
+![w6 p9](assets/images/ml/ml_w6_p09.jpg)
+
+![w6 p10](assets/images/ml/ml_w6_p10.jpg)
+
+![w6 p11](assets/images/ml/ml_w6_p11.jpg)
+
+![w6 p12](assets/images/ml/ml_w6_p12.jpg)
+
+![w6 p13](assets/images/ml/ml_w6_p13.jpg)
+
+![w6 p14](assets/images/ml/ml_w6_p14.jpg)
+
+![w6 p15](assets/images/ml/ml_w6_p15.jpg)
+
+![w6 p16](assets/images/ml/ml_w6_p16.jpg)
+
+![w6 p17](assets/images/ml/ml_w6_p17.jpg)
+
+![w6 p18](assets/images/ml/ml_w6_p18.jpg)
+
+![w6 p19](assets/images/ml/ml_w6_p19.jpg)
+
+![w6 p20](assets/images/ml/ml_w6_p20.jpg)
+
+![w6 p21](assets/images/ml/ml_w6_p21.jpg)
+
+![w6 p22](assets/images/ml/ml_w6_p22.jpg)
+
+![w6 p23](assets/images/ml/ml_w6_p23.jpg)
+
+![w6 p24](assets/images/ml/ml_w6_p24.jpg)
+
+![w6 p25](assets/images/ml/ml_w6_p25.jpg)
+
+![w6 p26](assets/images/ml/ml_w6_p26.jpg)
+
+![w6 p27](assets/images/ml/ml_w6_p27.jpg)
+
+![w6 p28](assets/images/ml/ml_w6_p28.jpg)
+
+![w6 p29](assets/images/ml/ml_w6_p29.jpg)
+
+![w6 p30](assets/images/ml/ml_w6_p30.jpg)
+
+![w6 p31](assets/images/ml/ml_w6_p31.jpg)
+
+![w6 p32](assets/images/ml/ml_w6_p32.jpg)
+
+![w6 p33](assets/images/ml/ml_w6_p33.jpg)
+
+![w6 p34](assets/images/ml/ml_w6_p34.jpg)
+
+![w6 p35](assets/images/ml/ml_w6_p35.jpg)
+
+![w6 p36](assets/images/ml/ml_w6_p36.jpg)
+
+![w6 p37](assets/images/ml/ml_w6_p37.jpg)
+
+![w6 p38](assets/images/ml/ml_w6_p38.jpg)
+
+![w6 p39](assets/images/ml/ml_w6_p39.jpg)
+
+![w6 p40](assets/images/ml/ml_w6_p40.jpg)
+
+![w6 p41](assets/images/ml/ml_w6_p41.jpg)
+
+![w6 p42](assets/images/ml/ml_w6_p42.jpg)
+
+![w6 p43](assets/images/ml/ml_w6_p43.jpg)
+
+![w6 p44](assets/images/ml/ml_w6_p44.jpg)
+
+![w6 p45](assets/images/ml/ml_w6_p45.jpg)
+
+![w6 p46](assets/images/ml/ml_w6_p46.jpg)
+
+![w6 p47](assets/images/ml/ml_w6_p47.jpg)
+
+![w6 p48](assets/images/ml/ml_w6_p48.jpg)
+
+![w6 p49](assets/images/ml/ml_w6_p49.jpg)
+
+![w6 p50](assets/images/ml/ml_w6_p50.jpg)
+
+![w6 p51](assets/images/ml/ml_w6_p51.jpg)
+
+![w6 p52](assets/images/ml/ml_w6_p52.jpg)
+
+![w6 p53](assets/images/ml/ml_w6_p53.jpg)
+
+![w6 p54](assets/images/ml/ml_w6_p54.jpg)
+
+![w6 p55](assets/images/ml/ml_w6_p55.jpg)
+
+![w6 p56](assets/images/ml/ml_w6_p56.jpg)
+
+![w6 p57](assets/images/ml/ml_w6_p57.jpg)
+
+![w6 p58](assets/images/ml/ml_w6_p58.jpg)
+
+![w6 p59](assets/images/ml/ml_w6_p59.jpg)
+
+![w6 p60](assets/images/ml/ml_w6_p60.jpg)
+
+![w6 p61](assets/images/ml/ml_w6_p61.jpg)
+
+![w6 p62](assets/images/ml/ml_w6_p62.jpg)
+
+![w6 p63](assets/images/ml/ml_w6_p63.jpg)
+
+![w6 p64](assets/images/ml/ml_w6_p64.jpg)
+
+![w6 p65](assets/images/ml/ml_w6_p65.jpg)
+
+![w6 p66](assets/images/ml/ml_w6_p66.jpg)
+
+![w6 p67](assets/images/ml/ml_w6_p67.jpg)
+
+![w6 p68](assets/images/ml/ml_w6_p68.jpg)
+
+![w6 p69](assets/images/ml/ml_w6_p69.jpg)
+
+![w6 p70](assets/images/ml/ml_w6_p70.jpg)
+
+![w6 p71](assets/images/ml/ml_w6_p71.jpg)
+
+![w6 p72](assets/images/ml/ml_w6_p72.jpg)
+
+![w6 p73](assets/images/ml/ml_w6_p73.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->

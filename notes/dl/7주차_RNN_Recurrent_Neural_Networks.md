@@ -377,3 +377,143 @@ $$h_t = f_W(h_{t-1}, x_t)$$
 - [ ] **서술형 오픈북** (5월 11일)
 - [ ] **수식 암기 X, 의미 서술 ○**
 - [ ] 교수님이 던진 **오픈형 질문**은 반드시 스스로 정리해 두기
+
+<!-- AUTO:SLIDES:START -->
+
+---
+
+## 강의 슬라이드 (원본 PDF 페이지 렌더)
+
+### RNN
+
+<details><summary>슬라이드 42장 펼치기</summary>
+
+![rnn p1](assets/images/dl/dl_rnn_p01.jpg)
+
+![rnn p2](assets/images/dl/dl_rnn_p02.jpg)
+
+![rnn p3](assets/images/dl/dl_rnn_p03.jpg)
+
+![rnn p4](assets/images/dl/dl_rnn_p04.jpg)
+
+![rnn p5](assets/images/dl/dl_rnn_p05.jpg)
+
+![rnn p6](assets/images/dl/dl_rnn_p06.jpg)
+
+![rnn p7](assets/images/dl/dl_rnn_p07.jpg)
+
+![rnn p8](assets/images/dl/dl_rnn_p08.jpg)
+
+![rnn p9](assets/images/dl/dl_rnn_p09.jpg)
+
+![rnn p10](assets/images/dl/dl_rnn_p10.jpg)
+
+![rnn p11](assets/images/dl/dl_rnn_p11.jpg)
+
+![rnn p12](assets/images/dl/dl_rnn_p12.jpg)
+
+![rnn p13](assets/images/dl/dl_rnn_p13.jpg)
+
+![rnn p14](assets/images/dl/dl_rnn_p14.jpg)
+
+![rnn p15](assets/images/dl/dl_rnn_p15.jpg)
+
+![rnn p16](assets/images/dl/dl_rnn_p16.jpg)
+
+![rnn p17](assets/images/dl/dl_rnn_p17.jpg)
+
+![rnn p18](assets/images/dl/dl_rnn_p18.jpg)
+
+![rnn p19](assets/images/dl/dl_rnn_p19.jpg)
+
+![rnn p20](assets/images/dl/dl_rnn_p20.jpg)
+
+![rnn p21](assets/images/dl/dl_rnn_p21.jpg)
+
+![rnn p22](assets/images/dl/dl_rnn_p22.jpg)
+
+![rnn p23](assets/images/dl/dl_rnn_p23.jpg)
+
+![rnn p24](assets/images/dl/dl_rnn_p24.jpg)
+
+![rnn p25](assets/images/dl/dl_rnn_p25.jpg)
+
+![rnn p26](assets/images/dl/dl_rnn_p26.jpg)
+
+![rnn p27](assets/images/dl/dl_rnn_p27.jpg)
+
+![rnn p28](assets/images/dl/dl_rnn_p28.jpg)
+
+![rnn p29](assets/images/dl/dl_rnn_p29.jpg)
+
+![rnn p30](assets/images/dl/dl_rnn_p30.jpg)
+
+![rnn p31](assets/images/dl/dl_rnn_p31.jpg)
+
+![rnn p32](assets/images/dl/dl_rnn_p32.jpg)
+
+![rnn p33](assets/images/dl/dl_rnn_p33.jpg)
+
+![rnn p34](assets/images/dl/dl_rnn_p34.jpg)
+
+![rnn p35](assets/images/dl/dl_rnn_p35.jpg)
+
+![rnn p36](assets/images/dl/dl_rnn_p36.jpg)
+
+![rnn p37](assets/images/dl/dl_rnn_p37.jpg)
+
+![rnn p38](assets/images/dl/dl_rnn_p38.jpg)
+
+![rnn p39](assets/images/dl/dl_rnn_p39.jpg)
+
+![rnn p40](assets/images/dl/dl_rnn_p40.jpg)
+
+![rnn p41](assets/images/dl/dl_rnn_p41.jpg)
+
+![rnn p42](assets/images/dl/dl_rnn_p42.jpg)
+
+</details>
+
+### LSTM/GRU
+
+<details><summary>슬라이드 18장 펼치기</summary>
+
+![lstm_gru p1](assets/images/dl/dl_lstm_gru_p01.jpg)
+
+![lstm_gru p2](assets/images/dl/dl_lstm_gru_p02.jpg)
+
+![lstm_gru p3](assets/images/dl/dl_lstm_gru_p03.jpg)
+
+![lstm_gru p4](assets/images/dl/dl_lstm_gru_p04.jpg)
+
+![lstm_gru p5](assets/images/dl/dl_lstm_gru_p05.jpg)
+
+![lstm_gru p6](assets/images/dl/dl_lstm_gru_p06.jpg)
+
+![lstm_gru p7](assets/images/dl/dl_lstm_gru_p07.jpg)
+
+![lstm_gru p8](assets/images/dl/dl_lstm_gru_p08.jpg)
+
+![lstm_gru p9](assets/images/dl/dl_lstm_gru_p09.jpg)
+
+![lstm_gru p10](assets/images/dl/dl_lstm_gru_p10.jpg)
+
+![lstm_gru p11](assets/images/dl/dl_lstm_gru_p11.jpg)
+
+![lstm_gru p12](assets/images/dl/dl_lstm_gru_p12.jpg)
+
+![lstm_gru p13](assets/images/dl/dl_lstm_gru_p13.jpg)
+
+![lstm_gru p14](assets/images/dl/dl_lstm_gru_p14.jpg)
+
+![lstm_gru p15](assets/images/dl/dl_lstm_gru_p15.jpg)
+
+![lstm_gru p16](assets/images/dl/dl_lstm_gru_p16.jpg)
+
+![lstm_gru p17](assets/images/dl/dl_lstm_gru_p17.jpg)
+
+![lstm_gru p18](assets/images/dl/dl_lstm_gru_p18.jpg)
+
+</details>
+
+<!-- AUTO:SLIDES:END -->
