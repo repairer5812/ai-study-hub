@@ -187,6 +187,27 @@ export const SLIDE_MAP = {
   },
   ml: {
     // ──────────────────────────────────────────────────────
+    // 2주차 기초·학습법·일반화 (56p 중 18장 선별, 32% 채택)
+    // 커버 범위가 넓음: 전문가 시스템→3대 학습→CV→과적합→Double Descent→OOD
+    // ──────────────────────────────────────────────────────
+    "2주차_기초_학습법_일반화": {
+      "1-2. 전문가 시스템": ["ml_w2_p04.jpg"],
+      "1-3. 머신러닝 (Machine Learning)": ["ml_w2_p06.jpg"],
+      "2. 머신러닝의 3가지 핵심 요소": ["ml_w2_p07.jpg"],
+      "3-1. 지도 학습 (Supervised Learning)": ["ml_w2_p10.jpg", "ml_w2_p11.jpg"],
+      "3-2. 비지도 학습 (Unsupervised Learning)": ["ml_w2_p13.jpg", "ml_w2_p14.jpg"],
+      "3-3. 강화 학습 (Reinforcement Learning)": ["ml_w2_p15.jpg"],
+      "4-2. 데이터 분할 (Data Split)": ["ml_w2_p19.jpg"],
+      "5-1. K-fold Cross-Validation": ["ml_w2_p20.jpg"],
+      "5-2. Leave-one-out Cross-Validation": ["ml_w2_p21.jpg"],
+      "5-3. 💡 Stratified K-fold Cross-Validation": ["ml_w2_p22.jpg"],
+      "6. 과소적합(Underfitting) vs 과적합(Overfitting)": ["ml_w2_p23.jpg", "ml_w2_p26.jpg"],
+      "6-3. Bias-Variance Tradeoff": ["ml_w2_p27.jpg"],
+      "6-4. 💡 최신 연구 동향: Deep Double Descent": ["ml_w2_p31.jpg"],
+      "7-1. 데이터 분포의 중요성": ["ml_w2_p33.jpg"],
+      "7-2. 💡 지름길 학습 (Shortcut Learning)": ["ml_w2_p34.jpg"],
+    },
+    // ──────────────────────────────────────────────────────
     // 7주차 평가지표·ROC (49p 중 11장 선별, 22% 채택)
     // ──────────────────────────────────────────────────────
     "7주차_평가지표_ROC": {
@@ -213,6 +234,7 @@ export const CURATED_SLUGS = new Set([
   "4차시_리스트_ADT와_정적_구현",
   "1차시_과목_오리엔테이션_및_자료구조_전체_숲보기",
   "7주차_평가지표_ROC",
+  "2주차_기초_학습법_일반화",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
   "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",
