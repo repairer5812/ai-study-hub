@@ -192,13 +192,20 @@ export const SLIDE_MAP = {
     // Disc-2 앞 55p는 Disc-1과 완전 동일(중복 제외), 뒷부분 Regularization은 W4에서 처리
     // ──────────────────────────────────────────────────────
     // ──────────────────────────────────────────────────────
-    // 4주차 정규화·나이브베이즈·LDA (일부) — Disc-2 PDF의 Regularization 부분 4장
-    // Disc-2는 앞 55p가 Disc-1 반복이고, p56~65가 Regularization (4주차 Part 1 범위)
-    // 나머지 4주차 섹션(NB/LDA)은 Generative-2 PDF에서 C-6 단계에 선별
+    // 4주차 정규화·나이브베이즈·LDA (Generative-2 67p 중 11장 + Disc-2 Regularization 4장 = 15장, 22%)
+    // Part 1 Regularization은 Disc-2 PDF의 뒤 10p에서 (w3b)
+    // Part 2 Bayes / Part 3 NB / Part 4 LDA는 Generative-2 PDF에서 (w4)
     // ──────────────────────────────────────────────────────
     "4주차_정규화_나이브베이즈_LDA": {
       "3. 정규화 기법 (Regularization)": ["ml_w3b_p59.jpg"],
       "4. L1 vs L2 정규화": ["ml_w3b_p61.jpg", "ml_w3b_p62.jpg", "ml_w3b_p64.jpg"],
+      "1. 판별 모델 (Discriminative Models) vs 생성 모델": ["ml_w4_p02.jpg", "ml_w4_p09.jpg"],
+      "4. 🗣️ 베이즈 정리의 직관적 이해": ["ml_w4_p10.jpg"],
+      "2. 💡 나이브 베이즈의 아주 강력한 가정": ["ml_w4_p14.jpg"],
+      "4. 구체적인 예시: 스팸 메일 분류": ["ml_w4_p16.jpg"],
+      "5. 피처(Feature) 타입에 따른 나이브 베이즈의 확장": ["ml_w4_p29.jpg"],
+      "2. 확률적/생성 모델 관점에서의 LDA": ["ml_w4_p34.jpg", "ml_w4_p37.jpg", "ml_w4_p38.jpg"],
+      "1. LDA의 두 가지 접근 방법": ["ml_w4_p46.jpg", "ml_w4_p47.jpg"],
     },
     "3주차_선형회귀_로지스틱_GLM": {
       "1.1. 지도학습의 목표": ["ml_w3a_p02.jpg"],
@@ -269,6 +276,7 @@ export const CURATED_SLUGS = new Set([
   "7주차_평가지표_ROC",
   "2주차_기초_학습법_일반화",
   "3주차_선형회귀_로지스틱_GLM",
+  "4주차_정규화_나이브베이즈_LDA",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
   "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",

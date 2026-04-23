@@ -20,7 +20,7 @@
     {"phase":"C4","subject":"ml","alias":"w2","slug":"2주차_기초_학습법_일반화","pdf":"BRI507_IntroML_2_Intro.pdf","pages":56,"status":"completed","priority":16,"notes":"ML 기초 — 전문가시스템·3대학습·CV·과적합·OOD (18장/56p, 32%)","selected_pages":[4,6,7,10,11,13,14,15,19,20,21,22,23,26,27,31,33,34]},
     {"phase":"C5a","subject":"ml","alias":"w3a","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-1.pdf","pages":56,"status":"completed","priority":17,"notes":"선형회귀·로지스틱·소프트맥스·CE 전체 (17장/56p, 30%)","selected_pages":[2,5,7,9,14,18,20,22,23,28,30,32,38,40,42,43,46]},
     {"phase":"C5b","subject":"ml","alias":"w3b","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-2.pdf","pages":66,"status":"completed","priority":18,"notes":"Disc-2 앞55p는 Disc-1 반복(C-5a로 커버), 뒤 Regularization 4장을 W4 md에 매핑","selected_pages":[59,61,62,64]},
-    {"phase":"C6","subject":"ml","alias":"w4","slug":"4주차_정규화_나이브베이즈_LDA","pdf":"BRI507_IntroML_4_Generative-2.pdf","pages":67,"status":"pending","priority":19,"notes":"정규화·NB·LDA"},
+    {"phase":"C6","subject":"ml","alias":"w4","slug":"4주차_정규화_나이브베이즈_LDA","pdf":"BRI507_IntroML_4_Generative-2.pdf","pages":67,"status":"completed","priority":19,"notes":"Part 2 Bayes·Part 3 NB·Part 4 LDA (11장/67p), Disc-2 Regularization 4장 합쳐 총 15장 16%","selected_pages":[2,9,10,14,16,29,34,37,38,46,47]},
     {"phase":"C7","subject":"ml","alias":"w5","slug":"5주차_KNN_Tree_Ensemble","pdf":"BRI507_IntroML_5_Nonparametric.pdf","pages":59,"status":"pending","priority":20,"notes":"KNN·Tree"},
     {"phase":"C8","subject":"ml","alias":"w6","slug":"6주차_SVM_커널","pdf":"BRI507_IntroML_6_SVM.pdf","pages":73,"status":"pending","priority":21,"notes":"SVM·커널"}
   ],
