@@ -9,7 +9,7 @@
     {"phase":"A5","subject":"dl","alias":"rnn","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"RNN_2P.pdf","pages":42,"status":"completed","priority":5,"notes":"교수님 오픈 질문 — 시계열 CNN, CNN+RNN","selected_pages":[1,2,3,7,10,14,20,21,31,32,35]},
     {"phase":"B1","subject":"ds","alias":"w2","slug":"2차시_알고리즘_기초와_성능_분석","pdf":"자료구조2주차.pdf","pages":36,"status":"completed","priority":6,"notes":"빅오 100% 출제","selected_pages":[2,11,17,21,23,26,27,29,32]},
     {"phase":"B2","subject":"ds","alias":"w3","slug":"3차시_순환_vs_반복과_알고리즘_설계_기법","pdf":"자료구조3주차_순환.pdf","pages":37,"status":"completed","priority":7,"notes":"순환 수도코드 결과 예측","selected_pages":[5,9,10,13,17,19,24,25,36]},
-    {"phase":"B3","subject":"ds","alias":"w4","slug":"4차시_리스트_ADT와_정적_구현","pdf":"자료구조4주차_리스트.pdf","pages":47,"status":"pending","priority":8,"notes":"데이터 Shift 방향"},
+    {"phase":"B3","subject":"ds","alias":"w4","slug":"4차시_리스트_ADT와_정적_구현","pdf":"자료구조4주차_리스트.pdf","pages":47,"status":"completed","priority":8,"notes":"데이터 Shift 방향","selected_pages":[7,20,30,33,36,37,39,40,41]},
     {"phase":"B4a","subject":"dl","alias":"fnn","slug":"3주차_인공신경망의_기초와_딥러닝의_발전","pdf":"DNNs_FNNs.pdf","pages":42,"status":"pending","priority":9,"notes":"Vanishing Gradient, ReLU, Auto-Encoder"},
     {"phase":"B4b","subject":"dl","alias":"dnn","slug":"3주차_인공신경망의_기초와_딥러닝의_발전","pdf":"DNNs_2P.pdf","pages":19,"status":"pending","priority":10,"notes":"DNN 기초 보완 (같은 md에 병합)"},
     {"phase":"B5","subject":"dl","alias":"overview","slug":"2주차_인공지능과_기계학습의_기초","pdf":"ML_Overview_2P.pdf","pages":31,"status":"pending","priority":11,"notes":"ML vs DL 비교"},
