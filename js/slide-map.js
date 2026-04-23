@@ -69,6 +69,21 @@ export const SLIDE_MAP = {
     // 5주차 CNN (58p/2-up 113슬라이드 중 15장 선별, 26% 채택) 🌟 시스템 설계형 시험
     // 핵심 메커니즘 + 정상급 아키텍처(LeNet/AlexNet/VGG/GoogLeNet/ResNet/DenseNet/SENet/U-Net) 중심 선별
     // ──────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────
+    // 7주차 RNN (42p 중 11장 선별, 26% 채택) 🌟 교수님 오픈 질문 (시계열 CNN, CNN+RNN)
+    // ──────────────────────────────────────────────────────
+    "7주차_RNN_Recurrent_Neural_Networks": {
+      "1. RNN (Recurrent Neural Network)의 기본 개념": ["dl_rnn_p01.jpg"],
+      "2. DNN vs CNN vs RNN 전격 비교": ["dl_rnn_p02.jpg"],
+      "4. RNN의 다양한 아키텍처 (입출력 구조)": ["dl_rnn_p03.jpg"],
+      "5. RNN의 내부 연산과 함수 (Computational Graph)": ["dl_rnn_p07.jpg"],
+      "6. 구체적 예시: Character-Level Language Model": ["dl_rnn_p14.jpg"],
+      "8. Word-Level 언어 모델 학습 및 Loss 계산": ["dl_rnn_p10.jpg"],
+      "9. BPTT (Backpropagation Through Time)와 Truncated BPTT": ["dl_rnn_p20.jpg", "dl_rnn_p21.jpg"],
+      "11. 심화 구조: Bi-directional RNN & Deep RNN": ["dl_rnn_p31.jpg"],
+      "12. RNN의 다양한 실제 응용 사례 (Applications)": ["dl_rnn_p32.jpg"],
+      "13. Image Captioning 심화 (CNN + RNN의 융합)": ["dl_rnn_p35.jpg"],
+    },
     "5주차_CNN_Convolutional_Neural_Networks": {
       "2.1. Local Receptive Fields (국소 수용 영역)": ["dl_cnn_p03.jpg"],
       "2.3. Subsampling (Pooling)": ["dl_cnn_p05.jpg", "dl_cnn_p07.jpg"],
@@ -95,4 +110,5 @@ export const CURATED_SLUGS = new Set([
   "6차시_스택과_수식의_계산",
   "7차시_큐_데크_우선순위_큐",
   "5주차_CNN_Convolutional_Neural_Networks",
+  "7주차_RNN_Recurrent_Neural_Networks",
 ]);
