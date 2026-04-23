@@ -187,6 +187,39 @@ export const SLIDE_MAP = {
   },
   ml: {
     // ──────────────────────────────────────────────────────
+    // 3주차 선형회귀·로지스틱·GLM (Disc-1 56p 중 17장 선별, 30% 채택)
+    // 선형회귀→GD→Normal Eq→MLE→Sigmoid→Softmax→Cross-Entropy
+    // Disc-2 앞 55p는 Disc-1과 완전 동일(중복 제외), 뒷부분 Regularization은 W4에서 처리
+    // ──────────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────
+    // 4주차 정규화·나이브베이즈·LDA (일부) — Disc-2 PDF의 Regularization 부분 4장
+    // Disc-2는 앞 55p가 Disc-1 반복이고, p56~65가 Regularization (4주차 Part 1 범위)
+    // 나머지 4주차 섹션(NB/LDA)은 Generative-2 PDF에서 C-6 단계에 선별
+    // ──────────────────────────────────────────────────────
+    "4주차_정규화_나이브베이즈_LDA": {
+      "3. 정규화 기법 (Regularization)": ["ml_w3b_p59.jpg"],
+      "4. L1 vs L2 정규화": ["ml_w3b_p61.jpg", "ml_w3b_p62.jpg", "ml_w3b_p64.jpg"],
+    },
+    "3주차_선형회귀_로지스틱_GLM": {
+      "1.1. 지도학습의 목표": ["ml_w3a_p02.jpg"],
+      "3.1. 수식 정의": ["ml_w3a_p05.jpg"],
+      "4.1. Residual (잔차)": ["ml_w3a_p07.jpg"],
+      "4.2. Least Mean Squares": ["ml_w3a_p09.jpg"],
+      "5.2. 그래디언트(Gradient)와 이동 방향": ["ml_w3a_p14.jpg"],
+      "6.1. 왜 한 번에 찾을 수 있을까?": ["ml_w3a_p18.jpg"],
+      "6.2. 행렬(Matrix) 표기법 도입": ["ml_w3a_p20.jpg"],
+      "6.3. Normal Equation (정규 방정식) 도출 과정": ["ml_w3a_p22.jpg"],
+      "7.1. 노이즈(Noise)의 도입과 정규분포 가정": ["ml_w3a_p23.jpg"],
+      "7.4. Maximum Likelihood Estimation": ["ml_w3a_p28.jpg"],
+      "8.1. Regression vs Classification": ["ml_w3a_p30.jpg"],
+      "9.1. Sigmoid Function": ["ml_w3a_p32.jpg"],
+      "11.2. 미분 전개와 놀라운 결과": ["ml_w3a_p38.jpg"],
+      "13. Multiclass Classification": ["ml_w3a_p40.jpg"],
+      "14. Softmax Function": ["ml_w3a_p42.jpg"],
+      "14.1. Softmax의 3가지 핵심 역할": ["ml_w3a_p43.jpg"],
+      "15. Cross-Entropy Loss": ["ml_w3a_p46.jpg"],
+    },
+    // ──────────────────────────────────────────────────────
     // 2주차 기초·학습법·일반화 (56p 중 18장 선별, 32% 채택)
     // 커버 범위가 넓음: 전문가 시스템→3대 학습→CV→과적합→Double Descent→OOD
     // ──────────────────────────────────────────────────────
@@ -235,6 +268,7 @@ export const CURATED_SLUGS = new Set([
   "1차시_과목_오리엔테이션_및_자료구조_전체_숲보기",
   "7주차_평가지표_ROC",
   "2주차_기초_학습법_일반화",
+  "3주차_선형회귀_로지스틱_GLM",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
   "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",
