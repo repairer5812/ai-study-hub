@@ -112,6 +112,28 @@ export const SLIDE_MAP = {
     // 핵심 메커니즘 + 정상급 아키텍처(LeNet/AlexNet/VGG/GoogLeNet/ResNet/DenseNet/SENet/U-Net) 중심 선별
     // ──────────────────────────────────────────────────────
     // ──────────────────────────────────────────────────────
+    // 3주차 FNN/DNN (FNN 42p + DNN 19p = 61p 중 16장 선별, 26% 채택)
+    // Vanishing Gradient·ReLU·Auto-Encoder·Dropout·Adam 계보 집중
+    // ──────────────────────────────────────────────────────
+    "3주차_인공신경망의_기초와_딥러닝의_발전": {
+      "💡 [핵심 출제 포인트] SVM vs. Neural Network의 차이점": ["dl_fnn_p07.jpg"],
+      "2. 🔬 생물학적 뉴런의 모델링": ["dl_fnn_p02.jpg"],
+      "3. 🚪 Perceptron (퍼셉트론, 1958)": ["dl_fnn_p03.jpg"],
+      "4. 📈 Activation Function의 역사적 변천사": ["dl_fnn_p05.jpg"],
+      "5. 🥞 Multi-Layer Perceptron (MLP)와 Hidden Layer": ["dl_fnn_p08.jpg"],
+      "7. 🧮 Parameter Optimization & Gradient Descent (파라미터 최적화)": ["dl_fnn_p12.jpg"],
+      "8. 📦 Data Batching Strategies (데이터 학습 단위)": ["dl_fnn_p14.jpg"],
+      "9. 🔙 Backpropagation (오차 역전파 알고리즘)": ["dl_fnn_p17.jpg"],
+      "11. 🌌 Universal Approximation Theorem과 Deep Architecture": ["dl_dnn_p03.jpg"],
+      "12. ⚠️ 딥러닝의 3가지 난제와 Vanishing Gradient (기울기 소실)": ["dl_dnn_p05.jpg"],
+      "13. 🛠️ 한계 극복 1: Greedy Layer-wise Pre-training과 Auto-Encoder": ["dl_dnn_p07.jpg"],
+      "14. 🛠️ 한계 극복 2: ReLU 활성화 함수의 도입": ["dl_dnn_p11.jpg"],
+      "15. 🧰 딥러닝 필수 테크닉 (Tricks of the Trade)": ["dl_dnn_p12.jpg"],
+      "16. 🧭 방향성을 개선하는 방법 (Momentum 계열)": ["dl_dnn_p15.jpg"],
+      "17. 📏 스텝 사이즈(학습률)를 조절하는 방법 (Ada 계열)": ["dl_dnn_p16.jpg"],
+      "18. 👑 최적화 알고리즘의 끝판왕: Adam": ["dl_dnn_p19.jpg"],
+    },
+    // ──────────────────────────────────────────────────────
     // 7주차 RNN (42p 중 11장 선별, 26% 채택) 🌟 교수님 오픈 질문 (시계열 CNN, CNN+RNN)
     // ──────────────────────────────────────────────────────
     "7주차_RNN_Recurrent_Neural_Networks": {
@@ -154,6 +176,7 @@ export const CURATED_SLUGS = new Set([
   "2차시_알고리즘_기초와_성능_분석",
   "3차시_순환_vs_반복과_알고리즘_설계_기법",
   "4차시_리스트_ADT와_정적_구현",
+  "3주차_인공신경망의_기초와_딥러닝의_발전",
   "5주차_CNN_Convolutional_Neural_Networks",
   "7주차_RNN_Recurrent_Neural_Networks",
 ]);
