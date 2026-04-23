@@ -1,4 +1,7 @@
-// subjects/dl.js — 딥러닝 서술형 모의고사 (1세트 × 8문제)
+// subjects/dl.js — 딥러닝 서술형 모의고사 (8세트 × 1문제)
+//
+// 서술형 특성상 한 문제가 매우 길기 때문에, 문제당 1세트로 쪼개어
+// 풀이·채점·복습 흐름을 세트 단위로 독립시킨다.
 //
 // 교수님 출제 방향 (수업 중 직접 언급)
 // - "딥러닝 시스템을 만드는 것" — 레이어 쌓기, 활성화 함수 선택,
@@ -12,11 +15,18 @@
 //   question, keywords[], modelAnswer, rubric, source }
 
 export const SETS_META = [
-  { id: 1, title: "SET 1", label: "시스템 설계형", desc: "레이어·활성화·손실·옵티마이저 설계" },
+  { id: 1, title: "SET 1", label: "RNN 파라미터 공유",        desc: "W 공유·Arbitrary length·Gradient 합" },
+  { id: 2, title: "SET 2", label: "CNN+RNN 캡셔닝",          desc: "가변 이미지·문장 설계·사전학습 VGG" },
+  { id: 3, title: "SET 3", label: "시계열 CNN",              desc: "1D Conv·병렬 연산·장기 의존성" },
+  { id: 4, title: "SET 4", label: "전통 ML vs DL",           desc: "Feature 주체·DL 불리한 경우" },
+  { id: 5, title: "SET 5", label: "CIFAR-10 설계",           desc: "레이어 스택·BN·Augmentation" },
+  { id: 6, title: "SET 6", label: "Vanishing Gradient",      desc: "원인·ReLU·Pre-training" },
+  { id: 7, title: "SET 7", label: "옵티마이저 비교",         desc: "Momentum·Adagrad·Adam" },
+  { id: 8, title: "SET 8", label: "RNN → Transformer",       desc: "순차 의존·Self-Attention·Mamba" },
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SET 1 — 시스템 설계형 (8문제)
+// SET 1 — RNN 파라미터 공유
 // ═══════════════════════════════════════════════════════════════
 export const set1 = [
   {
@@ -42,8 +52,14 @@ export const set1 = [
     rubric: "3개 소문항 각 33점. 키워드 h_t 수식 의미·Arbitrary length·편미분 합의 3축을 모두 서술해야 만점.",
     source: "7주차 RNN § 2·5·9",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 2 — CNN+RNN 캡셔닝
+// ═══════════════════════════════════════════════════════════════
+export const set2 = [
   {
-    id: "DL_S1Q2", set: 1, week: 5, topic: "가변 이미지 CNN+RNN 설계", type: "essay", difficulty: "hard",
+    id: "DL_S2Q1", set: 2, week: 5, topic: "가변 이미지 CNN+RNN 설계", type: "essay", difficulty: "hard",
     question:
       "입력 이미지 크기가 **가변적**이고 출력으로 이미지 설명 문장(가변 길이)을 생성하는 시스템을 설계하시오.\n" +
       "(1) CNN+RNN 조합 구조를 글로 설계하시오 — 각 모듈의 역할, 레이어 개수, 활성화 함수, 연결점(초기 State Vector) 포함.\n" +
@@ -72,8 +88,14 @@ export const set1 = [
     rubric: "(1) 시스템 설계 30점. (2) 버리는 이유 30점. (3) 장점 2+단점 2 40점.",
     source: "5주차 CNN + 7주차 RNN § Image Captioning",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 3 — 시계열 CNN
+// ═══════════════════════════════════════════════════════════════
+export const set3 = [
   {
-    id: "DL_S1Q3", set: 1, week: 7, topic: "시계열 CNN 적용", type: "essay", difficulty: "medium",
+    id: "DL_S3Q1", set: 3, week: 7, topic: "시계열 CNN 적용", type: "essay", difficulty: "medium",
     question:
       "시계열 데이터(음성·주가·센서 시그널)에 전통적으로는 RNN을 사용해왔으나, 최근 CNN을 적용하는 경우도 많다. 교수님께서 수업 중 '잘 생각해보십시오'라며 답을 주지 않고 넘어간 이 주제에 대해 답하시오.\n" +
       "(1) 시계열에 CNN을 적용할 때의 **구조적 특징**을 설명하시오 (1D Convolution, 커널 크기·개수, 활성화 함수, 풀링 설계 포함).\n" +
@@ -99,8 +121,14 @@ export const set1 = [
     rubric: "(1) 1D Convolution 구조 30점. (2) 장점 2개 30점. (3) 단점 2개 40점 — RNN과 '대비' 서술 필수.",
     source: "7주차 RNN § 3 (교수님 직접 오픈 질문)",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 4 — 전통 ML vs DL
+// ═══════════════════════════════════════════════════════════════
+export const set4 = [
   {
-    id: "DL_S1Q4", set: 1, week: 2, topic: "전통 ML vs DL", type: "essay", difficulty: "medium",
+    id: "DL_S4Q1", set: 4, week: 2, topic: "전통 ML vs DL", type: "essay", difficulty: "medium",
     question:
       "전통적인 기계학습과 딥러닝의 차이점을 **Feature Extraction 담당 주체**(사람 vs 기계) 관점에서 설명하고, **딥러닝이 오히려 전통 ML보다 불리한 경우**가 있다면 구체적 상황과 근거로 서술하시오.",
     keywords: [
@@ -124,8 +152,14 @@ export const set1 = [
     rubric: "Feature Extraction 주체 차이 40점, 불리한 경우 2개 이상 + 근거 60점.",
     source: "2주차 § ML 개요 (기출 1번 직계)",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 5 — CIFAR-10 설계
+// ═══════════════════════════════════════════════════════════════
+export const set5 = [
   {
-    id: "DL_S1Q5", set: 1, week: 6, topic: "CIFAR-10 시스템 설계", type: "essay", difficulty: "hard",
+    id: "DL_S5Q1", set: 5, week: 6, topic: "CIFAR-10 시스템 설계", type: "essay", difficulty: "hard",
     question:
       "CIFAR-10 (32×32 컬러, 10클래스)을 분류하는 CNN 시스템을 **처음부터 직접 설계**한다고 하자. 교수님 과제 힌트인 '어떤 시도를 했을 때 어떤 차이가 있었는지 이유 설명'을 반영하여 답하시오.\n" +
       "(1) **레이어 스택**: Conv·Pool·FC 레이어의 순서·개수와 각 Conv의 필터 크기·개수를 설계하시오.\n" +
@@ -154,8 +188,14 @@ export const set1 = [
     rubric: "(1) 레이어 스택 30점. (2) 활성화 20점. (3) Loss·Optimizer 20점. (4) BN or Augmentation 원리 30점.",
     source: "6주차 CIFAR-10 + 3주차 옵티마이저",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 6 — Vanishing Gradient
+// ═══════════════════════════════════════════════════════════════
+export const set6 = [
   {
-    id: "DL_S1Q6", set: 1, week: 3, topic: "Vanishing Gradient + Pre-training", type: "essay", difficulty: "medium",
+    id: "DL_S6Q1", set: 6, week: 3, topic: "Vanishing Gradient + Pre-training", type: "essay", difficulty: "medium",
     question:
       "다음 질문에 답하시오.\n" +
       "(1) **Vanishing Gradient의 수학적 원인**을 Sigmoid(최대 미분값 0.25), Tanh(최대 미분값 1.0)의 미분값 관점에서 설명하시오.\n" +
@@ -180,8 +220,14 @@ export const set1 = [
     rubric: "(1) 수학적 원인 30점. (2) ReLU + Dead ReLU 30점. (3) Pre-training 메커니즘 40점.",
     source: "3주차 § Vanishing Gradient + Auto-Encoder",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 7 — 옵티마이저 비교
+// ═══════════════════════════════════════════════════════════════
+export const set7 = [
   {
-    id: "DL_S1Q7", set: 1, week: 3, topic: "옵티마이저 비교", type: "essay", difficulty: "medium",
+    id: "DL_S7Q1", set: 7, week: 3, topic: "옵티마이저 비교", type: "essay", difficulty: "medium",
     question:
       "Momentum, Adagrad, Adam 세 옵티마이저를 비교하시오.\n" +
       "(1) 각각이 해결하려 한 기존 SGD의 문제점은 무엇인가?\n" +
@@ -210,8 +256,14 @@ export const set1 = [
     rubric: "(1) 세 옵티마이저 설명 60점. (2) Adam이 둘의 결합 + bias-correction임을 명시 40점.",
     source: "3주차 § 14~18",
   },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 8 — RNN → Transformer
+// ═══════════════════════════════════════════════════════════════
+export const set8 = [
   {
-    id: "DL_S1Q8", set: 1, week: 7, topic: "RNN 병렬화 한계 → Transformer", type: "essay", difficulty: "medium",
+    id: "DL_S8Q1", set: 8, week: 7, topic: "RNN 병렬화 한계 → Transformer", type: "essay", difficulty: "medium",
     question:
       "RNN이 Transformer에 자리를 내준 가장 핵심 이유는 **GPU 병렬 처리의 한계**다.\n" +
       "(1) 왜 $t$ 시점 연산이 $t-1$ 결과에 **구조적으로** 의존하는지 State Vector 관점에서 설명하시오.\n" +
@@ -239,12 +291,12 @@ export const set1 = [
 // ═══════════════════════════════════════════════════════════════
 // 메타 + 전체
 // ═══════════════════════════════════════════════════════════════
-const ALL = [...set1];
+const ALL = [...set1, ...set2, ...set3, ...set4, ...set5, ...set6, ...set7, ...set8];
 
 export const META = {
   id: "dl",
   title: "딥러닝",
-  subtitle: "서술형 8문제 · 시스템 설계형 · LLM 채점",
+  subtitle: "서술형 8세트 · 문제당 1세트 · LLM 채점",
   emoji: "💻",
   color: "#7B2D8E",
   available: true,
@@ -266,8 +318,8 @@ export const META = {
 };
 
 export function getSetQuestions(setId) {
-  if (setId === 1) return set1;
-  return [];
+  const table = { 1: set1, 2: set2, 3: set3, 4: set4, 5: set5, 6: set6, 7: set7, 8: set8 };
+  return table[setId] || [];
 }
 
 export function getAllQuestions() { return ALL; }
