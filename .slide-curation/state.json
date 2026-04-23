@@ -7,7 +7,7 @@
     {"phase":"A3","subject":"ds","alias":"w7","slug":"7차시_큐_데크_우선순위_큐","pdf":"자료구조7주차_큐_queue.pdf","pages":45,"status":"completed","priority":3,"notes":"🌟 족집게 3가지 — 원형 큐 Empty/Full, INQ/DQ","selected_pages":[5,9,14,15,17,18,25,26,35,39,42,43]},
     {"phase":"A4","subject":"dl","alias":"cnn","slug":"5주차_CNN_Convolutional_Neural_Networks","pdf":"CNNs_2P.pdf","pages":58,"status":"completed","priority":4,"notes":"시스템 설계형 시험 — CNN 아키텍처","selected_pages":[3,5,7,8,10,11,15,17,18,19,25,27,33,41,51]},
     {"phase":"A5","subject":"dl","alias":"rnn","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"RNN_2P.pdf","pages":42,"status":"completed","priority":5,"notes":"교수님 오픈 질문 — 시계열 CNN, CNN+RNN","selected_pages":[1,2,3,7,10,14,20,21,31,32,35]},
-    {"phase":"B1","subject":"ds","alias":"w2","slug":"2차시_알고리즘_기초와_성능_분석","pdf":"자료구조2주차.pdf","pages":36,"status":"pending","priority":6,"notes":"빅오 100% 출제"},
+    {"phase":"B1","subject":"ds","alias":"w2","slug":"2차시_알고리즘_기초와_성능_분석","pdf":"자료구조2주차.pdf","pages":36,"status":"completed","priority":6,"notes":"빅오 100% 출제","selected_pages":[2,11,17,21,23,26,27,29,32]},
     {"phase":"B2","subject":"ds","alias":"w3","slug":"3차시_순환_vs_반복과_알고리즘_설계_기법","pdf":"자료구조3주차_순환.pdf","pages":37,"status":"pending","priority":7,"notes":"순환 수도코드 결과 예측"},
     {"phase":"B3","subject":"ds","alias":"w4","slug":"4차시_리스트_ADT와_정적_구현","pdf":"자료구조4주차_리스트.pdf","pages":47,"status":"pending","priority":8,"notes":"데이터 Shift 방향"},
     {"phase":"B4a","subject":"dl","alias":"fnn","slug":"3주차_인공신경망의_기초와_딥러닝의_발전","pdf":"DNNs_FNNs.pdf","pages":42,"status":"pending","priority":9,"notes":"Vanishing Gradient, ReLU, Auto-Encoder"},
