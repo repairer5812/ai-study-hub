@@ -29,6 +29,11 @@ if (!meta.hasExam || !meta.sets.length) {
   document.getElementById("no-exam-section").style.display = "block";
 } else {
   document.getElementById("exam-section").style.display = "";
+  // 서술형(essay)은 한 세트당 1문제이므로 mode selector 숨김
+  if (meta.examType === "essay") {
+    const ms = document.getElementById("mode-selector");
+    if (ms) ms.style.display = "none";
+  }
   renderExamSection();
 }
 
