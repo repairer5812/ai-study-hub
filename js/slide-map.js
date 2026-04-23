@@ -65,6 +65,25 @@ export const SLIDE_MAP = {
     },
   },
   dl: {
+    // ──────────────────────────────────────────────────────
+    // 5주차 CNN (58p/2-up 113슬라이드 중 15장 선별, 26% 채택) 🌟 시스템 설계형 시험
+    // 핵심 메커니즘 + 정상급 아키텍처(LeNet/AlexNet/VGG/GoogLeNet/ResNet/DenseNet/SENet/U-Net) 중심 선별
+    // ──────────────────────────────────────────────────────
+    "5주차_CNN_Convolutional_Neural_Networks": {
+      "2.1. Local Receptive Fields (국소 수용 영역)": ["dl_cnn_p03.jpg"],
+      "2.3. Subsampling (Pooling)": ["dl_cnn_p05.jpg", "dl_cnn_p07.jpg"],
+      "3.1. 기본 구성 블록": ["dl_cnn_p08.jpg"],
+      "3.2. 분류(Classification)를 위한 마무리": ["dl_cnn_p10.jpg"],
+      "4.1. LeNet (1998)": ["dl_cnn_p11.jpg"],
+      "6.1. AlexNet (2012)": ["dl_cnn_p15.jpg"],
+      "6.2. VGGNet (2015)": ["dl_cnn_p17.jpg"],
+      "6.3. GoogLeNet / Inception (2015)": ["dl_cnn_p18.jpg", "dl_cnn_p19.jpg"],
+      "7.2. Shortcut Connection (Skip/Highway Connection)": ["dl_cnn_p25.jpg"],
+      "7.3. Bottleneck Design (병목 구조)": ["dl_cnn_p27.jpg"],
+      "8. 🧱 DenseNet (Densely Connected Convolutional Networks)": ["dl_cnn_p33.jpg"],
+      "9. 🎯 Attention 메커니즘의 도입: SENet": ["dl_cnn_p41.jpg"],
+      "11. 🧬 U-Net": ["dl_cnn_p51.jpg"],
+    },
   },
   ml: {
   },
@@ -75,4 +94,5 @@ export const CURATED_SLUGS = new Set([
   "5차시_연결_리스트_단순_원형_이중",
   "6차시_스택과_수식의_계산",
   "7차시_큐_데크_우선순위_큐",
+  "5주차_CNN_Convolutional_Neural_Networks",
 ]);
