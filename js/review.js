@@ -4,6 +4,7 @@
 //   - 체크리스트: md의 `- [ ]` 문법을 checkbox로 렌더하고 localStorage에 진행도 저장
 
 import { getSubjectMeta } from "./subjects/index.js";
+import { SLIDE_MAP, CURATED_SLUGS } from "./slide-map.js";
 
 const params = new URLSearchParams(location.search);
 const subjectId = params.get("s") || "ml";
@@ -101,6 +102,9 @@ async function loadNote(slug) {
     );
     body.innerHTML = html;
 
+    // 섹션별 맥락 슬라이드 삽입 + 기존 끝 갤러리 숨김 (큐레이션 완료 주차만)
+    injectContextSlides(body, slug);
+
     // 체크박스 진행도 복원 + 저장
     hydrateCheckboxes(slug);
 
@@ -128,6 +132,117 @@ async function loadNote(slug) {
         <p class="muted">에러: ${err.message}</p>
       </div>`;
   }
+}
+
+// ── 섹션별 맥락 슬라이드 삽입 ──────────────────────────
+function normalizeKey(s) {
+  // 한글·영숫자만 남기고 소문자화
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[\s ·\-–—:().,'"\[\]{}!?#$%^&*+=/\\|<>~`]/g, "")
+    .replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+function findMatchingKey(headingText, mappingObj) {
+  if (!mappingObj) return null;
+  const hk = normalizeKey(headingText);
+  if (!hk) return null;
+  for (const [key, slides] of Object.entries(mappingObj)) {
+    const exact = key.startsWith("^");
+    const bare = exact ? key.slice(1) : key;
+    const bk = normalizeKey(bare);
+    if (!bk) continue;
+    if (exact) {
+      if (hk === bk) return slides;
+    } else {
+      if (hk.includes(bk) || bk.includes(hk)) return slides;
+    }
+  }
+  return null;
+}
+
+function injectContextSlides(body, slug) {
+  const subjMap = SLIDE_MAP[subjectId] || {};
+  const mapping = subjMap[slug];
+
+  // 1) 큐레이션 완료 주차면 기존 끝 <details> 갤러리 숨김
+  if (CURATED_SLUGS.has(slug)) {
+    const all = body.innerHTML;
+    // AUTO:SLIDES 마커 범위 제거 (marked가 HTML 주석을 그대로 통과시키므로 innerHTML에 포함됨)
+    // marker는 주석이라 그대로 존재할 수도, sanitize됐을 수도 — 양쪽 대응
+    body.innerHTML = all.replace(
+      /<!--\s*AUTO:SLIDES:START\s*-->[\s\S]*?<!--\s*AUTO:SLIDES:END\s*-->/g,
+      ""
+    );
+    // marker 없이 <details>만 남았을 수도 — 직후 렌더된 '강의 슬라이드' 섹션 탐색·제거
+    body.querySelectorAll("h2").forEach(h2 => {
+      if (h2.textContent.includes("강의 슬라이드") && h2.textContent.includes("원본 PDF")) {
+        // 이 h2부터 body 끝까지 전부 제거
+        let node = h2.previousSibling;
+        // h2 위에 hr(---)이 있으면 함께 제거
+        if (node && node.nodeType === 1 && node.tagName === "HR") node.remove();
+        let cursor = h2;
+        while (cursor) {
+          const next = cursor.nextSibling;
+          cursor.remove();
+          cursor = next;
+        }
+      }
+    });
+  }
+
+  // 2) 매핑 없으면 종료
+  if (!mapping || Object.keys(mapping).length === 0) return;
+
+  // 3) 모든 h2·h3 순회하며 해당 섹션 끝에 슬라이드 삽입
+  const headings = body.querySelectorAll("h2, h3");
+  const insertedKeys = new Set();
+  headings.forEach(h => {
+    const slides = findMatchingKey(h.textContent, mapping);
+    if (!slides || slides.length === 0) return;
+    const key = slides.join("|");
+    if (insertedKeys.has(key)) return; // 중복 삽입 방지
+    insertedKeys.add(key);
+
+    const block = document.createElement("div");
+    block.className = "context-slides";
+    block.style.cssText =
+      "margin:10px 0 22px; display:grid; " +
+      "grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px;";
+    slides.forEach(fn => {
+      const img = document.createElement("img");
+      img.src = `assets/images/${subjectId}/${fn}`;
+      img.loading = "lazy";
+      img.alt = fn;
+      img.style.cssText =
+        "width:100%; border:1px solid var(--c-border-soft); " +
+        "border-radius:8px; cursor:zoom-in; background:#fff;";
+      img.addEventListener("click", () => openLightbox(img.src));
+      block.appendChild(img);
+    });
+
+    // 해당 섹션의 '끝'에 삽입 = 다음 같은 레벨 heading 바로 앞
+    // 간단히: h 다음 sibling 앞에 삽입 (h 바로 아래)
+    h.insertAdjacentElement("afterend", block);
+  });
+}
+
+// Lightbox
+let __lightboxEl = null;
+function openLightbox(src) {
+  if (!__lightboxEl) {
+    __lightboxEl = document.createElement("div");
+    __lightboxEl.style.cssText =
+      "position:fixed; inset:0; background:rgba(0,0,0,0.85); " +
+      "display:flex; align-items:center; justify-content:center; z-index:10000; cursor:zoom-out;";
+    __lightboxEl.innerHTML = `<img style="max-width:95vw; max-height:95vh; box-shadow:0 4px 40px rgba(0,0,0,0.4);">`;
+    __lightboxEl.addEventListener("click", () => __lightboxEl.remove());
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && document.body.contains(__lightboxEl)) __lightboxEl.remove();
+    });
+  }
+  __lightboxEl.querySelector("img").src = src;
+  document.body.appendChild(__lightboxEl);
 }
 
 // ── 체크박스 진행도 (localStorage) ───────────────────
