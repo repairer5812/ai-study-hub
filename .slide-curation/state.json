@@ -4,7 +4,7 @@
   "queue": [
     {"phase":"A1","subject":"ds","alias":"w5","slug":"5차시_연결_리스트_단순_원형_이중","pdf":"자료구조5주차_리스트2.pdf","pages":53,"status":"completed","priority":1,"notes":"🌟 시험 8문제 예고 — 14장 선별(26%)","selected_pages":[12,17,18,20,21,25,26,29,34,35,37,38,39,40,41]},
     {"phase":"A2","subject":"ds","alias":"w6","slug":"6차시_스택과_수식의_계산","pdf":"자료구조6주차_스택.pdf","pages":57,"status":"completed","priority":2,"notes":"🌟 시험 3문제 예고 — 수식 계산","selected_pages":[10,13,14,15,21,23,24,32,36,39,40,41,43,44,48]},
-    {"phase":"A3","subject":"ds","alias":"w7","slug":"7차시_큐_데크_우선순위_큐","pdf":"자료구조7주차_큐_queue.pdf","pages":45,"status":"pending","priority":3,"notes":"🌟 족집게 3가지 — 원형 큐 Empty/Full, INQ/DQ"},
+    {"phase":"A3","subject":"ds","alias":"w7","slug":"7차시_큐_데크_우선순위_큐","pdf":"자료구조7주차_큐_queue.pdf","pages":45,"status":"completed","priority":3,"notes":"🌟 족집게 3가지 — 원형 큐 Empty/Full, INQ/DQ","selected_pages":[5,9,14,15,17,18,25,26,35,39,42,43]},
     {"phase":"A4","subject":"dl","alias":"cnn","slug":"5주차_CNN_Convolutional_Neural_Networks","pdf":"CNNs_2P.pdf","pages":58,"status":"pending","priority":4,"notes":"시스템 설계형 시험 — CNN 아키텍처"},
     {"phase":"A5","subject":"dl","alias":"rnn","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"RNN_2P.pdf","pages":42,"status":"pending","priority":5,"notes":"교수님 오픈 질문 — 시계열 CNN, CNN+RNN"},
     {"phase":"B1","subject":"ds","alias":"w2","slug":"2차시_알고리즘_기초와_성능_분석","pdf":"자료구조2주차.pdf","pages":36,"status":"pending","priority":6,"notes":"빅오 100% 출제"},
