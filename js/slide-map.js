@@ -186,6 +186,20 @@ export const SLIDE_MAP = {
     },
   },
   ml: {
+    // ──────────────────────────────────────────────────────
+    // 7주차 평가지표·ROC (49p 중 11장 선별, 22% 채택)
+    // ──────────────────────────────────────────────────────
+    "7주차_평가지표_ROC": {
+      "4. 💡 Confusion Matrix (혼동 행렬)": ["ml_w7_p06.jpg"],
+      "5. 📈 모델 평가 지표 (Evaluation Metrics)": ["ml_w7_p12.jpg"],
+      "6. 🏥 예시를 통한 지표의 한계 이해 (임신 진단 예시)": ["ml_w7_p16.jpg", "ml_w7_p17.jpg"],
+      "7. ⚖️ 💡 데이터 불균형(Class Imbalance) 문제와 Accuracy의 함정": ["ml_w7_p19.jpg"],
+      "8. 🧮 MCC (Matthews Correlation Coefficient)": ["ml_w7_p21.jpg"],
+      "9. 🎚️ 임계값(Threshold) 조정과 Signal Detection Theory": ["ml_w7_p23.jpg"],
+      "10. 📉 💡 ROC Curve": ["ml_w7_p24.jpg", "ml_w7_p26.jpg"],
+      "11. 📐 AUC (Area Under the Curve)": ["ml_w7_p27.jpg"],
+      "13. 🏋️‍♂️ 모델 훈련(Training) 시 클래스 불균형 문제와 해결책": ["ml_w7_p30.jpg"],
+    },
   },
 };
 
@@ -198,6 +212,7 @@ export const CURATED_SLUGS = new Set([
   "3차시_순환_vs_반복과_알고리즘_설계_기법",
   "4차시_리스트_ADT와_정적_구현",
   "1차시_과목_오리엔테이션_및_자료구조_전체_숲보기",
+  "7주차_평가지표_ROC",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
   "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",
