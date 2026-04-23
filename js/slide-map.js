@@ -112,6 +112,19 @@ export const SLIDE_MAP = {
     // 핵심 메커니즘 + 정상급 아키텍처(LeNet/AlexNet/VGG/GoogLeNet/ResNet/DenseNet/SENet/U-Net) 중심 선별
     // ──────────────────────────────────────────────────────
     // ──────────────────────────────────────────────────────
+    // 2주차 ML Overview (31p 중 9장 선별, 29% 채택) — ML vs DL 비교
+    // ──────────────────────────────────────────────────────
+    "2주차_인공지능과_기계학습의_기초": {
+      "2. 💻 전통적 프로그래밍 vs 기계학습 (Traditional Programming vs. ML)": ["dl_overview_p04.jpg"],
+      "5. 🗂️ 기계학습의 종류 및 모델": ["dl_overview_p06.jpg"],
+      "5.1. Supervised Learning (지도 학습)": ["dl_overview_p07.jpg"],
+      "6. 📈 다항식 곡선 피팅 (Polynomial Curve Fitting) 예제": ["dl_overview_p08.jpg"],
+      "7. 📉 손실 함수 (Loss Function / Error Function)": ["dl_overview_p09.jpg"],
+      "8. 🧩 모델의 복잡도와 오버피팅 (Model Complexity & Overfitting)": ["dl_overview_p10.jpg", "dl_overview_p11.jpg"],
+      "9. 🛡️ 오버피팅을 해결하는 방법 (Regularization)": ["dl_overview_p13.jpg"],
+      "10. 🧱 기저 함수 (Linear Basis Function Models)": ["dl_overview_p16.jpg"],
+    },
+    // ──────────────────────────────────────────────────────
     // 3주차 FNN/DNN (FNN 42p + DNN 19p = 61p 중 16장 선별, 26% 채택)
     // Vanishing Gradient·ReLU·Auto-Encoder·Dropout·Adam 계보 집중
     // ──────────────────────────────────────────────────────
@@ -177,6 +190,7 @@ export const CURATED_SLUGS = new Set([
   "3차시_순환_vs_반복과_알고리즘_설계_기법",
   "4차시_리스트_ADT와_정적_구현",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
+  "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",
   "7주차_RNN_Recurrent_Neural_Networks",
 ]);
