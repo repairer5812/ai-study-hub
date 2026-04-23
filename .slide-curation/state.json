@@ -16,7 +16,7 @@
     {"phase":"C1","subject":"ds","alias":"w1","slug":"1차시_과목_오리엔테이션_및_자료구조_전체_숲보기","pdf":"자료구조1주차.pdf","pages":19,"status":"completed","priority":12,"notes":"OT","selected_pages":[5,9]},
     {"phase":"C2a","subject":"dl","alias":"fnn2","slug":"4주차_실습환경_구축_및_PyTorch_기초","pdf":"FNNs_2P.pdf","pages":23,"status":"skipped","priority":13,"notes":"PyTorch 실습 관련 — 코딩 튜토리얼 위주로 큐레이션 스킵","selected_pages":[]},
     {"phase":"C2b","subject":"dl","alias":"lstm_gru","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"LSTM_GRU_2P.pdf","pages":18,"status":"completed","priority":14,"notes":"RNN 확장 (LSTM/GRU) — 7주차 md 섹션 14에 병합","selected_pages":[6,10,17]},
-    {"phase":"C3","subject":"ml","alias":"w7","slug":"7주차_평가지표_ROC","pdf":"BRI507_IntroML_7_Evaluation.pdf","pages":49,"status":"pending","priority":15,"notes":"평가 지표·ROC"},
+    {"phase":"C3","subject":"ml","alias":"w7","slug":"7주차_평가지표_ROC","pdf":"BRI507_IntroML_7_Evaluation.pdf","pages":49,"status":"completed","priority":15,"notes":"평가 지표·ROC","selected_pages":[6,12,16,17,19,21,23,24,26,27,30]},
     {"phase":"C4","subject":"ml","alias":"w2","slug":"2주차_기초_학습법_일반화","pdf":"BRI507_IntroML_2_Intro.pdf","pages":56,"status":"pending","priority":16,"notes":"ML 기초"},
     {"phase":"C5a","subject":"ml","alias":"w3a","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-1.pdf","pages":56,"status":"pending","priority":17,"notes":"선형 회귀"},
     {"phase":"C5b","subject":"ml","alias":"w3b","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-2.pdf","pages":66,"status":"pending","priority":18,"notes":"로지스틱·GLM"},
