@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "updated_at": "2026-04-23",
+  "queue": [
+    {"phase":"A1","subject":"ds","alias":"w5","slug":"5차시_연결_리스트_단순_원형_이중","pdf":"자료구조5주차_리스트2.pdf","pages":53,"status":"completed","priority":1,"notes":"🌟 시험 8문제 예고 — 14장 선별(26%)","selected_pages":[12,17,18,20,21,25,26,29,34,35,37,38,39,40,41]},
+    {"phase":"A2","subject":"ds","alias":"w6","slug":"6차시_스택과_수식의_계산","pdf":"자료구조6주차_스택.pdf","pages":57,"status":"pending","priority":2,"notes":"🌟 시험 3문제 예고 — 수식 계산"},
+    {"phase":"A3","subject":"ds","alias":"w7","slug":"7차시_큐_데크_우선순위_큐","pdf":"자료구조7주차_큐_queue.pdf","pages":45,"status":"pending","priority":3,"notes":"🌟 족집게 3가지 — 원형 큐 Empty/Full, INQ/DQ"},
+    {"phase":"A4","subject":"dl","alias":"cnn","slug":"5주차_CNN_Convolutional_Neural_Networks","pdf":"CNNs_2P.pdf","pages":58,"status":"pending","priority":4,"notes":"시스템 설계형 시험 — CNN 아키텍처"},
+    {"phase":"A5","subject":"dl","alias":"rnn","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"RNN_2P.pdf","pages":42,"status":"pending","priority":5,"notes":"교수님 오픈 질문 — 시계열 CNN, CNN+RNN"},
+    {"phase":"B1","subject":"ds","alias":"w2","slug":"2차시_알고리즘_기초와_성능_분석","pdf":"자료구조2주차.pdf","pages":36,"status":"pending","priority":6,"notes":"빅오 100% 출제"},
+    {"phase":"B2","subject":"ds","alias":"w3","slug":"3차시_순환_vs_반복과_알고리즘_설계_기법","pdf":"자료구조3주차_순환.pdf","pages":37,"status":"pending","priority":7,"notes":"순환 수도코드 결과 예측"},
+    {"phase":"B3","subject":"ds","alias":"w4","slug":"4차시_리스트_ADT와_정적_구현","pdf":"자료구조4주차_리스트.pdf","pages":47,"status":"pending","priority":8,"notes":"데이터 Shift 방향"},
+    {"phase":"B4a","subject":"dl","alias":"fnn","slug":"3주차_인공신경망의_기초와_딥러닝의_발전","pdf":"DNNs_FNNs.pdf","pages":42,"status":"pending","priority":9,"notes":"Vanishing Gradient, ReLU, Auto-Encoder"},
+    {"phase":"B4b","subject":"dl","alias":"dnn","slug":"3주차_인공신경망의_기초와_딥러닝의_발전","pdf":"DNNs_2P.pdf","pages":19,"status":"pending","priority":10,"notes":"DNN 기초 보완 (같은 md에 병합)"},
+    {"phase":"B5","subject":"dl","alias":"overview","slug":"2주차_인공지능과_기계학습의_기초","pdf":"ML_Overview_2P.pdf","pages":31,"status":"pending","priority":11,"notes":"ML vs DL 비교"},
+    {"phase":"C1","subject":"ds","alias":"w1","slug":"1차시_과목_오리엔테이션_및_자료구조_전체_숲보기","pdf":"자료구조1주차.pdf","pages":19,"status":"pending","priority":12,"notes":"OT"},
+    {"phase":"C2a","subject":"dl","alias":"fnn2","slug":"4주차_실습환경_구축_및_PyTorch_기초","pdf":"FNNs_2P.pdf","pages":23,"status":"pending","priority":13,"notes":"PyTorch 실습 관련"},
+    {"phase":"C2b","subject":"dl","alias":"lstm_gru","slug":"7주차_RNN_Recurrent_Neural_Networks","pdf":"LSTM_GRU_2P.pdf","pages":18,"status":"pending","priority":14,"notes":"RNN 확장 (LSTM/GRU) — 7주차 md에 병합"},
+    {"phase":"C3","subject":"ml","alias":"w7","slug":"7주차_평가지표_ROC","pdf":"BRI507_IntroML_7_Evaluation.pdf","pages":49,"status":"pending","priority":15,"notes":"평가 지표·ROC"},
+    {"phase":"C4","subject":"ml","alias":"w2","slug":"2주차_기초_학습법_일반화","pdf":"BRI507_IntroML_2_Intro.pdf","pages":56,"status":"pending","priority":16,"notes":"ML 기초"},
+    {"phase":"C5a","subject":"ml","alias":"w3a","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-1.pdf","pages":56,"status":"pending","priority":17,"notes":"선형 회귀"},
+    {"phase":"C5b","subject":"ml","alias":"w3b","slug":"3주차_선형회귀_로지스틱_GLM","pdf":"BRI507_IntroML_3_Discriminative-2.pdf","pages":66,"status":"pending","priority":18,"notes":"로지스틱·GLM"},
+    {"phase":"C6","subject":"ml","alias":"w4","slug":"4주차_정규화_나이브베이즈_LDA","pdf":"BRI507_IntroML_4_Generative-2.pdf","pages":67,"status":"pending","priority":19,"notes":"정규화·NB·LDA"},
+    {"phase":"C7","subject":"ml","alias":"w5","slug":"5주차_KNN_Tree_Ensemble","pdf":"BRI507_IntroML_5_Nonparametric.pdf","pages":59,"status":"pending","priority":20,"notes":"KNN·Tree"},
+    {"phase":"C8","subject":"ml","alias":"w6","slug":"6주차_SVM_커널","pdf":"BRI507_IntroML_6_SVM.pdf","pages":73,"status":"pending","priority":21,"notes":"SVM·커널"}
+  ],
+  "completed": [],
+  "in_progress": null
+}
