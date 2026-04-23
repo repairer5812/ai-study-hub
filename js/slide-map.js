@@ -192,6 +192,25 @@ export const SLIDE_MAP = {
     // Disc-2 앞 55p는 Disc-1과 완전 동일(중복 제외), 뒷부분 Regularization은 W4에서 처리
     // ──────────────────────────────────────────────────────
     // ──────────────────────────────────────────────────────
+    // 5주차 KNN·Tree·Ensemble (59p 중 14장 선별, 24% 채택)
+    // Parametric vs Non-param → KNN → Decision Tree → Impurity → Ensemble(Bagging/RF/AdaBoost)
+    // ──────────────────────────────────────────────────────
+    "5주차_KNN_Tree_Ensemble": {
+      "3. 파라메트릭(Parametric) 모델 vs 논파라메트릭(Non-Parametric) 모델": ["ml_w5_p03.jpg"],
+      "4.1 기본 컨셉": ["ml_w5_p04.jpg"],
+      "4.3 K값과 결정 경계 (Decision Boundary)": ["ml_w5_p15.jpg"],
+      "5.1 기본 컨셉": ["ml_w5_p16.jpg"],
+      "5.3 Information Gain (정보 획득량)과 Impurity (불순도)": ["ml_w5_p17.jpg"],
+      "5.2 Overfitting과 Pruning (가지치기)": ["ml_w5_p19.jpg"],
+      "5.4 세 가지 Impurity 계산 방식 (매우 중요)": ["ml_w5_p26.jpg", "ml_w5_p29.jpg"],
+      "6. Decision Tree의 한계와 앙상블(Ensemble)의 등장": ["ml_w5_p34.jpg"],
+      "7.1 앙상블은 왜 성능이 더 좋을까?": ["ml_w5_p41.jpg"],
+      "8.1 배깅 (Bagging = Bootstrap Aggregating)": ["ml_w5_p42.jpg"],
+      "8.2 랜덤 포레스트 (Random Forest)": ["ml_w5_p44.jpg"],
+      "9. 부스팅 (Boosting) 과 AdaBoost": ["ml_w5_p49.jpg"],
+      "9.1 AdaBoost (Adaptive Boosting) 알고리즘 스텝": ["ml_w5_p53.jpg"],
+    },
+    // ──────────────────────────────────────────────────────
     // 4주차 정규화·나이브베이즈·LDA (Generative-2 67p 중 11장 + Disc-2 Regularization 4장 = 15장, 22%)
     // Part 1 Regularization은 Disc-2 PDF의 뒤 10p에서 (w3b)
     // Part 2 Bayes / Part 3 NB / Part 4 LDA는 Generative-2 PDF에서 (w4)
@@ -277,6 +296,7 @@ export const CURATED_SLUGS = new Set([
   "2주차_기초_학습법_일반화",
   "3주차_선형회귀_로지스틱_GLM",
   "4주차_정규화_나이브베이즈_LDA",
+  "5주차_KNN_Tree_Ensemble",
   "3주차_인공신경망의_기초와_딥러닝의_발전",
   "2주차_인공지능과_기계학습의_기초",
   "5주차_CNN_Convolutional_Neural_Networks",
