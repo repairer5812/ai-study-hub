@@ -5,14 +5,23 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 랭킹 컬렉션: /leaderboards/{setId}/entries/{entryId}
-    match /leaderboards/{setId}/entries/{entryId} {
+    // 랭킹 컬렉션: /leaderboards/{leaderKey}/entries/{entryId}
+    // leaderKey 규약:
+    //   - "1"~"5"           : 레거시 ML 경로 (기존 데이터 보존)
+    //   - "ml_1"~"ml_5"     : 명시적 ML 경로 (예약, 현재는 사용하지 않음)
+    //   - "ds_1"~"ds_5"     : 데이터사이언스
+    //   - "dl_1"~"dl_5"     : 딥러닝
+    //   - "sec_1"~"sec_5"   : 보안
+    match /leaderboards/{leaderKey}/entries/{entryId} {
 
       // 누구나 읽기 가능 (TOP 랭킹 표시)
       allow read: if true;
 
       // 쓰기는 엄격하게 검증
       allow create: if
+        // 경로 키 화이트리스트: 레거시 1~5 또는 {subject}_{1-5}
+        leaderKey.matches('^([1-5]|ml_[1-5]|ds_[1-5]|dl_[1-5]|sec_[1-5])$') &&
+
         // 필수 필드 타입 체크
         request.resource.data.nickname is string &&
         request.resource.data.score is int &&

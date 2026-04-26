@@ -302,6 +302,7 @@
       try {
         saveNickname(name);
         const res = await submitScore({
+          subjectId,
           setId,
           nickname: name,
           score: score100,
@@ -383,7 +384,7 @@
     const tbody = document.getElementById("ranking-tbody");
     let entries = [];
     try {
-      entries = await fetchTopRanking(setId, 20);
+      entries = await fetchTopRanking(subjectId, setId, 20);
     } catch (e) {
       tbody.innerHTML = `<tr><td colspan="5" class="muted small" style="text-align:center; padding:24px">랭킹을 불러올 수 없습니다</td></tr>`;
       return;

@@ -16,6 +16,13 @@ let _app = null;
 let _db = null;
 
 const NICK_RE = /^[가-힣a-zA-Z0-9_]{1,16}$/;
+const VALID_SUBJECTS = ["ml", "ds", "dl", "sec"];
+
+// 리더보드 경로 키: ml(또는 미지정)은 레거시 그대로 "{setId}",
+// 나머지 과목은 "{subjectId}_{setId}" 로 분리해 기존 ML 데이터를 보존한다.
+function leaderboardPath(subjectId, setId) {
+  return (!subjectId || subjectId === "ml") ? String(setId) : `${subjectId}_${setId}`;
+}
 
 export function initLeaderboard() {
   if (_app && _db) return;
@@ -28,7 +35,7 @@ function ensureDb() {
   return _db;
 }
 
-function validateSubmission({ setId, nickname, score, totalQuestions, durationSec }) {
+function validateSubmission({ subjectId, setId, nickname, score, totalQuestions, durationSec }) {
   if (typeof nickname !== "string" || !NICK_RE.test(nickname)) {
     return "닉네임은 한글·영문·숫자·밑줄 1~16자여야 합니다.";
   }
@@ -37,6 +44,9 @@ function validateSubmission({ setId, nickname, score, totalQuestions, durationSe
   }
   if (!Number.isInteger(setId) || setId < 1 || setId > 5) {
     return "세트 ID는 1~5 사이 정수여야 합니다.";
+  }
+  if (subjectId !== undefined && subjectId !== null && subjectId !== "" && !VALID_SUBJECTS.includes(subjectId)) {
+    return "지원하지 않는 과목입니다.";
   }
   if (totalQuestions !== 30) {
     return "총 문항 수는 30이어야 합니다.";
@@ -47,13 +57,14 @@ function validateSubmission({ setId, nickname, score, totalQuestions, durationSe
   return null;
 }
 
-export async function submitScore({ setId, nickname, score, totalQuestions, durationSec }) {
-  const err = validateSubmission({ setId, nickname, score, totalQuestions, durationSec });
+export async function submitScore({ subjectId, setId, nickname, score, totalQuestions, durationSec }) {
+  const err = validateSubmission({ subjectId, setId, nickname, score, totalQuestions, durationSec });
   if (err) return { ok: false, error: err };
 
   try {
     const db = ensureDb();
-    const ref = collection(db, "leaderboards", String(setId), "entries");
+    const key = leaderboardPath(subjectId, setId);
+    const ref = collection(db, "leaderboards", key, "entries");
     await addDoc(ref, {
       nickname,
       score,
@@ -68,9 +79,10 @@ export async function submitScore({ setId, nickname, score, totalQuestions, dura
   }
 }
 
-export async function fetchTopRanking(setId, max = 20) {
+export async function fetchTopRanking(subjectId, setId, max = 20) {
   const db = ensureDb();
-  const ref = collection(db, "leaderboards", String(setId), "entries");
+  const key = leaderboardPath(subjectId, setId);
+  const ref = collection(db, "leaderboards", key, "entries");
   const snap = await getDocs(ref);
   const out = [];
 
