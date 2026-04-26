@@ -1,10 +1,11 @@
-// subjects/ds.js — 자료구조 모의고사 (100% 객관식, 3세트 × 30문제 = 90문제)
+// subjects/ds.js — 자료구조 모의고사 (100% 객관식, 4세트 × 30문제 = 120문제)
 //
 // 출제 원칙
 // - 교수님 시험 공지: "100% 객관식 선다형"
 // - 족집게 포인트 반영: 2차시 유한성·빅오, 3차시 순환 수도코드 결과,
 //   5차시 연결 리스트 삽입/삭제 8문제, 6차시 수식 계산 3문제,
 //   7차시 원형 큐 Empty/Full · INQ/DQ 시퀀스 예측
+// - 시간복잡도 빈칸 매트릭스(NEW_006~012) · ADT/추상화(NEW_001~005) 신규 보강
 // - 농담·비유 배제. 개념·계산·코드 추적 중심 시험 톤 유지.
 //
 // 스키마 (기계학습 questions.js와 동일)
@@ -12,13 +13,14 @@
 //   question, choices[4], answer(0~3), brief, detailed, source }
 
 export const SETS_META = [
-  { id: 1, title: "SET 1", label: "기본 균형", desc: "전범위 고루 출제" },
-  { id: 2, title: "SET 2", label: "족집게 집중", desc: "교수님 예고 영역" },
-  { id: 3, title: "SET 3", label: "종합 심화", desc: "비교·코드 추적 중심" },
+  { id: 1, title: "SET 1", label: "기본 균형", desc: "전범위 고루 출제 + ADT/매트릭스 도입" },
+  { id: 2, title: "SET 2", label: "족집게 집중", desc: "교수님 예고 영역 (LL·수식·원형 큐)" },
+  { id: 3, title: "SET 3", label: "코드 추적·변별", desc: "심화 hard 위주" },
+  { id: 4, title: "SET 4", label: "통합 모의고사", desc: "전범위 실전 진단" },
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SET 1 — 기본 균형 (Week 2:5 · 3:5 · 4:4 · 5:6 · 6:5 · 7:5 = 30)
+// SET 1 — 기본 균형 (Week 2:5 · 3:3 · 4:2 · 5:6 · 6:7 · 7:7 = 30)
 // ═══════════════════════════════════════════════════════════════
 export const set1 = [
   // ── 2차시 — 알고리즘 기초·빅오 ──
@@ -65,46 +67,37 @@ export const set1 = [
     source: "2차시 § 6.1",
   },
   {
-    id: "DS_S1Q4", set: 1, week: 2, topic: "Worst Case", type: "multiple_choice", difficulty: "medium",
-    question: "빅오 표기법이 일반적으로 어떤 경우를 분석하는 데 사용되는가?",
+    id: "DS_S1Q4", set: 1, week: 2, topic: "ADT 정의", type: "multiple_choice", difficulty: "basic",
+    question: "추상 데이터 타입(ADT, Abstract Data Type)의 정의로 가장 적절한 것은?",
     choices: [
-      "Best Case (최선)",
-      "Average Case (평균)",
-      "Worst Case (최악)",
-      "Typical Case (통상)",
+      "데이터의 물리적 저장 방식까지 함께 명시한 구조",
+      "데이터(객체)와 연산(인터페이스)만을 정의하고 구현 방식은 분리한 개념적 모델",
+      "C 언어의 typedef로 정의한 별칭 자료형",
+      "메모리 주소에 직접 매핑된 자료형",
     ],
-    answer: 2,
-    brief: "빅오는 상한 = Worst Case.",
-    detailed: "빅오는 상한(Upper Bound)이므로 Worst Case 분석에 쓰인다. 부등식의 등호가 성립하는 시점이 Worst Case다.",
-    source: "2차시 § 6.1",
+    answer: 1,
+    brief: "ADT는 What(객체·연산)만 정의, How(구현)은 분리.",
+    detailed: "ADT는 데이터가 '무엇(What)'을 할 수 있는지(객체와 연산)만 정의하고, '어떻게(How)' 구현되는지는 감춘 개념적 명세다. 자료구조는 ADT를 실제 메모리 위에서 구현한 결과물이다.",
+    source: "4차시 § 4.1",
   },
   {
-    id: "DS_S1Q5", set: 1, week: 2, topic: "시간 복잡도 계산", type: "multiple_choice", difficulty: "medium",
-    question: "시간 복잡도 함수 T(n) = 2n² + 3n + 1의 빅오 표기로 옳은 것은?",
-    choices: ["O(n)", "O(n²)", "O(2n²)", "O(2ⁿ)"],
-    answer: 1,
-    brief: "최고차항만 남기고 계수 제거 → O(n²).",
-    detailed: "점근적 표기법에서는 최고차항만 남기고 계수·하위항을 제거한다. 2n² + 3n + 1 → O(n²).",
-    source: "2차시 § 6.1",
+    id: "DS_S1Q5", set: 1, week: 2, topic: "명확성 정의", type: "multiple_choice", difficulty: "basic",
+    question: "알고리즘의 5대 조건 중 '명확성(Definiteness)'의 의미로 옳은 것은?",
+    choices: [
+      "각 명령어가 모호하지 않고 의미가 분명해야 한다",
+      "유한한 단계 안에 반드시 종료되어야 한다",
+      "출력은 반드시 1개 이상 있어야 한다",
+      "각 명령어는 실제로 실행 가능해야 한다",
+    ],
+    answer: 0,
+    brief: "명확성 = 각 명령어가 모호하지 않음.",
+    detailed: "명확성(Definiteness)은 알고리즘의 각 단계가 분명하고 모호함이 없어야 함을 의미한다. '대충 큰 값', '적당히 정렬' 같은 모호한 표현은 명확성을 위반한다.",
+    source: "2차시 § 2.2",
   },
 
-  // ── 3차시 — 순환·반복·알고리즘 설계 ──
+  // ── 3차시 — 순환·반복 ──
   {
-    id: "DS_S1Q6", set: 1, week: 3, topic: "순환 4형태", type: "multiple_choice", difficulty: "medium",
-    question: "함수 호출 직후 추가 연산이 필요 없는 순환 형태를 무엇이라 하는가?",
-    choices: [
-      "Linear Recursion",
-      "Non-tail Recursion",
-      "Tail Recursion",
-      "Binary Recursion",
-    ],
-    answer: 2,
-    brief: "Tail Recursion — 호출이 마지막 동작.",
-    detailed: "Tail Recursion은 함수 호출이 마지막 동작이고 이후 추가 연산이 없는 형태다. 이진 검색이 대표적인 예다.",
-    source: "3차시 § 3",
-  },
-  {
-    id: "DS_S1Q7", set: 1, week: 3, topic: "순환 적합 조건", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q6", set: 1, week: 3, topic: "순환 적합 조건", type: "multiple_choice", difficulty: "medium",
     question: "순환(Recursion)으로 해결하기 적합한 문제의 조건이 아닌 것은?",
     choices: [
       "문제 정의 자체가 순환적일 것",
@@ -118,25 +111,7 @@ export const set1 = [
     source: "3차시 § 4",
   },
   {
-    id: "DS_S1Q8", set: 1, week: 3, topic: "팩토리얼 복잡도", type: "multiple_choice", difficulty: "medium",
-    question: "순환으로 구현한 팩토리얼 factorial(n)의 시간 복잡도는?",
-    choices: ["O(1)", "O(log n)", "O(n)", "O(2ⁿ)"],
-    answer: 2,
-    brief: "팩토리얼 순환은 n번 재귀 호출 → O(n).",
-    detailed: "factorial(n) = n × factorial(n-1)로 n번 재귀 호출되므로 시간 복잡도는 O(n) + α(함수 호출 오버헤드)다.",
-    source: "3차시 § 5.1",
-  },
-  {
-    id: "DS_S1Q9", set: 1, week: 3, topic: "피보나치 복잡도", type: "multiple_choice", difficulty: "hard",
-    question: "순환만으로 구현한 피보나치 fib(n)의 시간 복잡도는?",
-    choices: ["O(n)", "O(n log n)", "O(n²)", "O(2ⁿ)"],
-    answer: 3,
-    brief: "Binary Recursion — 호출마다 2번 재귀.",
-    detailed: "fib(n) = fib(n-1) + fib(n-2)로 매 호출마다 자기 자신을 2번 부르기 때문에 호출 수가 2ⁿ로 증가한다. 메모이제이션 없이는 O(2ⁿ).",
-    source: "3차시 § 5.2",
-  },
-  {
-    id: "DS_S1Q10", set: 1, week: 3, topic: "이진 검색 복잡도", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q7", set: 1, week: 3, topic: "이진 검색 복잡도", type: "multiple_choice", difficulty: "medium",
     question: "정렬된 n개 데이터에 대한 이진 검색(Binary Search)의 시간 복잡도는?",
     choices: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
     answer: 1,
@@ -144,52 +119,24 @@ export const set1 = [
     detailed: "이진 검색은 매 단계 탐색 범위가 절반으로 줄어든다. n = 2^k에서 k = log₂ n이므로 O(log n)이다.",
     source: "3차시 § 5.3",
   },
+  {
+    id: "DS_S1Q8", set: 1, week: 3, topic: "순환 부적합 — 피보나치", type: "multiple_choice", difficulty: "medium",
+    question: "다음 중 '순환으로 풀기 부적합'한 대표적인 예로 가장 적절한 것은?",
+    choices: [
+      "이진 검색 (Binary Search)",
+      "팩토리얼 (factorial)",
+      "메모이제이션 없는 피보나치 (fib)",
+      "하노이 탑",
+    ],
+    answer: 2,
+    brief: "메모이제이션 없는 피보나치는 O(2ⁿ) — 부적합.",
+    detailed: "메모이제이션 없는 순환 피보나치는 fib(n) = fib(n-1) + fib(n-2)로 자기를 두 번 호출하여 동일 부분문제가 중복 계산된다. 시간 복잡도가 O(2ⁿ)으로 폭발하므로 순환으로 풀기 부적합한 대표 사례다. 반복 또는 메모이제이션을 써야 한다.",
+    source: "3차시 § 5.2",
+  },
 
   // ── 4차시 — 리스트 ADT·정적 구현 ──
   {
-    id: "DS_S1Q11", set: 1, week: 4, topic: "정적 vs 동적", type: "multiple_choice", difficulty: "basic",
-    question: "정적(Static) 구현과 동적(Dynamic) 구현에 대한 설명 중 옳은 것은?",
-    choices: [
-      "정적은 런타임에 크기가 결정되고, 동적은 컴파일 타임에 결정된다",
-      "정적은 연속된 메모리, 동적은 비연속 메모리(Heap)를 사용한다",
-      "정적은 삽입·삭제 시 링크만 조작, 동적은 데이터 이동 필요",
-      "동적은 인덱스 접근이 O(1)이다",
-    ],
-    answer: 1,
-    brief: "정적=연속 메모리, 동적=Heap(비연속).",
-    detailed: "정적 구현은 컴파일 타임에 연속된 메모리를 할당받아 인덱스 O(1) 접근이 가능하다. 동적 구현은 런타임에 Heap에서 비연속 메모리를 확보하며 포인터로 연결한다.",
-    source: "4차시 § 1",
-  },
-  {
-    id: "DS_S1Q12", set: 1, week: 4, topic: "데이터 Shift 방향", type: "multiple_choice", difficulty: "medium",
-    question: "정적 리스트에서 중간 위치에 원소를 삽입할 때 데이터 이동(Shift) 방향으로 옳은 것은?",
-    choices: [
-      "맨 앞에서부터 뒤로 한 칸씩 밀어준다",
-      "맨 뒤에서부터 역순으로 한 칸씩 당겨준다",
-      "이동 방향은 결과에 영향을 주지 않는다",
-      "양쪽 끝에서 중앙으로 이동한다",
-    ],
-    answer: 1,
-    brief: "반드시 뒤에서부터 역순으로.",
-    detailed: "앞에서부터 밀면 덮어쓰기가 발생해 데이터가 사라진다. 반드시 맨 뒤 원소부터 한 칸씩 뒤로 당겨야 값이 보존된다.",
-    source: "4차시 § 6.1",
-  },
-  {
-    id: "DS_S1Q13", set: 1, week: 4, topic: "Call by Reference", type: "multiple_choice", difficulty: "medium",
-    question: "Call by Reference(참조 호출)가 사용되는 대표적인 3가지 경우로 거리가 먼 것은?",
-    choices: [
-      "함수에 큰 데이터를 파라미터로 전달할 때",
-      "연결 리스트의 삽입·삭제에서 링크 조작 시",
-      "배열을 함수에 넘길 때 (1차원 배열 이름은 주소 상수)",
-      "기본 자료형(int, char) 하나를 반환할 때",
-    ],
-    answer: 3,
-    brief: "기본 자료형 하나는 값 호출로 충분.",
-    detailed: "Call by Reference 3케이스: ① 함수 파라미터 복사 비용 절감 ② 연결 리스트 링크 조작 ③ 배열 전달. 기본 자료형 반환은 이에 해당하지 않는다.",
-    source: "4차시 § 3",
-  },
-  {
-    id: "DS_S1Q14", set: 1, week: 4, topic: "포인터 크기", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S1Q9", set: 1, week: 4, topic: "포인터 크기", type: "multiple_choice", difficulty: "basic",
     question: "64비트 시스템에서 포인터 변수 자체의 크기는?",
     choices: ["1바이트", "4바이트", "8바이트", "가리키는 자료형에 따라 다름"],
     answer: 2,
@@ -197,10 +144,24 @@ export const set1 = [
     detailed: "포인터는 메모리 주소를 저장하는 변수이며, 64비트 시스템에서는 주소가 64비트(=8바이트)이므로 포인터 변수 크기는 자료형과 무관하게 8바이트다.",
     source: "4차시 § 2.1",
   },
-
-  // ── 5차시 — 연결 리스트 (🌟 교수님 예고 8문제 영역) ──
   {
-    id: "DS_S1Q15", set: 1, week: 5, topic: "단순 LL 삽입 순서", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q10", set: 1, week: 4, topic: "빅오 매트릭스 — 배열", type: "multiple_choice", difficulty: "medium",
+    question: "정적 배열(고정 크기) 기반 리스트의 [접근 / 탐색 / 중간 삽입 / 중간 삭제] 시간 복잡도를 순서대로 옳게 나열한 것은?",
+    choices: [
+      "O(1) / O(n) / O(n) / O(n)",
+      "O(n) / O(n) / O(1) / O(1)",
+      "O(1) / O(log n) / O(1) / O(1)",
+      "O(1) / O(n) / O(1) / O(1)",
+    ],
+    answer: 0,
+    brief: "인덱스 O(1), 탐색·삽입·삭제는 Shift 때문에 O(n).",
+    detailed: "정적 배열은 인덱스 접근이 O(1)이지만, 탐색은 선형 O(n), 중간 삽입·삭제는 데이터 이동(Shift)이 필요해 O(n)이다.",
+    source: "4차시 § 6 / 시간복잡도 매트릭스",
+  },
+
+  // ── 5차시 — 연결 리스트 ──
+  {
+    id: "DS_S1Q11", set: 1, week: 5, topic: "단순 LL 삽입 순서", type: "multiple_choice", difficulty: "medium",
     question: "단순 연결 리스트에서 before 뒤에 new_node를 삽입할 때 올바른 포인터 조작 순서는?",
     choices: [
       "before->link = new_node; new_node->link = before->link;",
@@ -214,21 +175,7 @@ export const set1 = [
     source: "5차시 § 3.3",
   },
   {
-    id: "DS_S1Q16", set: 1, week: 5, topic: "이중 LL 삽입 4단계", type: "multiple_choice", difficulty: "hard",
-    question: "이중 연결 리스트에서 before 뒤에 new_node를 삽입하는 4단계 중 올바른 순서는?",
-    choices: [
-      "① new_node->llink=before  ② new_node->rlink=before->rlink  ③ before->rlink->llink=new_node  ④ before->rlink=new_node",
-      "① before->rlink=new_node  ② new_node->llink=before  ③ new_node->rlink=before->rlink  ④ before->rlink->llink=new_node",
-      "① before->rlink->llink=new_node  ② before->rlink=new_node  ③ new_node->llink=before  ④ new_node->rlink=before->rlink",
-      "① new_node->rlink=before  ② new_node->llink=before->rlink  ③ before->llink=new_node  ④ before->rlink->rlink=new_node",
-    ],
-    answer: 0,
-    brief: "new_node의 양쪽 링크 먼저, before->rlink는 맨 마지막.",
-    detailed: "①② new_node의 llink·rlink를 먼저 설정 → ③ before->rlink(아직 원래의 다음 노드)의 llink를 new_node로 갱신 → ④ 마지막으로 before->rlink를 new_node로 갱신. 순서를 바꾸면 포인터가 끊어진다.",
-    source: "5차시 § 5.2",
-  },
-  {
-    id: "DS_S1Q17", set: 1, week: 5, topic: "원형 LL head 위치", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q12", set: 1, week: 5, topic: "원형 LL head 위치", type: "multiple_choice", difficulty: "medium",
     question: "원형 연결 리스트(Circular Linked List)에서 head 포인터가 일반적으로 가리키는 노드는?",
     choices: [
       "첫 번째 노드",
@@ -242,30 +189,7 @@ export const set1 = [
     source: "5차시 § 4.1",
   },
   {
-    id: "DS_S1Q18", set: 1, week: 5, topic: "이중 LL 삭제", type: "multiple_choice", difficulty: "medium",
-    question: "이중 연결 리스트에서 removed 노드를 삭제할 때의 올바른 조작은?",
-    choices: [
-      "removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink; free(removed);",
-      "free(removed); removed->llink->rlink = removed->rlink;",
-      "removed->llink = NULL; removed->rlink = NULL; free(removed);",
-      "removed->llink->rlink = removed; removed->rlink->llink = removed;",
-    ],
-    answer: 0,
-    brief: "양옆을 먼저 잇고 나서 free.",
-    detailed: "삭제 전에 반드시 양옆 노드를 서로 연결한 뒤 free(removed)를 호출해야 한다. free 먼저 하면 포인터 역참조가 위험해진다.",
-    source: "5차시 § 5.3",
-  },
-  {
-    id: "DS_S1Q19", set: 1, week: 5, topic: "LL 연산 복잡도", type: "multiple_choice", difficulty: "medium",
-    question: "단순 연결 리스트(Singular Linked List)의 addLast 연산 시간 복잡도는?",
-    choices: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-    answer: 2,
-    brief: "마지막 노드를 찾기 위해 전체 순회 필요.",
-    detailed: "단순 연결 리스트는 head만 알기 때문에 마지막 노드에 도달하려면 처음부터 순차 탐색해야 해서 O(n)이다. 원형·이중 원형 LL에서는 O(1)이다.",
-    source: "5차시 § 3",
-  },
-  {
-    id: "DS_S1Q20", set: 1, week: 5, topic: "Memory Leak 방지", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S1Q13", set: 1, week: 5, topic: "Memory Leak 방지", type: "multiple_choice", difficulty: "basic",
     question: "연결 리스트에서 노드를 삭제한 뒤 반드시 수행해야 하는 작업은?",
     choices: [
       "head 포인터를 NULL로 초기화",
@@ -278,10 +202,52 @@ export const set1 = [
     detailed: "malloc으로 Heap에 할당받은 메모리는 반드시 free로 반환해야 한다. 그렇지 않으면 Memory Leak이 발생한다.",
     source: "5차시 § 3.4",
   },
-
-  // ── 6차시 — 스택·수식 계산 (🌟 예고 3문제 영역) ──
   {
-    id: "DS_S1Q21", set: 1, week: 6, topic: "스택 원리", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S1Q14", set: 1, week: 5, topic: "단순 LL addFirst", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트에 addFirst(맨 앞 삽입) 연산을 수행하는 코드의 올바른 순서는?",
+    choices: [
+      "head = new_node; new_node->link = head;",
+      "new_node->link = head; head = new_node;",
+      "new_node->link = NULL; head = new_node;",
+      "head->link = new_node; new_node->link = NULL;",
+    ],
+    answer: 1,
+    brief: "new_node->link 먼저, head 갱신은 마지막.",
+    detailed: "addFirst는 ① new_node->link = head로 기존 첫 노드 주소를 보존한 뒤 ② head = new_node로 head를 갱신해야 한다. 순서를 바꾸면 head를 먼저 바꿔 원래 첫 노드의 주소를 잃는다.",
+    source: "5차시 § 3.2",
+  },
+  {
+    id: "DS_S1Q15", set: 1, week: 5, topic: "빅오 매트릭스 — 단순 LL", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트(Singular Linked List)의 [접근(인덱스) / 탐색(키) / addFirst / addLast] 시간 복잡도를 순서대로 옳게 나열한 것은?",
+    choices: [
+      "O(1) / O(1) / O(1) / O(n)",
+      "O(n) / O(n) / O(1) / O(n)",
+      "O(n) / O(n) / O(n) / O(1)",
+      "O(log n) / O(n) / O(1) / O(1)",
+    ],
+    answer: 1,
+    brief: "단순 LL은 끝까지 가야 하므로 addLast는 O(n).",
+    detailed: "단순 LL은 head만 가지므로 임의 인덱스 접근·탐색은 O(n). addFirst는 head 앞에 끼워넣으면 되므로 O(1). addLast는 마지막 노드까지 순회 필요 → O(n).",
+    source: "5차시 § 3 / 시간복잡도 매트릭스",
+  },
+  {
+    id: "DS_S1Q16", set: 1, week: 5, topic: "LL 빈칸 — 순회", type: "multiple_choice", difficulty: "basic",
+    question: "다음 단순 연결 리스트 순회 코드의 빈칸 ___ 에 들어갈 표현으로 옳은 것은?\n```\nNode *p = head;\nwhile (p != NULL) {\n  ___ ;\n  p = p->link;\n}\n```",
+    choices: [
+      "p = NULL",
+      "printf(\"%d \", p->data)",
+      "p->link = NULL",
+      "free(p)",
+    ],
+    answer: 1,
+    brief: "현재 노드 데이터 사용 후 다음으로 이동.",
+    detailed: "순회 루프는 현재 노드 p의 데이터를 처리(예: 출력)한 뒤 p = p->link로 다음 노드로 이동한다. p = NULL이나 p->link = NULL은 즉시 루프를 끊거나 리스트를 망가뜨린다.",
+    source: "5차시 § 3.5",
+  },
+
+  // ── 6차시 — 스택·수식 계산 ──
+  {
+    id: "DS_S1Q17", set: 1, week: 6, topic: "스택 원리", type: "multiple_choice", difficulty: "basic",
     question: "스택(Stack)의 삽입·삭제 원리로 옳은 것은?",
     choices: [
       "FIFO — 먼저 들어온 것이 먼저 나간다",
@@ -295,8 +261,8 @@ export const set1 = [
     source: "6차시 § 1.1",
   },
   {
-    id: "DS_S1Q22", set: 1, week: 6, topic: "PUSH 코드", type: "multiple_choice", difficulty: "medium",
-    question: "C언어로 정적 구현된 스택에서 PUSH 연산을 올바르게 표현한 것은?",
+    id: "DS_S1Q18", set: 1, week: 6, topic: "PUSH 코드", type: "multiple_choice", difficulty: "medium",
+    question: "C언어로 정적 구현된 스택에서 PUSH 연산을 올바르게 표현한 것은? (top 초기값 = -1)",
     choices: [
       "stack[top++] = item;",
       "stack[++top] = item;",
@@ -309,7 +275,7 @@ export const set1 = [
     source: "6차시 § 3.1",
   },
   {
-    id: "DS_S1Q23", set: 1, week: 6, topic: "Infix→Postfix 변환", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q19", set: 1, week: 6, topic: "Infix→Postfix 변환", type: "multiple_choice", difficulty: "medium",
     question: "중위 표기식 `A / B * C`를 후위 표기식으로 올바르게 변환한 것은?",
     choices: [
       "A B C / *",
@@ -323,7 +289,7 @@ export const set1 = [
     source: "6차시 § 5.2",
   },
   {
-    id: "DS_S1Q24", set: 1, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q20", set: 1, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "medium",
     question: "후위 표기식 `1 2 + 7 *`를 계산한 결과는?",
     choices: ["8", "15", "21", "24"],
     answer: 2,
@@ -332,23 +298,51 @@ export const set1 = [
     source: "6차시 § 7.3",
   },
   {
-    id: "DS_S1Q25", set: 1, week: 6, topic: "icp vs isp", type: "multiple_choice", difficulty: "hard",
-    question: "스택을 이용한 중위→후위 변환에서 새 연산자의 우선순위(icp)가 스택 top 연산자의 우선순위(isp)와 같을 때의 처리는?",
+    id: "DS_S1Q21", set: 1, week: 6, topic: "빅오 매트릭스 — 스택", type: "multiple_choice", difficulty: "basic",
+    question: "배열 기반 스택의 [PUSH / POP / Peek / Search(임의 키)] 시간 복잡도로 옳은 것은?",
     choices: [
-      "즉시 PUSH한다",
-      "스택 top 연산자를 POP하여 출력한 뒤 새 연산자를 PUSH한다",
-      "무시하고 다음 토큰으로 넘어간다",
-      "스택을 비우고 시작한다",
+      "O(1) / O(1) / O(1) / O(n)",
+      "O(1) / O(1) / O(1) / O(1)",
+      "O(n) / O(n) / O(1) / O(n)",
+      "O(log n) / O(log n) / O(1) / O(n)",
+    ],
+    answer: 0,
+    brief: "Top 연산은 모두 O(1), 임의 키 검색은 O(n).",
+    detailed: "PUSH·POP·Peek 모두 top 한 위치에서만 일어나므로 O(1). 다만 임의 키를 찾는 Search는 스택 전체를 훑어야 하므로 O(n)이다.",
+    source: "6차시 § 3 / 시간복잡도 매트릭스",
+  },
+  {
+    id: "DS_S1Q22", set: 1, week: 6, topic: "스택 정적 구현 유리", type: "multiple_choice", difficulty: "medium",
+    question: "스택을 정적(배열)으로 구현해도 일반 리스트와 달리 Shift 오버헤드가 없는 이유는?",
+    choices: [
+      "배열이 아닌 연결 리스트를 쓰기 때문",
+      "삽입·삭제가 top 한 위치에서만 일어나 중간 데이터 이동이 필요 없기 때문",
+      "데이터 타입이 고정되어 있기 때문",
+      "운영체제가 최적화해주기 때문",
     ],
     answer: 1,
-    brief: "isp ≥ icp면 POP 먼저.",
-    detailed: "isp < icp면 PUSH, isp ≥ icp면 조건을 만족할 때까지 POP 후 출력, 그 다음 새 연산자 PUSH. 같을 때도 PUSH가 아니라 POP 먼저다.",
-    source: "6차시 § 6.2",
+    brief: "Top 고정 연산 → 이동 불필요.",
+    detailed: "스택의 PUSH·POP은 모두 배열의 맨 끝(top)에서만 일어나므로 중간 원소를 Shift할 일이 없다. 구현이 단순하고 성능도 좋아 정적 구현이 선호된다.",
+    source: "6차시 § 3.1",
+  },
+  {
+    id: "DS_S1Q23", set: 1, week: 6, topic: "전위식", type: "multiple_choice", difficulty: "basic",
+    question: "수식 표기법 중 '폴란드 표기법(Polish Notation)'으로도 불리는 것은?",
+    choices: [
+      "중위 표기식 (Infix)",
+      "전위 표기식 (Prefix)",
+      "후위 표기식 (Postfix)",
+      "역폴란드 표기식 (Reverse Polish)",
+    ],
+    answer: 1,
+    brief: "전위식 = Polish Notation.",
+    detailed: "폴란드 수학자 얀 우카시에비치가 고안한 표기법이 전위식(Prefix). 후위식은 그 역(Reverse Polish)이다.",
+    source: "6차시 § 4.1",
   },
 
-  // ── 7차시 — 큐·데크·우선순위 큐 (🌟 족집게 3가지) ──
+  // ── 7차시 — 큐·데크·우선순위 큐 ──
   {
-    id: "DS_S1Q26", set: 1, week: 7, topic: "큐 원리", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S1Q24", set: 1, week: 7, topic: "큐 원리", type: "multiple_choice", difficulty: "basic",
     question: "큐(Queue)에 대한 설명으로 옳은 것은?",
     choices: [
       "LIFO 구조로 한쪽 끝에서 삽입·삭제",
@@ -362,7 +356,7 @@ export const set1 = [
     source: "7차시 § 1",
   },
   {
-    id: "DS_S1Q27", set: 1, week: 7, topic: "원형 큐 초기값", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q25", set: 1, week: 7, topic: "원형 큐 초기값", type: "multiple_choice", difficulty: "medium",
     question: "원형 큐(Circular Queue)의 front와 rear 초기값으로 옳은 것은?",
     choices: [
       "front = -1, rear = -1",
@@ -376,7 +370,7 @@ export const set1 = [
     source: "7차시 § 3.2",
   },
   {
-    id: "DS_S1Q28", set: 1, week: 7, topic: "원형 큐 Empty", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S1Q26", set: 1, week: 7, topic: "원형 큐 Empty", type: "multiple_choice", difficulty: "basic",
     question: "원형 큐(Circular Queue)의 Empty 조건은?",
     choices: [
       "front == rear",
@@ -390,21 +384,7 @@ export const set1 = [
     source: "7차시 § 3.2",
   },
   {
-    id: "DS_S1Q29", set: 1, week: 7, topic: "원형 큐 Full", type: "multiple_choice", difficulty: "medium",
-    question: "크기가 MAX_SIZE인 원형 큐의 Full 조건은?",
-    choices: [
-      "rear == MAX_SIZE - 1",
-      "front == rear",
-      "(rear + 1) % MAX_SIZE == front",
-      "rear - front == MAX_SIZE",
-    ],
-    answer: 2,
-    brief: "(rear+1) % MAX == front.",
-    detailed: "원형 큐는 Empty와 Full을 구분하려고 한 칸을 비워둔다. Full 조건은 (rear + 1) % MAX_SIZE == front이며, 실제 최대 저장 개수는 MAX_SIZE - 1이다.",
-    source: "7차시 § 3.2",
-  },
-  {
-    id: "DS_S1Q30", set: 1, week: 7, topic: "우선순위 큐 구현", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S1Q27", set: 1, week: 7, topic: "우선순위 큐 구현", type: "multiple_choice", difficulty: "medium",
     question: "우선순위 큐(Priority Queue)를 효율적으로 구현할 때 주로 사용되는 자료구조는?",
     choices: [
       "단순 연결 리스트",
@@ -417,14 +397,71 @@ export const set1 = [
     detailed: "우선순위 큐는 이름이 '큐'이지만 선형 자료구조로는 효율적 구현이 어렵다. 트리 기반의 힙(Max Heap/Min Heap)으로 구현해야 삽입·삭제가 O(log n)로 가능하다.",
     source: "7차시 § 6.3",
   },
+  {
+    id: "DS_S1Q28", set: 1, week: 7, topic: "빅오 매트릭스 — 원형 큐", type: "multiple_choice", difficulty: "basic",
+    question: "원형 큐(배열 기반)의 [Enqueue / Dequeue / Peek / Search(임의 키)] 시간 복잡도로 옳은 것은?",
+    choices: [
+      "O(1) / O(1) / O(1) / O(n)",
+      "O(n) / O(n) / O(n) / O(n)",
+      "O(1) / O(n) / O(1) / O(n)",
+      "O(log n) / O(log n) / O(1) / O(n)",
+    ],
+    answer: 0,
+    brief: "양 끝 연산은 O(1), 임의 키 Search는 O(n).",
+    detailed: "원형 큐는 rear와 front 인덱스만 갱신하면 되므로 Enqueue·Dequeue·Peek 모두 O(1). 임의 키를 찾는 Search는 큐 전체를 훑으므로 O(n).",
+    source: "7차시 § 3 / 시간복잡도 매트릭스",
+  },
+  {
+    id: "DS_S1Q29", set: 1, week: 7, topic: "데크 응용", type: "multiple_choice", difficulty: "medium",
+    question: "데크(Deque)가 가장 자연스럽게 활용되는 사례로 적절한 것은?",
+    choices: [
+      "병원 응급실의 환자 처리 순서 결정",
+      "은행 창구의 일반 대기 줄",
+      "텍스트 에디터의 양방향 Undo·Redo 또는 슬라이딩 윈도우 최댓값",
+      "프린터 작업 대기열",
+    ],
+    answer: 2,
+    brief: "양쪽 끝 연산이 모두 필요한 응용 = 데크.",
+    detailed: "데크(Deque, Double-Ended Queue)는 양쪽 끝에서 모두 삽입·삭제가 가능한 자료구조다. 텍스트 에디터의 양방향 Undo·Redo, 슬라이딩 윈도우 최댓값처럼 양 끝에서 작업이 발생하는 경우에 적합하다. 응급실은 우선순위 큐, 은행·프린터는 일반 큐.",
+    source: "7차시 § 5",
+  },
+  {
+    id: "DS_S1Q30", set: 1, week: 7, topic: "우선순위 큐 구현법", type: "multiple_choice", difficulty: "medium",
+    question: "우선순위 큐를 배열이나 단순 연결 리스트로 구현하지 않는 이유로 가장 적절한 것은?",
+    choices: [
+      "C 언어에서 지원되지 않기 때문",
+      "삽입·삭제 시 매번 전체를 탐색해야 해서 효율이 떨어지기 때문",
+      "메모리 사용량이 너무 많기 때문",
+      "우선순위를 부여할 수 없기 때문",
+    ],
+    answer: 1,
+    brief: "선형 자료는 우선순위 유지에 O(n) 필요.",
+    detailed: "배열·리스트로는 삽입 위치 찾기 또는 최대/최소 찾기에 O(n)이 든다. 힙(Heap)으로 구현하면 둘 다 O(log n)으로 가능하다.",
+    source: "7차시 § 6.3",
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SET 2 — 족집게 집중 (Week 2:4 · 3:4 · 5:8 · 6:8 · 7:6 = 30)
+// SET 2 — 족집게 집중 (Week 2:5 · 3:3 · 4:3 · 5:8 · 6:5 · 7:6 = 30)
 // ═══════════════════════════════════════════════════════════════
 export const set2 = [
+  // ── 2차시 — 알고리즘 기초·빅오 ──
   {
-    id: "DS_S2Q1", set: 2, week: 2, topic: "빅오 종류", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S2Q1", set: 2, week: 2, topic: "Worst Case", type: "multiple_choice", difficulty: "medium",
+    question: "빅오 표기법이 일반적으로 어떤 경우를 분석하는 데 사용되는가?",
+    choices: [
+      "Best Case (최선)",
+      "Average Case (평균)",
+      "Worst Case (최악)",
+      "Typical Case (통상)",
+    ],
+    answer: 2,
+    brief: "빅오는 상한 = Worst Case.",
+    detailed: "빅오는 상한(Upper Bound)이므로 Worst Case 분석에 쓰인다. 부등식의 등호가 성립하는 시점이 Worst Case다.",
+    source: "2차시 § 6.1",
+  },
+  {
+    id: "DS_S2Q2", set: 2, week: 2, topic: "빅오 종류", type: "multiple_choice", difficulty: "basic",
     question: "다음 시간 복잡도들을 효율적인(빠른) 순서대로 나열한 것으로 옳은 것은?",
     choices: [
       "O(1) < O(n) < O(log n) < O(n²)",
@@ -438,39 +475,51 @@ export const set2 = [
     source: "2차시 § 6.3",
   },
   {
-    id: "DS_S2Q2", set: 2, week: 2, topic: "빅오 계산", type: "multiple_choice", difficulty: "medium",
-    question: "T(n) = 5 × 2ⁿ + 3n²의 빅오 표기는?",
-    choices: ["O(n²)", "O(2ⁿ)", "O(5 × 2ⁿ)", "O(n² × 2ⁿ)"],
-    answer: 1,
-    brief: "지수 항이 다항 항을 압도 → O(2ⁿ).",
-    detailed: "지수 항 2ⁿ은 다항 n²보다 훨씬 빠르게 증가하므로 최고차 항은 2ⁿ이다. 계수는 제거 → O(2ⁿ).",
-    source: "2차시 § 6.1",
-  },
-  {
-    id: "DS_S2Q3", set: 2, week: 2, topic: "Polynomial vs Exponential", type: "multiple_choice", difficulty: "medium",
-    question: "컴퓨터로 일반적으로 해결 가능한(Polynomial) 복잡도 범위에 해당하지 않는 것은?",
-    choices: ["O(n)", "O(n²)", "O(n³)", "O(2ⁿ)"],
-    answer: 3,
-    brief: "O(2ⁿ)는 지수형(Exponential).",
-    detailed: "다항식(Polynomial) 범위는 O(1) ~ O(n³) (느슨하게 O(n⁴)까지)로 해결 가능하다. O(2ⁿ), O(n!)은 지수·팩토리얼형으로 해결이 비효율적이다.",
-    source: "2차시 § 6.4",
-  },
-  {
-    id: "DS_S2Q4", set: 2, week: 2, topic: "Big-Ω", type: "multiple_choice", difficulty: "hard",
-    question: "빅 오메가(Big-Ω) 표기법이 나타내는 것은?",
+    id: "DS_S2Q3", set: 2, week: 2, topic: "유효성 정의", type: "multiple_choice", difficulty: "basic",
+    question: "알고리즘 5조건 중 '유효성(Effectiveness)'의 의미로 가장 적절한 것은?",
     choices: [
-      "상한(Upper Bound) — Worst Case",
-      "하한(Lower Bound) — Best Case",
-      "상한과 하한이 일치할 때만 성립",
-      "평균 복잡도",
+      "각 명령어는 실제로 실행 가능한 연산이어야 한다",
+      "출력은 반드시 1개 이상이어야 한다",
+      "각 명령어는 모호함이 없어야 한다",
+      "유한 단계 안에 종료되어야 한다",
+    ],
+    answer: 0,
+    brief: "유효성 = 실제로 실행 가능한 연산.",
+    detailed: "유효성(Effectiveness)은 각 명령이 컴퓨터로 실제 수행 가능한 연산이어야 함을 뜻한다. 예를 들어 '0으로 나누기'는 정의상 모호하지 않더라도 실행 불가능하므로 유효성을 위반한다.",
+    source: "2차시 § 2.2",
+  },
+  {
+    id: "DS_S2Q4", set: 2, week: 2, topic: "입력/출력 조건", type: "multiple_choice", difficulty: "basic",
+    question: "알고리즘 5조건 중 입력·출력에 대한 설명으로 옳은 것은?",
+    choices: [
+      "입력은 1개 이상, 출력은 0개 이상이어야 한다",
+      "입력은 0개 이상이어도 되지만, 출력은 반드시 1개 이상이어야 한다",
+      "입력·출력 모두 1개 이상이어야 한다",
+      "입력·출력 모두 0개라도 알고리즘이 성립한다",
     ],
     answer: 1,
-    brief: "Ω는 하한 = Best Case.",
-    detailed: "빅오(O)는 상한, 빅 오메가(Ω)는 하한(Best Case), 빅 세타(Θ)는 상한과 하한이 일치할 때 쓴다.",
-    source: "2차시 § 6.2",
+    brief: "입력 0+, 출력 1+.",
+    detailed: "입력은 외부에서 받지 않을 수도 있으므로 0개 이상이면 된다. 그러나 출력이 없으면 결과를 확인할 수 없으므로 반드시 1개 이상이어야 한다. 출력 없는 절차는 알고리즘으로 인정되지 않는다.",
+    source: "2차시 § 2.2",
   },
   {
-    id: "DS_S2Q5", set: 2, week: 3, topic: "factorial 결과", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S2Q5", set: 2, week: 2, topic: "빅오 부등식", type: "multiple_choice", difficulty: "medium",
+    question: "f(n) = O(g(n))의 정의에서 \"어떤 양의 상수 c와 n₀가 존재하여 모든 n ≥ n₀에 대해 ___ 가 성립한다\"의 빈칸에 들어갈 식은?",
+    choices: [
+      "|f(n)| ≥ c · |g(n)|",
+      "|f(n)| ≤ c · |g(n)|",
+      "|f(n)| = c · |g(n)|",
+      "f(n) < g(n)",
+    ],
+    answer: 1,
+    brief: "상한 정의: |f(n)| ≤ c·|g(n)|.",
+    detailed: "빅오는 상한이므로 부등호 방향이 ≤ 다. ≥ 방향이면 빅 오메가(Ω, 하한). 등호일 때만 빅 세타(Θ).",
+    source: "2차시 § 6.1",
+  },
+
+  // ── 3차시 — 순환 ──
+  {
+    id: "DS_S2Q6", set: 2, week: 3, topic: "factorial 결과", type: "multiple_choice", difficulty: "medium",
     question: "다음 순환 함수의 결과 factorial(4)는?\n```\nfactorial(n):\n  if n == 0: return 1\n  else: return n * factorial(n-1)\n```",
     choices: ["6", "12", "24", "120"],
     answer: 2,
@@ -479,22 +528,13 @@ export const set2 = [
     source: "3차시 § 5.1",
   },
   {
-    id: "DS_S2Q6", set: 2, week: 3, topic: "fib 중복 호출", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S2Q7", set: 2, week: 3, topic: "fib 중복 호출", type: "multiple_choice", difficulty: "hard",
     question: "순환 피보나치 fib(6) 계산 시, fib(0)이 호출되는 횟수는? (메모이제이션 없음)",
     choices: ["1회", "3회", "5회", "8회"],
     answer: 3,
     brief: "fib(6)에서 fib(0)은 8회 호출.",
     detailed: "피보나치 순환은 매 호출마다 자기를 2번 재귀 호출하는 Binary Recursion이라 중복 계산이 심하다. fib(6) 전개 시 fib(0)은 정확히 8회 불린다.",
     source: "3차시 § 5.2",
-  },
-  {
-    id: "DS_S2Q7", set: 2, week: 3, topic: "메모이제이션", type: "multiple_choice", difficulty: "medium",
-    question: "메모이제이션(Memoization)을 적용한 피보나치의 시간 복잡도는?",
-    choices: ["O(log n)", "O(n)", "O(n²)", "O(2ⁿ)"],
-    answer: 1,
-    brief: "중복 제거 → O(n).",
-    detailed: "메모이제이션은 이미 계산한 fib(k)를 저장하여 재호출을 막는다. 모든 fib(0) ~ fib(n)을 한 번씩만 계산하므로 O(n).",
-    source: "3차시 § 7.2",
   },
   {
     id: "DS_S2Q8", set: 2, week: 3, topic: "이진 검색 단계 수", type: "multiple_choice", difficulty: "medium",
@@ -505,8 +545,91 @@ export const set2 = [
     detailed: "이진 검색 최악 비교 횟수는 ⌈log₂ n⌉. n=64 → log₂ 64 = 6. 매 단계 범위가 절반으로 줄어든다.",
     source: "3차시 § 5.3",
   },
+
+  // ── 4차시 — 리스트 ADT ──
   {
-    id: "DS_S2Q9", set: 2, week: 5, topic: "단순 LL 삽입 3경우", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S2Q9", set: 2, week: 4, topic: "데이터 Shift 방향", type: "multiple_choice", difficulty: "medium",
+    question: "정적 리스트에서 중간 위치에 원소를 삽입할 때 데이터 이동(Shift) 방향으로 옳은 것은?",
+    choices: [
+      "맨 앞에서부터 뒤로 한 칸씩 밀어준다",
+      "맨 뒤에서부터 역순으로 한 칸씩 당겨준다",
+      "이동 방향은 결과에 영향을 주지 않는다",
+      "양쪽 끝에서 중앙으로 이동한다",
+    ],
+    answer: 1,
+    brief: "반드시 뒤에서부터 역순으로.",
+    detailed: "앞에서부터 밀면 덮어쓰기가 발생해 데이터가 사라진다. 반드시 맨 뒤 원소부터 한 칸씩 뒤로 당겨야 값이 보존된다.",
+    source: "4차시 § 6.1",
+  },
+  {
+    id: "DS_S2Q10", set: 2, week: 4, topic: "Call by Reference", type: "multiple_choice", difficulty: "medium",
+    question: "Call by Reference(참조 호출)가 사용되는 대표적인 3가지 경우로 거리가 먼 것은?",
+    choices: [
+      "함수에 큰 데이터를 파라미터로 전달할 때",
+      "연결 리스트의 삽입·삭제에서 링크 조작 시",
+      "배열을 함수에 넘길 때 (1차원 배열 이름은 주소 상수)",
+      "기본 자료형(int, char) 하나를 반환할 때",
+    ],
+    answer: 3,
+    brief: "기본 자료형 하나는 값 호출로 충분.",
+    detailed: "Call by Reference 3케이스: ① 함수 파라미터 복사 비용 절감 ② 연결 리스트 링크 조작 ③ 배열 전달. 기본 자료형 반환은 이에 해당하지 않는다.",
+    source: "4차시 § 3",
+  },
+  {
+    id: "DS_S2Q11", set: 2, week: 4, topic: "ADT 구성요소", type: "multiple_choice", difficulty: "medium",
+    question: "ADT(추상 데이터 타입)의 구성요소로 일반적으로 명세에 포함되지 않는 것은?",
+    choices: [
+      "객체(Object) 정의",
+      "연산(Operation)의 인터페이스 명세",
+      "각 연산의 사전·사후 조건",
+      "메모리 상의 물리적 저장 형태",
+    ],
+    answer: 3,
+    brief: "물리적 저장은 구현(How)이며 ADT 명세 대상이 아님.",
+    detailed: "ADT는 객체·연산·각 연산의 사전·사후 조건만 정의한다. 메모리 상에서 어떤 자료구조로 저장되는지는 구현(자료구조)의 영역이며 ADT 명세에는 포함되지 않는다.",
+    source: "4차시 § 4.1",
+  },
+
+  // ── 5차시 — 연결 리스트 (예고 영역) ──
+  {
+    id: "DS_S2Q12", set: 2, week: 5, topic: "이중 LL 삽입 4단계", type: "multiple_choice", difficulty: "hard",
+    question: "이중 연결 리스트에서 before 뒤에 new_node를 삽입하는 4단계 중 올바른 순서는?",
+    choices: [
+      "① new_node->llink=before  ② new_node->rlink=before->rlink  ③ before->rlink->llink=new_node  ④ before->rlink=new_node",
+      "① before->rlink=new_node  ② new_node->llink=before  ③ new_node->rlink=before->rlink  ④ before->rlink->llink=new_node",
+      "① before->rlink->llink=new_node  ② before->rlink=new_node  ③ new_node->llink=before  ④ new_node->rlink=before->rlink",
+      "① new_node->rlink=before  ② new_node->llink=before->rlink  ③ before->llink=new_node  ④ before->rlink->rlink=new_node",
+    ],
+    answer: 0,
+    brief: "new_node의 양쪽 링크 먼저, before->rlink는 맨 마지막.",
+    detailed: "①② new_node의 llink·rlink를 먼저 설정 → ③ before->rlink(아직 원래의 다음 노드)의 llink를 new_node로 갱신 → ④ 마지막으로 before->rlink를 new_node로 갱신. 순서를 바꾸면 포인터가 끊어진다.",
+    source: "5차시 § 5.2",
+  },
+  {
+    id: "DS_S2Q13", set: 2, week: 5, topic: "이중 LL 삭제", type: "multiple_choice", difficulty: "medium",
+    question: "이중 연결 리스트에서 removed 노드를 삭제할 때의 올바른 조작은?",
+    choices: [
+      "removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink; free(removed);",
+      "free(removed); removed->llink->rlink = removed->rlink;",
+      "removed->llink = NULL; removed->rlink = NULL; free(removed);",
+      "removed->llink->rlink = removed; removed->rlink->llink = removed;",
+    ],
+    answer: 0,
+    brief: "양옆을 먼저 잇고 나서 free.",
+    detailed: "삭제 전에 반드시 양옆 노드를 서로 연결한 뒤 free(removed)를 호출해야 한다. free 먼저 하면 포인터 역참조가 위험해진다.",
+    source: "5차시 § 5.3",
+  },
+  {
+    id: "DS_S2Q14", set: 2, week: 5, topic: "LL 연산 복잡도", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트(Singular Linked List)의 addLast 연산 시간 복잡도는?",
+    choices: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    answer: 2,
+    brief: "마지막 노드를 찾기 위해 전체 순회 필요.",
+    detailed: "단순 연결 리스트는 head만 알기 때문에 마지막 노드에 도달하려면 처음부터 순차 탐색해야 해서 O(n)이다. 원형·이중 원형 LL에서는 O(1)이다.",
+    source: "5차시 § 3",
+  },
+  {
+    id: "DS_S2Q15", set: 2, week: 5, topic: "단순 LL 삽입 3경우", type: "multiple_choice", difficulty: "medium",
     question: "단순 연결 리스트 삽입에서 head 포인터가 변경되는 경우에 해당하지 않는 것은?",
     choices: [
       "빈 리스트에 최초 노드를 삽입할 때",
@@ -520,7 +643,7 @@ export const set2 = [
     source: "5차시 § 3.2",
   },
   {
-    id: "DS_S2Q10", set: 2, week: 5, topic: "LL 삽입 코드 식별", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S2Q16", set: 2, week: 5, topic: "LL 삽입 코드 식별", type: "multiple_choice", difficulty: "hard",
     question: "다음 코드 중 단순 연결 리스트에서 올바른 중간 삽입을 수행하는 것은?\n(A) `before->link = new_node; new_node->link = before->link;`\n(B) `new_node->link = before->link; before->link = new_node;`\n(C) `new_node->link = before; before = new_node;`\n(D) `before->link = new_node; new_node = before->link;`",
     choices: ["(A)", "(B)", "(C)", "(D)"],
     answer: 1,
@@ -529,16 +652,7 @@ export const set2 = [
     source: "5차시 § 3.3",
   },
   {
-    id: "DS_S2Q11", set: 2, week: 5, topic: "원형 LL addLast", type: "multiple_choice", difficulty: "medium",
-    question: "원형 연결 리스트에서 addLast 연산의 시간 복잡도는? (head가 마지막 노드를 가리킴)",
-    choices: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-    answer: 0,
-    brief: "head = 마지막 → O(1).",
-    detailed: "원형 연결 리스트는 head가 마지막 노드를 가리키므로 addLast 시 head->link를 통해 첫 노드에 O(1)로 접근·삽입 후 head를 갱신하면 된다.",
-    source: "5차시 § 4.2",
-  },
-  {
-    id: "DS_S2Q12", set: 2, week: 5, topic: "이중 LL 삽입 오류", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S2Q17", set: 2, week: 5, topic: "이중 LL 삽입 오류", type: "multiple_choice", difficulty: "hard",
     question: "이중 연결 리스트 삽입에서 다음 순서로 코드를 작성했을 때 발생하는 문제는?\n```\n① before->rlink = new_node;\n② new_node->rlink = before->rlink;\n③ new_node->llink = before;\n④ before->rlink->llink = new_node;\n```",
     choices: [
       "오류 없이 정상 동작",
@@ -552,63 +666,37 @@ export const set2 = [
     source: "5차시 § 5.2",
   },
   {
-    id: "DS_S2Q13", set: 2, week: 5, topic: "이중 LL 삭제 순서", type: "multiple_choice", difficulty: "hard",
-    question: "이중 연결 리스트에서 removed 노드를 삭제하는 올바른 순서의 코드는?",
+    id: "DS_S2Q18", set: 2, week: 5, topic: "이중 LL addFirst", type: "multiple_choice", difficulty: "hard",
+    question: "이중 연결 리스트에 addFirst(head 앞에 new_node 삽입)를 수행하는 4단계의 올바른 순서는? (head는 첫 노드를 가리킴, 비어있지 않다고 가정)",
     choices: [
-      "free(removed); removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink;",
-      "removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink; free(removed);",
-      "removed->llink = NULL; removed->rlink = NULL; free(removed);",
-      "removed = NULL; free(removed);",
+      "① new_node->rlink = head  ② new_node->llink = NULL  ③ head->llink = new_node  ④ head = new_node",
+      "① head = new_node  ② new_node->rlink = head  ③ new_node->llink = NULL  ④ head->llink = new_node",
+      "① head->llink = new_node  ② head = new_node  ③ new_node->rlink = head  ④ new_node->llink = NULL",
+      "① new_node->llink = head  ② new_node->rlink = head->rlink  ③ head->rlink = new_node  ④ head = new_node",
+    ],
+    answer: 0,
+    brief: "new_node 양쪽 링크 → head의 llink → head 갱신.",
+    detailed: "addFirst는 ① new_node->rlink로 기존 head 주소 보존 ② new_node->llink = NULL (맨 앞이므로) ③ 기존 head의 llink를 new_node로 ④ head = new_node로 head 갱신. ②와 ①의 순서는 무관하지만 ④ head 갱신은 반드시 ③ 이후여야 한다.",
+    source: "5차시 § 5.2",
+  },
+  {
+    id: "DS_S2Q19", set: 2, week: 5, topic: "빅오 매트릭스 — 이중 LL", type: "multiple_choice", difficulty: "medium",
+    question: "이중 연결 리스트(Doubly LL, head 만 보유)의 [임의 인덱스 접근 / addFirst / 노드가 주어진 삽입 / 노드가 주어진 삭제] 시간 복잡도로 옳은 것은?",
+    choices: [
+      "O(1) / O(1) / O(1) / O(1)",
+      "O(n) / O(1) / O(1) / O(1)",
+      "O(n) / O(n) / O(n) / O(n)",
+      "O(log n) / O(1) / O(1) / O(n)",
     ],
     answer: 1,
-    brief: "양옆 재연결 → free.",
-    detailed: "반드시 removed의 양옆 노드를 서로 연결한 뒤 free를 호출한다. free를 먼저 하면 이후 removed->llink 등 역참조가 위험하다.",
-    source: "5차시 § 5.3",
+    brief: "노드 주소가 주어지면 양쪽 링크 갱신 O(1).",
+    detailed: "이중 LL은 임의 인덱스 접근은 head부터 순회해 O(n)이지만, 노드 주소가 주어졌다면 양쪽 링크만 갱신하면 되므로 삽입·삭제 O(1). addFirst도 head 앞에 끼우면 되므로 O(1).",
+    source: "5차시 § 5 / 시간복잡도 매트릭스",
   },
+
+  // ── 6차시 — 스택·수식 (예고 영역) ──
   {
-    id: "DS_S2Q14", set: 2, week: 5, topic: "원형 LL head 의미", type: "multiple_choice", difficulty: "medium",
-    question: "원형 연결 리스트에서 head가 마지막 노드를 가리키는 설계의 핵심 이점은?",
-    choices: [
-      "메모리를 절약한다",
-      "addFirst와 addLast 모두 O(1)로 구현 가능",
-      "중간 삽입이 O(1)이 된다",
-      "역방향 탐색이 O(1)이 된다",
-    ],
-    answer: 1,
-    brief: "맨 앞·맨 뒤 모두 O(1) 접근.",
-    detailed: "head가 마지막 노드를 가리키면 head->link가 첫 노드이므로 addFirst는 O(1). 마지막 노드도 head이므로 addLast도 O(1).",
-    source: "5차시 § 4.1",
-  },
-  {
-    id: "DS_S2Q15", set: 2, week: 5, topic: "이중 원형 LL", type: "multiple_choice", difficulty: "medium",
-    question: "이중 원형 연결 리스트(Doubly Circular Linked List)의 특성으로 옳은 것은?",
-    choices: [
-      "addFirst O(1), addLast O(n), 역방향 탐색 불가",
-      "addFirst O(1), addLast O(1), 역방향 탐색 가능",
-      "addFirst O(n), addLast O(n), 역방향 탐색 가능",
-      "인덱스 랜덤 접근 O(1)",
-    ],
-    answer: 1,
-    brief: "양방향 링크 + 원형 = 모든 연산 O(1) + 역방향 가능.",
-    detailed: "이중 원형은 원형의 양끝 O(1) 장점과 이중의 역방향 탐색 가능성을 모두 가진다. 실무에서 가장 많이 사용되는 형태다.",
-    source: "5차시 § 5 / 6차시 § 0.2",
-  },
-  {
-    id: "DS_S2Q16", set: 2, week: 5, topic: "free 누락 결과", type: "multiple_choice", difficulty: "basic",
-    question: "연결 리스트에서 노드 삭제 후 free()를 호출하지 않으면 발생하는 현상은?",
-    choices: [
-      "Segmentation Fault",
-      "Stack Overflow",
-      "Memory Leak",
-      "Heap Overflow",
-    ],
-    answer: 2,
-    brief: "Heap 할당 후 해제하지 않음 = Memory Leak.",
-    detailed: "malloc으로 Heap에 할당받은 메모리를 free로 반환하지 않으면 사용 가능한 메모리가 점진적으로 줄어드는 Memory Leak이 발생한다.",
-    source: "5차시 § 3.4",
-  },
-  {
-    id: "DS_S2Q17", set: 2, week: 6, topic: "Infix→Postfix", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S2Q20", set: 2, week: 6, topic: "Infix→Postfix", type: "multiple_choice", difficulty: "medium",
     question: "중위 표기식 `A / B * (C + D) + E`의 후위 표기식은?",
     choices: [
       "A B / C D + * E +",
@@ -622,21 +710,7 @@ export const set2 = [
     source: "6차시 § 5.2",
   },
   {
-    id: "DS_S2Q18", set: 2, week: 6, topic: "Infix→Postfix", type: "multiple_choice", difficulty: "hard",
-    question: "중위 표기식 `(A + B) * C - D / E`의 후위 표기식은?",
-    choices: [
-      "A B + C * D E / -",
-      "A B + C D / * E -",
-      "A B C + * D E / -",
-      "A + B C * D / E -",
-    ],
-    answer: 0,
-    brief: "((A+B)*C) - (D/E).",
-    detailed: "((A+B)*C) → A B + C *. (D/E) → D E /. 최종 `-`로 연결 → A B + C * D E / -.",
-    source: "6차시 § 5.2",
-  },
-  {
-    id: "DS_S2Q19", set: 2, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S2Q21", set: 2, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "medium",
     question: "후위 표기식 `6 2 / 3 - 4 2 * +`를 계산한 결과는?",
     choices: ["0", "4", "8", "12"],
     answer: 2,
@@ -645,39 +719,7 @@ export const set2 = [
     source: "6차시 § 7.3",
   },
   {
-    id: "DS_S2Q20", set: 2, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "hard",
-    question: "후위 표기식 `5 1 2 + 4 * + 3 -`를 계산한 결과는?",
-    choices: ["10", "14", "16", "17"],
-    answer: 1,
-    brief: "5 + ((1+2)×4) - 3 = 5+12-3 = 14.",
-    detailed: "1,2 → + → 3, 3,4 → * → 12, 5,12 → + → 17, 17,3 → - → 14.",
-    source: "6차시 § 7.3",
-  },
-  {
-    id: "DS_S2Q21", set: 2, week: 6, topic: "top 초기값", type: "multiple_choice", difficulty: "basic",
-    question: "배열 기반 스택에서 top 변수의 초기값으로 일반적으로 사용되는 값은?",
-    choices: ["0", "-1", "MAX_SIZE - 1", "NULL"],
-    answer: 1,
-    brief: "top = -1 이 공백 상태.",
-    detailed: "배열 인덱스 0부터 시작하므로 공백을 표현하려면 top = -1로 초기화한다. is_empty 조건은 top == -1.",
-    source: "6차시 § 3.1",
-  },
-  {
-    id: "DS_S2Q22", set: 2, week: 6, topic: "peek vs pop", type: "multiple_choice", difficulty: "basic",
-    question: "스택의 peek(또는 top) 연산과 pop 연산의 차이로 옳은 것은?",
-    choices: [
-      "둘 다 동일한 연산이다",
-      "peek은 top 위치의 값을 반환하지만 삭제는 하지 않고, pop은 반환과 동시에 삭제한다",
-      "peek은 삭제만 수행하고 값은 반환하지 않는다",
-      "pop은 스택 전체를 비운다",
-    ],
-    answer: 1,
-    brief: "peek은 값만 확인, pop은 삭제 포함.",
-    detailed: "peek(top)은 최상단 값을 확인만 하고 top을 변경하지 않는다. pop은 값을 반환하면서 top을 1 감소시켜 실제 삭제한다.",
-    source: "6차시 § 2",
-  },
-  {
-    id: "DS_S2Q23", set: 2, week: 6, topic: "중첩 괄호", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S2Q22", set: 2, week: 6, topic: "중첩 괄호", type: "multiple_choice", difficulty: "hard",
     question: "중위→후위 변환 시 `(` 가 두 번 연속 들어오는 중첩 괄호는 어떻게 처리되는가?",
     choices: [
       "두 번째 `(`는 무시된다",
@@ -691,19 +733,35 @@ export const set2 = [
     source: "6차시 § 6.3",
   },
   {
-    id: "DS_S2Q24", set: 2, week: 6, topic: "PUSH 의미", type: "multiple_choice", difficulty: "medium",
-    question: "C 코드 `stack[++top] = item;`의 동작 순서로 옳은 것은?",
+    id: "DS_S2Q23", set: 2, week: 6, topic: "후위식 트레이싱", type: "multiple_choice", difficulty: "hard",
+    question: "후위 표기식 `A B + C * D -` 를 계산할 때, 4번째 토큰 `*`을 처리하고 난 직후 스택의 상태(아래→위)는? (피연산자는 그 자체 값이라 가정)",
     choices: [
-      "stack[top]에 item을 대입한 뒤 top을 1 증가",
-      "top을 먼저 1 증가시킨 뒤 stack[top]에 item을 대입",
-      "item을 먼저 증가시킨 뒤 대입",
-      "top을 1 감소시킨 뒤 대입",
+      "[A]",
+      "[(A+B)]",
+      "[(A+B)*C]",
+      "[(A+B), C]",
+    ],
+    answer: 2,
+    brief: "+ 처리 후 (A+B), * 처리 후 (A+B)*C.",
+    detailed: "토큰 순서: A 푸시 → [A]. B 푸시 → [A, B]. + 처리 → POP 두 번 후 (A+B) PUSH → [(A+B)]. C 푸시 → [(A+B), C]. * 처리 → POP 두 번 후 (A+B)*C PUSH → [(A+B)*C]. 정답은 4번째 토큰(`*`) 처리 직후이므로 [(A+B)*C].",
+    source: "6차시 § 7",
+  },
+  {
+    id: "DS_S2Q24", set: 2, week: 6, topic: "isp/icp 표", type: "multiple_choice", difficulty: "hard",
+    question: "스택을 이용한 중위→후위 변환에서 다음 isp/icp 우선순위 표 중 올바른 것은? (값이 클수록 높은 우선순위)",
+    choices: [
+      "`(`: icp=0, isp=0    `+ -`: icp=1, isp=1    `* /`: icp=2, isp=2",
+      "`(`: icp=3, isp=0    `* /`: icp=2, isp=2    `+ -`: icp=1, isp=1",
+      "`(`: icp=0, isp=3    `+ -`: icp=2, isp=1    `* /`: icp=1, isp=2",
+      "`(`: icp=2, isp=2    `+ -`: icp=2, isp=2    `* /`: icp=2, isp=2",
     ],
     answer: 1,
-    brief: "전위 ++: 먼저 증가 후 대입.",
-    detailed: "전위 ++는 변수를 먼저 증가시킨 후 그 값을 연산에 쓴다. top = -1에서 PUSH 시 top이 0이 된 뒤 stack[0]에 item 저장.",
-    source: "6차시 § 3.1",
+    brief: "`(`만 icp=최고, isp=최저. 나머지는 icp=isp.",
+    detailed: "isp(In-Stack)와 icp(Incoming) 모두 `* /` > `+ -`. `(`만 들어올 때(icp=3) 최고, 들어간 후(isp=0) 최저로 두 값이 달라야 중첩 괄호가 자동 처리된다. 나머지 연산자는 icp=isp로 두면 좌결합성(같은 우선순위는 왼쪽부터)이 자연스럽게 구현된다.",
+    source: "6차시 § 6.2~6.3",
   },
+
+  // ── 7차시 — 큐·데크·우선순위 큐 (예고 영역) ──
   {
     id: "DS_S2Q25", set: 2, week: 7, topic: "원형 큐 Empty 재확인", type: "multiple_choice", difficulty: "basic",
     question: "원형 큐의 Empty 상태를 판정하는 조건으로 옳은 것은?",
@@ -761,64 +819,74 @@ export const set2 = [
     source: "7차시 § 8",
   },
   {
-    id: "DS_S2Q29", set: 2, week: 7, topic: "동적 큐 Full", type: "multiple_choice", difficulty: "medium",
-    question: "연결 리스트로 구현한 동적 큐에서 Full 상태 검사가 필요하지 않은 이유는?",
+    id: "DS_S2Q29", set: 2, week: 7, topic: "선형 큐 Enqueue O(?)", type: "multiple_choice", difficulty: "medium",
+    question: "선형 큐(Linear Queue, 배열 기반)에서 front를 항상 0으로 유지하는 단순 구현일 때, Dequeue 연산 후 데이터 정렬을 수행한다면 평균 시간 복잡도는? (그리고 그 이유)",
     choices: [
-      "연결 리스트는 삽입 속도가 빠르기 때문",
-      "Heap 메모리가 허용하는 한 크기가 무제한이기 때문",
-      "동적 큐는 Full이 없는 자료구조이므로",
-      "rear 포인터가 NULL일 수 없기 때문",
-    ],
-    answer: 1,
-    brief: "동적 할당이라 크기 제한 없음.",
-    detailed: "동적 큐는 Heap에서 필요할 때마다 노드를 할당하므로 메모리가 허용하는 한 Full이 발생하지 않는다. Empty 검사만 필요하다.",
-    source: "7차시 § 4.1",
-  },
-  {
-    id: "DS_S2Q30", set: 2, week: 7, topic: "데크 구현", type: "multiple_choice", difficulty: "medium",
-    question: "데크(Deque)를 동적으로 구현할 때 가장 적합한 자료구조는?",
-    choices: [
-      "단순 연결 리스트",
-      "원형 연결 리스트 (단일 링크)",
-      "이중 연결 리스트",
-      "해시 테이블",
+      "O(1) — front만 1 증가시키면 되기 때문",
+      "O(log n) — 이진 탐색을 사용하기 때문",
+      "O(n) — Dequeue 후 모든 원소를 한 칸씩 앞으로 당겨야 하기 때문",
+      "O(n²) — 매번 정렬을 다시 해야 하기 때문",
     ],
     answer: 2,
-    brief: "양방향 삽입·삭제 → 이중 연결 리스트.",
-    detailed: "데크는 양쪽 끝에서 모두 삽입·삭제가 가능해야 하므로 양방향 링크를 가진 이중 연결 리스트가 적합하다.",
-    source: "7차시 § 5.2",
+    brief: "front=0 고정 시 Dequeue마다 전체 Shift → O(n).",
+    detailed: "front를 0으로 고정하는 단순 선형 큐는 Dequeue 시 큐 안의 남은 원소를 모두 한 칸씩 앞으로 당겨야 해서 평균 O(n)이다. 이를 해결하기 위해 front 인덱스를 함께 움직이는 방식이 등장했고, 그 끝이 원형 큐다.",
+    source: "7차시 § 2.2",
+  },
+  {
+    id: "DS_S2Q30", set: 2, week: 7, topic: "빅오 매트릭스 종합", type: "multiple_choice", difficulty: "hard",
+    question: "다음 중 자료구조와 [접근/탐색/삽입/삭제] 시간 복잡도 매칭으로 잘못된 것은?",
+    choices: [
+      "정적 배열: O(1) / O(n) / O(n) / O(n)",
+      "단순 LL (인덱스 접근, addLast 기준): O(n) / O(n) / O(n) / O(n)",
+      "이중 원형 LL (양 끝, 노드 주어짐): O(n) / O(n) / O(1) / O(1)",
+      "원형 큐(배열): O(1) / O(1) / O(1) / O(1)",
+    ],
+    answer: 3,
+    brief: "원형 큐는 임의 키 탐색이 O(n) — O(1)이 아님.",
+    detailed: "원형 큐는 양 끝(rear/front) 연산은 O(1)이지만 임의의 키 탐색은 큐 전체를 훑어야 하므로 O(n)이다. 따라서 [접근/탐색/Enqueue/Dequeue] = O(1)/O(n)/O(1)/O(1)이 맞다.",
+    source: "시간복잡도 매트릭스 종합",
   },
 ];
 
 // ═══════════════════════════════════════════════════════════════
-// SET 3 — 종합 심화 (Week 2:4 · 3:4 · 4:4 · 5:6 · 6:6 · 7:6 = 30)
+// SET 3 — 코드 추적·변별 (Week 2:5 · 3:4 · 4:2 · 5:6 · 6:7 · 7:6 = 30)
 // ═══════════════════════════════════════════════════════════════
 export const set3 = [
+  // ── 2차시 ──
   {
-    id: "DS_S3Q1", set: 3, week: 2, topic: "빅오 계산 종합", type: "multiple_choice", difficulty: "medium",
-    question: "T(n) = n² + n + n log n + 1의 빅오 표기는?",
-    choices: ["O(n)", "O(n log n)", "O(n²)", "O(n³)"],
-    answer: 2,
-    brief: "최고차 n²이 지배.",
-    detailed: "n² > n log n > n > 1이므로 최고차 항은 n². 계수·하위 항 제거 → O(n²).",
+    id: "DS_S3Q1", set: 3, week: 2, topic: "빅오 계산", type: "multiple_choice", difficulty: "medium",
+    question: "T(n) = 5 × 2ⁿ + 3n²의 빅오 표기는?",
+    choices: ["O(n²)", "O(2ⁿ)", "O(5 × 2ⁿ)", "O(n² × 2ⁿ)"],
+    answer: 1,
+    brief: "지수 항이 다항 항을 압도 → O(2ⁿ).",
+    detailed: "지수 항 2ⁿ은 다항 n²보다 훨씬 빠르게 증가하므로 최고차 항은 2ⁿ이다. 계수는 제거 → O(2ⁿ).",
     source: "2차시 § 6.1",
   },
   {
-    id: "DS_S3Q2", set: 3, week: 2, topic: "O(n⁴) 판정", type: "multiple_choice", difficulty: "hard",
-    question: "시간 복잡도 O(n⁴)에 대한 설명으로 옳은 것은?",
-    choices: [
-      "지수형이므로 컴퓨터로 해결할 수 없다",
-      "다항식 시간(Polynomial)에 해당하므로 현대 컴퓨터로 해결 가능하다",
-      "로그형이므로 매우 빠르다",
-      "실제로는 존재하지 않는 복잡도다",
-    ],
-    answer: 1,
-    brief: "O(n⁴)는 다항식 범위(폴리노미얼).",
-    detailed: "O(n³)까지는 폴리노미얼, O(n⁴)도 현대 컴퓨팅 파워로는 해결 가능한 다항식 시간. O(2ⁿ), O(n!)만 실질적으로 불가능.",
+    id: "DS_S3Q2", set: 3, week: 2, topic: "Polynomial vs Exponential", type: "multiple_choice", difficulty: "medium",
+    question: "컴퓨터로 일반적으로 해결 가능한(Polynomial) 복잡도 범위에 해당하지 않는 것은?",
+    choices: ["O(n)", "O(n²)", "O(n³)", "O(2ⁿ)"],
+    answer: 3,
+    brief: "O(2ⁿ)는 지수형(Exponential).",
+    detailed: "다항식(Polynomial) 범위는 O(1) ~ O(n³) (느슨하게 O(n⁴)까지)로 해결 가능하다. O(2ⁿ), O(n!)은 지수·팩토리얼형으로 해결이 비효율적이다.",
     source: "2차시 § 6.4",
   },
   {
-    id: "DS_S3Q3", set: 3, week: 2, topic: "순차 탐색 복잡도", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q3", set: 3, week: 2, topic: "Big-Ω", type: "multiple_choice", difficulty: "hard",
+    question: "빅 오메가(Big-Ω) 표기법이 나타내는 것은?",
+    choices: [
+      "상한(Upper Bound) — Worst Case",
+      "하한(Lower Bound) — Best Case",
+      "상한과 하한이 일치할 때만 성립",
+      "평균 복잡도",
+    ],
+    answer: 1,
+    brief: "Ω는 하한 = Best Case.",
+    detailed: "빅오(O)는 상한, 빅 오메가(Ω)는 하한(Best Case), 빅 세타(Θ)는 상한과 하한이 일치할 때 쓴다.",
+    source: "2차시 § 6.2",
+  },
+  {
+    id: "DS_S3Q4", set: 3, week: 2, topic: "순차 탐색 복잡도", type: "multiple_choice", difficulty: "medium",
     question: "정렬되지 않은 n개의 원소에서 key를 순차 탐색할 때 Best Case와 Worst Case의 시간 복잡도로 옳은 것은?",
     choices: [
       "Best: O(1), Worst: O(n)",
@@ -832,21 +900,32 @@ export const set3 = [
     source: "2차시 § 8",
   },
   {
-    id: "DS_S3Q4", set: 3, week: 2, topic: "알고리즘 기술 방법", type: "multiple_choice", difficulty: "basic",
-    question: "알고리즘을 기술할 때 구조적이면서도 언어 문법에 얽매이지 않고 핵심 로직에 집중할 수 있는 방법은?",
+    id: "DS_S3Q5", set: 3, week: 2, topic: "추상화", type: "multiple_choice", difficulty: "medium",
+    question: "프로그래밍에서 '추상화(Abstraction)'에 대한 설명으로 옳지 않은 것은?",
     choices: [
-      "자연어",
-      "흐름도 (Flow Chart)",
-      "유사 코드 (Pseudo-code)",
-      "구체적인 프로그래밍 언어",
+      "복잡한 시스템에서 불필요한 세부사항을 숨기고 본질만 노출하는 기법이다",
+      "ADT는 자료의 추상화 사례로, 사용자에게는 인터페이스만 노출한다",
+      "추상화의 목적은 메모리 사용량을 절감하는 것이다",
+      "추상화는 모듈 간 결합도를 낮추고 응집도를 높이는 데 기여한다",
     ],
     answer: 2,
-    brief: "Pseudo-code — 언어 문법 독립.",
-    detailed: "자연어는 모호할 수 있고, 프로그래밍 언어는 문법에 치중되며, 흐름도는 복잡해지기 쉽다. 유사 코드는 로직에 집중하게 해준다.",
-    source: "2차시 § 2.3",
+    brief: "메모리 절감은 추상화의 목적이 아님.",
+    detailed: "추상화의 목적은 복잡도 관리·재사용성·유지보수성 향상이다. 메모리 절감은 부수적 효과일 수는 있어도 본래 목적이 아니다. 오히려 캡슐화·간접 호출로 약간의 오버헤드가 생길 수 있다.",
+    source: "4차시 § 4.1",
+  },
+
+  // ── 3차시 ──
+  {
+    id: "DS_S3Q6", set: 3, week: 3, topic: "피보나치 복잡도", type: "multiple_choice", difficulty: "hard",
+    question: "순환만으로 구현한 피보나치 fib(n)의 시간 복잡도는?",
+    choices: ["O(n)", "O(n log n)", "O(n²)", "O(2ⁿ)"],
+    answer: 3,
+    brief: "Binary Recursion — 호출마다 2번 재귀.",
+    detailed: "fib(n) = fib(n-1) + fib(n-2)로 매 호출마다 자기 자신을 2번 부르기 때문에 호출 수가 2ⁿ로 증가한다. 메모이제이션 없이는 O(2ⁿ).",
+    source: "3차시 § 5.2",
   },
   {
-    id: "DS_S3Q5", set: 3, week: 3, topic: "순환 vs 반복", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q7", set: 3, week: 3, topic: "순환 vs 반복", type: "multiple_choice", difficulty: "medium",
     question: "순환(Recursion)과 반복(Iteration)의 비교 중 옳지 않은 것은?",
     choices: [
       "순환은 함수 호출 스택 오버헤드가 있다",
@@ -860,7 +939,7 @@ export const set3 = [
     source: "3차시 § 6",
   },
   {
-    id: "DS_S3Q6", set: 3, week: 3, topic: "Stack Overflow 원인", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q8", set: 3, week: 3, topic: "Stack Overflow 원인", type: "multiple_choice", difficulty: "medium",
     question: "순환 함수에서 Stack Overflow가 발생하는 주된 원인은?",
     choices: [
       "매개변수가 너무 많다",
@@ -874,63 +953,23 @@ export const set3 = [
     source: "3차시 § 2.1",
   },
   {
-    id: "DS_S3Q7", set: 3, week: 3, topic: "분할정복", type: "multiple_choice", difficulty: "medium",
-    question: "분할정복(Divide-and-Conquer) 전략에 해당하는 알고리즘이 아닌 것은?",
-    choices: [
-      "이진 검색 (Binary Search)",
-      "합병 정렬 (Merge Sort)",
-      "퀵 정렬 (Quick Sort)",
-      "버블 정렬 (Bubble Sort)",
-    ],
-    answer: 3,
-    brief: "버블 정렬은 분할정복 아님.",
-    detailed: "버블 정렬은 인접 원소를 반복 비교·교환하는 단순 전략으로 분할정복이 아니다. 이진 검색·합병·퀵은 문제를 분할해 해결하는 대표적 분할정복.",
-    source: "3차시 § 9.1",
-  },
-  {
-    id: "DS_S3Q8", set: 3, week: 3, topic: "순환 4형태 매칭", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S3Q9", set: 3, week: 3, topic: "순환 4형태 매칭", type: "multiple_choice", difficulty: "hard",
     question: "다음 중 Non-tail Recursion(비꼬리 순환)에 해당하는 예시는?",
     choices: [
       "이진 검색",
       "팩토리얼 (`n * factorial(n-1)`)",
-      "피보나치 (`fib(n-1) + fib(n-2)`)",
       "꼬리 재귀 최적화된 누적 합계",
+      "while 루프로 변환된 반복문",
     ],
     answer: 1,
     brief: "factorial은 호출 후 곱셈 필요 → Non-tail.",
-    detailed: "factorial(n-1)을 호출한 뒤 n과 곱하는 연산이 남아 있으므로 Non-tail. 이진 검색은 호출이 마지막이라 Tail, 피보나치는 한 번에 두 번 호출하는 Binary.",
+    detailed: "factorial(n-1)을 호출한 뒤 n과 곱하는 연산이 남아 있으므로 Non-tail. 이진 검색은 호출이 마지막이라 Tail. 꼬리 재귀 최적화된 누적도 Tail.",
     source: "3차시 § 3",
   },
+
+  // ── 4차시 ──
   {
-    id: "DS_S3Q9", set: 3, week: 4, topic: "배열 이름 주소", type: "multiple_choice", difficulty: "medium",
-    question: "C언어에서 `int A[10];`으로 선언했을 때 배열 이름 `A`의 의미로 옳은 것은?",
-    choices: [
-      "배열 첫 원소의 값 (A[0])",
-      "배열의 크기 (10)",
-      "배열 첫 원소의 주소 상수 (&A[0])",
-      "배열을 가리키는 포인터 변수",
-    ],
-    answer: 2,
-    brief: "1차원 배열 이름 = 주소 상수.",
-    detailed: "1차원 배열 이름은 그 자체로 배열 첫 원소의 주소를 나타내는 '주소 상수'다. 따라서 ptr = A; 는 ptr = &A[0]; 과 같다.",
-    source: "4차시 § 2.2",
-  },
-  {
-    id: "DS_S3Q10", set: 3, week: 4, topic: "자기참조 구조체", type: "multiple_choice", difficulty: "medium",
-    question: "자기참조 구조체(Self-referential structure)의 필수 특징은?",
-    choices: [
-      "구조체 멤버로 int 타입이 하나 이상 있어야 한다",
-      "자기 자신과 같은 타입의 구조체를 가리키는 포인터가 멤버로 존재한다",
-      "malloc 없이는 선언할 수 없다",
-      "최대 2개의 필드만 가질 수 있다",
-    ],
-    answer: 1,
-    brief: "자기 타입 포인터 필드 필수.",
-    detailed: "자기참조 구조체는 struct Listnode { int data; struct Listnode *link; } 처럼 자기 자신 타입의 포인터를 멤버로 가진다. 연결 리스트 노드의 기본 구조다.",
-    source: "4차시 § 2.4",
-  },
-  {
-    id: "DS_S3Q11", set: 3, week: 4, topic: "정적 삽입 순서", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S3Q10", set: 3, week: 4, topic: "정적 삽입 순서", type: "multiple_choice", difficulty: "hard",
     question: "정적 리스트 [A, B, C, D, E] (length=5) 의 position=2에 X를 삽입하려 한다. 데이터 이동 순서로 올바른 것은?",
     choices: [
       "E → D → C 각각 한 칸 뒤로, 그 후 position=2에 X 삽입",
@@ -944,7 +983,7 @@ export const set3 = [
     source: "4차시 § 6.1",
   },
   {
-    id: "DS_S3Q12", set: 3, week: 4, topic: "Call by Value vs Reference", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q11", set: 3, week: 4, topic: "Call by Value vs Reference", type: "multiple_choice", difficulty: "medium",
     question: "함수에 큰 구조체를 인자로 전달할 때 Call by Reference가 Call by Value보다 유리한 이유는?",
     choices: [
       "코드가 더 간결해지기 때문",
@@ -957,22 +996,10 @@ export const set3 = [
     detailed: "Call by Value는 인자 전체를 복사해 지역 변수로 만들어 큰 구조체에서는 비용이 크다. 주소만 전달하는 Call by Reference는 8바이트(64비트) 포인터만 복사하면 된다.",
     source: "4차시 § 3",
   },
+
+  // ── 5차시 ──
   {
-    id: "DS_S3Q13", set: 3, week: 5, topic: "LL 비교", type: "multiple_choice", difficulty: "medium",
-    question: "단순·원형·이중 연결 리스트의 addLast 시간 복잡도로 올바른 조합은?",
-    choices: [
-      "단순: O(1), 원형: O(1), 이중: O(1)",
-      "단순: O(n), 원형: O(1), 이중: O(n)",
-      "단순: O(n), 원형: O(n), 이중: O(n)",
-      "단순: O(1), 원형: O(n), 이중: O(n)",
-    ],
-    answer: 1,
-    brief: "원형만 O(1), 나머지는 끝까지 순회.",
-    detailed: "단순 LL은 head부터 끝까지 순회 O(n). 원형 LL은 head가 마지막 노드라 O(1). 이중 LL은 head→끝 순회 O(n) (이중 원형이어야 O(1)).",
-    source: "5차시 § 종합",
-  },
-  {
-    id: "DS_S3Q14", set: 3, week: 5, topic: "이중 LL 장단점", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q12", set: 3, week: 5, topic: "이중 LL 장단점", type: "multiple_choice", difficulty: "medium",
     question: "이중 연결 리스트(Doubly Linked List)의 단점으로 가장 적절한 것은?",
     choices: [
       "삽입·삭제 시 데이터 이동이 많다",
@@ -986,7 +1013,7 @@ export const set3 = [
     source: "5차시 § 5.1",
   },
   {
-    id: "DS_S3Q15", set: 3, week: 5, topic: "이중 LL 삽입 원칙", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S3Q13", set: 3, week: 5, topic: "이중 LL 삽입 원칙", type: "multiple_choice", difficulty: "hard",
     question: "이중 연결 리스트 삽입 코드 4줄을 임의 순서로 섞었을 때, 반드시 **먼저** 실행되어야 하는 두 줄은?",
     choices: [
       "before->rlink = new_node; before->rlink->llink = new_node;",
@@ -1000,30 +1027,7 @@ export const set3 = [
     source: "5차시 § 5.2",
   },
   {
-    id: "DS_S3Q16", set: 3, week: 5, topic: "역순 구현", type: "multiple_choice", difficulty: "medium",
-    question: "단순 연결 리스트를 역순으로 바꾸려 할 때 최소 몇 개의 포인터가 필요한가?",
-    choices: ["1개", "2개", "3개", "불가능"],
-    answer: 2,
-    brief: "prev, curr, next 3개.",
-    detailed: "단순 LL은 역방향 링크가 없으므로 이전 노드(prev), 현재 노드(curr), 다음 노드(next)를 각각 가리키는 3개 포인터로 링크를 하나씩 뒤집어야 한다.",
-    source: "5차시 § 3.5",
-  },
-  {
-    id: "DS_S3Q17", set: 3, week: 5, topic: "이중 원형 LL 이점", type: "multiple_choice", difficulty: "medium",
-    question: "이중 원형 연결 리스트가 실무에서 가장 널리 쓰이는 이유로 가장 적절한 것은?",
-    choices: [
-      "구조가 가장 단순하기 때문",
-      "addFirst·addLast가 모두 O(1)이면서 역방향 탐색도 O(1)로 가능하기 때문",
-      "메모리를 가장 적게 사용하기 때문",
-      "정렬이 쉽기 때문",
-    ],
-    answer: 1,
-    brief: "모든 끝 연산 O(1) + 양방향 탐색.",
-    detailed: "이중(양방향) + 원형(양 끝 O(1))의 장점을 모두 가져 삽입·삭제·탐색의 균형이 가장 뛰어나 실무 표준이다.",
-    source: "5차시 § 5.1 / 6차시 § 0.2",
-  },
-  {
-    id: "DS_S3Q18", set: 3, week: 5, topic: "free 위치", type: "multiple_choice", difficulty: "hard",
+    id: "DS_S3Q14", set: 3, week: 5, topic: "free 위치", type: "multiple_choice", difficulty: "hard",
     question: "이중 연결 리스트에서 removed 노드 삭제 시, free(removed)를 **가장 마지막**에 호출해야 하는 이유로 적절한 것은?",
     choices: [
       "컴파일러 최적화 때문",
@@ -1037,32 +1041,85 @@ export const set3 = [
     source: "5차시 § 5.3",
   },
   {
-    id: "DS_S3Q19", set: 3, week: 6, topic: "스택 활용처", type: "multiple_choice", difficulty: "basic",
-    question: "스택(Stack) 자료구조가 사용되는 대표적인 응용이 아닌 것은?",
+    id: "DS_S3Q15", set: 3, week: 5, topic: "이중 LL 삭제 순서", type: "multiple_choice", difficulty: "hard",
+    question: "이중 연결 리스트에서 removed 노드를 삭제하는 올바른 순서의 코드는?",
     choices: [
-      "함수 호출 스택 (Call Stack)",
-      "수식의 중위→후위 변환 및 계산",
-      "에디터의 Undo 기능",
-      "운영체제의 라운드 로빈 스케줄링",
+      "free(removed); removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink;",
+      "removed->llink->rlink = removed->rlink; removed->rlink->llink = removed->llink; free(removed);",
+      "removed->llink = NULL; removed->rlink = NULL; free(removed);",
+      "removed = NULL; free(removed);",
     ],
-    answer: 3,
-    brief: "라운드 로빈은 큐(원형 LL).",
-    detailed: "스택은 LIFO 구조로 함수 호출·수식 계산·Undo·브라우저 뒤로가기 등에 쓰인다. 라운드 로빈 스케줄링은 순차 실행을 위해 FIFO의 원형 큐/원형 LL을 사용한다.",
-    source: "6차시 § 1.1 / 7차시",
+    answer: 1,
+    brief: "양옆 재연결 → free.",
+    detailed: "반드시 removed의 양옆 노드를 서로 연결한 뒤 free를 호출한다. free를 먼저 하면 이후 removed->llink 등 역참조가 위험하다.",
+    source: "5차시 § 5.3",
   },
   {
-    id: "DS_S3Q20", set: 3, week: 6, topic: "Infix→Postfix 복합", type: "multiple_choice", difficulty: "hard",
-    question: "중위 표기식 `((A / B) + C) - (D * E)`의 후위 표기식은?",
+    id: "DS_S3Q16", set: 3, week: 5, topic: "LL 빈칸 — 삭제 코드", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트의 중간 노드 삭제 코드의 빈칸 ___ 에 들어갈 표현으로 옳은 것은?\n```\n// prev: removed의 이전 노드, removed: 삭제할 노드\nprev->link = ___ ;\nfree(removed);\n```",
     choices: [
-      "A B / C + D E * -",
-      "A B C / + D E * -",
-      "A / B C + D E * -",
-      "A B / + C D E * -",
+      "prev",
+      "removed",
+      "removed->link",
+      "NULL",
+    ],
+    answer: 2,
+    brief: "removed를 건너뛰어 그 다음 노드로 연결.",
+    detailed: "삭제는 removed의 다음 노드(removed->link)를 prev->link에 연결하면 된다. 그 후 free(removed)로 메모리 반환. removed나 NULL을 넣으면 리스트가 끊어진다.",
+    source: "5차시 § 3.4",
+  },
+  {
+    id: "DS_S3Q17", set: 3, week: 5, topic: "LL 빈칸 — 검색", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트에서 키가 key와 일치하는 노드를 찾는 함수의 루프 종료 조건으로 가장 적절한 것은?\n```\nNode *p = head;\nwhile ( ___ ) {\n  p = p->link;\n}\nreturn p;  // 못 찾으면 NULL 반환\n```",
+    choices: [
+      "p != NULL",
+      "p->link != NULL",
+      "p != NULL && p->data != key",
+      "p->data == key",
+    ],
+    answer: 2,
+    brief: "두 조건: 끝에 도달했거나 키를 찾았으면 종료.",
+    detailed: "리스트 끝(p == NULL)이나 키 발견(p->data == key) 어느 쪽이든 루프를 빠져나와야 한다. p != NULL을 먼저 체크해야 NULL 역참조를 피할 수 있다(단락 평가).",
+    source: "5차시 § 3.5",
+  },
+
+  // ── 6차시 ──
+  {
+    id: "DS_S3Q18", set: 3, week: 6, topic: "icp vs isp", type: "multiple_choice", difficulty: "hard",
+    question: "스택을 이용한 중위→후위 변환에서 새 연산자의 우선순위(icp)가 스택 top 연산자의 우선순위(isp)와 같을 때의 처리는?",
+    choices: [
+      "즉시 PUSH한다",
+      "스택 top 연산자를 POP하여 출력한 뒤 새 연산자를 PUSH한다",
+      "무시하고 다음 토큰으로 넘어간다",
+      "스택을 비우고 시작한다",
+    ],
+    answer: 1,
+    brief: "isp ≥ icp면 POP 먼저.",
+    detailed: "isp < icp면 PUSH, isp ≥ icp면 조건을 만족할 때까지 POP 후 출력, 그 다음 새 연산자 PUSH. 같을 때도 PUSH가 아니라 POP 먼저다.",
+    source: "6차시 § 6.2",
+  },
+  {
+    id: "DS_S3Q19", set: 3, week: 6, topic: "Infix→Postfix", type: "multiple_choice", difficulty: "hard",
+    question: "중위 표기식 `(A + B) * C - D / E`의 후위 표기식은?",
+    choices: [
+      "A B + C * D E / -",
+      "A B + C D / * E -",
+      "A B C + * D E / -",
+      "A + B C * D / E -",
     ],
     answer: 0,
-    brief: "안쪽 괄호부터 변환.",
-    detailed: "(A/B) → A B /, +C → A B / C +, (D*E) → D E *, 최종 - → A B / C + D E * -.",
+    brief: "((A+B)*C) - (D/E).",
+    detailed: "((A+B)*C) → A B + C *. (D/E) → D E /. 최종 `-`로 연결 → A B + C * D E / -.",
     source: "6차시 § 5.2",
+  },
+  {
+    id: "DS_S3Q20", set: 3, week: 6, topic: "후위식 계산", type: "multiple_choice", difficulty: "hard",
+    question: "후위 표기식 `5 1 2 + 4 * + 3 -`를 계산한 결과는?",
+    choices: ["10", "14", "16", "17"],
+    answer: 1,
+    brief: "5 + ((1+2)×4) - 3 = 5+12-3 = 14.",
+    detailed: "1,2 → + → 3, 3,4 → * → 12, 5,12 → + → 17, 17,3 → - → 14.",
+    source: "6차시 § 7.3",
   },
   {
     id: "DS_S3Q21", set: 3, week: 6, topic: "후위식 op 순서", type: "multiple_choice", difficulty: "hard",
@@ -1079,18 +1136,18 @@ export const set3 = [
     source: "6차시 § 7",
   },
   {
-    id: "DS_S3Q22", set: 3, week: 6, topic: "스택 정적 구현 유리", type: "multiple_choice", difficulty: "medium",
-    question: "스택을 정적(배열)으로 구현해도 일반 리스트와 달리 Shift 오버헤드가 없는 이유는?",
+    id: "DS_S3Q22", set: 3, week: 6, topic: "Infix→Postfix 복합", type: "multiple_choice", difficulty: "hard",
+    question: "중위 표기식 `((A / B) + C) - (D * E)`의 후위 표기식은?",
     choices: [
-      "배열이 아닌 연결 리스트를 쓰기 때문",
-      "삽입·삭제가 top 한 위치에서만 일어나 중간 데이터 이동이 필요 없기 때문",
-      "데이터 타입이 고정되어 있기 때문",
-      "운영체제가 최적화해주기 때문",
+      "A B / C + D E * -",
+      "A B C / + D E * -",
+      "A / B C + D E * -",
+      "A B / + C D E * -",
     ],
-    answer: 1,
-    brief: "Top 고정 연산 → 이동 불필요.",
-    detailed: "스택의 PUSH·POP은 모두 배열의 맨 끝(top)에서만 일어나므로 중간 원소를 Shift할 일이 없다. 구현이 단순하고 성능도 좋아 정적 구현이 선호된다.",
-    source: "6차시 § 3.1",
+    answer: 0,
+    brief: "안쪽 괄호부터 변환.",
+    detailed: "(A/B) → A B /, +C → A B / C +, (D*E) → D E *, 최종 - → A B / C + D E * -.",
+    source: "6차시 § 5.2",
   },
   {
     id: "DS_S3Q23", set: 3, week: 6, topic: "괄호 icp/isp", type: "multiple_choice", difficulty: "hard",
@@ -1107,35 +1164,23 @@ export const set3 = [
     source: "6차시 § 6.3",
   },
   {
-    id: "DS_S3Q24", set: 3, week: 6, topic: "전위식", type: "multiple_choice", difficulty: "basic",
-    question: "수식 표기법 중 '폴란드 표기법(Polish Notation)'으로도 불리는 것은?",
+    id: "DS_S3Q24", set: 3, week: 6, topic: "후위→중위 역변환", type: "multiple_choice", difficulty: "medium",
+    question: "후위 표기식 `A B C * +` 를 중위 표기식으로 옳게 변환한 것은?",
     choices: [
-      "중위 표기식 (Infix)",
-      "전위 표기식 (Prefix)",
-      "후위 표기식 (Postfix)",
-      "역폴란드 표기식 (Reverse Polish)",
+      "A + B + C",
+      "(A + B) * C",
+      "A + (B * C)",
+      "A * B + C",
     ],
-    answer: 1,
-    brief: "전위식 = Polish Notation.",
-    detailed: "폴란드 수학자 얀 우카시에비치가 고안한 표기법이 전위식(Prefix). 후위식은 그 역(Reverse Polish)이다.",
-    source: "6차시 § 4.1",
+    answer: 2,
+    brief: "B C * 먼저 → A + (B*C).",
+    detailed: "후위식을 스택으로 따라가면 A 푸시 → [A], B 푸시 → [A, B], C 푸시 → [A, B, C], * 처리 → POP 두 번 후 (B*C) PUSH → [A, (B*C)], + 처리 → POP 두 번 후 (A+(B*C)) PUSH. 결과: A + (B*C).",
+    source: "6차시 § 5",
   },
+
+  // ── 7차시 ──
   {
-    id: "DS_S3Q25", set: 3, week: 7, topic: "스택 vs 큐", type: "multiple_choice", difficulty: "basic",
-    question: "스택(Stack)과 큐(Queue)의 비교 중 옳지 않은 것은?",
-    choices: [
-      "스택은 LIFO, 큐는 FIFO이다",
-      "스택은 한쪽 끝에서만 삽입·삭제, 큐는 rear에서 삽입·front에서 삭제",
-      "스택은 함수 호출, 큐는 프린터 대기열에 주로 쓰인다",
-      "둘 다 양쪽 끝에서 삽입·삭제가 자유롭다",
-    ],
-    answer: 3,
-    brief: "양쪽 끝 자유는 데크(Deque).",
-    detailed: "양쪽 끝에서 모두 삽입·삭제가 가능한 것은 스택·큐가 아니라 데크(Deque)다. 스택·큐는 연산 위치에 제약이 있다.",
-    source: "7차시 § 7.1",
-  },
-  {
-    id: "DS_S3Q26", set: 3, week: 7, topic: "선형 큐 가짜 포화", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q25", set: 3, week: 7, topic: "선형 큐 가짜 포화", type: "multiple_choice", difficulty: "medium",
     question: "선형 큐(Linear Queue)에서 발생하는 '가짜 포화 상태(False Full)'란?",
     choices: [
       "큐가 실제로 가득 차서 더 삽입 불가능한 상태",
@@ -1149,7 +1194,7 @@ export const set3 = [
     source: "7차시 § 2.2",
   },
   {
-    id: "DS_S3Q27", set: 3, week: 7, topic: "원형 큐 front > rear", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q26", set: 3, week: 7, topic: "원형 큐 front > rear", type: "multiple_choice", difficulty: "medium",
     question: "원형 큐에서 front가 rear보다 큰 값을 가질 수 있는가?",
     choices: [
       "불가능하다 — 항상 rear ≥ front",
@@ -1163,7 +1208,437 @@ export const set3 = [
     source: "7차시 § 3.3",
   },
   {
-    id: "DS_S3Q28", set: 3, week: 7, topic: "데크 head/tail", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S3Q27", set: 3, week: 7, topic: "동적 큐 Full", type: "multiple_choice", difficulty: "medium",
+    question: "연결 리스트로 구현한 동적 큐에서 Full 상태 검사가 필요하지 않은 이유는?",
+    choices: [
+      "연결 리스트는 삽입 속도가 빠르기 때문",
+      "Heap 메모리가 허용하는 한 크기가 무제한이기 때문",
+      "동적 큐는 Full이 없는 자료구조이므로",
+      "rear 포인터가 NULL일 수 없기 때문",
+    ],
+    answer: 1,
+    brief: "동적 할당이라 크기 제한 없음.",
+    detailed: "동적 큐는 Heap에서 필요할 때마다 노드를 할당하므로 메모리가 허용하는 한 Full이 발생하지 않는다. Empty 검사만 필요하다.",
+    source: "7차시 § 4.1",
+  },
+  {
+    id: "DS_S3Q28", set: 3, week: 7, topic: "원형 큐 Full", type: "multiple_choice", difficulty: "medium",
+    question: "크기가 MAX_SIZE인 원형 큐의 Full 조건은?",
+    choices: [
+      "rear == MAX_SIZE - 1",
+      "front == rear",
+      "(rear + 1) % MAX_SIZE == front",
+      "rear - front == MAX_SIZE",
+    ],
+    answer: 2,
+    brief: "(rear+1) % MAX == front.",
+    detailed: "원형 큐는 Empty와 Full을 구분하려고 한 칸을 비워둔다. Full 조건은 (rear + 1) % MAX_SIZE == front이며, 실제 최대 저장 개수는 MAX_SIZE - 1이다.",
+    source: "7차시 § 3.2",
+  },
+  {
+    id: "DS_S3Q29", set: 3, week: 7, topic: "우선순위 큐 응용", type: "multiple_choice", difficulty: "medium",
+    question: "다음 중 우선순위 큐(Priority Queue)로 구현하기 가장 적합한 응용은?",
+    choices: [
+      "은행 창구의 일반 대기 줄 (도착 순서)",
+      "병원 응급실의 환자 처리 (중증도 순서)",
+      "프린터 작업 대기열 (요청 순서)",
+      "함수 호출 스택 (중첩 호출)",
+    ],
+    answer: 1,
+    brief: "중증도 = 우선순위 → 우선순위 큐.",
+    detailed: "응급실은 도착 순서가 아니라 중증도(우선순위)에 따라 처리해야 하므로 우선순위 큐가 적합하다. 일반 대기·프린터 대기열은 일반 큐(FIFO), 함수 호출은 스택(LIFO).",
+    source: "7차시 § 6.3",
+  },
+  {
+    id: "DS_S3Q30", set: 3, week: 7, topic: "Heap 삽입 복잡도", type: "multiple_choice", difficulty: "medium",
+    question: "n개의 원소를 가진 Max Heap에 새 원소를 삽입할 때의 시간 복잡도와 그 이유로 옳은 것은?",
+    choices: [
+      "O(1) — 배열의 끝에 추가만 하면 됨",
+      "O(log n) — 추가 후 부모와 비교하며 위로 올라가는(Up-Heap) 단계 수가 트리 높이 log n에 비례",
+      "O(n) — 매번 전체 재정렬이 필요",
+      "O(n log n) — 정렬 알고리즘과 동일",
+    ],
+    answer: 1,
+    brief: "Up-Heap: 트리 높이 만큼 비교 → O(log n).",
+    detailed: "Heap 삽입은 ① 배열 끝에 새 원소 추가 후 ② 부모와 비교해 더 크면 교환하면서 위로 올라간다(Up-Heap). 이진 트리의 높이가 log n이므로 최악 비교 횟수는 O(log n).",
+    source: "7차시 § 6.3",
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// SET 4 — 통합 모의고사 (Week 2:5 · 3:4 · 4:4 · 5:8 · 6:5 · 7:4 = 30)
+// ═══════════════════════════════════════════════════════════════
+export const set4 = [
+  // ── 2차시 ──
+  {
+    id: "DS_S4Q1", set: 4, week: 2, topic: "시간 복잡도 계산", type: "multiple_choice", difficulty: "medium",
+    question: "시간 복잡도 함수 T(n) = 2n² + 3n + 1의 빅오 표기로 옳은 것은?",
+    choices: ["O(n)", "O(n²)", "O(2n²)", "O(2ⁿ)"],
+    answer: 1,
+    brief: "최고차항만 남기고 계수 제거 → O(n²).",
+    detailed: "점근적 표기법에서는 최고차항만 남기고 계수·하위항을 제거한다. 2n² + 3n + 1 → O(n²).",
+    source: "2차시 § 6.1",
+  },
+  {
+    id: "DS_S4Q2", set: 4, week: 2, topic: "빅오 계산 종합", type: "multiple_choice", difficulty: "medium",
+    question: "T(n) = n² + n + n log n + 1의 빅오 표기는?",
+    choices: ["O(n)", "O(n log n)", "O(n²)", "O(n³)"],
+    answer: 2,
+    brief: "최고차 n²이 지배.",
+    detailed: "n² > n log n > n > 1이므로 최고차 항은 n². 계수·하위 항 제거 → O(n²).",
+    source: "2차시 § 6.1",
+  },
+  {
+    id: "DS_S4Q3", set: 4, week: 2, topic: "O(n⁴) 판정", type: "multiple_choice", difficulty: "hard",
+    question: "시간 복잡도 O(n⁴)에 대한 설명으로 옳은 것은?",
+    choices: [
+      "지수형이므로 컴퓨터로 해결할 수 없다",
+      "다항식 시간(Polynomial)에 해당하므로 현대 컴퓨터로 해결 가능하다",
+      "로그형이므로 매우 빠르다",
+      "실제로는 존재하지 않는 복잡도다",
+    ],
+    answer: 1,
+    brief: "O(n⁴)는 다항식 범위(폴리노미얼).",
+    detailed: "O(n³)까지는 폴리노미얼, O(n⁴)도 현대 컴퓨팅 파워로는 해결 가능한 다항식 시간. O(2ⁿ), O(n!)만 실질적으로 불가능.",
+    source: "2차시 § 6.4",
+  },
+  {
+    id: "DS_S4Q4", set: 4, week: 2, topic: "알고리즘 기술 방법", type: "multiple_choice", difficulty: "basic",
+    question: "알고리즘을 기술할 때 구조적이면서도 언어 문법에 얽매이지 않고 핵심 로직에 집중할 수 있는 방법은?",
+    choices: [
+      "자연어",
+      "흐름도 (Flow Chart)",
+      "유사 코드 (Pseudo-code)",
+      "구체적인 프로그래밍 언어",
+    ],
+    answer: 2,
+    brief: "Pseudo-code — 언어 문법 독립.",
+    detailed: "자연어는 모호할 수 있고, 프로그래밍 언어는 문법에 치중되며, 흐름도는 복잡해지기 쉽다. 유사 코드는 로직에 집중하게 해준다.",
+    source: "2차시 § 2.3",
+  },
+  {
+    id: "DS_S4Q5", set: 4, week: 2, topic: "ADT vs 자료구조", type: "multiple_choice", difficulty: "medium",
+    question: "ADT(추상 데이터 타입)와 자료구조(Data Structure)의 관계로 옳은 것은?",
+    choices: [
+      "ADT와 자료구조는 동의어이다",
+      "ADT는 '무엇(What)'을 정의하는 명세이고, 자료구조는 그것을 메모리에서 '어떻게(How)' 구현한 결과다",
+      "자료구조가 상위 개념이고 ADT는 그 일부다",
+      "ADT는 정적, 자료구조는 동적인 것을 의미한다",
+    ],
+    answer: 1,
+    brief: "ADT=명세(What), 자료구조=구현(How).",
+    detailed: "ADT는 객체와 연산만 정의한 추상 명세다. 자료구조는 그 ADT를 배열·연결 리스트 등 구체적 구현으로 옮긴 결과물이다. 같은 스택 ADT라도 배열 구현·연결 리스트 구현이 모두 가능하다.",
+    source: "4차시 § 4.1",
+  },
+
+  // ── 3차시 ──
+  {
+    id: "DS_S4Q6", set: 4, week: 3, topic: "순환 4형태", type: "multiple_choice", difficulty: "medium",
+    question: "함수 호출 직후 추가 연산이 필요 없는 순환 형태를 무엇이라 하는가?",
+    choices: [
+      "Linear Recursion",
+      "Non-tail Recursion",
+      "Tail Recursion",
+      "Binary Recursion",
+    ],
+    answer: 2,
+    brief: "Tail Recursion — 호출이 마지막 동작.",
+    detailed: "Tail Recursion은 함수 호출이 마지막 동작이고 이후 추가 연산이 없는 형태다. 이진 검색이 대표적인 예다.",
+    source: "3차시 § 3",
+  },
+  {
+    id: "DS_S4Q7", set: 4, week: 3, topic: "팩토리얼 복잡도", type: "multiple_choice", difficulty: "medium",
+    question: "순환으로 구현한 팩토리얼 factorial(n)의 시간 복잡도는?",
+    choices: ["O(1)", "O(log n)", "O(n)", "O(2ⁿ)"],
+    answer: 2,
+    brief: "팩토리얼 순환은 n번 재귀 호출 → O(n).",
+    detailed: "factorial(n) = n × factorial(n-1)로 n번 재귀 호출되므로 시간 복잡도는 O(n) + α(함수 호출 오버헤드)다.",
+    source: "3차시 § 5.1",
+  },
+  {
+    id: "DS_S4Q8", set: 4, week: 3, topic: "분할정복", type: "multiple_choice", difficulty: "medium",
+    question: "분할정복(Divide-and-Conquer) 전략에 해당하는 알고리즘이 아닌 것은?",
+    choices: [
+      "이진 검색 (Binary Search)",
+      "합병 정렬 (Merge Sort)",
+      "퀵 정렬 (Quick Sort)",
+      "버블 정렬 (Bubble Sort)",
+    ],
+    answer: 3,
+    brief: "버블 정렬은 분할정복 아님.",
+    detailed: "버블 정렬은 인접 원소를 반복 비교·교환하는 단순 전략으로 분할정복이 아니다. 이진 검색·합병·퀵은 문제를 분할해 해결하는 대표적 분할정복.",
+    source: "3차시 § 9.1",
+  },
+  {
+    id: "DS_S4Q9", set: 4, week: 3, topic: "메모이제이션", type: "multiple_choice", difficulty: "medium",
+    question: "메모이제이션(Memoization)을 적용한 피보나치의 시간 복잡도는?",
+    choices: ["O(log n)", "O(n)", "O(n²)", "O(2ⁿ)"],
+    answer: 1,
+    brief: "중복 제거 → O(n).",
+    detailed: "메모이제이션은 이미 계산한 fib(k)를 저장하여 재호출을 막는다. 모든 fib(0) ~ fib(n)을 한 번씩만 계산하므로 O(n).",
+    source: "3차시 § 7.2",
+  },
+
+  // ── 4차시 ──
+  {
+    id: "DS_S4Q10", set: 4, week: 4, topic: "정적 vs 동적", type: "multiple_choice", difficulty: "basic",
+    question: "정적(Static) 구현과 동적(Dynamic) 구현에 대한 설명 중 옳은 것은?",
+    choices: [
+      "정적은 런타임에 크기가 결정되고, 동적은 컴파일 타임에 결정된다",
+      "정적은 연속된 메모리, 동적은 비연속 메모리(Heap)를 사용한다",
+      "정적은 삽입·삭제 시 링크만 조작, 동적은 데이터 이동 필요",
+      "동적은 인덱스 접근이 O(1)이다",
+    ],
+    answer: 1,
+    brief: "정적=연속 메모리, 동적=Heap(비연속).",
+    detailed: "정적 구현은 컴파일 타임에 연속된 메모리를 할당받아 인덱스 O(1) 접근이 가능하다. 동적 구현은 런타임에 Heap에서 비연속 메모리를 확보하며 포인터로 연결한다.",
+    source: "4차시 § 1",
+  },
+  {
+    id: "DS_S4Q11", set: 4, week: 4, topic: "배열 이름 주소", type: "multiple_choice", difficulty: "medium",
+    question: "C언어에서 `int A[10];`으로 선언했을 때 배열 이름 `A`의 의미로 옳은 것은?",
+    choices: [
+      "배열 첫 원소의 값 (A[0])",
+      "배열의 크기 (10)",
+      "배열 첫 원소의 주소 상수 (&A[0])",
+      "배열을 가리키는 포인터 변수",
+    ],
+    answer: 2,
+    brief: "1차원 배열 이름 = 주소 상수.",
+    detailed: "1차원 배열 이름은 그 자체로 배열 첫 원소의 주소를 나타내는 '주소 상수'다. 따라서 ptr = A; 는 ptr = &A[0]; 과 같다.",
+    source: "4차시 § 2.2",
+  },
+  {
+    id: "DS_S4Q12", set: 4, week: 4, topic: "자기참조 구조체", type: "multiple_choice", difficulty: "medium",
+    question: "자기참조 구조체(Self-referential structure)의 필수 특징은?",
+    choices: [
+      "구조체 멤버로 int 타입이 하나 이상 있어야 한다",
+      "자기 자신과 같은 타입의 구조체를 가리키는 포인터가 멤버로 존재한다",
+      "malloc 없이는 선언할 수 없다",
+      "최대 2개의 필드만 가질 수 있다",
+    ],
+    answer: 1,
+    brief: "자기 타입 포인터 필드 필수.",
+    detailed: "자기참조 구조체는 struct Listnode { int data; struct Listnode *link; } 처럼 자기 자신 타입의 포인터를 멤버로 가진다. 연결 리스트 노드의 기본 구조다.",
+    source: "4차시 § 2.4",
+  },
+  {
+    id: "DS_S4Q13", set: 4, week: 4, topic: "캡슐화", type: "multiple_choice", difficulty: "medium",
+    question: "ADT의 캡슐화(Encapsulation) 원칙에 따라 사용자에게 노출되어야 하는 것은?",
+    choices: [
+      "데이터의 내부 저장 형태 (배열·연결 리스트 여부)",
+      "연산의 인터페이스(이름·매개변수·반환값)",
+      "구현에 사용된 변수 이름",
+      "메모리 주소 위치",
+    ],
+    answer: 1,
+    brief: "사용자에게는 인터페이스(연산)만 노출.",
+    detailed: "캡슐화는 내부 구현(How)을 감추고 외부에는 인터페이스(What)만 공개하는 원칙이다. 사용자는 push·pop 같은 연산만 알면 되며, 내부가 배열인지 연결 리스트인지 알 필요가 없다.",
+    source: "4차시 § 4.1",
+  },
+
+  // ── 5차시 ──
+  {
+    id: "DS_S4Q14", set: 4, week: 5, topic: "원형 LL addLast", type: "multiple_choice", difficulty: "medium",
+    question: "원형 연결 리스트에서 addLast 연산의 시간 복잡도는? (head가 마지막 노드를 가리킴)",
+    choices: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    answer: 0,
+    brief: "head = 마지막 → O(1).",
+    detailed: "원형 연결 리스트는 head가 마지막 노드를 가리키므로 addLast 시 head->link를 통해 첫 노드에 O(1)로 접근·삽입 후 head를 갱신하면 된다.",
+    source: "5차시 § 4.2",
+  },
+  {
+    id: "DS_S4Q15", set: 4, week: 5, topic: "원형 LL head 의미", type: "multiple_choice", difficulty: "medium",
+    question: "원형 연결 리스트에서 head가 마지막 노드를 가리키는 설계의 핵심 이점은?",
+    choices: [
+      "메모리를 절약한다",
+      "addFirst와 addLast 모두 O(1)로 구현 가능",
+      "중간 삽입이 O(1)이 된다",
+      "역방향 탐색이 O(1)이 된다",
+    ],
+    answer: 1,
+    brief: "맨 앞·맨 뒤 모두 O(1) 접근.",
+    detailed: "head가 마지막 노드를 가리키면 head->link가 첫 노드이므로 addFirst는 O(1). 마지막 노드도 head이므로 addLast도 O(1).",
+    source: "5차시 § 4.1",
+  },
+  {
+    id: "DS_S4Q16", set: 4, week: 5, topic: "이중 원형 LL", type: "multiple_choice", difficulty: "medium",
+    question: "이중 원형 연결 리스트(Doubly Circular Linked List)의 특성으로 옳은 것은?",
+    choices: [
+      "addFirst O(1), addLast O(n), 역방향 탐색 불가",
+      "addFirst O(1), addLast O(1), 역방향 탐색 가능",
+      "addFirst O(n), addLast O(n), 역방향 탐색 가능",
+      "인덱스 랜덤 접근 O(1)",
+    ],
+    answer: 1,
+    brief: "양방향 링크 + 원형 = 모든 연산 O(1) + 역방향 가능.",
+    detailed: "이중 원형은 원형의 양끝 O(1) 장점과 이중의 역방향 탐색 가능성을 모두 가진다. 실무에서 가장 많이 사용되는 형태다.",
+    source: "5차시 § 5 / 6차시 § 0.2",
+  },
+  {
+    id: "DS_S4Q17", set: 4, week: 5, topic: "free 누락 결과", type: "multiple_choice", difficulty: "basic",
+    question: "연결 리스트에서 노드 삭제 후 free()를 호출하지 않으면 발생하는 현상은?",
+    choices: [
+      "Segmentation Fault",
+      "Stack Overflow",
+      "Memory Leak",
+      "Heap Overflow",
+    ],
+    answer: 2,
+    brief: "Heap 할당 후 해제하지 않음 = Memory Leak.",
+    detailed: "malloc으로 Heap에 할당받은 메모리를 free로 반환하지 않으면 사용 가능한 메모리가 점진적으로 줄어드는 Memory Leak이 발생한다.",
+    source: "5차시 § 3.4",
+  },
+  {
+    id: "DS_S4Q18", set: 4, week: 5, topic: "LL 비교", type: "multiple_choice", difficulty: "medium",
+    question: "단순·원형·이중 연결 리스트의 addLast 시간 복잡도로 올바른 조합은?",
+    choices: [
+      "단순: O(1), 원형: O(1), 이중: O(1)",
+      "단순: O(n), 원형: O(1), 이중: O(n)",
+      "단순: O(n), 원형: O(n), 이중: O(n)",
+      "단순: O(1), 원형: O(n), 이중: O(n)",
+    ],
+    answer: 1,
+    brief: "원형만 O(1), 나머지는 끝까지 순회.",
+    detailed: "단순 LL은 head부터 끝까지 순회 O(n). 원형 LL은 head가 마지막 노드라 O(1). 이중 LL은 head→끝 순회 O(n) (이중 원형이어야 O(1)).",
+    source: "5차시 § 종합",
+  },
+  {
+    id: "DS_S4Q19", set: 4, week: 5, topic: "역순 구현", type: "multiple_choice", difficulty: "medium",
+    question: "단순 연결 리스트를 역순으로 바꾸려 할 때 최소 몇 개의 포인터가 필요한가?",
+    choices: ["1개", "2개", "3개", "불가능"],
+    answer: 2,
+    brief: "prev, curr, next 3개.",
+    detailed: "단순 LL은 역방향 링크가 없으므로 이전 노드(prev), 현재 노드(curr), 다음 노드(next)를 각각 가리키는 3개 포인터로 링크를 하나씩 뒤집어야 한다.",
+    source: "5차시 § 3.5",
+  },
+  {
+    id: "DS_S4Q20", set: 4, week: 5, topic: "이중 원형 LL 이점", type: "multiple_choice", difficulty: "medium",
+    question: "이중 원형 연결 리스트가 실무에서 가장 널리 쓰이는 이유로 가장 적절한 것은?",
+    choices: [
+      "구조가 가장 단순하기 때문",
+      "addFirst·addLast가 모두 O(1)이면서 역방향 탐색도 O(1)로 가능하기 때문",
+      "메모리를 가장 적게 사용하기 때문",
+      "정렬이 쉽기 때문",
+    ],
+    answer: 1,
+    brief: "모든 끝 연산 O(1) + 양방향 탐색.",
+    detailed: "이중(양방향) + 원형(양 끝 O(1))의 장점을 모두 가져 삽입·삭제·탐색의 균형이 가장 뛰어나 실무 표준이다.",
+    source: "5차시 § 5.1 / 6차시 § 0.2",
+  },
+  {
+    id: "DS_S4Q21", set: 4, week: 5, topic: "빅오 매트릭스 — 원형 LL", type: "multiple_choice", difficulty: "medium",
+    question: "원형 연결 리스트(head가 마지막 노드를 가리킴)의 [addFirst / addLast / 임의 인덱스 접근 / 임의 키 탐색] 시간 복잡도로 옳은 것은?",
+    choices: [
+      "O(1) / O(1) / O(n) / O(n)",
+      "O(n) / O(n) / O(n) / O(n)",
+      "O(1) / O(n) / O(n) / O(n)",
+      "O(1) / O(1) / O(1) / O(n)",
+    ],
+    answer: 0,
+    brief: "양 끝 모두 O(1), 접근·탐색은 O(n).",
+    detailed: "원형 LL은 head가 마지막 노드를 가리키므로 head->link로 첫 노드에 O(1) 접근 가능 → addFirst·addLast 모두 O(1). 임의 인덱스·키 접근은 여전히 순회 필요로 O(n).",
+    source: "5차시 § 4 / 시간복잡도 매트릭스",
+  },
+
+  // ── 6차시 ──
+  {
+    id: "DS_S4Q22", set: 4, week: 6, topic: "top 초기값", type: "multiple_choice", difficulty: "basic",
+    question: "배열 기반 스택에서 top 변수의 초기값으로 일반적으로 사용되는 값은?",
+    choices: ["0", "-1", "MAX_SIZE - 1", "NULL"],
+    answer: 1,
+    brief: "top = -1 이 공백 상태.",
+    detailed: "배열 인덱스 0부터 시작하므로 공백을 표현하려면 top = -1로 초기화한다. is_empty 조건은 top == -1.",
+    source: "6차시 § 3.1",
+  },
+  {
+    id: "DS_S4Q23", set: 4, week: 6, topic: "peek vs pop", type: "multiple_choice", difficulty: "basic",
+    question: "스택의 peek(또는 top) 연산과 pop 연산의 차이로 옳은 것은?",
+    choices: [
+      "둘 다 동일한 연산이다",
+      "peek은 top 위치의 값을 반환하지만 삭제는 하지 않고, pop은 반환과 동시에 삭제한다",
+      "peek은 삭제만 수행하고 값은 반환하지 않는다",
+      "pop은 스택 전체를 비운다",
+    ],
+    answer: 1,
+    brief: "peek은 값만 확인, pop은 삭제 포함.",
+    detailed: "peek(top)은 최상단 값을 확인만 하고 top을 변경하지 않는다. pop은 값을 반환하면서 top을 1 감소시켜 실제 삭제한다.",
+    source: "6차시 § 2",
+  },
+  {
+    id: "DS_S4Q24", set: 4, week: 6, topic: "PUSH 의미", type: "multiple_choice", difficulty: "medium",
+    question: "C 코드 `stack[++top] = item;`의 동작 순서로 옳은 것은?",
+    choices: [
+      "stack[top]에 item을 대입한 뒤 top을 1 증가",
+      "top을 먼저 1 증가시킨 뒤 stack[top]에 item을 대입",
+      "item을 먼저 증가시킨 뒤 대입",
+      "top을 1 감소시킨 뒤 대입",
+    ],
+    answer: 1,
+    brief: "전위 ++: 먼저 증가 후 대입.",
+    detailed: "전위 ++는 변수를 먼저 증가시킨 후 그 값을 연산에 쓴다. top = -1에서 PUSH 시 top이 0이 된 뒤 stack[0]에 item 저장.",
+    source: "6차시 § 3.1",
+  },
+  {
+    id: "DS_S4Q25", set: 4, week: 6, topic: "스택 활용처", type: "multiple_choice", difficulty: "basic",
+    question: "스택(Stack) 자료구조가 사용되는 대표적인 응용이 아닌 것은?",
+    choices: [
+      "함수 호출 스택 (Call Stack)",
+      "수식의 중위→후위 변환 및 계산",
+      "에디터의 Undo 기능",
+      "운영체제의 라운드 로빈 스케줄링",
+    ],
+    answer: 3,
+    brief: "라운드 로빈은 큐(원형 LL).",
+    detailed: "스택은 LIFO 구조로 함수 호출·수식 계산·Undo·브라우저 뒤로가기 등에 쓰인다. 라운드 로빈 스케줄링은 순차 실행을 위해 FIFO의 원형 큐/원형 LL을 사용한다.",
+    source: "6차시 § 1.1 / 7차시",
+  },
+  {
+    id: "DS_S4Q26", set: 4, week: 6, topic: "괄호 매칭 알고리즘", type: "multiple_choice", difficulty: "medium",
+    question: "수식의 괄호 짝(여는 괄호 / 닫는 괄호)을 검사하는 알고리즘에서 사용하는 자료구조와 동작으로 옳은 것은?",
+    choices: [
+      "큐 — 여는 괄호를 Enqueue하고 닫는 괄호를 만나면 Dequeue 후 비교",
+      "스택 — 여는 괄호를 PUSH하고 닫는 괄호를 만나면 POP 후 짝 비교",
+      "해시 테이블 — 괄호 인덱스를 키로 저장 후 검색",
+      "이진 탐색 트리 — 괄호 위치를 정렬한 뒤 in-order 순회",
+    ],
+    answer: 1,
+    brief: "스택 PUSH/POP으로 가장 가까운 짝부터 검사.",
+    detailed: "괄호 짝 검사는 스택을 사용한다. 여는 괄호가 등장하면 PUSH, 닫는 괄호를 만나면 스택 top을 POP해 짝이 맞는지 비교한다. 끝까지 모두 짝이 맞고 스택이 비어 있으면 올바른 수식이다.",
+    source: "6차시 § 6 / 노트 응용",
+  },
+
+  // ── 7차시 ──
+  {
+    id: "DS_S4Q27", set: 4, week: 7, topic: "데크 구현", type: "multiple_choice", difficulty: "medium",
+    question: "데크(Deque)를 동적으로 구현할 때 가장 적합한 자료구조는?",
+    choices: [
+      "단순 연결 리스트",
+      "원형 연결 리스트 (단일 링크)",
+      "이중 연결 리스트",
+      "해시 테이블",
+    ],
+    answer: 2,
+    brief: "양방향 삽입·삭제 → 이중 연결 리스트.",
+    detailed: "데크는 양쪽 끝에서 모두 삽입·삭제가 가능해야 하므로 양방향 링크를 가진 이중 연결 리스트가 적합하다.",
+    source: "7차시 § 5.2",
+  },
+  {
+    id: "DS_S4Q28", set: 4, week: 7, topic: "스택 vs 큐", type: "multiple_choice", difficulty: "basic",
+    question: "스택(Stack)과 큐(Queue)의 비교 중 옳지 않은 것은?",
+    choices: [
+      "스택은 LIFO, 큐는 FIFO이다",
+      "스택은 한쪽 끝에서만 삽입·삭제, 큐는 rear에서 삽입·front에서 삭제",
+      "스택은 함수 호출, 큐는 프린터 대기열에 주로 쓰인다",
+      "둘 다 양쪽 끝에서 삽입·삭제가 자유롭다",
+    ],
+    answer: 3,
+    brief: "양쪽 끝 자유는 데크(Deque).",
+    detailed: "양쪽 끝에서 모두 삽입·삭제가 가능한 것은 스택·큐가 아니라 데크(Deque)다. 스택·큐는 연산 위치에 제약이 있다.",
+    source: "7차시 § 7.1",
+  },
+  {
+    id: "DS_S4Q29", set: 4, week: 7, topic: "데크 head/tail", type: "multiple_choice", difficulty: "medium",
     question: "이중 연결 리스트로 구현한 데크(Deque)에서 head와 tail 포인터의 역할은?",
     choices: [
       "head만 사용하고 tail은 필요하지 않다",
@@ -1177,21 +1652,7 @@ export const set3 = [
     source: "7차시 § 5.2",
   },
   {
-    id: "DS_S3Q29", set: 3, week: 7, topic: "우선순위 큐 구현법", type: "multiple_choice", difficulty: "medium",
-    question: "우선순위 큐를 배열이나 단순 연결 리스트로 구현하지 않는 이유로 가장 적절한 것은?",
-    choices: [
-      "C 언어에서 지원되지 않기 때문",
-      "삽입·삭제 시 매번 전체를 탐색해야 해서 효율이 떨어지기 때문",
-      "메모리 사용량이 너무 많기 때문",
-      "우선순위를 부여할 수 없기 때문",
-    ],
-    answer: 1,
-    brief: "선형 자료는 우선순위 유지에 O(n) 필요.",
-    detailed: "배열·리스트로는 삽입 위치 찾기 또는 최대/최소 찾기에 O(n)이 든다. 힙(Heap)으로 구현하면 둘 다 O(log n)으로 가능하다.",
-    source: "7차시 § 6.3",
-  },
-  {
-    id: "DS_S3Q30", set: 3, week: 7, topic: "Max vs Min Heap", type: "multiple_choice", difficulty: "basic",
+    id: "DS_S4Q30", set: 4, week: 7, topic: "Max vs Min Heap", type: "multiple_choice", difficulty: "basic",
     question: "Max Heap과 Min Heap에 대한 설명 중 옳은 것은?",
     choices: [
       "Max Heap은 루트에 가장 큰 값, Min Heap은 루트에 가장 작은 값이 있다",
@@ -1209,12 +1670,12 @@ export const set3 = [
 // ═══════════════════════════════════════════════════════════════
 // 메타 + 전체 모음
 // ═══════════════════════════════════════════════════════════════
-const ALL = [...set1, ...set2, ...set3];
+const ALL = [...set1, ...set2, ...set3, ...set4];
 
 export const META = {
   id: "ds",
   title: "자료구조",
-  subtitle: "1~7차시 · 3세트 × 30문제 = 90문제",
+  subtitle: "1~7차시 · 4세트 × 30문제 = 120문제",
   emoji: "📊",
   color: "#1E7E5F",
   available: true,
@@ -1239,6 +1700,7 @@ export function getSetQuestions(setId) {
     case 1: return set1;
     case 2: return set2;
     case 3: return set3;
+    case 4: return set4;
     default: return [];
   }
 }
