@@ -218,7 +218,7 @@ export const set1 = [
   },
   {
     id: "DS_S1Q15", set: 1, week: 5, topic: "빅오 매트릭스 — 단순 LL", type: "multiple_choice", difficulty: "medium",
-    question: "단순 연결 리스트(Singular Linked List)의 [접근(인덱스) / 탐색(키) / addFirst / addLast] 시간 복잡도를 순서대로 옳게 나열한 것은?",
+    question: "단순 연결 리스트(Singly Linked List)의 [접근(인덱스) / 탐색(키) / addFirst / addLast] 시간 복잡도를 순서대로 옳게 나열한 것은? (tail 포인터 없음, head만 보유)",
     choices: [
       "O(1) / O(1) / O(1) / O(n)",
       "O(n) / O(n) / O(1) / O(n)",
@@ -226,8 +226,8 @@ export const set1 = [
       "O(log n) / O(n) / O(1) / O(1)",
     ],
     answer: 1,
-    brief: "단순 LL은 끝까지 가야 하므로 addLast는 O(n).",
-    detailed: "단순 LL은 head만 가지므로 임의 인덱스 접근·탐색은 O(n). addFirst는 head 앞에 끼워넣으면 되므로 O(1). addLast는 마지막 노드까지 순회 필요 → O(n).",
+    brief: "단순 연결 리스트는 끝까지 가야 하므로 addLast는 O(n).",
+    detailed: "단순 연결 리스트는 head만 가지므로 임의 인덱스 접근·탐색은 O(n). addFirst는 head 앞에 끼워넣으면 되므로 O(1). addLast는 마지막 노드까지 순회 필요 → O(n).",
     source: "5차시 § 3 / 시간복잡도 매트릭스",
   },
   {
@@ -371,7 +371,7 @@ export const set1 = [
   },
   {
     id: "DS_S1Q26", set: 1, week: 7, topic: "원형 큐 Empty", type: "multiple_choice", difficulty: "basic",
-    question: "원형 큐(Circular Queue)의 Empty 조건은?",
+    question: "원형 큐(Circular Queue)의 Empty 조건은? (한 칸 비우기 표준 구현 기준)",
     choices: [
       "front == rear",
       "front == -1 && rear == -1",
@@ -417,12 +417,12 @@ export const set1 = [
     choices: [
       "병원 응급실의 환자 처리 순서 결정",
       "은행 창구의 일반 대기 줄",
-      "텍스트 에디터의 양방향 Undo·Redo 또는 슬라이딩 윈도우 최댓값",
+      "슬라이딩 윈도우 최댓값 (Sliding Window Maximum)",
       "프린터 작업 대기열",
     ],
     answer: 2,
     brief: "양쪽 끝 연산이 모두 필요한 응용 = 데크.",
-    detailed: "데크(Deque, Double-Ended Queue)는 양쪽 끝에서 모두 삽입·삭제가 가능한 자료구조다. 텍스트 에디터의 양방향 Undo·Redo, 슬라이딩 윈도우 최댓값처럼 양 끝에서 작업이 발생하는 경우에 적합하다. 응급실은 우선순위 큐, 은행·프린터는 일반 큐.",
+    detailed: "데크(Deque, Double-Ended Queue)는 양쪽 끝에서 모두 삽입·삭제가 가능한 자료구조다. 슬라이딩 윈도우 최댓값처럼 양 끝에서 작업이 발생하는 경우에 적합하다. 응급실은 우선순위 큐, 은행·프린터는 일반 큐.",
     source: "7차시 § 5",
   },
   {
@@ -621,11 +621,11 @@ export const set2 = [
   },
   {
     id: "DS_S2Q14", set: 2, week: 5, topic: "LL 연산 복잡도", type: "multiple_choice", difficulty: "medium",
-    question: "단순 연결 리스트(Singular Linked List)의 addLast 연산 시간 복잡도는?",
+    question: "단순 연결 리스트(Singly Linked List)의 addLast 연산 시간 복잡도는?",
     choices: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
     answer: 2,
     brief: "마지막 노드를 찾기 위해 전체 순회 필요.",
-    detailed: "단순 연결 리스트는 head만 알기 때문에 마지막 노드에 도달하려면 처음부터 순차 탐색해야 해서 O(n)이다. 원형·이중 원형 LL에서는 O(1)이다.",
+    detailed: "단순 연결 리스트는 head만 알기 때문에 마지막 노드에 도달하려면 처음부터 순차 탐색해야 해서 O(n)이다. 원형 연결 리스트(Circular Linked List)·이중 원형 연결 리스트(Doubly Circular Linked List)에서는 O(1)이다.",
     source: "5차시 § 3",
   },
   {
@@ -635,11 +635,11 @@ export const set2 = [
       "빈 리스트에 최초 노드를 삽입할 때",
       "기존 리스트 맨 앞에 삽입할 때 (addFirst)",
       "리스트 중간에 새 노드를 삽입할 때",
-      "첫 번째 노드를 삭제할 때 (head = head->link)",
+      "첫 번째 노드를 삭제할 때",
     ],
     answer: 2,
     brief: "중간 삽입만 head 불변.",
-    detailed: "단순 LL에서 head 변경 케이스: ① 빈 리스트 첫 삽입(NULL→new_node), ② addFirst(기존 첫 노드→new_node), ④ 첫 노드 삭제(head→link로 갱신). ③ 중간·끝 삽입은 기존 첫 노드가 그대로라 head 불변.",
+    detailed: "단순 연결 리스트(Singly Linked List)에서 head 변경 케이스: ① 빈 리스트 첫 삽입(NULL→new_node), ② addFirst(기존 첫 노드→new_node), ④ 첫 노드 삭제(head→link로 갱신). ③ 중간·끝 삽입은 기존 첫 노드가 그대로라 head 불변.",
     source: "5차시 § 3.2 / 3.4",
   },
   {
@@ -681,7 +681,7 @@ export const set2 = [
   },
   {
     id: "DS_S2Q19", set: 2, week: 5, topic: "빅오 매트릭스 — 이중 LL", type: "multiple_choice", difficulty: "medium",
-    question: "이중 연결 리스트(Doubly LL, head 만 보유)의 [임의 인덱스 접근 / addFirst / 노드가 주어진 삽입 / 노드가 주어진 삭제] 시간 복잡도로 옳은 것은?",
+    question: "이중 연결 리스트(Doubly Linked List, head 만 보유)의 [임의 인덱스 접근 / addFirst / 노드 주소가 주어진 상태에서 그 노드 뒤 삽입 / 노드 주소가 주어진 상태에서 그 노드 삭제] 시간 복잡도로 옳은 것은?",
     choices: [
       "O(1) / O(1) / O(1) / O(1)",
       "O(n) / O(1) / O(1) / O(1)",
@@ -690,7 +690,7 @@ export const set2 = [
     ],
     answer: 1,
     brief: "노드 주소가 주어지면 양쪽 링크 갱신 O(1).",
-    detailed: "이중 LL은 임의 인덱스 접근은 head부터 순회해 O(n)이지만, 노드 주소가 주어졌다면 양쪽 링크만 갱신하면 되므로 삽입·삭제 O(1). addFirst도 head 앞에 끼우면 되므로 O(1).",
+    detailed: "이중 연결 리스트는 임의 인덱스 접근은 head부터 순회해 O(n)이지만, 노드 주소가 주어졌다면 양쪽 링크만 갱신하면 되므로 삽입·삭제 O(1). addFirst도 head 앞에 끼우면 되므로 O(1).",
     source: "5차시 § 5 / 시간복잡도 매트릭스",
   },
 
@@ -819,7 +819,7 @@ export const set2 = [
     source: "7차시 § 8",
   },
   {
-    id: "DS_S2Q29", set: 2, week: 7, topic: "선형 큐 Enqueue O(?)", type: "multiple_choice", difficulty: "medium",
+    id: "DS_S2Q29", set: 2, week: 7, topic: "선형 큐 Dequeue O(n)", type: "multiple_choice", difficulty: "medium",
     question: "선형 큐(Linear Queue, 배열 기반)에서 front를 항상 0으로 유지하는 단순 구현일 때, Dequeue 연산 후 데이터 정렬을 수행한다면 평균 시간 복잡도는? (그리고 그 이유)",
     choices: [
       "O(1) — front만 1 증가시키면 되기 때문",
@@ -836,9 +836,9 @@ export const set2 = [
     id: "DS_S2Q30", set: 2, week: 7, topic: "빅오 매트릭스 종합", type: "multiple_choice", difficulty: "hard",
     question: "다음 중 자료구조와 [접근/탐색/삽입/삭제] 시간 복잡도 매칭으로 잘못된 것은?",
     choices: [
-      "정적 배열: O(1) / O(n) / O(n) / O(n)",
-      "단순 LL (인덱스 접근, addLast 기준): O(n) / O(n) / O(n) / O(n)",
-      "이중 원형 LL (양 끝, 노드 주어짐): O(n) / O(n) / O(1) / O(1)",
+      "정적 배열 (비정렬): O(1) / O(n) / O(n) / O(n)",
+      "단순 연결 리스트 (Singly Linked List, 인덱스 접근, addLast 기준): O(n) / O(n) / O(n) / O(n)",
+      "이중 원형 연결 리스트 (Doubly Circular Linked List, 양 끝, 노드 주어짐): O(n) / O(n) / O(1) / O(1)",
       "원형 큐(배열): O(1) / O(1) / O(1) / O(1)",
     ],
     answer: 3,
@@ -956,7 +956,7 @@ export const set3 = [
     id: "DS_S3Q9", set: 3, week: 3, topic: "순환 4형태 매칭", type: "multiple_choice", difficulty: "hard",
     question: "다음 중 Non-tail Recursion(비꼬리 순환)에 해당하는 예시는?",
     choices: [
-      "이진 검색",
+      "이진 검색 (재귀 호출이 마지막 문장)",
       "팩토리얼 (`n * factorial(n-1)`)",
       "꼬리 재귀 최적화된 누적 합계",
       "while 루프로 변환된 반복문",
@@ -1003,13 +1003,13 @@ export const set3 = [
     question: "이중 연결 리스트(Doubly Linked List)의 단점으로 가장 적절한 것은?",
     choices: [
       "삽입·삭제 시 데이터 이동이 많다",
-      "각 노드가 llink·rlink 두 포인터를 가져 메모리 사용량이 단순 LL보다 많다",
+      "각 노드가 llink·rlink 두 포인터를 가져 메모리 사용량이 단순 연결 리스트(Singly Linked List)보다 많다",
       "역방향 탐색이 불가능하다",
       "인덱스 접근이 O(1)이다",
     ],
     answer: 1,
     brief: "포인터 2개 = 메모리 추가 사용.",
-    detailed: "이중 LL은 각 노드에 llink와 rlink 두 개의 포인터를 두므로 단순 LL보다 노드당 4~8바이트 추가 메모리를 쓴다. 대신 역방향 탐색 O(1).",
+    detailed: "이중 연결 리스트는 각 노드에 llink와 rlink 두 개의 포인터를 두므로 단순 연결 리스트보다 노드당 4~8바이트 추가 메모리를 쓴다. 대신 역방향 탐색 O(1).",
     source: "5차시 § 5.1",
   },
   {
@@ -1401,7 +1401,7 @@ export const set4 = [
       "배열 첫 원소의 값 (A[0])",
       "배열의 크기 (10)",
       "배열 첫 원소의 주소 상수 (&A[0])",
-      "배열을 가리키는 포인터 변수",
+      "값을 변경할 수 있는 포인터 변수",
     ],
     answer: 2,
     brief: "1차원 배열 이름 = 주소 상수.",
@@ -1471,8 +1471,8 @@ export const set4 = [
       "인덱스 랜덤 접근 O(1)",
     ],
     answer: 1,
-    brief: "양방향 링크 + 원형 = 모든 연산 O(1) + 역방향 가능.",
-    detailed: "이중 원형은 원형의 양끝 O(1) 장점과 이중의 역방향 탐색 가능성을 모두 가진다. 실무에서 가장 많이 사용되는 형태다.",
+    brief: "양 끝 삽입·삭제 O(1) + 양방향 탐색 가능.",
+    detailed: "이중 원형 연결 리스트는 원형의 양끝 O(1) 장점과 이중의 역방향 탐색 가능성을 모두 가진다. 실무에서 가장 많이 사용되는 형태다.",
     source: "5차시 § 5 / 6차시 § 0.2",
   },
   {
@@ -1491,7 +1491,7 @@ export const set4 = [
   },
   {
     id: "DS_S4Q18", set: 4, week: 5, topic: "LL 비교", type: "multiple_choice", difficulty: "medium",
-    question: "단순·원형·이중 연결 리스트의 addLast 시간 복잡도로 올바른 조합은? (모두 head 포인터만 보유, tail 포인터 없음)",
+    question: "단순·원형·이중 연결 리스트 (Singly/Circular/Doubly Linked List)의 addLast 시간 복잡도로 올바른 조합은? (모두 head 포인터만 보유, tail 포인터 없음)",
     choices: [
       "단순: O(1), 원형: O(1), 이중: O(1)",
       "단순: O(n), 원형: O(1), 이중: O(n)",
@@ -1500,7 +1500,7 @@ export const set4 = [
     ],
     answer: 1,
     brief: "원형만 O(1), 나머지는 끝까지 순회.",
-    detailed: "단순 LL은 head부터 끝까지 순회 O(n). 원형 LL은 head가 마지막 노드라 O(1). 이중 LL은 head→끝 순회 O(n) (이중 원형이어야 O(1)).",
+    detailed: "단순 연결 리스트는 head부터 끝까지 순회 O(n). 원형 연결 리스트는 head가 마지막 노드라 O(1). 이중 연결 리스트는 head→끝 순회 O(n) (이중 원형이어야 O(1)).",
     source: "5차시 § 종합",
   },
   {
@@ -1509,7 +1509,7 @@ export const set4 = [
     choices: ["1개", "2개", "3개", "불가능"],
     answer: 2,
     brief: "prev, curr, next 3개.",
-    detailed: "단순 LL은 역방향 링크가 없으므로 이전 노드(prev), 현재 노드(curr), 다음 노드(next)를 각각 가리키는 3개 포인터로 링크를 하나씩 뒤집어야 한다.",
+    detailed: "단순 연결 리스트(Singly Linked List)는 역방향 링크가 없으므로 이전 노드(prev), 현재 노드(curr), 다음 노드(next)를 각각 가리키는 3개 포인터로 링크를 하나씩 뒤집어야 한다.",
     source: "5차시 § 3.5",
   },
   {
@@ -1537,7 +1537,7 @@ export const set4 = [
     ],
     answer: 0,
     brief: "양 끝 모두 O(1), 접근·탐색은 O(n).",
-    detailed: "원형 LL은 head가 마지막 노드를 가리키므로 head->link로 첫 노드에 O(1) 접근 가능 → addFirst·addLast 모두 O(1). 임의 인덱스·키 접근은 여전히 순회 필요로 O(n).",
+    detailed: "원형 연결 리스트(Circular Linked List)는 head가 마지막 노드를 가리키므로 head->link로 첫 노드에 O(1) 접근 가능 → addFirst·addLast 모두 O(1). 임의 인덱스·키 접근은 여전히 순회 필요로 O(n).",
     source: "5차시 § 4 / 시간복잡도 매트릭스",
   },
 
@@ -1589,8 +1589,8 @@ export const set4 = [
       "운영체제의 라운드 로빈 스케줄링",
     ],
     answer: 3,
-    brief: "라운드 로빈은 큐(원형 LL).",
-    detailed: "스택은 LIFO 구조로 함수 호출·수식 계산·Undo·브라우저 뒤로가기 등에 쓰인다. 라운드 로빈 스케줄링은 순차 실행을 위해 FIFO의 원형 큐/원형 LL을 사용한다.",
+    brief: "라운드 로빈은 큐(원형 연결 리스트).",
+    detailed: "스택은 LIFO 구조로 함수 호출·수식 계산·Undo·브라우저 뒤로가기 등에 쓰인다. 라운드 로빈 스케줄링은 순차 실행을 위해 FIFO의 원형 큐/원형 연결 리스트(Circular Linked List)를 사용한다.",
     source: "6차시 § 1.1 / 7차시",
   },
   {
@@ -1620,7 +1620,7 @@ export const set4 = [
     ],
     answer: 2,
     brief: "양방향 삽입·삭제 → 이중 연결 리스트.",
-    detailed: "데크는 양쪽 끝에서 모두 삽입·삭제가 가능해야 하므로 양방향 링크를 가진 이중 연결 리스트가 적합하다.",
+    detailed: "데크는 양쪽 끝에서 모두 삽입·삭제가 가능해야 하므로 양방향 링크를 가진 이중 연결 리스트가 적합하다. 원형 단일 연결 리스트는 deleteLast가 O(n)이므로 부적합.",
     source: "7차시 § 5.2",
   },
   {
@@ -1648,7 +1648,7 @@ export const set4 = [
     ],
     answer: 1,
     brief: "head=front, tail=rear.",
-    detailed: "데크는 양쪽 끝에서 삽입·삭제가 필요하므로 head(앞쪽)와 tail(뒤쪽) 두 포인터를 관리한다. 이중 LL이라 각 방향 연산 모두 O(1).",
+    detailed: "데크는 양쪽 끝에서 삽입·삭제가 필요하므로 head(앞쪽)와 tail(뒤쪽) 두 포인터를 관리한다. 이중 연결 리스트(Doubly Linked List)이라 각 방향 연산 모두 O(1).",
     source: "7차시 § 5.2",
   },
   {
