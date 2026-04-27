@@ -102,12 +102,12 @@ export const set1 = [
     choices: [
       "문제 정의 자체가 순환적일 것",
       "대상을 크게(반씩) 쪼갤 수 있을 것",
-      "Tail Recursion 형태로 작성 가능할 것",
+      "Base Case(종료 조건)가 명확할 것",
       "입력 크기가 작을 것",
     ],
     answer: 3,
     brief: "입력 크기는 조건이 아님.",
-    detailed: "순환 적합 4조건: ① 정의 순환적, ② 크게(반씩) 쪼갬, ③ Tail 형태, ④ Base Case 확실. 입력 크기는 포함되지 않는다.",
+    detailed: "순환 적합 조건: ① 문제 정의가 순환적, ② 입력을 크게(반씩) 쪼갤 수 있음, ③ Base Case(종료 조건)가 명확. 입력 크기 자체는 적합 조건이 아니다.",
     source: "3차시 § 4",
   },
   {
@@ -743,7 +743,7 @@ export const set2 = [
     ],
     answer: 2,
     brief: "+ 처리 후 (A+B), * 처리 후 (A+B)*C.",
-    detailed: "토큰 순서: A 푸시 → [A]. B 푸시 → [A, B]. + 처리 → POP 두 번 후 (A+B) PUSH → [(A+B)]. C 푸시 → [(A+B), C]. * 처리 → POP 두 번 후 (A+B)*C PUSH → [(A+B)*C]. 정답은 4번째 토큰(`*`) 처리 직후이므로 [(A+B)*C].",
+    detailed: "토큰 순서: A(1) 푸시 → [A]. B(2) 푸시 → [A, B]. +(3) 처리 → POP 두 번 후 (A+B) PUSH → [(A+B)]. C(4) 푸시 → [(A+B), C]. *(5) 처리 → POP 두 번 후 (A+B)*C PUSH → [(A+B)*C]. 5번째 토큰(`*`) 처리 직후이므로 [(A+B)*C].",
     source: "6차시 § 7",
   },
   {
@@ -764,7 +764,7 @@ export const set2 = [
   // ── 7차시 — 큐·데크·우선순위 큐 (예고 영역) ──
   {
     id: "DS_S2Q25", set: 2, week: 7, topic: "원형 큐 Empty 재확인", type: "multiple_choice", difficulty: "basic",
-    question: "원형 큐의 Empty 상태를 판정하는 조건으로 옳은 것은?",
+    question: "초기 front = 0, rear = 0인 원형 큐의 Empty 상태를 판정하는 조건으로 옳은 것은?",
     choices: [
       "front == -1",
       "front == rear",
@@ -855,11 +855,11 @@ export const set3 = [
   // ── 2차시 ──
   {
     id: "DS_S3Q1", set: 3, week: 2, topic: "빅오 계산", type: "multiple_choice", difficulty: "medium",
-    question: "T(n) = 5 × 2ⁿ + 3n²의 빅오 표기는?",
-    choices: ["O(n²)", "O(2ⁿ)", "O(5 × 2ⁿ)", "O(n² × 2ⁿ)"],
-    answer: 1,
+    question: "T(n) = 5 × 2ⁿ + 3n²의 빅오 표기로 가장 적절한(타이트한) 것은?",
+    choices: ["O(n)", "O(n²)", "O(2ⁿ)", "O(log n)"],
+    answer: 2,
     brief: "지수 항이 다항 항을 압도 → O(2ⁿ).",
-    detailed: "지수 항 2ⁿ은 다항 n²보다 훨씬 빠르게 증가하므로 최고차 항은 2ⁿ이다. 계수는 제거 → O(2ⁿ).",
+    detailed: "최고차 항 식별: 2ⁿ vs n². 지수 항 2ⁿ이 다항 n²을 압도적으로 빠르게 증가시키므로 최고차 항은 2ⁿ. 계수 5 제거 → O(2ⁿ). O(n²)·O(n)·O(log n)은 모두 2ⁿ보다 느리게 증가하므로 상한이 될 수 없음.",
     source: "2차시 § 6.1",
   },
   {
@@ -1014,16 +1014,16 @@ export const set3 = [
   },
   {
     id: "DS_S3Q13", set: 3, week: 5, topic: "이중 LL 삽입 원칙", type: "multiple_choice", difficulty: "hard",
-    question: "이중 연결 리스트 삽입 코드 4줄을 임의 순서로 섞었을 때, 반드시 **먼저** 실행되어야 하는 두 줄은?",
+    question: "이중 연결 리스트 삽입의 4줄 코드 중, **new_node의 두 링크 필드를 설정하는 두 줄** (반드시 다른 두 줄보다 먼저 실행되어야 함) 로 올바른 것은?",
     choices: [
       "before->rlink = new_node; before->rlink->llink = new_node;",
       "new_node->llink = before; new_node->rlink = before->rlink;",
-      "new_node->rlink = before->rlink; before->rlink = new_node;",
-      "before->rlink->llink = new_node; new_node->llink = before;",
+      "new_node->rlink = new_node; new_node->llink = new_node;",
+      "before->llink = new_node; new_node->rlink = before;",
     ],
     answer: 1,
-    brief: "new_node의 두 링크를 먼저.",
-    detailed: "new_node의 llink·rlink를 먼저 설정해야 before->rlink(원래 다음 노드)의 주소가 new_node에 안전하게 복사된 뒤 덮어쓸 수 있다.",
+    brief: "new_node의 llink와 rlink 둘 다 먼저 설정.",
+    detailed: "new_node의 llink·rlink를 먼저 설정해야 before->rlink(원래 다음 노드)의 주소가 new_node에 안전하게 복사된 뒤, 이후 단계에서 before->rlink를 덮어써도 다음 노드 참조가 살아있다. 보기 1만 new_node의 두 링크를 다른 노드 참조 없이 정확히 설정.",
     source: "5차시 § 5.2",
   },
   {
@@ -1212,13 +1212,13 @@ export const set3 = [
     question: "연결 리스트로 구현한 동적 큐에서 Full 상태 검사가 필요하지 않은 이유는?",
     choices: [
       "연결 리스트는 삽입 속도가 빠르기 때문",
-      "Heap 메모리가 허용하는 한 크기가 무제한이기 때문",
-      "동적 큐는 Full이 없는 자료구조이므로",
+      "Heap 메모리가 허용하는 한 노드를 계속 할당할 수 있기 때문",
+      "C 컴파일러가 큐 자료구조의 Full을 자동으로 처리하기 때문",
       "rear 포인터가 NULL일 수 없기 때문",
     ],
     answer: 1,
     brief: "동적 할당이라 크기 제한 없음.",
-    detailed: "동적 큐는 Heap에서 필요할 때마다 노드를 할당하므로 메모리가 허용하는 한 Full이 발생하지 않는다. Empty 검사만 필요하다.",
+    detailed: "동적 큐는 Heap에서 필요할 때마다 노드를 malloc하므로 메모리가 허용하는 한 Full이 발생하지 않는다. Empty 검사만 필요하다. 보기 2는 거짓 — C는 자료구조의 Full을 자동 처리하지 않는다.",
     source: "7차시 § 4.1",
   },
   {
@@ -1272,11 +1272,11 @@ export const set4 = [
   // ── 2차시 ──
   {
     id: "DS_S4Q1", set: 4, week: 2, topic: "시간 복잡도 계산", type: "multiple_choice", difficulty: "medium",
-    question: "시간 복잡도 함수 T(n) = 2n² + 3n + 1의 빅오 표기로 옳은 것은?",
-    choices: ["O(n)", "O(n²)", "O(2n²)", "O(2ⁿ)"],
+    question: "시간 복잡도 함수 T(n) = 2n² + 3n + 1의 빅오 표기로 가장 적절한(타이트한) 것은?",
+    choices: ["O(n)", "O(n²)", "O(n³)", "O(2ⁿ)"],
     answer: 1,
     brief: "최고차항만 남기고 계수 제거 → O(n²).",
-    detailed: "점근적 표기법에서는 최고차항만 남기고 계수·하위항을 제거한다. 2n² + 3n + 1 → O(n²).",
+    detailed: "점근적 표기법에서는 최고차항만 남기고 계수·하위항을 제거한다. 2n² + 3n + 1 → O(n²). O(n)·O(log n)은 너무 낮고, O(n³)·O(2ⁿ)은 타이트하지 않은 더 큰 상한.",
     source: "2차시 § 6.1",
   },
   {
@@ -1491,7 +1491,7 @@ export const set4 = [
   },
   {
     id: "DS_S4Q18", set: 4, week: 5, topic: "LL 비교", type: "multiple_choice", difficulty: "medium",
-    question: "단순·원형·이중 연결 리스트의 addLast 시간 복잡도로 올바른 조합은?",
+    question: "단순·원형·이중 연결 리스트의 addLast 시간 복잡도로 올바른 조합은? (모두 head 포인터만 보유, tail 포인터 없음)",
     choices: [
       "단순: O(1), 원형: O(1), 이중: O(1)",
       "단순: O(n), 원형: O(1), 이중: O(n)",
@@ -1517,7 +1517,7 @@ export const set4 = [
     question: "이중 원형 연결 리스트가 실무에서 가장 널리 쓰이는 이유로 가장 적절한 것은?",
     choices: [
       "구조가 가장 단순하기 때문",
-      "addFirst·addLast가 모두 O(1)이면서 역방향 탐색도 O(1)로 가능하기 때문",
+      "addFirst·addLast가 모두 O(1)이면서 양방향 탐색이 가능하기 때문",
       "메모리를 가장 적게 사용하기 때문",
       "정렬이 쉽기 때문",
     ],
