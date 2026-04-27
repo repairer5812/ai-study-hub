@@ -734,7 +734,7 @@ export const set2 = [
   },
   {
     id: "DS_S2Q23", set: 2, week: 6, topic: "후위식 트레이싱", type: "multiple_choice", difficulty: "hard",
-    question: "후위 표기식 `A B + C * D -` 를 계산할 때, 4번째 토큰 `*`을 처리하고 난 직후 스택의 상태(아래→위)는? (피연산자는 그 자체 값이라 가정)",
+    question: "후위 표기식 `A B + C * D -` 를 계산할 때, 5번째 토큰 `*`을 처리하고 난 직후 스택의 상태(아래→위)는? (피연산자는 그 자체 값이라 가정)",
     choices: [
       "[A]",
       "[(A+B)]",
@@ -1457,7 +1457,7 @@ export const set4 = [
       "역방향 탐색이 O(1)이 된다",
     ],
     answer: 1,
-    brief: "맨 앞·맨 뒤 모두 O(1) 접근.",
+    brief: "맨 앞·맨 뒤 모두 O(1) 삽입.",
     detailed: "head가 마지막 노드를 가리키면 head->link가 첫 노드이므로 addFirst는 O(1). 마지막 노드도 head이므로 addLast도 O(1).",
     source: "5차시 § 4.1",
   },
