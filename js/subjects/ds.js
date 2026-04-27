@@ -146,7 +146,7 @@ export const set1 = [
   },
   {
     id: "DS_S1Q10", set: 1, week: 4, topic: "빅오 매트릭스 — 배열", type: "multiple_choice", difficulty: "medium",
-    question: "정적 배열(고정 크기) 기반 리스트의 [임의 접근(Random Access) / 임의 키 탐색(Search) / 중간 삽입 / 중간 삭제] 시간 복잡도를 순서대로 옳게 나열한 것은?",
+    question: "정적 배열(고정 크기) 기반 리스트의 [인덱스 접근(Indexed Access) / 키 탐색(Search by Key) / 중간 삽입 / 중간 삭제] 시간 복잡도를 순서대로 옳게 나열한 것은?",
     choices: [
       "O(1) / O(n) / O(n) / O(n)",
       "O(n) / O(n) / O(1) / O(1)",
@@ -154,8 +154,8 @@ export const set1 = [
       "O(1) / O(n) / O(1) / O(1)",
     ],
     answer: 0,
-    brief: "임의 접근 O(1), 탐색·삽입·삭제는 Shift 때문에 O(n).",
-    detailed: "정적 배열은 인덱스로 즉시 위치를 계산하는 임의 접근(Random Access)이 O(1)이다. 그러나 임의 키 탐색은 선형 O(n)이고, 중간 삽입·삭제는 데이터 이동(Shift)이 필요해 O(n)이다.",
+    brief: "인덱스 접근 O(1), 키 탐색·삽입·삭제는 Shift 때문에 O(n).",
+    detailed: "정적 배열은 인덱스로 즉시 위치를 계산하는 인덱스 접근(Indexed Access)이 O(1)이다. 그러나 키 탐색은 선형 O(n)이고, 중간 삽입·삭제는 데이터 이동(Shift)이 필요해 O(n)이다.",
     source: "4차시 § 6 / 시간복잡도 매트릭스",
   },
 
@@ -299,7 +299,7 @@ export const set1 = [
   },
   {
     id: "DS_S1Q21", set: 1, week: 6, topic: "빅오 매트릭스 — 스택", type: "multiple_choice", difficulty: "basic",
-    question: "배열 기반 스택의 [PUSH / POP / Peek / 임의 키 탐색(Search)] 시간 복잡도로 옳은 것은?",
+    question: "배열 기반 스택의 [PUSH / POP / Peek / 키 탐색(Search by Key)] 시간 복잡도로 옳은 것은?",
     choices: [
       "O(1) / O(1) / O(1) / O(n)",
       "O(1) / O(1) / O(1) / O(1)",
@@ -307,8 +307,8 @@ export const set1 = [
       "O(log n) / O(log n) / O(1) / O(n)",
     ],
     answer: 0,
-    brief: "Top 연산은 모두 O(1), 임의 키 탐색은 O(n).",
-    detailed: "PUSH·POP·Peek 모두 top 한 위치에서만 일어나므로 O(1). 다만 임의 키 탐색(Search)은 스택 전체를 순차 접근해야 하므로 O(n)이다.",
+    brief: "Top 연산은 모두 O(1), 키 탐색은 O(n).",
+    detailed: "PUSH·POP·Peek 모두 top 한 위치에서만 일어나므로 O(1). 다만 키 탐색(Search by Key)은 스택 전체를 순차 접근해야 하므로 O(n)이다.",
     source: "6차시 § 3 / 시간복잡도 매트릭스",
   },
   {
@@ -399,7 +399,7 @@ export const set1 = [
   },
   {
     id: "DS_S1Q28", set: 1, week: 7, topic: "빅오 매트릭스 — 원형 큐", type: "multiple_choice", difficulty: "basic",
-    question: "원형 큐(배열 기반)의 [Enqueue / Dequeue / Peek / 임의 키 탐색(Search)] 시간 복잡도로 옳은 것은?",
+    question: "원형 큐(배열 기반)의 [Enqueue / Dequeue / Peek / 키 탐색(Search by Key)] 시간 복잡도로 옳은 것은?",
     choices: [
       "O(1) / O(1) / O(1) / O(n)",
       "O(n) / O(n) / O(n) / O(n)",
@@ -407,8 +407,8 @@ export const set1 = [
       "O(log n) / O(log n) / O(1) / O(n)",
     ],
     answer: 0,
-    brief: "양 끝 연산은 O(1), 임의 키 탐색은 O(n).",
-    detailed: "원형 큐는 rear와 front 인덱스만 갱신하면 되므로 Enqueue·Dequeue·Peek 모두 O(1). 임의 키 탐색(Search)은 큐 전체를 순차 접근해야 하므로 O(n).",
+    brief: "양 끝 연산은 O(1), 키 탐색은 O(n).",
+    detailed: "원형 큐는 rear와 front 인덱스만 갱신하면 되므로 Enqueue·Dequeue·Peek 모두 O(1). 키 탐색(Search by Key)은 큐 전체를 순차 접근해야 하므로 O(n).",
     source: "7차시 § 3 / 시간복잡도 매트릭스",
   },
   {
@@ -621,7 +621,7 @@ export const set2 = [
   },
   {
     id: "DS_S2Q14", set: 2, week: 5, topic: "단순 LL 임의 접근·탐색", type: "multiple_choice", difficulty: "medium",
-    question: "단순 연결 리스트(Singly Linked List, head만 보유)에서 [i번째 노드의 임의 접근 (Random Access) / 임의 키 탐색 (Search)] 시간 복잡도로 옳은 것은?",
+    question: "단순 연결 리스트(Singly Linked List, head만 보유)에서 [i번째 노드의 인덱스 접근 (Indexed Access) / 키 탐색 (Search by Key)] 시간 복잡도로 옳은 것은?",
     choices: [
       "O(1) / O(1)",
       "O(1) / O(n)",
@@ -630,7 +630,7 @@ export const set2 = [
     ],
     answer: 2,
     brief: "둘 다 head부터 순차 접근(Sequential Access) → O(n).",
-    detailed: "단순 연결 리스트는 인덱스로 즉시 위치를 계산할 수 없어 i번째 노드를 찾으려면 head부터 한 칸씩 따라가는 순차 접근이 필요하다 → O(n). 임의 키 탐색도 마찬가지로 head부터 선형으로 비교해야 하므로 O(n)이다. 배열의 임의 접근(Random Access) O(1)과 대조된다.",
+    detailed: "단순 연결 리스트는 인덱스로 즉시 위치를 계산할 수 없어 i번째 노드를 찾으려면 head부터 한 칸씩 따라가는 순차 접근이 필요하다 → O(n). 키 탐색도 마찬가지로 head부터 선형으로 비교해야 하므로 O(n)이다. 배열의 인덱스 접근(Indexed Access) O(1)과 대조된다.",
     source: "5차시 § 3.5",
   },
   {
@@ -839,7 +839,7 @@ export const set2 = [
   },
   {
     id: "DS_S2Q30", set: 2, week: 7, topic: "빅오 매트릭스 종합", type: "multiple_choice", difficulty: "hard",
-    question: "다음 중 자료구조와 [임의 접근(Random Access) / 임의 키 탐색(Search) / 삽입 / 삭제] 시간 복잡도 매칭으로 잘못된 것은?",
+    question: "다음 중 자료구조와 [인덱스 접근(Indexed Access) / 키 탐색(Search by Key) / 삽입 / 삭제] 시간 복잡도 매칭으로 잘못된 것은?",
     choices: [
       "정적 배열 (비정렬, 중간 위치): O(1) / O(n) / O(n) / O(n)",
       "단순 연결 리스트 (Singly Linked List, 인덱스 접근, add_last 기준): O(n) / O(n) / O(n) / O(n)",
@@ -847,8 +847,8 @@ export const set2 = [
       "원형 큐(배열, 양 끝 연산): O(1) / O(1) / O(1) / O(1)",
     ],
     answer: 3,
-    brief: "원형 큐는 임의 키 탐색이 O(n) — O(1)이 아님.",
-    detailed: "원형 큐는 양 끝(rear/front) 연산은 O(1)이지만 임의 키 탐색은 큐 전체를 순차 접근해야 하므로 O(n)이다. 따라서 [임의 접근/탐색/Enqueue/Dequeue] = O(1)/O(n)/O(1)/O(1)이 맞다.",
+    brief: "원형 큐는 키 탐색이 O(n) — O(1)이 아님.",
+    detailed: "원형 큐는 양 끝(rear/front) 연산은 O(1)이지만 키 탐색은 큐 전체를 순차 접근해야 하므로 O(n)이다. 따라서 [인덱스 접근/키 탐색/Enqueue/Dequeue] = O(1)/O(n)/O(1)/O(1)이 맞다.",
     source: "시간복잡도 매트릭스 종합",
   },
 ];
