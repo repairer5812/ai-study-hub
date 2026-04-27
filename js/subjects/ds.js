@@ -531,9 +531,9 @@ export const set2 = [
     id: "DS_S2Q7", set: 2, week: 3, topic: "fib 중복 호출", type: "multiple_choice", difficulty: "hard",
     question: "순환 피보나치 fib(6) 계산 시, fib(0)이 호출되는 횟수는? (메모이제이션 없음)",
     choices: ["1회", "3회", "5회", "8회"],
-    answer: 3,
-    brief: "fib(6)에서 fib(0)은 8회 호출.",
-    detailed: "피보나치 순환은 매 호출마다 자기를 2번 재귀 호출하는 Binary Recursion이라 중복 계산이 심하다. fib(6) 전개 시 fib(0)은 정확히 8회 불린다.",
+    answer: 2,
+    brief: "fib(6)에서 fib(0)은 5회 호출.",
+    detailed: "fib(0) 호출 횟수 점화식: C₀(n) = C₀(n-1) + C₀(n-2), C₀(0)=1, C₀(1)=0. 따라서 C₀(2)=1, C₀(3)=1, C₀(4)=2, C₀(5)=3, C₀(6)=5. ⚠️ 함정: 8회는 fib(1)의 호출 횟수(C₁(6)=8)와 헷갈리기 쉬움. Binary Recursion의 중복 계산을 보여주는 대표 예시.",
     source: "3차시 § 5.2",
   },
   {
