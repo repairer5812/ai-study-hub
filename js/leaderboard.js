@@ -142,6 +142,100 @@ export async function recordAttempt(qid, isCorrect) {
   }
 }
 
+// ══════════════════════════════════════════════════════════════
+// 주차별 확인문제 (Weekly Quiz) 리더보드 — 정기고사와 완전 분리
+// 컬렉션 경로: leaderboards/{subjectId}_weekly_w{week}/entries
+// 정기고사와 다른 점:
+//  - setId 대신 week 사용 (주차별 격리)
+//  - totalQuestions 검증 완화 (1~50 허용, 주차마다 다를 수 있음)
+//  - durationSec 하한 완화 (10초 이상)
+// ══════════════════════════════════════════════════════════════
+
+function weeklyLeaderboardPath(subjectId, week) {
+  const sub = subjectId || "ml";
+  return `${sub}_weekly_w${week}`;
+}
+
+function validateWeeklySubmission({ subjectId, week, nickname, score, totalQuestions, durationSec }) {
+  if (typeof nickname !== "string" || !NICK_RE.test(nickname)) {
+    return "닉네임은 한글·영문·숫자·밑줄 1~16자여야 합니다.";
+  }
+  if (!Number.isInteger(score) || score < 0 || score > 100) {
+    return "점수는 0~100 사이 정수여야 합니다.";
+  }
+  if (!Number.isInteger(week) || week < 1 || week > 30) {
+    return "주차는 1~30 사이 정수여야 합니다.";
+  }
+  if (subjectId !== undefined && subjectId !== null && subjectId !== "" && !VALID_SUBJECTS.includes(subjectId)) {
+    return "지원하지 않는 과목입니다.";
+  }
+  if (!Number.isInteger(totalQuestions) || totalQuestions < 1 || totalQuestions > 50) {
+    return "총 문항 수는 1~50 사이여야 합니다.";
+  }
+  if (!Number.isInteger(durationSec) || durationSec < 10 || durationSec > 10800) {
+    return "소요 시간은 10~10800초 사이 정수여야 합니다.";
+  }
+  return null;
+}
+
+export async function submitWeeklyScore({ subjectId, week, nickname, score, totalQuestions, durationSec }) {
+  const err = validateWeeklySubmission({ subjectId, week, nickname, score, totalQuestions, durationSec });
+  if (err) return { ok: false, error: err };
+
+  try {
+    const db = ensureDb();
+    const key = weeklyLeaderboardPath(subjectId, week);
+    const ref = collection(db, "leaderboards", key, "entries");
+    await addDoc(ref, {
+      nickname,
+      score,
+      totalQuestions,
+      durationSec,
+      week,
+      kind: "weekly",
+      recordedAt: serverTimestamp()
+    });
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+export async function fetchWeeklyTopRanking(subjectId, week, max = 20) {
+  const db = ensureDb();
+  const key = weeklyLeaderboardPath(subjectId, week);
+  const ref = collection(db, "leaderboards", key, "entries");
+  const snap = await getDocs(ref);
+  const out = [];
+
+  snap.forEach((doc) => {
+    const d = doc.data();
+    out.push({
+      id: doc.id,
+      nickname: d.nickname,
+      score: d.score,
+      totalQuestions: d.totalQuestions,
+      durationSec: d.durationSec,
+      week: d.week,
+      recordedAt: d.recordedAt && typeof d.recordedAt.toDate === "function"
+        ? d.recordedAt.toDate()
+        : (d.recordedAt instanceof Date ? d.recordedAt : null)
+    });
+  });
+
+  out.sort((a, b) => {
+    const scoreDiff = Number(b.score || 0) - Number(a.score || 0);
+    if (scoreDiff !== 0) return scoreDiff;
+    const durationDiff = Number(a.durationSec || 0) - Number(b.durationSec || 0);
+    if (durationDiff !== 0) return durationDiff;
+    const timeA = a.recordedAt instanceof Date ? a.recordedAt.getTime() : Number.MAX_SAFE_INTEGER;
+    const timeB = b.recordedAt instanceof Date ? b.recordedAt.getTime() : Number.MAX_SAFE_INTEGER;
+    return timeA - timeB;
+  });
+
+  return out.slice(0, Math.max(0, max));
+}
+
 export async function fetchQuestionStats(qids) {
   if (!Array.isArray(qids) || qids.length === 0) return {};
   try {

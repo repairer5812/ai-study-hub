@@ -62,3 +62,45 @@ export function removeWrong(qid, subjectId = "ml") {
 // ── 닉네임 (전역) ───────────────────────────────────────
 export function getNickname() { return get(KEY.NICKNAME(), ""); }
 export function saveNickname(name) { set(KEY.NICKNAME(), name); }
+
+// ═════════════════════════════════════════════════════════
+// 주차별 확인문제 (Weekly Quiz) — 정기고사와 완전 분리된 저장소
+// 키 스킴: `${prefix}:weekly:best:w${week}` 등 별도 네임스페이스
+// ═════════════════════════════════════════════════════════
+const KEY_W = {
+  BEST:     (week, s) => `${prefix(s)}:weekly:best:w${week}`,
+  PROGRESS: (week, s) => `${prefix(s)}:weekly:progress:w${week}`,
+  WRONG:    (s)       => `${prefix(s)}:weekly:wrong`,
+};
+
+export function getWeeklyBest(week, subjectId = "ml") {
+  return get(KEY_W.BEST(week, subjectId), null);
+}
+export function saveWeeklyBest(week, record, subjectId = "ml") {
+  const prev = getWeeklyBest(week, subjectId);
+  if (!prev || record.score > prev.score ||
+      (record.score === prev.score && record.durationSec < prev.durationSec)) {
+    set(KEY_W.BEST(week, subjectId), record);
+    return true;
+  }
+  return false;
+}
+
+export function saveWeeklyProgress(week, state, subjectId = "ml") {
+  set(KEY_W.PROGRESS(week, subjectId), state);
+}
+export function loadWeeklyProgress(week, subjectId = "ml") {
+  return get(KEY_W.PROGRESS(week, subjectId), null);
+}
+export function clearWeeklyProgress(week, subjectId = "ml") {
+  remove(KEY_W.PROGRESS(week, subjectId));
+}
+
+export function getWeeklyWrongList(subjectId = "ml") { return get(KEY_W.WRONG(subjectId), []); }
+export function addWeeklyWrong(qid, subjectId = "ml") {
+  const list = getWeeklyWrongList(subjectId);
+  if (!list.includes(qid)) { list.push(qid); set(KEY_W.WRONG(subjectId), list); }
+}
+export function removeWeeklyWrong(qid, subjectId = "ml") {
+  set(KEY_W.WRONG(subjectId), getWeeklyWrongList(subjectId).filter(id => id !== qid));
+}

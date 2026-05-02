@@ -37,6 +37,9 @@
   </section>
 
   <section id="exam-section" style="display:none;">
+    <h2 class="h2" style="margin:8px 0 14px;">📝 정기고사 (중간고사/기말고사)</h2>
+    <div class="muted small" style="margin-bottom:14px;">한 세트 전체를 풀고 점수를 기록합니다. 랭킹은 세트별로 집계됩니다.</div>
+
     <div class="mode-selector" id="mode-selector" role="tablist" aria-label="풀이 모드 선택">
       <button class="mode-btn" data-mode="instant" role="tab"><span class="mode-label-instant">1문제씩 즉시 채점</span></button>
       <button class="mode-btn active" data-mode="batch" role="tab"><span class="mode-label-batch">30문제 일괄 채점</span></button>
@@ -49,6 +52,19 @@
     <div style="display:flex; gap:12px; justify-content:center; margin:40px 0 24px; flex-wrap:wrap;">
       <a class="btn btn-secondary btn-lg" id="link-ranking" href="result.html?view=ranking">🏆 전체 랭킹</a>
       <a class="btn btn-secondary btn-lg" id="link-wrong" href="#">📒 오답노트 (전 세트)</a>
+    </div>
+  </section>
+
+  <section id="weekly-section" style="display:none; margin-top:32px; padding-top:24px; border-top:1px solid var(--c-border-soft);">
+    <h2 class="h2" style="margin:8px 0 14px;">📅 주차별 확인문제</h2>
+    <div class="muted small" style="margin-bottom:14px;">주차 단위 객관식 확인문제. <strong>점수·랭킹은 정기고사와 별도로 기록</strong>됩니다.</div>
+
+    <div class="set-grid" id="weekly-grid">
+      <!-- 동적 렌더 -->
+    </div>
+
+    <div style="display:flex; gap:12px; justify-content:center; margin:24px 0; flex-wrap:wrap;">
+      <a class="btn btn-secondary" id="link-weekly-ranking" href="#" style="display:none;">🏆 주차별 랭킹</a>
     </div>
   </section>
 
