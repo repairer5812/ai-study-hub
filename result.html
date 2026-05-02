@@ -106,8 +106,15 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script type="module" src="js/theme.js"></script>
 <script type="module">
-  import { getBest, saveBest, getNickname, saveNickname } from "./js/storage.js";
-  import { initLeaderboard, submitScore, fetchTopRanking } from "./js/leaderboard.js";
+  import {
+    getBest, saveBest,
+    getWeeklyBest, saveWeeklyBest,
+    getNickname, saveNickname
+  } from "./js/storage.js";
+  import {
+    initLeaderboard, submitScore, fetchTopRanking,
+    submitWeeklyScore, fetchWeeklyTopRanking
+  } from "./js/leaderboard.js";
   import { getSubjectMeta } from "./js/subjects/index.js";
 
   // ── 토스트 ─────────────────────────────────
@@ -139,7 +146,11 @@
   // ── 결과 로드 ─────────────────────────────
   const urlParams = new URLSearchParams(location.search);
   const viewMode = urlParams.get("view");           // "ranking" = 랭킹 조회 전용
-  const urlSetId = parseInt(urlParams.get("set") || "1", 10);
+  const urlKind = urlParams.get("kind") || "regular"; // "regular" | "weekly"
+  const urlIsWeekly = urlKind === "weekly";
+  const urlWeek = urlIsWeekly ? parseInt(urlParams.get("w") || "0", 10) : 0;
+  const rawSet = urlParams.get("set") || "1";
+  const urlSetId = /^\d+$/.test(rawSet) ? parseInt(rawSet, 10) : rawSet;
   const subjectId = urlParams.get("s") || "ml";
 
   // 브레드크럼 · 홈 버튼 · 오답 버튼에 subject 반영
@@ -212,10 +223,26 @@
     const durationSec = r.durationSec ?? 0;
     const byWeek = r.byWeek || {};
     const isReview = !!r.isReview;
+    const isWeekly = r.kind === "weekly";
+    const weekN = r.week || 0;
 
-    // 오답 다시 보기 버튼: 방금 푼 세트 오답만 보도록 setId 반영
+    // 오답 다시 보기 버튼: 정기/주차별 분기
     const reviewBtn = document.getElementById("review-wrong-btn");
-    if (reviewBtn) reviewBtn.href = `exam.html?s=${subjectId}&set=${setId}&mode=wrong&review=1`;
+    if (reviewBtn) {
+      reviewBtn.href = isWeekly
+        ? `exam.html?s=${subjectId}&kind=weekly&w=${weekN}&mode=wrong&review=1`
+        : `exam.html?s=${subjectId}&set=${setId}&mode=wrong&review=1`;
+    }
+
+    // 주차별 모드: 헤로 라벨 변경
+    if (isWeekly) {
+      const heroBadge = document.querySelector(".result-hero .h1");
+      const titleSpan = document.createElement("div");
+      titleSpan.className = "muted small";
+      titleSpan.style.marginTop = "6px";
+      titleSpan.textContent = `📅 ${r.weeklyTitle || `Week ${weekN} 확인문제`}`;
+      document.querySelector(".result-hero")?.appendChild(titleSpan);
+    }
 
     // 리뷰 모드 배지
     if (isReview) {
@@ -240,10 +267,17 @@
     document.getElementById("stat-correct").textContent = correct;
     document.getElementById("stat-wrong").textContent = wrong;
 
-    // 개인 최고: 리뷰 모드는 갱신 안 함 (전체 30문제 한 세트가 아닐 수 있고 점수 의미가 다름)
+    // 개인 최고: 정기/주차별을 분리해 기록
     const bestEl = document.getElementById("stat-best");
+    const _getBest = isWeekly
+      ? () => getWeeklyBest(weekN, subjectId)
+      : () => getBest(setId, subjectId);
+    const _saveBest = isWeekly
+      ? (rec) => saveWeeklyBest(weekN, rec, subjectId)
+      : (rec) => saveBest(setId, rec, subjectId);
+
     if (isReview) {
-      const prev = getBest(setId, subjectId);
+      const prev = _getBest();
       bestEl.textContent = prev ? `${prev.score} / 100` : "—";
       const tag = document.createElement("div");
       tag.className = "muted small";
@@ -252,8 +286,8 @@
       bestEl.appendChild(tag);
     } else {
       const nowIso = new Date().toISOString();
-      const isNewRecord = saveBest(setId, { score: score100, total, durationSec, at: nowIso }, subjectId);
-      const best = getBest(setId, subjectId);
+      const isNewRecord = _saveBest({ score: score100, total, durationSec, at: nowIso });
+      const best = _getBest();
       if (best) {
         bestEl.textContent = `${best.score} / 100`;
         if (isNewRecord) {
@@ -288,7 +322,7 @@
     const nickInput = document.getElementById("nickname-input");
     nickInput.value = getNickname() || "";
 
-    // 랭킹 등록
+    // 랭킹 등록 (정기/주차별 분기)
     const submitBtn = document.getElementById("submit-rank-btn");
     const originalBtnText = submitBtn.textContent;
     submitBtn.addEventListener("click", async () => {
@@ -301,18 +335,27 @@
       submitBtn.textContent = "⏳ 등록 중…";
       try {
         saveNickname(name);
-        const res = await submitScore({
-          subjectId,
-          setId,
-          nickname: name,
-          score: score100,
-          totalQuestions: total,
-          durationSec,
-        });
+        const res = isWeekly
+          ? await submitWeeklyScore({
+              subjectId,
+              week: weekN,
+              nickname: name,
+              score: score100,
+              totalQuestions: total,
+              durationSec,
+            })
+          : await submitScore({
+              subjectId,
+              setId,
+              nickname: name,
+              score: score100,
+              totalQuestions: total,
+              durationSec,
+            });
         if (res && res.ok) {
           showToast("🏆 랭킹 등록 성공!");
           submitBtn.style.display = "none";
-          await loadRanking(setId, name, score100, durationSec);
+          await loadRanking(isWeekly ? weekN : setId, name, score100, durationSec, isWeekly);
         } else {
           const err = (res && res.error) ? res.error : "알 수 없는 오류";
           showToast("랭킹 등록 실패: " + err);
@@ -333,7 +376,7 @@
       } catch (e) {
         // Firebase 실패해도 결과 화면은 유지
       }
-      await loadRanking(setId, null, score100, durationSec);
+      await loadRanking(isWeekly ? weekN : setId, null, score100, durationSec, isWeekly);
     })();
   }
 
@@ -379,12 +422,14 @@
     }
   }
 
-  // ── 랭킹 조회·렌더링 ──────────────────────
-  async function loadRanking(setId, myNick, myScore, myDuration) {
+  // ── 랭킹 조회·렌더링 (정기/주차별 분기) ──────────────────────
+  async function loadRanking(setOrWeek, myNick, myScore, myDuration, isWeekly = false) {
     const tbody = document.getElementById("ranking-tbody");
     let entries = [];
     try {
-      entries = await fetchTopRanking(subjectId, setId, 20);
+      entries = isWeekly
+        ? await fetchWeeklyTopRanking(subjectId, setOrWeek, 20)
+        : await fetchTopRanking(subjectId, setOrWeek, 20);
     } catch (e) {
       tbody.innerHTML = `<tr><td colspan="5" class="muted small" style="text-align:center; padding:24px">랭킹을 불러올 수 없습니다</td></tr>`;
       return;

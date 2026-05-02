@@ -1,23 +1,43 @@
-// exam.js — 시험 풀이 로직 (5.01~5.14 통합, subject-aware)
+// exam.js — 시험 풀이 로직 (정기고사 + 주차별 확인문제, subject-aware)
 
 import { getSubjectModule, getSubjectMeta } from "./subjects/index.js";
 import { grade, scoreSet, collectWrongIds } from "./scoring.js";
 import {
   saveProgress, loadProgress, clearProgress,
-  getWrongList, addWrong, removeWrong
+  getWrongList, addWrong, removeWrong,
+  saveWeeklyProgress, loadWeeklyProgress, clearWeeklyProgress,
+  getWeeklyWrongList, addWeeklyWrong, removeWeeklyWrong
 } from "./storage.js";
 import { recordAttempt, fetchQuestionStats } from "./leaderboard.js";
 
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const subjectId = params.get("s") || "ml";
-const setId = parseInt(params.get("set") || "1", 10);
-const rawMode = params.get("mode") || "batch";  // "instant" | "batch" | "wrong"
+const kind = params.get("kind") || "regular"; // "regular" | "weekly"
+const isWeekly = kind === "weekly";
+const weeklyWeek = isWeekly ? parseInt(params.get("w") || "0", 10) : 0;
+const setId = isWeekly ? `w${weeklyWeek}` : parseInt(params.get("set") || "1", 10);
+const rawMode = params.get("mode") || "batch";
 const reviewMode = params.get("review") === "1" || params.get("mode") === "wrong";
-// 리뷰 모드는 학습이 목적이므로 즉시 채점 + 해설 노출 강제
 const mode = reviewMode ? "instant" : rawMode;
-const allSets = params.get("all") === "1";   // 세트 무관 전역 오답 모드
-const weekFilter = parseInt(params.get("week") || "0", 10); // 0이면 주차 필터 없음
+const allSets = params.get("all") === "1";
+const weekFilter = parseInt(params.get("week") || "0", 10);
+
+// ── 저장소 어댑터: 정기고사/주차별을 분리해 호출 ────────
+// setId가 정기고사면 정수, 주차별이면 "w<N>" 문자열 — storage 키는 자동 격리됨.
+// 단 정기고사는 전용 *Progress/*Wrong 변형, 주차별은 *Weekly* 변형으로 분기.
+const _saveProgress = isWeekly
+  ? (sid, state, sub) => saveWeeklyProgress(weeklyWeek, state, sub)
+  : saveProgress;
+const _loadProgress = isWeekly
+  ? (sid, sub) => loadWeeklyProgress(weeklyWeek, sub)
+  : loadProgress;
+const _clearProgress = isWeekly
+  ? (sid, sub) => clearWeeklyProgress(weeklyWeek, sub)
+  : clearProgress;
+const _getWrongList = isWeekly ? getWeeklyWrongList : getWrongList;
+const _addWrong = isWeekly ? addWeeklyWrong : addWrong;
+const _removeWrong = isWeekly ? removeWeeklyWrong : removeWrong;
 
 // ── 과목 유효성 검증 ──────────────────────────────────
 let subject, subjectMeta;
@@ -29,20 +49,55 @@ try {
   location.href = "index.html";
   throw new Error("Unknown subject");
 }
-if (!subjectMeta.hasExam && !reviewMode) {
+
+// 주차별 모드: 메타에서 weekly 항목 찾기
+let weeklyMeta = null;
+if (isWeekly) {
+  weeklyMeta = (subjectMeta.weeklyExams || []).find(w => w.week === weeklyWeek);
+  if (!weeklyMeta) {
+    alert(`Week ${weeklyWeek} 확인문제가 없습니다. 홈으로 돌아갑니다.`);
+    location.href = `subject.html?s=${subjectId}`;
+    throw new Error("Weekly quiz not found");
+  }
+} else if (!subjectMeta.hasExam && !reviewMode) {
   alert("이 과목의 모의고사는 아직 준비 중입니다.");
   location.href = `subject.html?s=${subjectId}`;
   throw new Error("Exam not ready");
 }
 
 // ── 탭 제목 · 메타 동적 갱신 ─────────────────────────
-document.title = `${subjectMeta.title} 시험 · AI Study Hub`;
+document.title = isWeekly
+  ? `${subjectMeta.title} W${weeklyWeek} 확인문제 · AI Study Hub`
+  : `${subjectMeta.title} 시험 · AI Study Hub`;
 
 // ── 문제 로드 ───────────────────────────────────────────
-let questions = allSets ? subject.getAllQuestions() : subject.getSetQuestions(setId);
+// 주차별: notes/<subId>/<slug>.json 비동기 fetch
+// 정기고사: subject 모듈에서 동기 로드
+let questions;
+if (isWeekly) {
+  const url = `notes/${subjectId}/${weeklyMeta.slug}.json`;
+  let data;
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    data = await resp.json();
+  } catch (e) {
+    alert(`확인문제 로드 실패: ${e.message}\n경로: ${url}`);
+    location.href = `subject.html?s=${subjectId}`;
+    throw e;
+  }
+  if (!Array.isArray(data.questions) || data.questions.length === 0) {
+    alert("확인문제 데이터가 비어 있습니다.");
+    location.href = `subject.html?s=${subjectId}`;
+    throw new Error("Empty weekly quiz");
+  }
+  questions = data.questions;
+} else {
+  questions = allSets ? subject.getAllQuestions() : subject.getSetQuestions(setId);
+}
 
-// 주차별 필터 모드
-if (weekFilter >= 2 && weekFilter <= 7) {
+// 주차별 필터 모드 (정기고사 전용)
+if (!isWeekly && weekFilter >= 2 && weekFilter <= 7) {
   questions = questions.filter(q => q.week === weekFilter);
   if (!questions.length) {
     alert(`Week ${weekFilter} 문제가 없습니다. 홈으로 돌아갑니다.`);
@@ -52,7 +107,7 @@ if (weekFilter >= 2 && weekFilter <= 7) {
 
 // 오답 리뷰 모드: 저장된 오답 ID 목록에서 해당 범위의 문제만 필터
 if (reviewMode) {
-  const wrongIds = new Set(getWrongList(subjectId));
+  const wrongIds = new Set(_getWrongList(subjectId));
   questions = questions.filter(q => wrongIds.has(q.id));
   if (!questions.length) {
     alert("오답노트가 비어 있습니다. 홈으로 돌아갑니다.");
@@ -144,7 +199,7 @@ function getShuffleMap(q) {
 
 // ── 세션 복구 ──────────────────────────────────────────
 (function restoreSession() {
-  const saved = loadProgress(setId, subjectId);
+  const saved = _loadProgress(setId, subjectId);
   if (!saved || reviewMode) return;
   if (saved.mode !== mode) return; // 모드 다르면 복구 안 함
   if (confirm("이전 풀이 내용이 있습니다. 이어서 풀까요?")) {
@@ -155,13 +210,13 @@ function getShuffleMap(q) {
     priorElapsedMs = Number(saved.priorElapsedMs) || 0;
     startTime = Date.now(); // 새 세션 시작
   } else {
-    clearProgress(setId, subjectId);
+    _clearProgress(setId, subjectId);
   }
 })();
 
 function persistProgress() {
   if (reviewMode || sessionFinalized) return; // 리뷰/종료 세션은 저장 안 함
-  saveProgress(setId, {
+  _saveProgress(setId, {
     mode,
     currentIdx,
     answers,
@@ -212,9 +267,15 @@ function render() {
 
   // 상단 바
   const weekTag = weekFilter >= 2 && weekFilter <= 7 ? ` · Week ${weekFilter}` : "";
-  el.setInfo.textContent = reviewMode
-    ? (allSets ? `전 세트 오답 리뷰${weekTag}` : `SET ${setId} · 오답 리뷰${weekTag}`)
-    : `SET ${setId}${weekTag} · ${mode === "instant" ? "즉시 채점" : "일괄 채점"}`;
+  if (isWeekly) {
+    el.setInfo.textContent = reviewMode
+      ? `Week ${weeklyWeek} 확인문제 · 오답 리뷰`
+      : `Week ${weeklyWeek} 확인문제 · ${mode === "instant" ? "즉시 채점" : "일괄 채점"}`;
+  } else {
+    el.setInfo.textContent = reviewMode
+      ? (allSets ? `전 세트 오답 리뷰${weekTag}` : `SET ${setId} · 오답 리뷰${weekTag}`)
+      : `SET ${setId}${weekTag} · ${mode === "instant" ? "즉시 채점" : "일괄 채점"}`;
+  }
   el.qno.textContent = `문제 ${currentIdx + 1} / ${questions.length}`;
   el.progress.style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
 
@@ -325,7 +386,7 @@ function handleChoiceClick(q, origIdx, container) {
       else if (bOrig === origIdx) btn.classList.add("incorrect");
     });
     const isCorrect = origIdx === q.answer;
-    if (!isCorrect) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
+    if (!isCorrect) _addWrong(q.id, subjectId); else _removeWrong(q.id, subjectId);
     tryRecordAttempt(q.id, isCorrect);
     showExplain(q);
   } else {
@@ -408,7 +469,7 @@ function confirmShortAnswer(q) {
   lockedInstant.add(q.id);
   const userText = getAnswer(q.id)?.text ?? "";
   const g = grade(q, userText);
-  if (!g.correct) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
+  if (!g.correct) _addWrong(q.id, subjectId); else _removeWrong(q.id, subjectId);
   tryRecordAttempt(q.id, g.correct);
   persistProgress();
   render(); // 잠금 상태로 다시 렌더
@@ -529,7 +590,7 @@ async function submitEssay(q, btn) {
       feedback: String(result.feedback || ""),
     };
     lockedInstant.add(q.id);
-    if (!result.correct) addWrong(q.id, subjectId); else removeWrong(q.id, subjectId);
+    if (!result.correct) _addWrong(q.id, subjectId); else _removeWrong(q.id, subjectId);
     persistProgress();
     render(); // 잠금 + 해설 공개
   } catch (e) {
@@ -728,8 +789,8 @@ function handleSubmit() {
   const wrongQids = collectWrongIds(result);
 
   // 오답노트 업데이트 (이미 instant 모드에서 진행 중이지만 batch 모드 대응)
-  wrongQids.forEach(id => addWrong(id, subjectId));
-  result.perQuestion.filter(p => p.correct).forEach(p => removeWrong(p.qid, subjectId));
+  wrongQids.forEach(id => _addWrong(id, subjectId));
+  result.perQuestion.filter(p => p.correct).forEach(p => _removeWrong(p.qid, subjectId));
 
   // 익명 통계 기록: 답한 문항만 (미응답은 제외)
   result.perQuestion.forEach(p => {
@@ -746,7 +807,10 @@ function handleSubmit() {
     durationSec,
     byWeek: result.byWeek,
     wrongQids,
-    isReview: reviewMode,  // 리뷰 모드면 결과 화면에서 최고점·랭킹 갱신 스킵
+    isReview: reviewMode,
+    kind: isWeekly ? "weekly" : "regular",
+    week: isWeekly ? weeklyWeek : null,
+    weeklyTitle: isWeekly && weeklyMeta ? weeklyMeta.title : null,
   };
   try {
     sessionStorage.setItem("ml-exam:lastResult", JSON.stringify(payload));
@@ -757,10 +821,14 @@ function handleSubmit() {
   // 세션 클리어
   sessionFinalized = true;
   stopTimer();
-  clearProgress(setId, subjectId);
+  _clearProgress(setId, subjectId);
 
-  // 결과 페이지로 (subject 파라미터 보존)
-  location.href = `result.html?s=${subjectId}&set=${setId}`;
+  // 결과 페이지로 (subject + kind/week 파라미터 보존)
+  if (isWeekly) {
+    location.href = `result.html?s=${subjectId}&kind=weekly&w=${weeklyWeek}`;
+  } else {
+    location.href = `result.html?s=${subjectId}&set=${setId}`;
+  }
 }
 
 // ── 나가기 확인 오버라이드 ────────────────────────────
