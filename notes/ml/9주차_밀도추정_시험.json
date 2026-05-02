@@ -1,0 +1,393 @@
+{
+  "subject": "ml",
+  "week": 9,
+  "title": "기계학습 9주차 — 밀도 추정 (KDE · KNN · GMM)",
+  "set_meta": {
+    "id": 9,
+    "title": "Week 9",
+    "label": "Density Estimation",
+    "desc": "비지도학습 · KDE · KNN · GMM · MLE 한계"
+  },
+  "questions": [
+    {
+      "id": "MLW9Q1",
+      "set": 9,
+      "week": 9,
+      "topic": "학습 패러다임 구분",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "비지도학습(Unsupervised Learning)을 지도학습(Supervised Learning)과 구분하는 가장 본질적인 차이로 가장 적절한 것은?",
+      "choices": [
+        "① 입력 데이터가 항상 텍스트 형태로 주어진다",
+        "② 정답 라벨 없이 데이터 자체에 내재된 구조나 패턴을 발견하는 것이 목표다",
+        "③ 학습이 끝난 후에도 새로운 데이터로 모델을 계속 갱신해야 한다",
+        "④ 데이터의 차원이 항상 2차원 또는 3차원으로 제한된다"
+      ],
+      "answer": 1,
+      "brief": "비지도학습은 라벨 없이 데이터 분포·구조 자체를 학습한다.",
+      "detailed": "지도학습은 입력 X와 정답 Y가 짝으로 주어져 X→Y 매핑을 학습하지만, 비지도학습은 정답 없이 입력만 주어진다. 슬라이드는 \"unsupervised learning seeks to identify patterns, regularities, or hidden organization within the observed data\"라고 명시한다. 강아지/고양이 라벨 없이 이미지만 보고 \"이게 다른 입력과 어떻게 다른가\"를 추론해야 하는 상황이 대표적이다. ①·③·④는 데이터 형태나 학습 절차에 대한 잘못된 일반화이다.",
+      "source": "Density PDF p.2; 9주차 § 1"
+    },
+    {
+      "id": "MLW9Q2",
+      "set": 9,
+      "week": 9,
+      "topic": "비지도학습의 목표",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "강의에서 설명된 밀도 추정(Density Estimation)의 목표를 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 데이터가 어느 클래스에 속하는지 사전 정의된 카테고리로 할당한다",
+        "② 두 변수 사이의 인과관계를 통계적 검정으로 확인한다",
+        "③ 유한한 샘플로부터 진짜 데이터 분포 p(x)를 근사하는 확률 모델을 만든다",
+        "④ 데이터의 평균과 분산만을 빠르게 계산해 보고하는 요약 통계를 산출한다"
+      ],
+      "answer": 2,
+      "brief": "유한 샘플로부터 진짜 분포 p(x)를 근사하는 확률 모델 구축이 목표.",
+      "detailed": "슬라이드 정의: \"Density estimation involves learning an approximation of the true underlying data distribution p(x) from a finite sample by constructing a probabilistic model that assigns high probability to regions where data are concentrated and low probability to regions where data are sparse.\" 데이터가 많은 곳은 봉우리, 적은 곳은 골짜기가 되도록 분포를 추정하는 것이 핵심이다. ①은 분류, ②는 인과 추론, ④는 단순 요약 통계로 모두 다른 작업이다.",
+      "source": "Density PDF p.3; 9주차 § 2"
+    },
+    {
+      "id": "MLW9Q3",
+      "set": 9,
+      "week": 9,
+      "topic": "기본 추정식 유도",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "전체 데이터 N개 중 작은 영역 R(부피 V)에 K개가 들어올 때 사용되는 밀도 추정 근사식 p(x) ≈ K/(NV)의 의미를 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 데이터의 평균과 분산을 결합한 표준화된 점수를 계산하는 식이다",
+        "② 한 점에서의 밀도가 그 점 주변 작은 영역에 들어오는 데이터 비율을 영역 부피로 나눈 값으로 근사된다는 의미다",
+        "③ 분류기의 정답률을 데이터 수와 클래스 수로 나누어 표준화한 식이다",
+        "④ 모든 데이터 포인트의 평균 거리를 N으로 나누어 정규화한 식이다"
+      ],
+      "answer": 1,
+      "brief": "p(x) ≈ (영역 내 데이터 비율 K/N) ÷ (영역 부피 V) = 작은 영역의 평균 밀도.",
+      "detailed": "유도는 두 단계: (1) 큰 N 극한에서 영역 R 내 비율 K/N이 진짜 확률 P에 수렴, (2) 작은 R 극한에서 P ≈ p(x)·V (밀도가 영역 안에서 거의 상수). 두 식을 결합하면 p(x) ≈ K/(NV). 직관: 한 점 주변 작은 동네에 데이터가 많을수록(K↑) 또는 동네가 작을수록(V↓) 그 점의 밀도가 높다고 추정한다. 이 단순한 식이 KDE와 KNN의 공통 출발점이다.",
+      "source": "Density PDF p.7-9; 9주차 § 3"
+    },
+    {
+      "id": "MLW9Q4",
+      "set": 9,
+      "week": 9,
+      "topic": "두 접근법의 분기",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "p(x) ≈ K/(NV)에서 영역의 크기 V를 미리 정해두고 그 안에 들어오는 데이터 개수 K를 세는 방식의 밀도 추정 방법은?",
+      "choices": [
+        "① K-Nearest Neighbors Density Estimator는 K를 고정하고 V를 늘린다",
+        "② Kernel Density Estimation은 V를 고정하고 K를 카운트한다",
+        "③ Maximum Likelihood Estimation은 정규분포의 파라미터를 추정한다",
+        "④ Expectation-Maximization은 잠재 변수가 있는 모델을 반복적으로 최적화한다"
+      ],
+      "answer": 1,
+      "brief": "KDE는 V를 고정하고 그 안의 K를 센다.",
+      "detailed": "슬라이드는 두 접근을 명확히 분리한다: (1) Fix V, count K → kernel density method; (2) Fix K, adjust V → k-nearest neighbors method. KDE는 박스(또는 가우시안 윈도우)의 크기를 미리 정해놓고 그 안에 들어오는 데이터를 카운트해 밀도를 추정한다. ①은 KNN density로 정확히 반대 방식, ③·④는 다른 추정·최적화 기법이다.",
+      "source": "Density PDF p.10; 9주차 § 4"
+    },
+    {
+      "id": "MLW9Q5",
+      "set": 9,
+      "week": 9,
+      "topic": "히스토그램과의 관계",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "히스토그램(Histogram)을 KDE의 관점에서 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① KDE와 본질적으로 다른 알고리즘으로, KDE의 정의에는 포함되지 않는다",
+        "② KDE의 일종으로 영역의 크기 V가 고정 너비 bin이고, bin 경계가 미리 정해진 special case다",
+        "③ K-Nearest Neighbors의 특수 형태로, K를 1로 고정한 경우와 동일하다",
+        "④ Gaussian Mixture Model에서 컴포넌트 수가 1일 때 자연스럽게 도출되는 모델이다"
+      ],
+      "answer": 1,
+      "brief": "히스토그램은 KDE의 \"V가 고정 bin\"인 special case다.",
+      "detailed": "슬라이드: \"The histogram can be viewed as a special case of the first approach. There, the region V corresponds to a bin of fixed width.\" 히스토그램은 영역(V)이 미리 고정된 bin이고 bin 경계가 정해져 있어 추정값이 불연속(discrete)으로 흔들린다. KDE는 이 한계를 극복하기 위해 윈도우를 모든 점에서 부드럽게 슬라이딩하는 일반화 형태다.",
+      "source": "Density PDF p.11; 9주차 § 5"
+    },
+    {
+      "id": "MLW9Q6",
+      "set": 9,
+      "week": 9,
+      "topic": "커널 함수의 형태",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Box Kernel(Uniform Kernel)과 Gaussian Kernel을 비교한 설명 중 가장 정확한 것은?",
+      "choices": [
+        "① 두 커널 모두 경계에서 값이 갑자기 0으로 떨어지는 불연속 함수다",
+        "② Box Kernel은 경계 안에서 1, 밖에서 0인 불연속 함수인 반면, Gaussian Kernel은 거리에 따라 부드럽게 감소하는 연속 함수다",
+        "③ Box Kernel은 가까운 점일수록 더 큰 가중치를 주지만, Gaussian Kernel은 모든 점에 동일한 가중치를 준다",
+        "④ Box Kernel은 1차원에서만 사용 가능하지만 Gaussian Kernel은 다차원에서만 사용 가능하다"
+      ],
+      "answer": 1,
+      "brief": "Box = 경계 안 1 / 밖 0 (불연속), Gaussian = 거리에 따라 부드럽게 감소 (연속).",
+      "detailed": "Box Kernel은 데이터 점이 하이퍼큐브 경계 안에 있으면 1, 밖에 있으면 0을 반환하는 indicator 함수로, 경계에서 갑자기 끊긴다. Gaussian Kernel은 가까운 점에 더 높은 값, 먼 점에 더 낮은 값을 부드럽게 부여해 거리에 따른 부드러운 감쇠를 준다. ③은 Box의 동작을 거꾸로 설명했고, ④는 두 커널 모두 다차원에서 정의되므로 잘못된 설명이다.",
+      "source": "Density PDF p.12-15; 9주차 § 5"
+    },
+    {
+      "id": "MLW9Q7",
+      "set": 9,
+      "week": 9,
+      "topic": "하이퍼파라미터의 영향",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "KDE에서 대역폭(Bandwidth) h를 매우 작게 설정했을 때 나타나는 현상으로 가장 적절한 것은?",
+      "choices": [
+        "① 모든 위치에서 밀도가 0에 수렴해 어떤 데이터도 추정되지 않는다",
+        "② 결과 분포가 지나치게 부드러워져 진짜 분포의 봉우리가 하나로 합쳐진다",
+        "③ 추정 분포가 매우 노이즈가 심해져 데이터 점마다 비정상적으로 뾰족한 패턴이 생긴다",
+        "④ 추정 분포가 균일분포에 수렴해 모든 위치에서 같은 값을 출력한다"
+      ],
+      "answer": 2,
+      "brief": "h가 너무 작으면 noisy & spiky — 점마다 뾰족한 봉우리.",
+      "detailed": "슬라이드 예시는 h=0.005일 때 매우 noisy한 spiky 패턴, h=0.07일 때 가장 좋은 추정, h=0.2일 때 over-smoothed(bimodal이 사라짐)를 보여준다. h가 작으면 각 데이터 포인트의 영향 범위가 좁아져 그 점 위에서만 봉우리가 솟고 사이는 거의 0이 되어 noisy해진다. ②는 h가 매우 클 때의 현상(over-smoothing)이다.",
+      "source": "Density PDF p.18; 9주차 § 5"
+    },
+    {
+      "id": "MLW9Q8",
+      "set": 9,
+      "week": 9,
+      "topic": "KDE의 구조적 한계",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "KDE가 가지는 가장 근본적인 한계로 가장 적절한 것은?",
+      "choices": [
+        "① 데이터가 정규분포를 따른다고 가정해야만 사용할 수 있다",
+        "② 데이터 밀집 지역과 희소 지역에 동일한 대역폭 h를 사용하기 때문에 한 지역에서 적절한 h가 다른 지역에서는 부적절할 수 있다",
+        "③ 데이터 차원이 1차원을 넘어가면 수학적으로 정의되지 않는다",
+        "④ 학습 데이터의 평균값을 미리 알아야만 작동한다"
+      ],
+      "answer": 1,
+      "brief": "h가 모든 위치에서 동일 → 밀집 지역엔 over-smooth, 희소 지역엔 noisy.",
+      "detailed": "슬라이드: \"the problem arises because h is the same for all kernels, regardless of how the data is spread out.\" 즉, 한 지역에서 잘 맞는 h가 다른 지역에서는 부적절할 수 있다. 데이터가 많은 곳에서는 h가 너무 크면 디테일이 뭉개지고(over-smoothing), 데이터가 적은 곳에서는 h가 너무 작으면 noisy해진다. 이 한계가 K-Nearest Neighbors 밀도 추정 방법이 등장한 동기다.",
+      "source": "Density PDF p.20; 9주차 § 5"
+    },
+    {
+      "id": "MLW9Q9",
+      "set": 9,
+      "week": 9,
+      "topic": "다른 접근법의 차별성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "K-Nearest Neighbors 밀도 추정 방식이 KDE의 한계를 극복하기 위해 채택한 핵심 아이디어로 가장 적절한 것은?",
+      "choices": [
+        "① 영역의 부피 V를 모든 위치에서 동일하게 고정한다",
+        "② 데이터에 정규분포 가정을 추가해 분석적 해를 얻는다",
+        "③ 영역에 들어올 데이터 개수 K를 고정하고, 그 K개를 채울 때까지 영역의 크기 V를 자동으로 조정한다",
+        "④ 모든 데이터의 가중 평균을 계산해 단일 통계량으로 표현한다"
+      ],
+      "answer": 2,
+      "brief": "K 고정, V 가변 → 데이터 밀도에 따라 영역이 자동으로 크기를 조절(적응적).",
+      "detailed": "슬라이드: \"Instead of fixing the volume V and counting the number of data points K inside, as in kernel density estimation, we fix K (the number of nearest data points) and let the volume V change depending on the data.\" 데이터 밀집 지역에서는 K개 채우는 데 작은 영역만 필요하고, 희소 지역에서는 큰 영역이 필요하므로 자연스럽게 위치마다 다른 \"실효 대역폭\"을 사용하게 된다.",
+      "source": "Density PDF p.21; 9주차 § 6"
+    },
+    {
+      "id": "MLW9Q10",
+      "set": 9,
+      "week": 9,
+      "topic": "K 값의 영향",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "K-Nearest Neighbors 밀도 추정에서 K=1로 설정했을 때 나타나는 현상으로 가장 적절한 것은?",
+      "choices": [
+        "① 추정값이 0과 1 두 값으로만 결정되는 이진 함수가 된다",
+        "② 추정 분포가 매우 noisy하고 데이터 포인트마다 비정상적으로 뾰족한 봉우리를 형성한다",
+        "③ 모든 위치에서 동일한 상수값을 출력하는 균일분포가 된다",
+        "④ 추정 분포가 지나치게 부드러워져 데이터의 디테일이 사라진다"
+      ],
+      "answer": 1,
+      "brief": "K=1 → 매우 noisy, spiky 분포.",
+      "detailed": "슬라이드는 K=1일 때 매우 noisy하고 spiky한 분포, K=5일 때 적절한 추정, K=30일 때 over-smoothed가 되어 진짜 bimodal 구조가 사라지는 것을 보여준다. K가 작으면 각 데이터 포인트가 매우 작은 영역만 필요로 해 그 점에서 비정상적으로 큰 밀도가 추정되어 noisy해진다. ④는 K가 매우 클 때의 현상이다.",
+      "source": "Density PDF p.22; 9주차 § 6"
+    },
+    {
+      "id": "MLW9Q11",
+      "set": 9,
+      "week": 9,
+      "topic": "분류기로의 확장",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "KNN 밀도 추정 원리에 Bayes 정리를 적용해 새로운 점 x의 클래스 사후확률 p(C_c | x)를 구하면, 이 값은 어떻게 표현되는가?",
+      "choices": [
+        "① 클래스 C_c에 속한 전체 데이터 수를 전체 데이터 수로 나눈 값과 같다",
+        "② 새 점 x로부터 해당 클래스 평균까지의 유클리드 거리의 역수에 비례한다",
+        "③ x의 K개 최근접 이웃 중 클래스 C_c에 속하는 점의 비율(K_c/K)과 같다",
+        "④ 클래스 C_c의 평균과 공분산으로 계산되는 가우시안 우도와 같다"
+      ],
+      "answer": 2,
+      "brief": "p(C_c|x) = K_c / K — \"K개 이웃 중 c 클래스에 속한 비율\".",
+      "detailed": "유도: 클래스 조건부 밀도 p(x|C_c) ≈ K_c/(N_c·V), prior p(C_c) = N_c/N, 무조건부 밀도 p(x) = K/(N·V)를 Bayes 정리에 대입하면 p(C_c|x) = K_c/K로 깔끔하게 정리된다. 슬라이드: \"the posterior probability of class C_c is simply the fraction of the K nearest points that belong to class C_c.\" 우리가 흔히 아는 \"KNN 다수결 분류\"가 사실은 밀도 추정 + Bayes 정리의 자연스러운 귀결이라는 점이 9주차의 통찰이다.",
+      "source": "Density PDF p.26-27; 9주차 § 7"
+    },
+    {
+      "id": "MLW9Q12",
+      "set": 9,
+      "week": 9,
+      "topic": "방법론 분류",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "다음 밀도 추정 방법 중 비모수적(Non-Parametric) 방식으로 분류되는 것은?",
+      "choices": [
+        "① 가우시안 혼합 모델(Gaussian Mixture Model)",
+        "② 단일 정규분포로 데이터를 모델링한 후 평균과 분산을 추정하는 방법",
+        "③ Kernel Density Estimation",
+        "④ 라플라스 분포의 위치·스케일 파라미터를 데이터로부터 추정하는 방법"
+      ],
+      "answer": 2,
+      "brief": "KDE는 데이터 자체에 의존하는 비모수적 방법.",
+      "detailed": "비모수적(Non-parametric) 방법은 데이터가 특정 분포를 따른다고 가정하지 않고 데이터 자체에 의존해 분포를 추정한다. KDE와 KNN density estimator가 대표적이다. 모델 복잡도가 데이터셋 크기에 비례해 커지는 특성이 있다. ①은 가우시안이라는 분포를 가정한 모수적(parametric) 방법, ②·④는 단일 분포 가정을 둔 모수적 방법이다.",
+      "source": "Density PDF p.28-29; 9주차 § 8"
+    },
+    {
+      "id": "MLW9Q13",
+      "set": 9,
+      "week": 9,
+      "topic": "혼합 모델의 정의",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Gaussian Mixture Model(GMM)의 정의를 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 데이터를 가장 잘 설명하는 단 하나의 정규분포의 평균과 분산을 추정한다",
+        "② 데이터를 K개의 그룹으로 하드 할당해 각 그룹의 중심을 거리 기반으로 갱신한다",
+        "③ 모든 데이터가 유한 개의 정규분포의 가중 결합으로부터 생성된다고 가정해 그 분포를 추정한다",
+        "④ 데이터의 차원을 정규분포의 누적분포 함수로 변환해 표준화하는 방법이다"
+      ],
+      "answer": 2,
+      "brief": "GMM은 \"K개 정규분포의 가중 합\"으로 분포를 표현하는 모수적 방법.",
+      "detailed": "슬라이드: \"A Gaussian mixture model is a probabilistic model that assumes all the data points are generated from a mixture of a finite number of Gaussian distributions with unknown parameters.\" 수학적으로 p(x) = Σ_k π_k·N(x|μ_k, Σ_k)로 쓰며, π_k는 각 컴포넌트의 가중치(prior)다. ①은 단일 가우시안, ②는 K-Means 같은 하드 클러스터링, ④는 정규화 변환에 가까운 잘못된 설명이다.",
+      "source": "Density PDF p.31-32; 9주차 § 9"
+    },
+    {
+      "id": "MLW9Q14",
+      "set": 9,
+      "week": 9,
+      "topic": "혼합 모델의 파라미터",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "GMM을 학습한다는 것은 다음 중 어떤 파라미터들을 데이터로부터 결정한다는 의미인가?",
+      "choices": [
+        "① 학습률, 배치 크기, 에폭 수",
+        "② 입력 차원 수, 데이터 포인트 수, 클래스 수",
+        "③ 각 컴포넌트의 가중치 π_k, 평균 μ_k, 공분산 Σ_k",
+        "④ 활성화 함수, 손실 함수, 정규화 강도"
+      ],
+      "answer": 2,
+      "brief": "GMM 학습 = {π_k, μ_k, Σ_k}의 K개 컴포넌트 파라미터 추정.",
+      "detailed": "슬라이드: \"Our goal is to determine the parameters {π_k, μ_k, Σ_k}_{k=1}^K that best explain the observed data.\" π_k는 mixing coefficient(prior, 0~1, 합이 1), μ_k는 컴포넌트 평균, Σ_k는 공분산으로 컴포넌트의 퍼짐과 방향을 결정한다. ①은 최적화 하이퍼파라미터, ②는 데이터셋 메타정보, ④는 신경망 일반의 설계 선택지로 모두 GMM 파라미터와 무관하다.",
+      "source": "Density PDF p.33; 9주차 § 9"
+    },
+    {
+      "id": "MLW9Q15",
+      "set": 9,
+      "week": 9,
+      "topic": "확률 모델의 변수",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "직접 관측되지는 않지만, 관측 가능한 데이터 x의 생성에 영향을 미치는 숨겨진 변수를 부르는 명칭은?",
+      "choices": [
+        "① 회귀 계수(Regression Coefficient)는 입력과 출력의 선형 관계를 나타내는 학습 가능 변수다",
+        "② 잠재 변수(Latent Variable)",
+        "③ 손실 함수(Loss Function)는 모델 예측과 정답 사이 거리를 측정한다",
+        "④ 결정 경계(Decision Boundary)는 분류기가 클래스를 가르는 경계선이다"
+      ],
+      "answer": 1,
+      "brief": "Latent Variable z — 관측 안 되지만 x 생성에 영향을 주는 숨은 변수.",
+      "detailed": "슬라이드 정의: \"A latent variable, typically denoted by z, is not directly observed but is assumed to influence how each data point x is generated.\" 교수님 비유: 사람의 \"지능\"은 직접 측정 불가능한 잠재 변수지만, 그로 인해 측정 가능한 SAT, 내신 점수가 결정된다. GMM에서는 \"데이터가 K개 가우시안 중 어느 컴포넌트에서 왔는지\"가 잠재 변수다.",
+      "source": "Density PDF p.34-35; 9주차 § 10"
+    },
+    {
+      "id": "MLW9Q16",
+      "set": 9,
+      "week": 9,
+      "topic": "확률적 표현 방식",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "GMM에서 잠재 변수 z를 어떤 형태의 벡터로 표현하는지에 대해 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 길이 K의 one-hot 벡터로 표현되며, k번째 컴포넌트가 선택될 때만 z_k=1이고 나머지는 0이다",
+        "② 길이 N의 실수 벡터로, 각 원소가 데이터 포인트의 평균을 의미한다",
+        "③ 길이 D의 정수 벡터로, 각 차원의 값이 1부터 D까지 순서대로 할당된다",
+        "④ 모든 데이터 포인트의 가중 평균을 단일 스칼라로 압축한 값이다"
+      ],
+      "answer": 0,
+      "brief": "z는 길이 K의 one-hot — \"어느 컴포넌트가 선택됐나\"를 인코딩.",
+      "detailed": "슬라이드: \"the latent variable z can be represented as a one-hot vector of length K, where z_k = 1 indicates that the k-th component is selected and z_j = 0 for all j ≠ k.\" Prior는 p(z_k=1) = π_k이고 conditional은 p(x|z_k=1) = N(x|μ_k, Σ_k)다. 이 z를 marginalize하면 GMM 수식 p(x) = Σ_k π_k·N(x|μ_k, Σ_k)이 자연스럽게 도출된다.",
+      "source": "Density PDF p.36; 9주차 § 10"
+    },
+    {
+      "id": "MLW9Q17",
+      "set": 9,
+      "week": 9,
+      "topic": "확률 변수의 처리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "잠재 변수 z를 도입한 결합 확률 p(x, z)에서 z를 모두 더해(주변화하여) 관측 데이터의 분포 p(x)를 얻는 절차를 부르는 명칭은?",
+      "choices": [
+        "① 표준화(Standardization)는 평균을 0, 분산을 1로 만드는 전처리 작업이다",
+        "② 정규화(Normalization)는 값을 일정 범위로 스케일링하는 절차다",
+        "③ 주변화(Marginalization)",
+        "④ 보간(Interpolation)은 두 점 사이의 값을 추정하는 작업이다"
+      ],
+      "answer": 2,
+      "brief": "Marginalization — joint를 한 변수에 대해 합산해 marginal을 얻음.",
+      "detailed": "슬라이드: \"the probability of x is obtained by accounting for all such possibilities. This is achieved through marginalization: p(x) = Σ_z p(x, z).\" GMM에서 marginalize는 Σ_z p(z)p(x|z) = Σ_k π_k·N(x|μ_k, Σ_k)로 정확히 GMM 수식을 복원한다. ①·②는 데이터 전처리 기법, ④는 수치 보간으로 모두 다른 개념이다.",
+      "source": "Density PDF p.36-37; 9주차 § 10"
+    },
+    {
+      "id": "MLW9Q18",
+      "set": 9,
+      "week": 9,
+      "topic": "최적화 난이도",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "GMM 파라미터를 일반적인 MLE(Maximum Likelihood Estimation)로 직접 풀려고 할 때 나타나는 \"수학적 복잡성\" 문제에 대한 설명으로 가장 정확한 것은?",
+      "choices": [
+        "① 단일 정규분포 MLE처럼 로그를 씌우면 지수항이 풀려 닫힌 해를 쉽게 구할 수 있다",
+        "② 로그 안에 컴포넌트 수만큼의 합(Sum)이 있어 미분 시 비선형 방정식이 되어 해석적으로 닫힌 해를 구할 수 없다",
+        "③ 로그 함수의 정의역 문제로 음수 입력에 대해 미분이 불가능해진다",
+        "④ 수치 오버플로가 발생해 컴퓨터로는 어떤 계산도 수행할 수 없게 된다"
+      ],
+      "answer": 1,
+      "brief": "로그 안에 Σ가 있어 미분이 비선형 → 닫힌 해 X.",
+      "detailed": "GMM의 log-likelihood는 ln p(X|π,μ,Σ) = Σ_n ln(Σ_k π_k·N(x^{(n)}|μ_k, Σ_k)) 형태다. 단일 가우시안이라면 로그가 지수를 풀어 깔끔한 닫힌 해를 주지만, GMM은 \"로그 안에 합\"이 있어 미분식이 비선형 방정식이 되고 해석적으로 풀 수 없다. 슬라이드: \"taking derivatives leads to nonlinear equations that cannot be solved analytically.\" 그래서 EM 같은 반복 최적화가 필요하다.",
+      "source": "Density PDF p.43; 9주차 § 11"
+    },
+    {
+      "id": "MLW9Q19",
+      "set": 9,
+      "week": 9,
+      "topic": "최적화의 두 번째 난점",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "GMM에 MLE를 적용할 때 발생하는 두 번째 치명적 문제로, \"하나의 가우시안 컴포넌트가 단일 데이터 포인트로 평균이 일치하고 분산이 0으로 줄어들 때 우도가 무한대로 발산하는 현상\"을 부르는 명칭은?",
+      "choices": [
+        "① 다중공선성(Multicollinearity)은 입력 변수들이 강한 상관을 보이는 회귀 분석의 문제다",
+        "② 불편 추정량(Unbiased Estimator) 문제는 추정량의 기댓값이 참값과 다른 경우다",
+        "③ 특이점(Singularity) 문제로, MLE가 well-posed하지 않게 되는 발산 현상이다",
+        "④ 차원의 저주(Curse of Dimensionality)는 차원이 늘어나며 데이터가 희소해지는 현상이다"
+      ],
+      "answer": 2,
+      "brief": "Singularity — 한 점에 collapse한 가우시안의 σ→0이 likelihood를 ∞로 만드는 발산.",
+      "detailed": "슬라이드: \"As σ_k approaches zero, the density term grows without bound, then causing the log-likelihood to diverge to infinity\" 와 \"maximum likelihood estimation for mixture models is not well posed, since such singular solutions can always occur.\" 즉, MLE는 데이터를 잘 설명하기보다는 한 데이터 점에 완벽히 overfit되는 비정상 해를 선호하게 된다. 이 문제는 EM 알고리즘에서도 여전히 존재해 적절한 초기화나 정규화로 회피해야 한다.",
+      "source": "Density PDF p.41-42; 9주차 § 11"
+    },
+    {
+      "id": "MLW9Q20",
+      "set": 9,
+      "week": 9,
+      "topic": "차후 학습 내용",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "MLE를 직접 적용할 수 없는 GMM과 같은 잠재 변수 모델을 학습하기 위해 다음 주차에서 다루는 알고리즘은?",
+      "choices": [
+        "① Stochastic Gradient Descent는 미니배치 단위로 그래디언트를 계산하는 일반 최적화 기법이다",
+        "② Newton-Raphson Method는 헤시안 행렬을 사용하는 2차 최적화 기법이다",
+        "③ Expectation-Maximization 알고리즘",
+        "④ Adam Optimizer는 모멘텀과 적응형 학습률을 결합한 신경망 학습 옵티마이저다"
+      ],
+      "answer": 2,
+      "brief": "EM 알고리즘 — 잠재 변수 모델용 반복 최적화의 표준.",
+      "detailed": "슬라이드: \"we turn to an alternative method known as the Expectation-Maximization (EM) algorithm, a general optimization framework designed for models with latent variables and widely applicable in probabilistic modeling.\" EM은 E-step(현재 파라미터로 잠재 변수의 사후 기대값 계산)과 M-step(그 기대값으로 파라미터 갱신)을 반복하며 우도를 단조 증가시킨다. ①·②·④는 모두 일반 최적화 기법이지만 잠재 변수 모델에 특화된 EM과는 다르다.",
+      "source": "Density PDF p.45; 9주차 § 12"
+    }
+  ]
+}

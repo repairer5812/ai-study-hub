@@ -1,0 +1,393 @@
+{
+  "subject": "dl",
+  "week": 8,
+  "title": "딥러닝 8주차 — LSTM & GRU",
+  "set_meta": {
+    "id": 8,
+    "title": "Week 8",
+    "label": "LSTM & GRU",
+    "desc": "Vanishing Gradient · Gating · Cell State · 변형"
+  },
+  "questions": [
+    {
+      "id": "DLW8Q1",
+      "set": 8,
+      "week": 8,
+      "topic": "RNN 학습 안정성",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "BPTT(Backpropagation Through Time)에서 동일한 가중치 행렬이 시간 축을 따라 반복적으로 곱해질 때, 행렬의 가장 큰 특이값(Largest Singular Value)이 1보다 큰 경우 일어나는 현상은 무엇인가?",
+      "choices": [
+        "① 시간 축을 따라 전파되는 신호가 점점 작아져 결국 0으로 수렴해 앞쪽 파라미터가 거의 갱신되지 않는 현상",
+        "② 시간 축을 따라 전파되는 신호가 폭발적으로 증가해 가중치를 발산시키는 현상",
+        "③ 모든 게이트의 출력이 0과 1 사이의 일정한 값으로 고정되어 더 이상 학습이 진행되지 않는 현상",
+        "④ 손실 함수의 표면이 평탄해져 어떤 방향으로도 그래디언트가 거의 발생하지 않는 정체 현상"
+      ],
+      "answer": 1,
+      "brief": "최대 특이값 > 1 → 행렬이 반복 곱해지며 값이 폭발적으로 커진다.",
+      "detailed": "BPTT는 시간 축으로 펼친 RNN의 그래디언트를 끝에서부터 거꾸로 계산하면서 동일한 가중치 W를 반복적으로 곱한다. 이 반복 곱은 선형대수적으로 W의 가장 큰 특이값이 결과를 지배한다. 최대 특이값이 1을 넘으면 그래디언트가 매 스텝마다 곱해질 때마다 커져 폭발(Exploding Gradient)하고, 1보다 작으면 0으로 수렴해 소실(Vanishing Gradient)한다. CNN·MLP는 층마다 파라미터가 다르므로 이 문제가 두드러지지 않지만, RNN은 동일 W를 반복 사용하기 때문에 두 문제가 모두 심각하다.",
+      "source": "RNN_LSTM PDF p.41-43; 8주차 § 1"
+    },
+    {
+      "id": "DLW8Q2",
+      "set": 8,
+      "week": 8,
+      "topic": "학습 안정화 기법",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "RNN 학습에서 그래디언트의 노름(Norm)이 사전 정의된 임계값보다 클 때, 그래디언트의 방향은 유지하면서 크기만 임계값 비율로 축소시키는 기법은?",
+      "choices": [
+        "① Batch Normalization을 시퀀스 차원에 적용해 활성값 분포를 표준화하는 기법",
+        "② Dropout을 hidden state에 일정 확률로 적용해 과적합을 줄이는 기법",
+        "③ 가중치에 L2 페널티를 더해 학습 중 큰 값으로 발산하는 것을 억제하는 정규화 기법",
+        "④ Gradient Clipping"
+      ],
+      "answer": 3,
+      "brief": "Gradient Clipping은 norm이 임계값을 넘을 때 다운스케일하여 발산을 막는 단순한 기법이다.",
+      "detailed": "교수님은 손실 함수 표면의 절벽(cliff)에서 그래디언트가 무한대에 가까워지면 파라미터가 멀리 날아가버리므로, 너무 멀리 가지 않게 스케일링한다고 설명하셨다. 슬라이드 의사 코드: grad_norm = np.sum(grad*grad); if grad_norm > threshold: grad *= threshold/grad_norm. 방향(Direction)은 유지하고 크기(Magnitude)만 임계값 비율로 축소하기 때문에 학습 안정성을 빠르게 개선한다. 단, 이 기법은 폭발(Exploding) 문제만 해결하고 소실(Vanishing)은 해결하지 못한다.",
+      "source": "RNN_LSTM PDF p.43; 8주차 § 2"
+    },
+    {
+      "id": "DLW8Q3",
+      "set": 8,
+      "week": 8,
+      "topic": "RNN의 구조적 한계",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Vanilla RNN이 장기 의존성(Long-Term Dependency)을 잘 처리하지 못하는 가장 근본적인 구조적 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 활성화 함수로 ReLU 대신 tanh를 사용하기 때문에 출력 범위가 제한되어 정보 손실이 발생한다",
+        "② 입력 시퀀스의 길이가 학습 시점에 고정되어 있어 다른 길이의 시퀀스를 처리할 수 없다",
+        "③ 모든 과거 정보를 차원이 고정된 단일 hidden state 벡터에 압축해 담아야 하므로 용량이 부족하다",
+        "④ 가중치가 시간에 따라 다르게 학습되어 시퀀스 끝부분의 정보만 학습된다"
+      ],
+      "answer": 2,
+      "brief": "고정 차원의 hidden state 하나가 모든 과거 정보를 담아야 한다는 구조적 한계 때문이다.",
+      "detailed": "이론적으로는 hidden state가 모든 과거를 인코딩할 수 있어야 하지만, 실제로는 그 차원이 고정되어 있다. 매우 긴 시퀀스의 모든 정보를 단일 고정 차원 벡터에 담는 것은 불가능하며, 차원을 늘리면 파라미터·메모리가 제곱(Quadratic)으로 증가해 또 다른 문제가 생긴다. 결과적으로 가까운 시점 정보(Short-term)는 잘 반영하지만 멀리 떨어진 정보(Long-term)와의 연관은 흐려진다. 이 한계가 게이트 기반 모델(LSTM, GRU)이 등장한 동기다. tanh 사용은 발산 방지를 위한 선택일 뿐 장기 의존성과 무관하며, RNN은 임의 길이 시퀀스를 처리할 수 있고, 가중치는 모든 시간 스텝에서 공유된다.",
+      "source": "RNN_LSTM PDF p.45; 8주차 § 3"
+    },
+    {
+      "id": "DLW8Q4",
+      "set": 8,
+      "week": 8,
+      "topic": "활성화 함수 선택",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "LSTM과 GRU의 게이트(Gate)에서 시그모이드(Sigmoid) 함수를 활성화 함수로 사용하는 가장 핵심적인 이유로 적절한 것은?",
+      "choices": [
+        "① 출력 범위가 -1에서 +1 사이로 제한되어 새로 들어올 정보의 부호와 크기를 동시에 결정할 수 있기 때문이다",
+        "② 출력이 0과 1 사이로 제한되어 정보를 얼마만큼의 비율로 통과시킬지 부드럽게(Soft) 조절할 수 있기 때문이다",
+        "③ 음수 입력에 대해 0을 출력해 죽은 뉴런(Dying Neuron) 문제를 자연스럽게 해결하기 때문이다",
+        "④ 여러 후보 중 하나만 1로, 나머지는 0으로 강제하여 확률 분포를 만들기 때문이다"
+      ],
+      "answer": 1,
+      "brief": "Sigmoid 출력이 0~1이라 \"문을 얼마나 열까\"를 부드럽게 조절하는 게이트로 사용된다.",
+      "detailed": "Sigmoid는 출력이 0~1로 제한되어 0이면 문을 닫음(완전 차단), 1이면 활짝 엶(완전 통과)이라는 직관적 의미를 가진다. 0.7이면 70% 통과처럼 비율로 부드럽게 조절할 수 있어 게이트에 적합하다. ①은 tanh의 특성으로 새 정보의 후보값(candidate)을 만들 때 사용되지 게이트에서는 사용하지 않는다. ③은 ReLU에 대한 설명. ④는 Softmax의 특성인데, 정보를 잊는 것과 더하는 것은 배타적 관계가 아니므로 Softmax는 부적절하다.",
+      "source": "RNN_LSTM PDF p.46; 8주차 § 4"
+    },
+    {
+      "id": "DLW8Q5",
+      "set": 8,
+      "week": 8,
+      "topic": "GRU 구성",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "GRU(Gated Recurrent Unit)에 포함된 게이트의 종류와 개수를 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 입력·망각·출력 세 게이트로 구성되며, 별도의 셀 상태(Cell State)도 함께 사용한다",
+        "② 갱신·망각·재설정 세 게이트로 구성되어 LSTM보다 미세한 메모리 제어가 가능하다",
+        "③ 갱신(Update)과 재설정(Reset)의 두 게이트로 구성되며 별도의 셀 상태 없이 hidden state로 메모리와 출력을 모두 처리한다",
+        "④ 단일 게이트만 사용해 정보 흐름을 제어하는 가장 단순화된 구조다"
+      ],
+      "answer": 2,
+      "brief": "GRU는 update와 reset 두 게이트만 사용하며 hidden state 하나로 메모리와 출력을 통합한다.",
+      "detailed": "GRU는 LSTM의 복잡한 셀 상태를 제거하고 hidden state 하나로 메모리와 출력을 모두 처리하도록 간소화한 구조다. 게이트는 두 개: update gate(과거와 새 정보 사이의 보간 비율 결정), reset gate(새 후보를 만들 때 과거 정보를 얼마나 잊을지 결정). 그래서 LSTM보다 파라미터가 약 25% 적고 더 단순하다. ①은 LSTM 설명, ②는 잘못된 게이트 구성, ④는 너무 단순화된 잘못된 묘사다.",
+      "source": "RNN_LSTM PDF p.47; 8주차 § 5"
+    },
+    {
+      "id": "DLW8Q6",
+      "set": 8,
+      "week": 8,
+      "topic": "GRU 게이트 역할",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "GRU에서 새로운 메모리 후보를 계산할 때 이전 hidden state에 곱해져, \"과거 정보를 얼마나 잊고 새로운 정보 위주로 후보를 만들지\"를 결정하는 게이트는?",
+      "choices": [
+        "① 갱신 게이트(Update Gate)는 과거와 새 정보의 보간 비율을 정한다",
+        "② 출력 게이트(Output Gate)는 셀 상태에서 무엇을 내보낼지 결정한다",
+        "③ 재설정 게이트(Reset Gate)는 새 후보 계산 시 과거 hidden state에 곱해져 과거 정보의 영향력을 조절한다",
+        "④ 망각 게이트(Forget Gate)는 셀 상태에서 어떤 정보를 버릴지 결정한다"
+      ],
+      "answer": 2,
+      "brief": "Reset Gate가 새 후보 hˇ_t 계산 시 h_{t-1}에 곱해져 과거의 영향력을 조절한다.",
+      "detailed": "GRU의 새 메모리 후보는 hˇ_t = tanh(W·[r_t * h_{t-1}, x_t])로 계산되며, 여기서 reset gate r_t가 이전 hidden state h_{t-1}에 element-wise로 곱해진다. r_t가 0에 가까우면 과거를 무시하고 단기 정보 위주로 후보를 만들어 단기 의존성에 적합하고, 1에 가까우면 과거를 그대로 살린다. ①은 update gate(보간 결정), ②와 ④는 LSTM의 게이트 설명이다.",
+      "source": "RNN_LSTM PDF p.47; 8주차 § 5"
+    },
+    {
+      "id": "DLW8Q7",
+      "set": 8,
+      "week": 8,
+      "topic": "GRU 게이트 동작 패턴",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "장기 의존성(Long-Term Dependency)이 강한 문제에서 GRU가 자연스럽게 보이는 게이트 활성화 패턴으로 가장 적절한 것은?",
+      "choices": [
+        "① Reset Gate가 매우 높게 활성화되어 과거 정보를 빠르게 지운다",
+        "② Update Gate의 값이 0에 가까운 상태로 유지되어 과거 hidden state를 거의 그대로 복사·전달한다",
+        "③ Forget Gate가 1로 고정되어 셀 상태에 모든 과거 정보가 그대로 누적된다",
+        "④ 두 게이트 모두 항상 0.5로 수렴하여 균형 잡힌 메모리를 유지한다"
+      ],
+      "answer": 1,
+      "brief": "z_t ≈ 0이면 h_t ≈ h_{t-1}로 과거를 길게 보존 → 장기 의존성에 유리.",
+      "detailed": "GRU의 hidden state 갱신은 h_t = (1-z_t)*h_{t-1} + z_t*hˇ_t. 따라서 update gate z_t가 0에 가까우면 h_t는 h_{t-1}을 거의 그대로 유지해 정보를 여러 시간 스텝 동안 복사할 수 있다. 이는 슬라이드의 \"If z close to 1, then we can copy information... (Less vanishing gradient!)\" 라는 표현과 동일한 메커니즘을 (1-z)관점에서 설명한 것이다. 반대로 단기 의존성이 강한 경우엔 reset gate가 활성화된다. ③은 LSTM의 forget gate 설명이며, GRU에는 forget gate가 없다.",
+      "source": "RNN_LSTM PDF p.48; 8주차 § 5"
+    },
+    {
+      "id": "DLW8Q8",
+      "set": 8,
+      "week": 8,
+      "topic": "GRU와 다른 모델의 유사성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "교수님은 GRU의 update gate가 0에 가까울 때 과거 정보가 그대로 흐르는 구조가 다른 유명한 신경망의 특정 메커니즘과 매우 유사하다고 강조하셨다. 그 메커니즘은 무엇인가?",
+      "choices": [
+        "① Inception Module의 다중 필터 병렬 결합",
+        "② BatchNorm의 통계 기반 정규화",
+        "③ Dropout의 무작위 뉴런 비활성화",
+        "④ ResNet의 Skip Connection을 통한 항등 경로"
+      ],
+      "answer": 3,
+      "brief": "GRU의 게이트가 열린 경로 = ResNet의 skip connection과 동일한 \"항등 경로 + 보정\" 구조.",
+      "detailed": "ResNet은 H(x) = F(x) + x로 항등 매핑(identity)에 보정(residual)을 더하는 구조다. GRU에서 z_t가 0이면 h_t ≈ h_{t-1} (항등)이고, z_t가 활성화되면 새 후보 hˇ_t로 보정된다. 슬라이드는 이를 \"Adaptive shortcut connections\"라고 명시하며 \"c.f.) ResNet: H(x) = F(x) + x\"를 직접 비교한다. 이 구조 덕분에 그래디언트가 게이트가 열린 경로를 통해 끊김 없이 흘러 vanishing gradient가 완화된다.",
+      "source": "RNN_LSTM PDF p.49; 8주차 § 5"
+    },
+    {
+      "id": "DLW8Q9",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM의 핵심 변수",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Vanilla RNN과 비교했을 때 LSTM이 새롭게 도입한 상태 변수의 역할로 가장 적절한 것은?",
+      "choices": [
+        "① 다음 시점의 입력으로 그대로 사용되는 단순 버퍼 역할을 한다",
+        "② 게이트의 활성화 함수가 적용된 결과를 임시 저장해두는 보조 변수 역할을 한다",
+        "③ 게이트들이 정보를 더하거나 빼면서 시퀀스 끝까지 정보를 안전하게 운반하는 컨베이어 벨트(고속도로) 역할을 한다",
+        "④ 모든 hidden state의 평균을 저장해 시퀀스의 전반적 통계를 요약하는 역할을 한다"
+      ],
+      "answer": 2,
+      "brief": "Cell State는 게이트가 정보를 더하고 빼며 시퀀스 끝까지 운반하는 정보 고속도로다.",
+      "detailed": "LSTM은 hidden state(h_t)와는 별도로 Cell State(C_t)라는 상태 변수를 도입했다. Cell State는 게이트들에 의해 정보가 추가(adding)되거나 삭제(removing)되면서 시퀀스 끝까지 정보를 운반하는 컨베이어 벨트 역할을 하며, 이 직선적인 경로 덕분에 그래디언트가 끊기지 않고 흐를 수 있다. ①·②·④는 모두 cell state의 본질을 잘못 묘사한 설명이다.",
+      "source": "RNN_LSTM PDF p.50; 8주차 § 6"
+    },
+    {
+      "id": "DLW8Q10",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 게이트 역할 매칭",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LSTM에서 \"새로 들어오는 정보를 셀 상태에 얼마만큼의 비율로 추가할 것인지\"를 결정하는 게이트는?",
+      "choices": [
+        "① 출력 게이트(Output Gate)는 셀 상태로부터 어떤 부분을 hidden state로 내보낼지 결정한다",
+        "② 입력 게이트(Input Gate)는 시그모이드 출력으로 새 정보의 반영 비율을 0~1 사이로 결정한다",
+        "③ 망각 게이트(Forget Gate)는 셀 상태에서 어떤 정보를 버릴지 결정한다",
+        "④ 후보 게이트(Candidate Gate)는 tanh 출력으로 새 정보의 방향과 크기를 결정한다"
+      ],
+      "answer": 1,
+      "brief": "Input Gate가 시그모이드 출력으로 새 정보의 반영 비율을 결정한다.",
+      "detailed": "LSTM은 새 정보를 두 단계로 처리한다. (1) Input Gate i_t = σ(...)는 새 정보를 얼마나 받을지 비율을 결정하고, (2) Candidate Cˇ_t = tanh(...)는 어떤 방향·크기로 더할지 후보를 만든다. 셀 상태 갱신은 C_t = f_t * C_{t-1} + i_t * Cˇ_t로, 두 항이 결합된다. ④는 candidate라는 별도 게이트가 있는 것처럼 표현했지만 실제로 candidate는 게이트가 아닌 후보값(content)이며, candidate \"gate\"는 LSTM 표준 용어가 아니다.",
+      "source": "RNN_LSTM PDF p.51; 8주차 § 6"
+    },
+    {
+      "id": "DLW8Q11",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 활성화 함수 매칭",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LSTM에서 \"새 정보를 어느 방향으로 얼마만큼 셀 상태에 더할 것인지\"를 결정하는 후보값을 만드는 데 사용되는 활성화 함수는?",
+      "choices": [
+        "① 출력이 0~1 범위로 제한되어 게이트의 통과 비율 역할을 하는 함수",
+        "② 입력이 양수면 그대로 통과시키고 음수면 0으로 만드는 함수",
+        "③ 출력이 -1~+1 범위라 새 정보의 부호와 크기를 모두 표현하는 tanh",
+        "④ 여러 출력값의 합이 1이 되도록 정규화해 확률 분포를 만드는 함수"
+      ],
+      "answer": 2,
+      "brief": "후보값(Candidate)은 -1~+1 범위인 tanh로 새 정보의 부호와 크기를 동시에 표현한다.",
+      "detailed": "LSTM의 후보값은 Cˇ_t = tanh(W_C·[h_{t-1}, x_t] + b_C)로 계산된다. tanh는 출력이 -1에서 +1 사이라 정보를 셀 상태에 더할지(+) 뺄지(-)와 그 크기를 동시에 결정할 수 있다. ①은 sigmoid로 게이트에서 사용된다. ②는 ReLU. ④는 softmax. 게이트는 sigmoid를, 후보값은 tanh를 쓰는 것이 LSTM·GRU 설계의 핵심 패턴이다.",
+      "source": "RNN_LSTM PDF p.51; 8주차 § 6"
+    },
+    {
+      "id": "DLW8Q12",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 셀 상태 갱신",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LSTM에서 셀 상태 갱신식의 두 항이 의미하는 바를 가장 정확하게 설명한 것은?",
+      "choices": [
+        "① 첫째 항은 hidden state로부터의 입력, 둘째 항은 외부 입력 x_t로부터의 입력을 결합한다",
+        "② 첫째 항은 망각 게이트로 거른 과거 정보를, 둘째 항은 입력 게이트로 거른 새 후보 정보를 더한다",
+        "③ 첫째 항은 출력 게이트의 결과, 둘째 항은 hidden state의 잔차를 더해준다",
+        "④ 첫째 항은 모든 가중치의 합, 둘째 항은 모든 편향의 합을 의미한다"
+      ],
+      "answer": 1,
+      "brief": "C_t = f_t*C_{t-1} + i_t*Cˇ_t — 거른 과거 + 거른 새 후보의 합.",
+      "detailed": "LSTM 셀 상태 갱신: C_t = f_t * C_{t-1} + i_t * Cˇ_t. 첫째 항 f_t * C_{t-1}는 망각 게이트(forget gate)로 거른 과거 정보를 의미하고, 둘째 항 i_t * Cˇ_t는 입력 게이트(input gate)로 거른 새 후보 정보를 의미한다. 두 항이 element-wise 합으로 더해지는 단순 구조 덕분에 그래디언트가 끊기지 않고 흐를 수 있다.",
+      "source": "RNN_LSTM PDF p.52; 8주차 § 6"
+    },
+    {
+      "id": "DLW8Q13",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 학습 안정성의 비밀",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "LSTM이 Vanilla RNN과 달리 vanishing gradient 문제를 효과적으로 완화하는 가장 핵심적인 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 가중치 행렬 W의 크기를 매 시점마다 자동으로 정규화해 특이값을 1 근처로 유지하기 때문이다",
+        "② Cell State 라인을 따라 역전파될 때 가중치 행렬이 반복 곱해지는 대신 element-wise 곱과 덧셈만 적용되기 때문이다",
+        "③ tanh 대신 ReLU 계열 활성화 함수를 사용해 그래디언트가 1로 유지되기 때문이다",
+        "④ 매 시점마다 가중치를 새로 초기화해 누적된 곱을 제거하기 때문이다"
+      ],
+      "answer": 1,
+      "brief": "Cell State 경로는 element-wise 곱·덧셈만 → 행렬 W 반복 곱이 없어 그래디언트가 끊기지 않음.",
+      "detailed": "슬라이드 \"Backpropagation from c_t to c_{t-1} only elementwise multiplication by f, no matrix multiply by W\" 가 정답의 근거다. Vanilla RNN은 BPTT에서 W가 반복 곱해져 폭발/소실이 발생하지만, LSTM의 cell state 경로 c_{t-1} → c_t는 단순한 덧셈과 element-wise 곱(forget gate와의 곱)만 거친다. 슬라이드는 이를 \"Uninterrupted gradient flow!\"라고 강조하며 ResNet의 skip connection 및 그 사이 단계인 Highway Networks와의 유사성을 함께 보여준다.",
+      "source": "RNN_LSTM PDF p.53; 8주차 § 7"
+    },
+    {
+      "id": "DLW8Q14",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 변형 모델",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "표준 LSTM의 게이트는 이전 hidden state와 현재 입력만을 보고 게이트 값을 결정하지만, 변형 모델 중 일부는 \"현재 또는 이전 셀 상태(Cell State)를 함께 참고하여\" 게이트 값을 결정하도록 변경했다. 이 변형 모델의 이름은?",
+      "choices": [
+        "① Peephole LSTM",
+        "② Bidirectional LSTM은 시간 양 방향의 정보를 모두 활용하도록 확장된 모델이다",
+        "③ Stacked LSTM은 LSTM 셀을 여러 층 쌓아 표현력을 높인 모델이다",
+        "④ Convolutional LSTM은 행렬 곱 대신 컨볼루션 연산을 사용하는 모델이다"
+      ],
+      "answer": 0,
+      "brief": "Peephole LSTM: 게이트가 cell state까지 \"엿보고(peephole)\" 결정.",
+      "detailed": "Peephole LSTM은 Gers & Schmidhuber(2000)가 제안한 변형으로, 게이트의 입력에 이전 또는 현재 cell state를 추가한다. 예: f_t = σ(W_f·[C_{t-1}, h_{t-1}, x_t] + b_f). 게이트가 cell state라는 메모리를 \"엿본다(peephole)\"는 비유에서 이름이 유래했다. ②는 양방향, ③은 깊이 확장, ④는 시공간 데이터용 변형으로 모두 다른 변형 모델이다.",
+      "source": "RNN_LSTM PDF p.54; 8주차 § 8"
+    },
+    {
+      "id": "DLW8Q15",
+      "set": 8,
+      "week": 8,
+      "topic": "LSTM 변형 모델",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "표준 LSTM의 망각 게이트와 입력 게이트를 별도로 학습하지 않고 \"잊은 만큼만 새 정보를 채우자\"라는 원칙으로 두 게이트를 하나로 묶은 변형 모델은?",
+      "choices": [
+        "① 게이트 입력에 cell state를 추가해 cell state 정보까지 참고하도록 만든 변형",
+        "② 망각 게이트와 입력 게이트를 결합한 Coupled Forget and Input Gates 변형",
+        "③ 모든 게이트를 제거하고 단일 가중치로 정보 흐름을 단순화한 변형",
+        "④ Cell state를 hidden state로 통합해 한 변수로 메모리와 출력을 모두 처리하는 변형"
+      ],
+      "answer": 1,
+      "brief": "Coupled Forget and Input Gates: i_t = 1 - f_t로 두 게이트가 자동 결합.",
+      "detailed": "이 변형은 셀 상태 갱신을 C_t = f_t * C_{t-1} + (1 - f_t) * Cˇ_t로 표현해 forget과 input 게이트를 하나의 f_t로 묶는다. \"잊는 만큼만 새 정보로 채운다\"는 직관이 핵심이며, 이 발상은 GRU의 update gate (h_t = (1-z_t)*h_{t-1} + z_t*hˇ_t) 와 사실상 동일한 철학이다. ①은 Peephole LSTM, ④는 GRU에 가까운 설명이다.",
+      "source": "RNN_LSTM PDF p.55; 8주차 § 8"
+    },
+    {
+      "id": "DLW8Q16",
+      "set": 8,
+      "week": 8,
+      "topic": "모델 비교",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "표준 LSTM과 표준 GRU를 비교한 설명 중 가장 정확한 것은?",
+      "choices": [
+        "① LSTM은 게이트 2개, GRU는 게이트 3개를 사용한다",
+        "② LSTM은 메모리와 출력을 동일 변수로 통합하는 반면, GRU는 두 변수를 분리해 사용한다",
+        "③ GRU는 LSTM보다 파라미터 수가 더 많아 일반적으로 학습 속도가 느리다",
+        "④ LSTM은 게이트 3개에 cell state를 분리해 사용하고, GRU는 게이트 2개로 hidden state 하나만 사용한다"
+      ],
+      "answer": 3,
+      "brief": "LSTM = 3 게이트 + cell state 분리, GRU = 2 게이트 + hidden state 통합.",
+      "detailed": "LSTM은 forget·input·output 3개 게이트와 별도 cell state(C_t)를 사용하고, hidden state(h_t)는 출력과 다음 시점 입력으로 사용된다. GRU는 update·reset 2개 게이트만 사용하고 cell state 없이 hidden state 하나로 메모리와 출력을 모두 처리한다. ①은 게이트 수가 반대로 되어 있고, ②는 LSTM과 GRU의 분리·통합이 반대로 설명되어 있으며, ③은 GRU 파라미터 수에 대한 잘못된 설명이다.",
+      "source": "RNN_LSTM PDF p.56; 8주차 § 8"
+    },
+    {
+      "id": "DLW8Q17",
+      "set": 8,
+      "week": 8,
+      "topic": "실무 적용 가이드",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "교수님이 새로운 태스크나 도메인에 메모리 기반 모델을 적용할 때 가장 먼저 시도해볼 것을 권장한 모델과 그 이유로 가장 적절한 것은?",
+      "choices": [
+        "① LSTM부터 시도하라 — 더 표현력이 높아 어떤 데이터셋에서도 항상 GRU보다 좋은 성능을 낸다",
+        "② GRU부터 시도하라 — 파라미터가 적고 구조가 단순해 빠르게 베이스라인을 측정할 수 있기 때문이다",
+        "③ Vanilla RNN부터 시도하라 — vanishing gradient 문제가 실제로는 거의 발생하지 않기 때문이다",
+        "④ Transformer부터 시도하라 — 메모리 기반 모델은 더 이상 의미가 없기 때문이다"
+      ],
+      "answer": 1,
+      "brief": "GRU 먼저 — 파라미터 적고 단순하므로 빠른 베이스라인. 필요 시 LSTM으로 업그레이드.",
+      "detailed": "교수님은 \"새로운 태스크나 도메인에 메모리 개념을 적용한다면 먼저 GRU를 써보는 것을 권장한다\"고 말씀하셨다. 이유는 GRU가 LSTM보다 파라미터가 약 25% 적고 구조가 단순해 빠르게 베이스라인을 만들 수 있기 때문이다. GRU로 충분치 않거나 더 강건한(robust) 성능이 필요할 때 LSTM으로 넘어가는 워크플로가 권장된다. ①은 \"항상 LSTM이 좋다\"는 잘못된 일반화이고, ③은 vanishing gradient가 실제로 RNN 학습을 매우 어렵게 만든다는 사실과 모순된다.",
+      "source": "8주차 § 10"
+    },
+    {
+      "id": "DLW8Q18",
+      "set": 8,
+      "week": 8,
+      "topic": "활성화 함수 선택의 이유",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "게이트의 활성화 함수로 Softmax 대신 Sigmoid가 적합한 이유로 가장 적절한 것은?",
+      "choices": [
+        "① Softmax는 미분이 불가능해 역전파에 사용할 수 없기 때문이다",
+        "② Softmax는 음수 입력을 처리할 수 없어 게이트 값이 항상 양수가 보장되지 않기 때문이다",
+        "③ 정보를 잊는 양과 새로 더하는 양은 합이 1이 되어야 할 배타적 관계가 아니므로, 각 게이트가 독립적으로 0~1 비율을 결정해야 하기 때문이다",
+        "④ Softmax는 다차원 벡터에 적용할 수 없고 스칼라 입력만 처리하기 때문이다"
+      ],
+      "answer": 2,
+      "brief": "잊는 양과 더하는 양은 배타적이지 않음 → 각 게이트가 독립적으로 결정해야 함.",
+      "detailed": "Softmax는 출력값들의 합이 1이 되도록 강제해 \"여러 후보 중 하나만 선택\"하는 배타적 분포를 만든다. 그러나 LSTM·GRU에서 정보를 잊는 양(forget)과 새로 더하는 양(input)은 독립적으로 결정해야 한다. 예를 들어 둘 다 0.7일 수도, 둘 다 0.2일 수도 있다. 따라서 각 게이트가 독립적으로 0~1 사이 값을 결정할 수 있는 sigmoid가 적합하다. ①은 잘못된 사실이고, ②·④도 사실과 다르다.",
+      "source": "8주차 § 10"
+    },
+    {
+      "id": "DLW8Q19",
+      "set": 8,
+      "week": 8,
+      "topic": "최신 연구와의 연결",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "교수님은 LSTM·GRU의 \"게이팅(Gating)\" 메커니즘이 단순히 옛 모델에 머무는 개념이 아니라 최신 모델들에서도 그 철학이 이어진다고 강조하셨다. 다음 중 그 철학과 가장 거리가 먼 것은?",
+      "choices": [
+        "① Mamba는 입력에 따라 상태 전이의 강도를 조절하는 선택적 SSM 구조다",
+        "② Transformer의 MoE(Mixture of Experts)는 학습 가능한 게이팅으로 전문가 네트워크를 선택한다",
+        "③ Highway Networks는 학습 가능한 게이트로 변환 경로와 항등 경로 사이를 보간한다",
+        "④ K-Means Clustering은 거리 기반으로 데이터를 K개 그룹에 하드 할당하는 단순 알고리즘이다"
+      ],
+      "answer": 3,
+      "brief": "K-Means는 학습 가능한 게이팅이 없는 거리 기반 하드 할당 알고리즘.",
+      "detailed": "게이팅의 핵심 철학은 \"학습 가능한 가중치로 정보 흐름을 부드럽게 제어한다\"이다. Mamba는 selective state space model로 입력에 따라 상태 전이를 조절하고, MoE는 게이팅 네트워크로 전문가를 선택하며, Highway Networks는 게이트로 변환과 항등 경로를 보간한다 — 모두 게이팅의 직계 후예다. K-Means는 거리 기준으로 한 점을 하나의 클러스터에만 할당하는 hard assignment 방식으로, 학습 가능한 부드러운 게이팅과 무관하다.",
+      "source": "8주차 § 10"
+    },
+    {
+      "id": "DLW8Q20",
+      "set": 8,
+      "week": 8,
+      "topic": "RNN 한계 해결 방법 분류",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RNN 학습에서 발생하는 두 그래디언트 문제와 그 표준적 해결 방법을 가장 정확하게 짝지은 것은?",
+      "choices": [
+        "① Exploding은 LSTM/GRU 같은 아키텍처 변경으로, Vanishing은 Gradient Clipping으로 해결한다",
+        "② Exploding은 Gradient Clipping으로, Vanishing은 LSTM/GRU 같은 아키텍처 변경으로 해결한다",
+        "③ 두 문제 모두 Gradient Clipping만으로 충분히 해결된다",
+        "④ 두 문제 모두 학습률을 0.001 이하로 낮추면 자동으로 사라진다"
+      ],
+      "answer": 1,
+      "brief": "Exploding → Clipping (간단한 스케일링), Vanishing → 아키텍처 변경 (LSTM/GRU).",
+      "detailed": "Exploding gradient는 그래디언트의 norm이 너무 커지는 문제이므로 norm을 임계값 이하로 스케일링하는 Gradient Clipping으로 효과적으로 해결된다. 그러나 Vanishing gradient는 그래디언트가 0으로 소실되는 문제로 단순 스케일링으로 복구할 수 없으며, cell state·게이트 같은 새로운 경로를 도입하는 구조적 변경(LSTM, GRU)이 필요하다. 슬라이드도 \"Exploding gradients → Gradient clipping\", \"Vanishing gradients → Change RNN architecture\"로 명확히 분리한다.",
+      "source": "RNN_LSTM PDF p.43-44; 8주차 § 1-2"
+    }
+  ]
+}
