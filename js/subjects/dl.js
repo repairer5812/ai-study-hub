@@ -303,7 +303,7 @@ export const META = {
   hasExam: true,
   examType: "essay",        // 서술형 — exam.js에서 분기 렌더링
   sets: SETS_META,
-  weekCount: 7,
+  weekCount: 8,
   noteIndex: [
     { slug: "1주차_응용_오리엔테이션_및_수업_운영_방침", title: "1주차 — 오리엔테이션·운영 방침", week: 1 },
     { slug: "2주차_인공지능과_기계학습의_기초", title: "2주차 — AI·ML 기초", week: 2 },
@@ -312,8 +312,12 @@ export const META = {
     { slug: "5주차_CNN_Convolutional_Neural_Networks", title: "5주차 — CNN", week: 5 },
     { slug: "6주차_CIFAR-10_및_CNN_최적화_기법", title: "6주차 — CIFAR-10·CNN 최적화", week: 6 },
     { slug: "7주차_RNN_Recurrent_Neural_Networks", title: "7주차 — RNN", week: 7 },
+    { slug: "8주차_LSTM_GRU", title: "8주차 — LSTM·GRU", week: 8 },
     { slug: "예상문제_모범답안", title: "📌 예상문제·모범답안", week: 99 },
     { slug: "딥러닝_기출문제", title: "📝 기출문제 (2025)", week: 98 },
+  ],
+  weeklyExams: [
+    { week: 8, slug: "8주차_LSTM_GRU_시험", title: "8주차 시험 — LSTM·GRU (객관식 20)", count: 20 },
   ],
 };
 
