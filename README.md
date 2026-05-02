@@ -1,29 +1,36 @@
 # AI Study Hub
 
-**🌐 배포: https://repairer5812.github.io/ai-study-hub/** (리네임 예정)
-**현재 URL: https://repairer5812.github.io/ml-midterm-mock/**
+**🌐 배포: https://repairer5812.github.io/ai-study-hub/**
 
-다과목 학습 허브 · 복습 노트 · 모의고사 · 실시간 랭킹
+다과목 학습 허브 · 복습 노트 · 모의고사 · 주차별 확인문제 · 실시간 랭킹
 
 > SW AI 융합정보대학원 61기 최경찬 · repairer5812@gmail.com
 
 ## 과목
 
-| 과목 | 복습 노트 | 모의고사 |
-|------|---------|---------|
-| 🤖 기계학습 | ✅ 7주차 | ✅ 150문제 · 5세트 |
-| 💻 딥러닝 | ✅ 7주차 + 예상문제·모범답안 | 🔜 서술형 준비 중 |
-| 📊 자료구조 | ✅ 7차시 + INDEX | 🔜 3세트 준비 중 |
-| 🔒 AI 보안기술 | 🔒 자료 수집 예정 | 🔒 |
+| 과목 | 복습 노트 | 정기고사 | 주차별 확인문제 |
+|------|---------|---------|----------------|
+| 🤖 기계학습 | ✅ 1~7, 9주차 | ✅ 150문제 · 5세트 | ✅ Week 9 (밀도추정) |
+| 💻 딥러닝 | ✅ 1~8주차 + 예상문제·모범답안 | ✅ 서술형 8세트 | ✅ Week 8 (LSTM·GRU) |
+| 📊 자료구조 | ✅ 7차시 + INDEX | 🔜 3세트 준비 중 | 🔜 |
+| 🔒 AI 보안기술 | 🔒 자료 수집 예정 | 🔒 | 🔒 |
+
+## 시험 갈래 (독립 점수 트랙)
+
+- **정기고사 (중간/기말)** — 한 세트 전체 풀이, 세트별 랭킹 집계.
+- **주차별 확인문제** — 주차 단위 객관식 20문제, 주차별 별도 점수·랭킹.
+  · LocalStorage 키: `${prefix}:weekly:best:w${week}` 등으로 자동 격리.
+  · Firebase 컬렉션: `leaderboards/${subjectId}_weekly_w${week}/entries`.
 
 ## 화면 구조
 
 ```
-index.html                  ← 허브 (과목 카드 4개)
-├─ subject.html?s=ml        ← 과목 랜딩 (복습/시험 메뉴, 세트 그리드)
-├─ review.html?s=ml&w=…     ← 주차별 복습 뷰어 (marked + KaTeX, 체크박스 저장)
-├─ exam.html?s=ml&set=1     ← 시험 화면 (기존 기계학습 150문제)
-└─ result.html?s=ml&set=1   ← 결과·랭킹·오답 복기
+index.html                          ← 허브 (과목 카드 4개)
+├─ subject.html?s=ml                ← 과목 랜딩 (정기고사 + 주차별 확인문제 그리드)
+├─ review.html?s=ml&w=…             ← 주차별 복습 뷰어 (marked + KaTeX, 체크박스 저장)
+├─ exam.html?s=ml&set=1             ← 정기고사 풀이
+├─ exam.html?s=ml&kind=weekly&w=9   ← 주차별 확인문제 풀이
+└─ result.html?…                    ← 결과·랭킹·오답 복기 (kind 파라미터로 분기)
 ```
 
 ## 주요 기능
@@ -80,26 +87,35 @@ python -m http.server 8000
 ## 폴더 구조
 
 ```
-mock-exam/                  ← GitHub에서 ai-study-hub 로 rename 예정
+ai-study-hub/
 ├─ index.html               # 허브
-├─ subject.html             # 과목 랜딩
+├─ subject.html             # 과목 랜딩 (정기고사 + 주차별 확인문제 섹션)
 ├─ review.html              # 복습 뷰어
-├─ exam.html                # 시험
-├─ result.html              # 결과
+├─ exam.html                # 시험 (정기/주차별 공용, kind 파라미터로 분기)
+├─ result.html              # 결과 (정기/주차별 공용)
 ├─ css/
 ├─ js/
-│  ├─ app.js, exam.js, scoring.js, storage.js, leaderboard.js, theme.js
+│  ├─ exam.js, scoring.js, storage.js, leaderboard.js, theme.js
 │  ├─ hub 로직은 index.html 인라인
 │  ├─ subject.js, review.js
 │  └─ subjects/
-│     ├─ ml.js, dl.js, ds.js, sec.js
-│     └─ index.js            # 레지스트리
+│     ├─ ml.js, dl.js, ds.js, sec.js  # noteIndex + sets + weeklyExams 메타
+│     └─ index.js                       # 레지스트리
 ├─ notes/
-│  ├─ ml/ *.md  (7개)
-│  ├─ dl/ *.md  (7개 + 예상문제·모범답안)
-│  ├─ ds/ *.md  (7개 + INDEX)
+│  ├─ ml/ *.md (1~7, 9주차) + 9주차_밀도추정_시험.json
+│  ├─ dl/ *.md (1~8주차 + 예상문제·모범답안) + 8주차_LSTM_GRU_시험.json
+│  ├─ ds/ *.md  (7차시 + INDEX)
 │  └─ sec/ (빈 폴더)
 ├─ assets/
 ├─ firebase-config.js
 └─ firestore.rules
 ```
+
+## 주차별 확인문제 추가 방법
+
+1. `notes/<sub>/<N>주차_<제목>_시험.json` 작성 (스키마: `{subject, week, title, set_meta, questions[]}`)
+2. `js/subjects/<sub>.js`의 `weeklyExams` 배열에 한 줄 추가:
+   ```js
+   { week: N, slug: "<N>주차_<제목>_시험", title: "...", count: 20 }
+   ```
+3. 끝. 과목 페이지에 자동으로 새 카드가 표시되고, 점수·랭킹은 자동으로 격리된 키에 저장됨.
