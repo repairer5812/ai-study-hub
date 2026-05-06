@@ -1687,7 +1687,7 @@ export const META = {
   hasExam: true,
   examType: "multiple_choice", // 100% 객관식 (교수님 공지)
   sets: SETS_META,
-  weekCount: 7,
+  weekCount: 9,
   noteIndex: [
     { slug: "00_INDEX_전체_개요", title: "📚 00 INDEX — 전체 개요·족집게", week: 0 },
     { slug: "1차시_과목_오리엔테이션_및_자료구조_전체_숲보기", title: "1차시 — 오리엔테이션·숲보기", week: 1 },
@@ -1697,6 +1697,7 @@ export const META = {
     { slug: "5차시_연결_리스트_단순_원형_이중", title: "🌟 5차시 — 연결 리스트", week: 5 },
     { slug: "6차시_스택과_수식의_계산", title: "🌟 6차시 — 스택·수식 계산", week: 6 },
     { slug: "7차시_큐_데크_우선순위_큐", title: "🌟 7차시 — 큐·데크·우선순위 큐", week: 7 },
+    { slug: "9차시_트리1_이진트리_탐색_BST", title: "🌟 9차시 — 트리 I·이진 트리·탐색·BST", week: 9 },
   ],
 };
 
