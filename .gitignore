@@ -5,3 +5,11 @@ node_modules/
 .vscode/
 .idea/
 assets/images/_raw/
+
+# Notion sync working artifacts (not deliverables)
+notes/**/_inventory.json
+notes/**/_inventory.py
+notes/**/_patches.json
+notes/**/_predecessors.json
+notes/**/_predecessors.py
+notes/**/_notion_sync/
