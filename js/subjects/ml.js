@@ -11,7 +11,7 @@ export const META = {
   hasExam: true,
   examType: "mixed", // 객관식 + 주관식
   sets: ML_SETS,
-  weekCount: 9,
+  weekCount: 10,
   noteIndex: [
     { slug: "00_개요",           title: "00 개요",                  week: 0 },
     { slug: "1주차_오리엔테이션",   title: "1주차 — 오리엔테이션",       week: 1 },
@@ -22,9 +22,11 @@ export const META = {
     { slug: "6주차_SVM_커널",       title: "6주차 — SVM·커널",        week: 6 },
     { slug: "7주차_평가지표_ROC",    title: "7주차 — 평가지표·ROC",     week: 7 },
     { slug: "9주차_밀도추정_KDE_KNN_GMM", title: "9주차 — 밀도추정·KDE·KNN·GMM", week: 9 },
+    { slug: "10주차_클러스터링_KMeans_GMM_EM_Hierarchical", title: "10주차 — 클러스터링·K-Means·GMM·EM·계층", week: 10 },
   ],
   weeklyExams: [
     { week: 9, slug: "9주차_밀도추정_시험", title: "9주차 시험 — 밀도 추정 (객관식 20)", count: 20 },
+    { week: 10, slug: "10주차_클러스터링_시험", title: "10주차 시험 — 클러스터링 (객관식 20)", count: 20 },
   ],
 };
 
