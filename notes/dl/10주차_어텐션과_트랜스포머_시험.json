@@ -1,0 +1,393 @@
+{
+  "subject": "dl",
+  "week": 10,
+  "title": "딥러닝 10주차 — 어텐션과 트랜스포머 (Attention · Transformer · BERT/GPT · ViT)",
+  "set_meta": {
+    "id": 10,
+    "title": "Week 10",
+    "label": "Attention & Transformer",
+    "desc": "Attention · Seq2Seq 병목 · Q/K/V · Scaled Dot-Product · Multi-Head · Masking · Positional Encoding · BERT/GPT · ViT"
+  },
+  "questions": [
+    {
+      "id": "DLW10Q1",
+      "set": 10,
+      "week": 10,
+      "topic": "Attention 정의",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "딥러닝에서 Attention의 개념을 가장 정확히 설명한 것은?",
+      "choices": [
+        "① 딥러닝이 뜨면서 완전히 새로 발명된 연산으로, 인간 인지와는 무관하다",
+        "② 인간 뇌의 선택적 집중(제한된 자원으로 중요한 정보에만 집중하고 나머지는 무시)을 신경망에 명시적으로 도입한 개념",
+        "③ 모든 입력 정보를 동일한 가중치로 평균 내는 연산",
+        "④ RNN의 hidden state를 고정 길이로 압축하는 기법"
+      ],
+      "answer": 1,
+      "brief": "인간의 선택적 집중을 신경망에 도입한 개념.",
+      "detailed": "슬라이드: attention is a limited resource used to selectively concentrate on some information while ignoring other perceivable information. 새로 발명된 게 아니라 인지 메커니즘을 신경망에 도입한 것이다(Spotlight model: focus/fringe/margin).",
+      "source": "Attention 슬라이드 p.1; 10주차 § 1"
+    },
+    {
+      "id": "DLW10Q2",
+      "set": 10,
+      "week": 10,
+      "topic": "Seq2Seq 병목",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "기존 RNN 기반 Seq2Seq 모델의 가장 큰 구조적 한계는?",
+      "choices": [
+        "① 입력과 출력 길이가 반드시 같아야 한다",
+        "② 디코더가 인코더를 전혀 참조하지 못한다",
+        "③ 인코더의 마지막 상태 하나(고정 길이 Context Vector)에 모든 정보를 압축하려다 긴 문장에서 정보 병목(Bottleneck)이 발생한다",
+        "④ Softmax를 사용할 수 없다"
+      ],
+      "answer": 2,
+      "brief": "고정 길이 Context Vector 병목(긴 문장 정보 손실).",
+      "detailed": "슬라이드: fixed-length context vector — incapable of remembering long sentences (i.e., bottleneck). 인코더가 문장 전체를 고정 길이 벡터로 압축하므로 길이가 길어지면 정보가 손실되고 디코더 성능이 저하된다.",
+      "source": "Attention 슬라이드 p.4; 10주차 § 1"
+    },
+    {
+      "id": "DLW10Q3",
+      "set": 10,
+      "week": 10,
+      "topic": "RNN 병렬화 한계",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "교수님이 강조한 RNN(Seq2Seq)의 또 다른 핵심 약점은?",
+      "choices": [
+        "① 이전 타임스텝 계산이 끝나야 다음을 계산할 수 있어 GPU 병렬 계산이 불가능하다",
+        "② 가중치를 타임스텝마다 따로 둔다",
+        "③ 활성화 함수를 쓸 수 없다",
+        "④ 출력이 항상 1개로 고정된다"
+      ],
+      "answer": 0,
+      "brief": "순차 의존 → 병렬 계산 불가.",
+      "detailed": "RNN은 t 시점이 t-1 결과에 의존하므로 순차적으로만 계산되어 GPU 병렬화가 불가능하다. 전사: RNN의 가장 큰 약점은 병렬 계산이 불가능하다는 것. 이 한계가 Transformer 등장의 결정적 동기가 된다.",
+      "source": "Attention 슬라이드 p.39; 10주차 § 1,6"
+    },
+    {
+      "id": "DLW10Q4",
+      "set": 10,
+      "week": 10,
+      "topic": "동적 Context Vector",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Attention을 도입하면 Context Vector는 어떻게 달라지는가?",
+      "choices": [
+        "① 여전히 고정된 하나의 벡터로 유지된다",
+        "② 인코더에서 완전히 사라진다",
+        "③ 디코더가 아니라 인코더에서만 매번 새로 만들어진다",
+        "④ 디코더의 각 타임스텝마다 인코더 전체 상태에 서로 다른 가중치를 적용해 새로운 Context Vector가 동적으로 생성된다"
+      ],
+      "answer": 3,
+      "brief": "디코더 타임스텝마다 동적 Context Vector 생성.",
+      "detailed": "슬라이드: craft the context vector so that it looks at different parts of the input for each decoder time step. c_t = Σ α_(t,i) h_i 처럼 디코더 시점 t마다 인코더 전체 hidden state에 다른 가중치를 적용해 매번 다른 Context Vector를 만든다.",
+      "source": "Attention 슬라이드 p.5,12; 10주차 § 2"
+    },
+    {
+      "id": "DLW10Q5",
+      "set": 10,
+      "week": 10,
+      "topic": "Bahdanau alignment",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Bahdanau NMT에서 Attention Weight α_(t,i)는 어떻게 계산되는가?",
+      "choices": [
+        "① 인코더 상태를 그대로 더한 값",
+        "② 디코더 상태 s_(t-1)와 인코더 상태 h_i의 alignment score에 softmax를 취한 값",
+        "③ 입력 단어의 빈도수",
+        "④ 무작위로 초기화된 고정 가중치"
+      ],
+      "answer": 1,
+      "brief": "α = softmax(score(s_(t-1), h_i)).",
+      "detailed": "α_(t,i) = align(y_t, x_i) = softmax(score(s_(t-1), h_i)). 디코더 이전 상태와 인코더 각 상태의 연관성(score)을 구해 softmax로 합 1의 확률 분포로 만들고, c_t = Σ α_(t,i) h_i로 가중합한다.",
+      "source": "Attention 슬라이드 p.11-12; 10주차 § 2"
+    },
+    {
+      "id": "DLW10Q6",
+      "set": 10,
+      "week": 10,
+      "topic": "Score 함수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Transformer가 채택한 alignment score 함수와 그 특징으로 옳은 것은?",
+      "choices": [
+        "① Additive — tanh와 별도 가중치 행렬을 사용 (Bahdanau)",
+        "② Content-based — cosine 유사도만 사용",
+        "③ Scaled Dot-Product — 내적을 차원의 제곱근으로 나눈 것 (Vaswani 2017)",
+        "④ Location-based — target 위치만으로 softmax"
+      ],
+      "answer": 2,
+      "brief": "Transformer = Scaled Dot-Product (내적/√차원).",
+      "detailed": "슬라이드 score 함수표: Scaled Dot-Product score = (s_t^T h_i)/√n (Vaswani2017). 가장 단순·빠른 내적을 쓰되 차원 제곱근으로 스케일링한다. Additive(Bahdanau)·Dot(Luong) 등과 구분.",
+      "source": "Attention 슬라이드 p.14; 10주차 § 3"
+    },
+    {
+      "id": "DLW10Q7",
+      "set": 10,
+      "week": 10,
+      "topic": "Self-Attention",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Self-Attention의 정의로 옳은 것은?",
+      "choices": [
+        "① 서로 다른 두 시퀀스가 아니라, 단일 시퀀스 내부의 요소들끼리 관계를 계산해 그 시퀀스 자체의 표현을 학습한다",
+        "② 인코더와 디코더 사이에서만 계산된다",
+        "③ 이미지 픽셀에만 적용 가능하다",
+        "④ 가중치가 항상 0 또는 1이다"
+      ],
+      "answer": 0,
+      "brief": "단일 시퀀스 내부 요소끼리 관계 계산.",
+      "detailed": "슬라이드: relating different positions of a single sequence in order to compute a representation of the same sequence. 번역의 source-target처럼 서로 다른 시퀀스가 아니라 자기 자신 내부 단어들 간 관계를 본다. Transformer의 핵심 원리.",
+      "source": "Attention 슬라이드 p.15-16; 10주차 § 4"
+    },
+    {
+      "id": "DLW10Q8",
+      "set": 10,
+      "week": 10,
+      "topic": "Soft vs Hard Attention",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Soft Attention과 Hard Attention의 차이로 옳은 것은?",
+      "choices": [
+        "① Soft는 확률론적·미분 불가, Hard는 결정론적·미분 가능",
+        "② 둘 다 강화학습으로만 학습된다",
+        "③ Hard가 일반적으로 더 많이 쓰이고 학습이 쉽다",
+        "④ Soft는 결정론적이고 모든 입력에 가중치를 두어 미분 가능(일반 Backprop)하지만 비쌈, Hard는 확률론적으로 하나만 샘플링해 미분 불가(강화학습 등 필요)하지만 추론 계산이 적음"
+      ],
+      "answer": 3,
+      "brief": "Soft=결정·미분O·비쌈, Hard=확률·미분X·강화학습·추론 저렴.",
+      "detailed": "슬라이드: (Deterministic) Soft Attention은 모든 패치에 가중치를 softly 부여 → smooth·differentiable, 입력 크면 비쌈. (Stochastic) Hard Attention은 한 패치만 선택 → non-differentiable, variance reduction·강화학습 필요, 추론 계산 적음. 실무는 Soft를 압도적으로 사용.",
+      "source": "Attention 슬라이드 p.17; 10주차 § 4"
+    },
+    {
+      "id": "DLW10Q9",
+      "set": 10,
+      "week": 10,
+      "topic": "Global vs Local Attention",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Local Attention에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 입력 시퀀스 전체를 대상으로 어텐션을 계산한다(Soft와 동일)",
+        "② Global(비쌈)과 Hard(미분 불가)의 절충으로, 먼저 하나의 정렬 위치를 예측한 뒤 그 주변 윈도우 내에서만 어텐션을 계산한다(미분 가능 + 계산 절약)",
+        "③ 가중치를 항상 0 또는 1로 만든다",
+        "④ RNN 없이는 동작하지 않는다"
+      ],
+      "answer": 1,
+      "brief": "Local = 정렬 위치 예측 후 주변 윈도우에서만 어텐션(절충).",
+      "detailed": "슬라이드: Local attention is an interesting blend between hard and soft... the model first predicts a single aligned position and a window centered around it is used. Global은 Soft와 유사(전체 계산).",
+      "source": "Attention 슬라이드 p.18; 10주차 § 4"
+    },
+    {
+      "id": "DLW10Q10",
+      "set": 10,
+      "week": 10,
+      "topic": "비전 Attention",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Image Captioning에서 Attention의 의의로 가장 적절한 것은?",
+      "choices": [
+        "① CNN의 가장 마지막 분류 레이어 출력만 사용한다",
+        "② 어텐션을 전혀 사용하지 않는다",
+        "③ 단어 생성 시 CNN의 공간 정보가 보존된 feature map의 어느 위치에 집중하는지 보여줘, 예컨대 'dog' 생성 시 강아지 위치가 highlight되어 설명 가능성(Explainability)을 제공한다",
+        "④ 이미지를 텍스트 없이 분류만 한다"
+      ],
+      "answer": 2,
+      "brief": "단어마다 집중 위치를 보여줘 설명 가능성 제공.",
+      "detailed": "Xu 2015: 하위 conv feature map(공간 정보 보존)에서 단어마다 어텐션을 계산. 'dog'·'frisbee' 생성 시 해당 객체 위치에 가중치가 쏠려 설명 가능성에 유용하다. soft: Σ α_(t,i) a_i, hard: Σ s_(t,i) a_i.",
+      "source": "Attention 슬라이드 p.10,19; 10주차 § 4"
+    },
+    {
+      "id": "DLW10Q11",
+      "set": 10,
+      "week": 10,
+      "topic": "Neural Turing Machine",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Neural Turing Machine(NTM)이 Attention을 활용한 핵심 아이디어는?",
+      "choices": [
+        "① 특정 메모리 주소 하나에만 기록하던 기존 컴퓨터와 달리, Attention 가중치로 메모리 전체에 '쫙 뿌려서' 읽고 써서 전 과정을 미분 가능하게 만든다",
+        "② 메모리를 전혀 사용하지 않는다",
+        "③ RNN을 완전히 대체한 모델이다",
+        "④ 이미지 분류 전용 구조다"
+      ],
+      "answer": 0,
+      "brief": "Attention으로 메모리 전체에 분산 read/write → 미분 가능.",
+      "detailed": "슬라이드: at every step, read and write everywhere, just to different extents. 기존 메모리는 특정 주소 기록(미분 불가)이지만 NTM은 r=Σ w_t(i)M_t(i)처럼 가중합으로 읽고 erase/add로 쓴다. Content(cosine)+Location 기반 addressing. 폰 노이만 컴퓨터를 미분 가능 신경망으로 구현하려는 시도.",
+      "source": "Attention 슬라이드 p.26-31; 10주차 § 5"
+    },
+    {
+      "id": "DLW10Q12",
+      "set": 10,
+      "week": 10,
+      "topic": "Transformer 도입 배경",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Transformer가 RNN을 완전히 버린 이유로 가장 핵심적인 것은?",
+      "choices": [
+        "① RNN이 너무 단순해서",
+        "② Softmax를 쓸 수 없어서",
+        "③ 어텐션이 불필요해서",
+        "④ RNN의 순차 의존으로 GPU 병렬 처리가 불가능하고, 거리 먼 단어 간 성능 저하·Feature Superposition 문제가 있어, Self-Attention만으로 병렬성과 표현력을 극대화하려고"
+      ],
+      "answer": 3,
+      "brief": "병렬 불가 + scalability + feature superposition → self-attention만 사용.",
+      "detailed": "슬라이드: Decouple attention from RNNs / Use self-attention to make it efficient. RNN의 병렬화 한계(가장 큰 치명타), 단어 거리에 따른 성능 저하, 한 뉴런이 여러 개념을 처리하는 Feature Superposition을 해결하려 RNN/CNN을 버리고 Attention만으로 만든 최초의 transduction model.",
+      "source": "Attention 슬라이드 p.37-39; 10주차 § 6"
+    },
+    {
+      "id": "DLW10Q13",
+      "set": 10,
+      "week": 10,
+      "topic": "Q, K, V",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Transformer의 Query·Key·Value 개념을 옳게 짝지은 것은?",
+      "choices": [
+        "① Q=실제 내용, K=찾는 기준, V=이름표",
+        "② Q=현재 찾고자 하는 기준 정보, K=대상들의 특징표(이름표), V=대상들의 실제 내용/값",
+        "③ Q·K·V 모두 동일한 의미의 중복 표기",
+        "④ Q=출력, K=입력, V=손실"
+      ],
+      "answer": 1,
+      "brief": "Q=찾는 기준, K=이름표, V=실제 값.",
+      "detailed": "정보 검색에서 차용: Query(찾고자 하는 기준), Key(대상의 특징표/이름표), Value(대상의 실제 내용). 보통 K와 V는 같은 출처에서 나온다. Q와 K의 유사도로 가중치를 만들어 V를 가중합한다.",
+      "source": "Attention 슬라이드 p.40-41; 10주차 § 6"
+    },
+    {
+      "id": "DLW10Q14",
+      "set": 10,
+      "week": 10,
+      "topic": "Scaled Dot-Product",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Scaled Dot-Product Attention = softmax(QKᵀ/√d_k)V 에서 √d_k로 나누는(스케일링) 이유는?",
+      "choices": [
+        "① 계산을 느리게 하기 위해",
+        "② 출력을 정수로 만들기 위해",
+        "③ 차원이 커지면 내적 값이 커져 softmax가 기울기 소실(gradient vanishing) 영역으로 가는 것을 방지하려고",
+        "④ Value를 0으로 만들기 위해"
+      ],
+      "answer": 2,
+      "brief": "내적이 커져 softmax 기울기 소실되는 것 방지.",
+      "detailed": "Attention(Q,K,V)=softmax(QKᵀ/√d_k)V. d_k가 크면 내적 값의 분산이 커져 softmax가 극단으로 쏠리고 기울기가 매우 작아진다(gradient vanishing). 이를 막으려 √d_k로 나눈다. 전사: 값이 곱해져 퍼지므로 차원으로 나눠 조절.",
+      "source": "Attention 슬라이드 p.46-47; 10주차 § 6"
+    },
+    {
+      "id": "DLW10Q15",
+      "set": 10,
+      "week": 10,
+      "topic": "Self vs Cross Attention",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Self-Attention과 Cross-Attention의 차이로 옳은 것은?",
+      "choices": [
+        "① Self는 Q·K·V가 모두 같은 출처에서, Cross는 Q는 디코더에서·K와 V는 인코더에서 온다",
+        "② Self는 Q만, Cross는 V만 사용한다",
+        "③ 둘 다 인코더에서만 일어난다",
+        "④ Cross-Attention은 Masking을 반드시 포함한다"
+      ],
+      "answer": 0,
+      "brief": "Self=같은 출처, Cross=Q(디코더)·K,V(인코더).",
+      "detailed": "슬라이드: Self-Attention은 keys/values/queries가 모두 같은 source. Cross-Attention은 keys-values와 queries가 서로 다른 source(번역 시 Q는 디코더, K·V는 인코더). encoder-decoder attention이 Cross에 해당한다.",
+      "source": "Attention 슬라이드 p.42,49; 10주차 § 6"
+    },
+    {
+      "id": "DLW10Q16",
+      "set": 10,
+      "week": 10,
+      "topic": "Multi-Head Attention",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Multi-Head Attention을 사용하는 이유와 특징으로 옳은 것은?",
+      "choices": [
+        "① 단일 헤드보다 연산량이 헤드 수만큼 폭증한다",
+        "② 차원을 늘려 표현력을 줄인다",
+        "③ 마스킹을 적용하기 위해서만 사용한다",
+        "④ 전체 차원을 여러 head로 쪼개 서로 다른 표현 부분공간(문법·의미 등 여러 관점)에서 동시에 어텐션을 계산하며, 차원을 나눠 계산하므로 연산량은 단일 헤드와 거의 같다"
+      ],
+      "answer": 3,
+      "brief": "여러 관점(부분공간) 동시 어텐션, 연산량은 단일과 유사.",
+      "detailed": "MultiHead(Q,K,V)=Concat(head_1..head_h)W^O, head_i=Attention(QW_i^Q,KW_i^K,VW_i^V), h=8, d_k=d_v=d_model/h=64. 전사: 한 관점이 아니라 여러 관점에서 본다(어떤 head는 문법, 어떤 head는 의미). 차원을 쪼개므로 연산량은 single-head와 거의 동일하고 Feature Superposition을 완화한다.",
+      "source": "Attention 슬라이드 p.48; 10주차 § 6"
+    },
+    {
+      "id": "DLW10Q17",
+      "set": 10,
+      "week": 10,
+      "topic": "Masked Self-Attention",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Transformer 디코더의 Masked Multi-Head Self-Attention에서 마스킹을 하는 이유는?",
+      "choices": [
+        "① 계산량을 줄이기 위해 일부 단어를 무작위로 제거",
+        "② 시퀀스 전체를 한 번에 입력받지만 생성은 순차적(auto-regressive)이어야 하므로, 학습 시 미래 단어를 미리 보는 컨닝을 막기 위해 미래 시점에 −∞ 마스킹해 어텐션 가중치를 0으로 만든다",
+        "③ 인코더와 디코더를 연결하기 위해",
+        "④ Positional Encoding을 대체하기 위해"
+      ],
+      "answer": 1,
+      "brief": "미래 단어 컨닝 방지 → 미래 시점 −∞ 마스킹(가중치 0).",
+      "detailed": "슬라이드: the first multi-head attention sub-layer is modified to prevent positions from attending to subsequent positions. Transformer는 시퀀스를 한 번에 받지만 생성은 순차적이므로, 미래 정보에 마스킹(−∞)을 걸어 현재 위치 예측 시 미래를 못 보게 한다.",
+      "source": "Attention 슬라이드 p.45; 10주차 § 7"
+    },
+    {
+      "id": "DLW10Q18",
+      "set": 10,
+      "week": 10,
+      "topic": "Positional Encoding",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Transformer의 Positional Encoding에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 입력 임베딩과 Concat(이어붙이기)으로 결합한다",
+        "② 순서 정보가 필요 없어 생략해도 결과가 같다",
+        "③ RNN을 버리며 순서 정보를 잃고 어텐션이 Permutation Invariant하므로, sin/cos로 만든 위치 벡터를 임베딩에 더하기(Add)로 결합해 순서를 주입한다",
+        "④ 학습이 불가능한 정수 인덱스를 그대로 사용한다"
+      ],
+      "answer": 2,
+      "brief": "어텐션은 순서 불변 → sin/cos 위치벡터를 Add로 주입.",
+      "detailed": "어텐션은 단어 순서를 섞어도 결과가 같다(Permutation Invariant). PE(pos,2i)=sin(pos/10000^(2i/d_model)), PE(pos,2i+1)=cos(...)을 임베딩에 Concat이 아니라 더해(Add) 순서를 주입한다. 전사: 순서 무관 데이터면 PE만 빼면 Set Transformer.",
+      "source": "Attention 슬라이드 p.51; 10주차 § 8"
+    },
+    {
+      "id": "DLW10Q19",
+      "set": 10,
+      "week": 10,
+      "topic": "BERT vs GPT",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "BERT와 GPT의 차이로 옳은 것은?",
+      "choices": [
+        "① BERT는 Transformer Encoder·양방향·Masked LM/NSP로 이해에 강하고, GPT는 Transformer Decoder·단방향(auto-regressive)·다음 단어 예측으로 생성에 강하다",
+        "② BERT는 Decoder, GPT는 Encoder를 사용한다",
+        "③ 둘 다 단방향 모델이다",
+        "④ BERT는 생성, GPT는 분류 전용이다"
+      ],
+      "answer": 0,
+      "brief": "BERT=Encoder·양방향·MLM+NSP, GPT=Decoder·단방향·Next Word.",
+      "detailed": "BERT(Google): Transformer Encoder만, 양방향, Masked LM(약 15% 가림)+NSP, [CLS]/[SEP] 토큰, 이해(NLU)·분류. GPT(OpenAI): Decoder만, 단방향 auto-regressive, 다음 단어 예측, 생성(NLG). GPT는 모델 크기를 키워 생성형 AI 강자가 됨.",
+      "source": "Attention 슬라이드 p.52-58; 10주차 § 9"
+    },
+    {
+      "id": "DLW10Q20",
+      "set": 10,
+      "week": 10,
+      "topic": "Vision Transformer",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Vision Transformer(ViT)의 핵심 아이디어로 옳은 것은?",
+      "choices": [
+        "① 이미지 픽셀 하나하나를 단어로 넣어 연산량을 줄인다",
+        "② CNN의 Convolution 연산을 Transformer 내부에 그대로 넣는다",
+        "③ RNN으로 이미지를 순차 처리한다",
+        "④ 이미지를 패치(예 16x16)로 잘라 Flatten·Linear Projection으로 토큰화하고, [CLS] 토큰과 Positional Embedding을 더해 Transformer Encoder에 그대로 넣어 분류하며, CNN의 Inductive Bias를 버린다"
+      ],
+      "answer": 3,
+      "brief": "이미지를 패치 토큰으로 → Transformer Encoder에 그대로, Inductive Bias 버림.",
+      "detailed": "픽셀 단위는 N^2 연산 폭발로 불가 → 패치(16x16)로 잘라 Flatten+Linear Projection으로 토큰화, [CLS]+Positional Embedding 후 Transformer Encoder에 투입, [CLS] 출력으로 분류. 전사: 패치로 잘라 그냥 넣은 것. CNN의 Inductive Bias(Locality·Translation Equivariance)를 버린 순수 Transformer로 비전 SOTA 달성(상세는 11주차).",
+      "source": "Attention 슬라이드 p.59-61; 10주차 § 10"
+    }
+  ]
+}
