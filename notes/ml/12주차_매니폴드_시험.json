@@ -1,0 +1,393 @@
+{
+  "subject": "ml",
+  "week": 12,
+  "title": "기계학습 12주차 — 매니폴드 학습 (MDS · t-SNE · UMAP)",
+  "set_meta": {
+    "id": 12,
+    "title": "Week 12",
+    "label": "Manifold Learning",
+    "desc": "Manifold · MDS(Gram·더블센터링) · t-SNE(가우시안·t분포·KL) · UMAP(그래프·Cross-Entropy) · Auto-Encoder"
+  },
+  "questions": [
+    {
+      "id": "MLW12Q1",
+      "set": 12,
+      "week": 12,
+      "topic": "매니폴드 정의",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "매니폴드(manifold)의 정의로 가장 적절한 것은?",
+      "choices": [
+        "① 고차원 데이터가 모든 방향으로 자유롭게 퍼져 있는 구조",
+        "② 고차원 공간에 임베딩되어 있지만 국소적으로는 더 단순한 저차원처럼 행동하는 매끄러운(smooth) 구조",
+        "③ 항상 직선으로만 이루어진 1차원 구조",
+        "④ 클래스 라벨이 부여된 지도학습용 데이터셋"
+      ],
+      "answer": 1,
+      "brief": "고차원에 임베딩됐지만 국소적으로 저차원처럼 행동하는 매끄러운 구조.",
+      "detailed": "슬라이드: a manifold can be understood as a smooth space that may be curved or embedded inside a higher-dimensional space, but locally behaves like a simpler low-dimensional space. 스위스 롤이 대표 예(3D에 말려 있지만 본질은 2D 매니폴드).",
+      "source": "Manifold PDF p.3; 12주차 § 1"
+    },
+    {
+      "id": "MLW12Q2",
+      "set": 12,
+      "week": 12,
+      "topic": "매니폴드 학습의 강조점",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "매니폴드 학습(manifold learning)이 일반 차원 축소와 구별되는 강조점은?",
+      "choices": [
+        "① 정답 라벨을 예측하는 데 집중한다",
+        "② 데이터 차원을 늘리는 데 집중한다",
+        "③ 데이터의 기하학적·위상학적(geometric/topological) 속성을 보존하는 데 더 강하게 초점을 둔다",
+        "④ 데이터를 정규분포로 변환하는 데 집중한다"
+      ],
+      "answer": 2,
+      "brief": "기하·위상 속성 보존에 더 강조.",
+      "detailed": "슬라이드: manifold learning places stronger emphasis on preserving the geometric or topological properties of the data. 차원 축소와 목적은 비슷하나 고차원 구조를 잘 유지하는 데 더 초점을 둔다.",
+      "source": "Manifold PDF p.4; 12주차 § 1"
+    },
+    {
+      "id": "MLW12Q3",
+      "set": 12,
+      "week": 12,
+      "topic": "PCA의 선형 한계",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA를 매니폴드 학습 관점에서 볼 때의 가장 큰 한계는?",
+      "choices": [
+        "① 라벨이 있어야만 동작한다",
+        "② 계산량이 너무 커서 실행이 불가능하다",
+        "③ 데이터를 항상 1차원으로만 축소한다",
+        "④ 선형(linear) 투영만 가능해, 스위스 롤처럼 비선형으로 말린 구조를 제대로 펼치지(unroll) 못한다"
+      ],
+      "answer": 3,
+      "brief": "PCA는 선형만 → 스위스 롤 같은 비선형 구조 실패.",
+      "detailed": "슬라이드: PCA is restricted to modeling linear structure... PCA cannot properly unroll the Swiss roll because it can only produce linear projections. 그래서 t-SNE·UMAP 같은 비선형 기법이 필요하다.",
+      "source": "Manifold PDF p.6; 12주차 § 2"
+    },
+    {
+      "id": "MLW12Q4",
+      "set": 12,
+      "week": 12,
+      "topic": "MDS 입력",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "MDS(Multi-Dimensional Scaling)의 입력으로 주어지는 것은?",
+      "choices": [
+        "① 데이터 간 거리(dissimilarity)를 담은 N×N 거리 행렬 D",
+        "② 각 데이터의 원본 좌표 행렬 X만",
+        "③ 클래스 라벨 벡터",
+        "④ 공분산 행렬의 고유값만"
+      ],
+      "answer": 0,
+      "brief": "입력 = N×N 거리(dissimilarity) 행렬 D.",
+      "detailed": "슬라이드: assume we are given the pairwise distances d_ij between N data points, but their coordinates are unknown... summarized in an N×N matrix D. MDS는 좌표 X가 아니라 거리 D만으로 저차원 좌표를 복원한다.",
+      "source": "Manifold PDF p.8; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q5",
+      "set": 12,
+      "week": 12,
+      "topic": "그램 행렬",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "MDS에서 거리 정보를 좌표로 바꾸기 위해 사용하는 그램 행렬(Gram matrix) B는?",
+      "choices": [
+        "① B = D (거리 행렬 그대로)",
+        "② B = X^T X (공분산)",
+        "③ B = X X^T (데이터 포인트 간 내적의 모음)",
+        "④ B = X^{-1}"
+      ],
+      "answer": 2,
+      "brief": "그램 행렬 B = X X^T (샘플 간 내적).",
+      "detailed": "||x_i−x_j||² = x_i^T x_i + x_j^T x_j − 2 x_i^T x_j 처럼 거리는 내적의 조합으로 표현되고, 모든 내적을 모으면 B=XX^T가 된다. B를 알면 고유값 분해로 좌표 X를 복원할 수 있다. ②의 X^T X는 PCA의 공분산이다.",
+      "source": "Manifold PDF p.10; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q6",
+      "set": 12,
+      "week": 12,
+      "topic": "더블 센터링",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "MDS에서 거리 행렬 D로부터 그램 행렬 B를 얻기 위해 사용하는 기법은?",
+      "choices": [
+        "① 소프트맥스 정규화",
+        "② 더블 센터링(double-centering): 제곱 거리에서 행 평균·열 평균을 빼고 전체 평균을 더함",
+        "③ 단일 가우시안 적합",
+        "④ 경사하강법으로 B를 직접 학습"
+      ],
+      "answer": 1,
+      "brief": "더블 센터링(행평균·열평균 빼고 전체평균 더함)으로 D→B.",
+      "detailed": "슬라이드: classical MDS uses double-centering to convert squared distances into inner products. B_ij = −1/2(d_ij² − d̄_i.² − d̄_.j² + d̄_..²). 전사: 이는 데이터를 평균 0으로 센터링하는 것과 동일(B=X̃X̃^T).",
+      "source": "Manifold PDF p.11-12; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q7",
+      "set": 12,
+      "week": 12,
+      "topic": "MDS 좌표 복원",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "MDS에서 그램 행렬 B를 고유값 분해(B=VΛV^T)한 뒤 저차원 좌표 X를 복원하는 식은?",
+      "choices": [
+        "① X = B^{-1}",
+        "② X = V + Λ",
+        "③ X = D V",
+        "④ X = V Λ^{1/2}"
+      ],
+      "answer": 3,
+      "brief": "X = V Λ^{1/2}.",
+      "detailed": "슬라이드: once B is known, factor it as B=VΛV^T, then set X = VΛ^{1/2}. 가장 큰 고유값·고유벡터를 선택하면 가장 중요한 기하 구조를 보존한 저차원 표현을 얻는다.",
+      "source": "Manifold PDF p.13-14; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q8",
+      "set": 12,
+      "week": 12,
+      "topic": "PCA vs MDS",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PCA와 MDS의 핵심 차이를 행렬 관점에서 옳게 설명한 것은?",
+      "choices": [
+        "① PCA와 MDS 모두 거리 행렬 D를 직접 고유분해한다",
+        "② PCA는 X X^T(그램), MDS는 X^T X(공분산)를 고유분해한다",
+        "③ PCA는 공분산 X^T X(변수 간 관계), MDS는 그램 X X^T(샘플 간 관계)를 고유분해한다",
+        "④ PCA와 MDS는 완전히 무관한 알고리즘이다"
+      ],
+      "answer": 2,
+      "brief": "PCA=X^T X(공분산, 변수), MDS=X X^T(그램, 샘플).",
+      "detailed": "슬라이드: PCA computes the covariance matrix S=(1/N)X^T X(변수 간 관계), 반면 classical MDS는 거리를 그램 행렬 B=XX^T(샘플 간 관계)로 변환해 고유분해한다. Transpose 위치가 다르다.",
+      "source": "Manifold PDF p.17-18; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q9",
+      "set": 12,
+      "week": 12,
+      "topic": "Classical MDS = PCA",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Classical MDS(유클리드 거리 사용)와 PCA의 관계로 옳은 것은?",
+      "choices": [
+        "① 수학적으로 동일한 결과를 낸다 — X^T X u = λu 양변에 X를 곱하면 (X X^T)(Xu)=λ(Xu)가 되어 그램 행렬 고유값 문제와 같아진다",
+        "② 전혀 다른 결과를 내며 비교할 수 없다",
+        "③ MDS가 항상 PCA보다 더 낮은 차원을 만든다",
+        "④ PCA는 비선형, Classical MDS는 선형이다"
+      ],
+      "answer": 0,
+      "brief": "Euclid면 Classical MDS = PCA (XᵀXu=λu → XXᵀ(Xu)=λ(Xu)).",
+      "detailed": "슬라이드: when MDS is applied to Euclidean distances (classical MDS), the resulting embedding is mathematically equivalent to PCA. 증명: X^T X u=λu에 X를 곱하면 (XX^T)(Xu)=λ(Xu) → (XX^T)v=λv. 둘 다 선형 기법이라 스위스 롤은 실패한다.",
+      "source": "Manifold PDF p.18; 12주차 § 3"
+    },
+    {
+      "id": "MLW12Q10",
+      "set": 12,
+      "week": 12,
+      "topic": "t-SNE 개념",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "t-SNE의 특징으로 가장 적절한 것은?",
+      "choices": [
+        "① 선형 기법으로 전역(global) 구조만 보존한다",
+        "② 비선형 기법으로, 유사도를 확률(probability)로 변환해 데이터의 로컬(local) 구조를 보존한다",
+        "③ 거리 행렬만 입력으로 받는 MDS의 한 종류다",
+        "④ 라벨을 사용하는 지도학습 시각화 기법이다"
+      ],
+      "answer": 1,
+      "brief": "비선형·확률 기반·로컬 구조 보존 시각화.",
+      "detailed": "슬라이드: t-SNE is a non-linear dimensionality reduction technique... capture the local structure by preserving pairwise similarities... fundamentally a probabilistic approach. MDS의 거리와 달리 유사도를 확률로 변환한다.",
+      "source": "Manifold PDF p.22-24; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q11",
+      "set": 12,
+      "week": 12,
+      "topic": "t-SNE 고차원 가우시안",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "t-SNE가 고차원 공간에서 유사도 p_(j|i)를 정의할 때 사용하는 분포와 그 이유는?",
+      "choices": [
+        "① 균일분포 — 모든 점에 같은 유사도를 주려고",
+        "② t-분포 — 꼬리를 두껍게 하려고",
+        "③ 가우시안 분포 — 거리가 멀어지면 확률이 급격히 떨어져 가까운 이웃(로컬)에만 높은 유사도를 주려고",
+        "④ 라플라스 분포 — 계산을 빠르게 하려고"
+      ],
+      "answer": 2,
+      "brief": "고차원은 가우시안 → 가까운 이웃에만 높은 유사도(로컬 집중).",
+      "detailed": "슬라이드: p_(j|i) is defined using a Gaussian distribution centered at x^(i). 가우시안은 거리에 따라 빠르게 감쇠해 로컬 이웃에 집중한다. σ_i가 이웃의 폭(bandwidth)을 조절한다.",
+      "source": "Manifold PDF p.25,28; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q12",
+      "set": 12,
+      "week": 12,
+      "topic": "t-SNE 대칭화",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "t-SNE에서 비대칭인 p_(j|i)를 대칭 결합확률 p_(ij)로 만드는 방법은?",
+      "choices": [
+        "① p_(ij) = (p_(j|i) + p_(i|j)) / 2N — 두 방향의 평균",
+        "② p_(ij) = p_(j|i) × p_(i|j)",
+        "③ p_(ij) = max(p_(j|i), p_(i|j))",
+        "④ p_(ij) = p_(j|i) − p_(i|j)"
+      ],
+      "answer": 0,
+      "brief": "p_ij = (p_(j|i)+p_(i|j))/2N (평균으로 대칭화).",
+      "detailed": "σ_i≠σ_j라 p_(j|i)≠p_(i|j)(비대칭)이다. 슬라이드: to make the similarity symmetric, define the joint probability p_ij = (p_(j|i)+p_(i|j))/2N. UMAP의 fuzzy-set union 대칭화와 대비된다.",
+      "source": "Manifold PDF p.26; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q13",
+      "set": 12,
+      "week": 12,
+      "topic": "t-SNE t-분포와 crowding",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "t-SNE가 저차원 공간에서 가우시안 대신 Student's t-분포를 쓰는 이유는?",
+      "choices": [
+        "① t-분포가 계산이 더 빠르기 때문",
+        "② 저차원에서 점들을 더 뭉치게 만들기 위해",
+        "③ 라벨 정보를 반영하기 위해",
+        "④ 고차원을 저차원에 욱여넣을 때 생기는 crowding problem을 해결하려고 — t-분포의 두꺼운 꼬리(heavy tail)가 점들을 적당히 퍼지게 해 먼 점이 먼 채로 남게 한다"
+      ],
+      "answer": 3,
+      "brief": "저차원 t-분포(heavy tail) → crowding problem 해결.",
+      "detailed": "슬라이드: simply using a Gaussian can lead to the crowding problem... the Student's t-distribution addresses this by having heavier tails, allowing points to spread out so that distant points remain well separated. 자유도 1의 t-분포를 사용한다.",
+      "source": "Manifold PDF p.27,29-30; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q14",
+      "set": 12,
+      "week": 12,
+      "topic": "t-SNE 목적 함수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "t-SNE가 고차원 분포 P와 저차원 분포 Q를 일치시키기 위해 최소화하는 목적 함수는?",
+      "choices": [
+        "① Cross-Entropy",
+        "② KL Divergence: KL(P||Q) = Σ p_ij log(p_ij / q_ij)",
+        "③ 평균 제곱 오차(MSE)만",
+        "④ 공분산 행렬의 trace"
+      ],
+      "answer": 1,
+      "brief": "KL Divergence 최소화(Gradient Descent).",
+      "detailed": "슬라이드: t-SNE seeks to minimize the KL divergence KL(P||Q)=Σ p_ij log(p_ij/q_ij) by gradient descent on the low-dimensional coordinates Y. UMAP이 Cross-Entropy를 쓰는 것과 대비된다.",
+      "source": "Manifold PDF p.31-32; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q15",
+      "set": 12,
+      "week": 12,
+      "topic": "Perplexity",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "t-SNE의 하이퍼파라미터 perplexity에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 저차원 t-분포의 자유도를 결정한다",
+        "② KL Divergence의 학습률이다",
+        "③ 고차원 가우시안의 분산 σ_i를 결정하며, 유효 이웃 수(effective number of neighbors)에 해당한다 (Perplexity = 2^{H(P_i)})",
+        "④ 데이터 차원 수와 같다"
+      ],
+      "answer": 2,
+      "brief": "perplexity = 유효 이웃 수, σ_i 결정 (2^{H(P_i)}).",
+      "detailed": "슬라이드: instead of choosing σ_i directly, t-SNE specifies a perplexity, Perplexity(P_i)=2^{H(P_i)}. perplexity가 작으면 아주 로컬, 크면 넓은 이웃을 반영한다. 점마다 σ_i가 다르게 결정된다.",
+      "source": "Manifold PDF p.33-34; 12주차 § 4"
+    },
+    {
+      "id": "MLW12Q16",
+      "set": 12,
+      "week": 12,
+      "topic": "UMAP vs t-SNE",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "UMAP이 t-SNE와 구별되는 결정적 차이는?",
+      "choices": [
+        "① t-SNE는 확률 분포를 모델링하고 KL을 최소화하는 반면, UMAP은 가중 그래프(graph)를 구성하고 그 그래프 구조를 보존한다",
+        "② UMAP은 선형 기법이고 t-SNE는 비선형이다",
+        "③ UMAP은 라벨이 필요하고 t-SNE는 필요 없다",
+        "④ UMAP은 거리 행렬만, t-SNE는 좌표만 입력받는다"
+      ],
+      "answer": 0,
+      "brief": "t-SNE=확률 분포+KL, UMAP=그래프 구조 보존.",
+      "detailed": "슬라이드: unlike t-SNE which models pairwise similarities using probability distributions and minimizes KL divergence, UMAP constructs a weighted graph to capture local structure and learns an embedding that preserves this graph structure. 둘 다 비선형이다.",
+      "source": "Manifold PDF p.36; 12주차 § 5"
+    },
+    {
+      "id": "MLW12Q17",
+      "set": 12,
+      "week": 12,
+      "topic": "UMAP Fuzzy-set union",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "UMAP에서 방향성 있는 가중치 w_ij를 대칭(무방향)으로 결합하는 방법은?",
+      "choices": [
+        "① 단순 평균 (w_ij + w_ji) / 2N",
+        "② 곱 w_ij · w_ji 만",
+        "③ 최댓값 max(w_ij, w_ji)",
+        "④ Fuzzy-set union: w_ij^(sym) = w_ij + w_ji − w_ij·w_ji"
+      ],
+      "answer": 3,
+      "brief": "Fuzzy-set union w_ij + w_ji − w_ij·w_ji (t-SNE 평균과 다름).",
+      "detailed": "슬라이드: UMAP combines two directed weights using a fuzzy-set union, w_ij^(sym) = w_ij + w_ji − w_ij·w_ji. 어느 방향이든 강하면 강하게, 둘 다 강하면 더 강하게(빼기 항은 중복 방지). t-SNE의 단순 평균 대칭화와 대비된다.",
+      "source": "Manifold PDF p.40; 12주차 § 5"
+    },
+    {
+      "id": "MLW12Q18",
+      "set": 12,
+      "week": 12,
+      "topic": "UMAP 목적 함수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "UMAP이 저차원 임베딩을 찾기 위해 최소화하는 목적 함수는?",
+      "choices": [
+        "① KL Divergence",
+        "② Cross-Entropy (고차원 그래프 가중치와 저차원 유사도의 불일치를 측정)",
+        "③ 분산(variance)",
+        "④ 유클리드 거리의 단순 합"
+      ],
+      "answer": 1,
+      "brief": "UMAP = Cross-Entropy 최소화(SGD + Negative Sampling).",
+      "detailed": "슬라이드: UMAP finds the embedding by minimizing a cross-entropy objective between the high-dimensional graph weights and low-dimensional similarities. 실제로는 SGD + Negative Sampling(연결된 쌍은 당기고 비연결 쌍은 밀어냄). t-SNE의 KL과 대비된다.",
+      "source": "Manifold PDF p.42; 12주차 § 5"
+    },
+    {
+      "id": "MLW12Q19",
+      "set": 12,
+      "week": 12,
+      "topic": "UMAP a,b 파라미터",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "UMAP의 저차원 유사도 v_ij = 1/(1 + a||y_i − y_j||^{2b})의 a, b에 대한 설명으로 옳은 것은? (전사 Q&A)",
+      "choices": [
+        "① a, b는 사용자가 직접 튜닝하는 핵심 하이퍼파라미터다",
+        "② a, b는 항상 1로 고정된다",
+        "③ a, b는 직접 튜닝하는 값이 아니라, k(이웃 수)나 ρ(최소 거리)를 정하면 모델 내에서 자동으로 결정된다",
+        "④ a, b는 KL Divergence로부터 계산된다"
+      ],
+      "answer": 2,
+      "brief": "a,b는 k·ρ를 정하면 자동 결정(직접 튜닝 X).",
+      "detailed": "전사 Q&A: 학생이 a,b도 하이퍼파라미터냐 묻자, 교수님은 'k나 ρ를 결정하면 모델 내에서 a,b가 자동 결정되는 것으로 안다(직접 튜닝 X)'고 답했다. UMAP의 주 하이퍼파라미터는 k(이웃 수)와 ρ(최소 거리)다.",
+      "source": "Manifold PDF p.41; 12주차 § 5"
+    },
+    {
+      "id": "MLW12Q20",
+      "set": 12,
+      "week": 12,
+      "topic": "Auto-Encoder",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "오토인코더(Auto-Encoder)에 대한 설명으로 옳은 것은? (전사 보강)",
+      "choices": [
+        "① 신경망으로 입력을 동일하게 복원(reconstruction)하도록 훈련하되, 중간 병목(bottleneck) 층으로 핵심 피처만 압축 학습하는 비선형 차원 축소 기법이며, Hinton(2006)은 PCA보다 우수함을 보였다",
+        "② 라벨을 예측하는 지도 분류기다",
+        "③ 거리 행렬을 고유분해하는 선형 기법이다",
+        "④ KL Divergence를 최소화하는 t-SNE의 변형이다"
+      ],
+      "answer": 0,
+      "brief": "AE = 병목으로 핵심 피처 압축·복원하는 비선형 차원축소, Hinton 2006 AE>PCA.",
+      "detailed": "전사(슬라이드 외 강의 보강): 오토인코더는 입력=출력이 되도록 훈련하며, 좁은 hidden layer(bottleneck)를 통과시켜 핵심 히든 구조만 압축 학습한다. 2006년 Hinton의 Science 논문에서 PCA보다 비선형 차원 축소가 우수함을 증명했다.",
+      "source": "전사(강의 보강); 12주차 § 6"
+    }
+  ]
+}
