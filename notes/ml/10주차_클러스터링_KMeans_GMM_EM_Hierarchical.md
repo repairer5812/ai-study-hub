@@ -240,9 +240,9 @@ $$\boxed{\pi_k = \frac{N_k}{N}, \qquad N_k = \sum_{n=1}^{N}\gamma(z_{nk})}$$
 |------|------|------|
 | **Complete (최대) linkage** | $\displaystyle\max_{a\in A,\,b\in B} d(a,b)$ | 가장 먼 쌍 기준 → 조밀한 군집 선호 |
 | **Single (최소) linkage** | $\displaystyle\min_{a\in A,\,b\in B} d(a,b)$ | 가장 가까운 쌍 기준 → 사슬(chaining) 현상 |
-| **Average (평균) linkage (UPGMA)** | $\displaystyle\frac{1}{|A|\cdot|B|}\sum_{a\in A}\sum_{b\in B} d(a,b)$ | 모든 쌍 평균 |
-| **Centroid linkage (UPGMC)** | $\big\|\boldsymbol{\mu}_A - \boldsymbol{\mu}_B\big\|^2$ | 두 군집 중심 간 거리 |
-| **Ward linkage (MISSQ)** | $\dfrac{|A|\cdot|B|}{|A\cup B|}\big\|\boldsymbol{\mu}_A-\boldsymbol{\mu}_B\big\|^2$ | 군집 내 분산 증가 최소화 |
+| **Average (평균) linkage (UPGMA)** | $\displaystyle\frac{1}{\lvert A\rvert\cdot\lvert B\rvert}\sum_{a\in A}\sum_{b\in B} d(a,b)$ | 모든 쌍 평균 |
+| **Centroid linkage (UPGMC)** | $\big\lVert\boldsymbol{\mu}_A - \boldsymbol{\mu}_B\big\rVert^2$ | 두 군집 중심 간 거리 |
+| **Ward linkage (MISSQ)** | $\dfrac{\lvert A\rvert\cdot\lvert B\rvert}{\lvert A\cup B\rvert}\big\lVert\boldsymbol{\mu}_A-\boldsymbol{\mu}_B\big\rVert^2$ | 군집 내 분산 증가 최소화 |
 
 > Different linkage choices can lead to **different clustering outcomes** on the same dataset.
 
