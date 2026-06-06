@@ -1,0 +1,393 @@
+{
+  "subject": "ml",
+  "week": 11,
+  "title": "기계학습 11주차 — 차원 축소 (PCA · ICA)",
+  "set_meta": {
+    "id": 11,
+    "title": "Week 11",
+    "label": "Dimension Reduction",
+    "desc": "차원의 저주 · PCA 분산최대화/오차최소화 · 고유값 · ICA 소스분리 · 비가우시안성"
+  },
+  "questions": [
+    {
+      "id": "MLW11Q1",
+      "set": 11,
+      "week": 11,
+      "topic": "차원 축소의 목적",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "차원 축소(Dimension Reduction)의 목적을 가장 정확히 설명한 것은?",
+      "choices": [
+        "① 데이터에 정답 라벨을 붙여 분류 정확도를 높인다",
+        "② 데이터 차원을 늘려 표현력을 강화한다",
+        "③ 데이터의 내재적 구조(intrinsic structure)는 보존하고 불필요한(redundant) 정보는 제거해 저차원으로 변환한다",
+        "④ 모든 특징을 동일 가중치로 평균 내어 하나의 값으로 만든다"
+      ],
+      "answer": 2,
+      "brief": "내재 구조 보존 + redundant 제거 → 저차원 변환.",
+      "detailed": "슬라이드: dimensionality reduction transforms data from a high-dimensional space into a lower-dimensional one while preserving its essential structure, ideally reflecting its intrinsic dimension. 3D 점이 사실상 2D 평면 위에 있으면 그 구조만 잡고 redundant 차원은 버린다. ①은 지도학습, ②는 반대, ④는 정보를 뭉개는 것이다.",
+      "source": "Dimension PDF p.2; 11주차 § 1"
+    },
+    {
+      "id": "MLW11Q2",
+      "set": 11,
+      "week": 11,
+      "topic": "차원의 저주",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "차원의 저주(curse of dimensionality)에 대한 설명으로 가장 적절한 것은?",
+      "choices": [
+        "① 차원이 증가하면 데이터가 더 촘촘(dense)해져 학습이 쉬워진다",
+        "② 차원이 증가하면 공간이 기하급수적으로 커지고 데이터가 희소(sparse)해져, 같은 학습·일반화에 기하급수적으로 더 많은 데이터가 필요해진다",
+        "③ 차원이 증가하면 항상 분류 정확도가 선형으로 증가한다",
+        "④ 차원의 저주는 지도학습에만 발생하고 비지도학습과는 무관하다"
+      ],
+      "answer": 1,
+      "brief": "차원↑ → sparse → 일반화에 기하급수적 데이터 필요.",
+      "detailed": "슬라이드: as the number of dimensions increases, the data becomes increasingly sparse, making learning, estimation, and generalization much more difficult without exponentially more data. 전사 비유: 강아지·고양이가 1D에선 촘촘하지만 3D로 가면 빈 공간이 폭증해 판단이 어려워진다.",
+      "source": "Dimension PDF p.3; 11주차 § 1"
+    },
+    {
+      "id": "MLW11Q3",
+      "set": 11,
+      "week": 11,
+      "topic": "LDA vs PCA",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "LDA와 PCA를 비교한 설명으로 옳은 것은?",
+      "choices": [
+        "① 둘 다 클래스 라벨을 사용하는 지도학습이다",
+        "② LDA는 비지도, PCA는 지도학습이다",
+        "③ PCA는 클래스 분리도를 최대화하고, LDA는 분산을 최대화한다",
+        "④ LDA는 지도학습으로 클래스 분리도를 최대화하고, PCA는 비지도학습으로 데이터 분산을 최대 보존한다"
+      ],
+      "answer": 3,
+      "brief": "LDA=지도(분리도 최대), PCA=비지도(분산 보존).",
+      "detailed": "슬라이드: LDA is a supervised dimensionality reduction technique that finds projections maximizing class separability. 반면 PCA는 레이블 없는 비지도로 데이터 분산을 최대 보존한다. ①·②·③은 둘을 뒤바꾸거나 잘못 설명한 것이다.",
+      "source": "Dimension PDF p.5; 11주차 § 1"
+    },
+    {
+      "id": "MLW11Q4",
+      "set": 11,
+      "week": 11,
+      "topic": "PCA 두 가지 등가 정의",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA의 두 가지 정의(분산 최대화 / 오차 최소화)에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 철학은 다르지만 둘 다 동일한 고유벡터·고유값 결과로 귀결된다",
+        "② 분산 최대화와 오차 최소화는 서로 다른 차원의 결과를 낸다",
+        "③ 오차 최소화 방식은 고유값 문제와 무관하다",
+        "④ 분산 최대화는 지도학습, 오차 최소화는 비지도학습이다"
+      ],
+      "answer": 0,
+      "brief": "두 정의는 등가 — 같은 고유벡터·고유값 결과.",
+      "detailed": "슬라이드: PCA can be understood in two equivalent ways that lead to the same algorithm — (1) maximize the variance of the projected data, (2) minimize the average projection cost. 철학(분산 최대화 vs 투영 오차 최소화)은 달라도 결과는 완전히 동일하다.",
+      "source": "Dimension PDF p.7; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q5",
+      "set": 11,
+      "week": 11,
+      "topic": "단위 벡터 제약",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA 분산 최대화에서 투영 벡터 u1에 u1^T u1 = 1 (단위 벡터) 제약을 거는 이유는?",
+      "choices": [
+        "① u1을 0으로 만들기 위해",
+        "② 계산 속도를 높이기 위해",
+        "③ 제약이 없으면 u1을 키워 분산을 무한정 크게 만들 수 있어서, 크기가 아닌 방향만 의미 있게 하려고",
+        "④ u1을 정수로 만들기 위해"
+      ],
+      "answer": 2,
+      "brief": "제약 없으면 u1 스케일로 분산 무한대 → 방향만 의미.",
+      "detailed": "슬라이드: the variance could be made arbitrarily large simply by scaling u1, so we impose the normalization constraint u1^T u1 = 1. 우리는 u1의 크기가 아니라 방향에만 관심이 있다.",
+      "source": "Dimension PDF p.9,11; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q6",
+      "set": 11,
+      "week": 11,
+      "topic": "투영 분산과 공분산 행렬",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA에서 투영된 데이터의 분산은 무엇으로 표현되는가? (S는 데이터 공분산 행렬)",
+      "choices": [
+        "① u1^T u1",
+        "② u1^T S u1",
+        "③ S^-1 u1",
+        "④ x̄^T u1"
+      ],
+      "answer": 1,
+      "brief": "투영 분산 = u1^T S u1.",
+      "detailed": "(1/N)Σ{u1^T x − u1^T x̄}² = u1^T [(1/N)Σ(x−x̄)(x−x̄)^T] u1 = u1^T S u1. 여기서 S=(1/N)Σ(x−x̄)(x−x̄)^T가 데이터 공분산 행렬이다.",
+      "source": "Dimension PDF p.10; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q7",
+      "set": 11,
+      "week": 11,
+      "topic": "라그랑주 → 고유값 문제",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PCA 분산 최대화를 라그랑주 승수로 풀면 어떤 결과가 나오는가?",
+      "choices": [
+        "① u1 = S^-1 x̄",
+        "② u1 = 0",
+        "③ S u1 = u1 (고유값이 항상 1)",
+        "④ S u1 = λ1 u1, 즉 u1은 공분산 행렬 S의 고유벡터다"
+      ],
+      "answer": 3,
+      "brief": "∂L/∂u1 = 2Su1 − 2λ1u1 = 0 → S u1 = λ1 u1 (고유값 문제).",
+      "detailed": "L = u1^T S u1 + λ1(1 − u1^T u1)을 u1로 미분하면 2Su1 − 2λ1 u1 = 0 → S u1 = λ1 u1. 전사 Q&A: 제곱(이차형식)을 u1로 미분하면 2가 앞으로 빠진다. 이는 선형대수의 고유값 문제와 정확히 일치한다.",
+      "source": "Dimension PDF p.11-12; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q8",
+      "set": 11,
+      "week": 11,
+      "topic": "고유벡터·고유값의 의미",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA에서 고유벡터 u1과 고유값 λ1의 의미로 옳은 것은?",
+      "choices": [
+        "① u1은 주성분 방향이고, λ1은 그 방향으로 투영한 데이터의 분산 값이다",
+        "② u1은 분산 값이고, λ1은 방향이다",
+        "③ λ1은 데이터 개수이고, u1은 차원 수이다",
+        "④ u1과 λ1 모두 평균 벡터를 의미한다"
+      ],
+      "answer": 0,
+      "brief": "u1=주성분 방향, λ1=그 방향의 분산값.",
+      "detailed": "u1^T S u1 = λ1이므로 고유값이 곧 투영 분산이다. 따라서 분산 최대화는 가장 큰 고유값 λ1을 갖는 고유벡터 u1(제1주성분)을 선택하는 것이다.",
+      "source": "Dimension PDF p.12-13; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q9",
+      "set": 11,
+      "week": 11,
+      "topic": "주성분의 직교성",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PCA에서 두 번째 이후 주성분이 이전 주성분과 직교(orthogonal)하게 되는 근본 이유는?",
+      "choices": [
+        "① 임의로 직교하도록 강제로 정규화하기 때문",
+        "② 데이터가 항상 2차원이기 때문",
+        "③ 공분산 행렬 S가 대칭 행렬이고, 대칭 행렬의 서로 다른 고유값에 대응하는 고유벡터는 직교하기 때문",
+        "④ 주성분들이 평균 벡터와 평행하기 때문"
+      ],
+      "answer": 2,
+      "brief": "대칭 행렬 S의 (서로 다른 고유값) 고유벡터는 직교 → 자연 발생.",
+      "detailed": "슬라이드: a key property of symmetric matrices such as S is that eigenvectors corresponding to different eigenvalues are orthogonal. 직교성은 억지로 강제한 게 아니라 수학적으로 자연 발생한다. 비슷한 방향을 뽑으면 중복 정보가 되어 새 정보를 담지 못한다.",
+      "source": "Dimension PDF p.14-15; 11주차 § 2"
+    },
+    {
+      "id": "MLW11Q10",
+      "set": 11,
+      "week": 11,
+      "topic": "오차 최소화: z_i vs b_i",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PCA 오차 최소화에서 근사 x̃ = Σ z_i u_i + Σ b_i u_i 의 z_i와 b_i에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① z_i는 모든 데이터 공통 상수이고, b_i는 데이터마다 다른 값이다",
+        "② z_i는 살려두는 M개 차원으로 데이터마다 다르고, b_i는 버려지는 차원으로 모든 데이터에 공통인 고정 상수다",
+        "③ z_i와 b_i 모두 데이터마다 다르다",
+        "④ z_i와 b_i 모두 모든 데이터에 동일한 상수다"
+      ],
+      "answer": 1,
+      "brief": "z_i=살림(데이터마다 다름), b_i=버림(공통 고정 상수).",
+      "detailed": "슬라이드: z_i^(n) vary from point to point and capture the meaningful differences; the b_i are fixed constants shared across all data points. 전사 비유: 평면상 분포 차이가 z_i, 버려지는 축은 어느 점이든 같은 b_i로 통일한다.",
+      "source": "Dimension PDF p.21-22; 11주차 § 3"
+    },
+    {
+      "id": "MLW11Q11",
+      "set": 11,
+      "week": 11,
+      "topic": "오차 최소화: z_i, b_i 해",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA 오차 최소화의 1단계(u_i 고정)에서 얻는 최적 z_i와 b_i는?",
+      "choices": [
+        "① z_i^(n) = (x^(n))^T u_i,  b_i = x̄^T u_i",
+        "② z_i = x̄^T u_i,  b_i = (x^(n))^T u_i",
+        "③ z_i = u_i,  b_i = x̄",
+        "④ z_i = 0,  b_i = 1"
+      ],
+      "answer": 0,
+      "brief": "z_i=(x)^T u_i, b_i=x̄^T u_i.",
+      "detailed": "distortion J를 z_i, b_i로 편미분해 0으로 두고 정규직교 조건을 쓰면 z_i^(n) = (x^(n))^T u_i (i=1..M), b_i = x̄^T u_i (i=M+1..D). 살리는 차원은 데이터 자체의 투영, 버리는 차원은 평균의 투영이다.",
+      "source": "Dimension PDF p.24-25; 11주차 § 3"
+    },
+    {
+      "id": "MLW11Q12",
+      "set": 11,
+      "week": 11,
+      "topic": "오차 최소화 최종형",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PCA 오차 최소화에서 최종 distortion J가 정리되는 형태와 그 의미로 옳은 것은?",
+      "choices": [
+        "① J = u1^T u1, 무상관 최대화",
+        "② J = Σ_{i=1}^M u_i^T S u_i, 살리는 차원의 분산 최대화",
+        "③ J는 고유값 문제와 무관하게 수치적으로만 구해진다",
+        "④ J = Σ_{i=M+1}^D u_i^T S u_i, 즉 버려지는 차원의 분산 합 최소화 = 살리는 차원의 분산 최대화(분산 최대화 방식과 동일 결론)"
+      ],
+      "answer": 3,
+      "brief": "J=Σ_{M+1}^D u_i^T S u_i, 버림 분산 최소 = 살림 분산 최대.",
+      "detailed": "슬라이드: J = Σ_{i=M+1}^D u_i^T S u_i. 버려지는 차원의 분산을 최소화하는 것은 살리는 차원의 분산을 최대화하는 것과 같아, 분산 최대화 formulation과 완전히 동일한 고유값 문제(S u_i = λ_i u_i)로 귀결된다.",
+      "source": "Dimension PDF p.31-32; 11주차 § 3"
+    },
+    {
+      "id": "MLW11Q13",
+      "set": 11,
+      "week": 11,
+      "topic": "고유벡터 선택",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA에서 M차원으로 줄일 때 고유벡터를 선택하는 방법으로 옳은 것은?",
+      "choices": [
+        "① 가장 작은 M개 고유값의 고유벡터를 선택한다",
+        "② 가장 큰 M개 고유값의 고유벡터를 보존하고, 가장 작은 D−M개를 버린다",
+        "③ 고유값과 무관하게 무작위로 M개를 선택한다",
+        "④ 모든 D개 고유벡터를 그대로 사용한다"
+      ],
+      "answer": 1,
+      "brief": "큰 M개 보존, 작은 D−M개 버림.",
+      "detailed": "분산(=고유값)을 최대로 보존하려면 가장 큰 고유값의 고유벡터를 살리고, 오차 최소화 관점에서 가장 작은 D−M개 고유값의 고유벡터를 버린다(두 관점은 동일한 선택을 준다).",
+      "source": "Dimension PDF p.16,32; 11주차 § 2,3"
+    },
+    {
+      "id": "MLW11Q14",
+      "set": 11,
+      "week": 11,
+      "topic": "eigen-spectrum으로 M 결정",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA에서 줄일 차원 수 M을 정할 때 고유값 스펙트럼(eigen-spectrum)을 어떻게 활용하는가?",
+      "choices": [
+        "① 고유값이 가장 작은 지점의 인덱스를 M으로 한다",
+        "② 모든 고유값을 더해 그 합을 M으로 한다",
+        "③ 고유값을 내림차순으로 그렸을 때 급격히 줄다가 완만해지는(꺾이는) 지점을 보고 M을 정한다",
+        "④ 고유값이 음수가 되는 첫 지점을 M으로 한다"
+      ],
+      "answer": 2,
+      "brief": "고유값 스펙트럼이 꺾이는 지점으로 M 결정.",
+      "detailed": "슬라이드(MNIST): 첫 고유값들은 10^5~10^6 단위로 크고 인덱스가 커지면 급감한다 → 대부분 차원은 정보가 거의 없다. 스펙트럼이 완만해지는 지점까지(예: 15~100개)면 데이터 분산의 대부분을 설명할 수 있다.",
+      "source": "Dimension PDF p.33; 11주차 § 4"
+    },
+    {
+      "id": "MLW11Q15",
+      "set": 11,
+      "week": 11,
+      "topic": "재구축 시 평균",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "PCA 재구축(reconstruction) 공식 x̂^(n) = x̄ + Σ z_i^(n) u_i 에서 특히 주의할 점은?",
+      "choices": [
+        "① u_i를 빼야 한다",
+        "② z_i를 제곱해야 한다",
+        "③ 고유값 λ_i를 곱해야 한다",
+        "④ 평균 x̄를 반드시 더해야 원래 위치로 복원된다"
+      ],
+      "answer": 3,
+      "brief": "평균 x̄를 반드시 더해야 복원.",
+      "detailed": "압축 시 z_i = (x − x̄)^T u_i처럼 평균을 빼고 투영했으므로, 재구축에서는 x̂ = x̄ + Σ z_i u_i로 평균을 다시 더해야 원래 위치로 복원된다. 슬라이드(숫자 3): M=1 두루뭉술 → M=250 원본과 거의 동일.",
+      "source": "Dimension PDF p.35-36; 11주차 § 4"
+    },
+    {
+      "id": "MLW11Q16",
+      "set": 11,
+      "week": 11,
+      "topic": "ICA의 목적",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "ICA(Independent Component Analysis)의 주된 목적은?",
+      "choices": [
+        "① 섞인 다변량 신호를 통계적으로 독립인 성분(소스)으로 분리(source separation)하는 것",
+        "② 데이터의 분산을 최대 보존해 차원을 줄이는 것",
+        "③ 클래스 라벨을 예측하는 지도 분류",
+        "④ 데이터를 정규분포로 변환하는 것"
+      ],
+      "answer": 0,
+      "brief": "ICA = 소스 분리(섞인 신호를 독립 성분으로).",
+      "detailed": "슬라이드: ICA is a computational method for separating a multivariate signal into statistically independent additive components. PCA(차원 축소)와 달리 주 목적은 소스 분리이며, 분리 후 노이즈 성분을 제거하는 데 활용된다.",
+      "source": "Dimension PDF p.37,42; 11주차 § 5"
+    },
+    {
+      "id": "MLW11Q17",
+      "set": 11,
+      "week": 11,
+      "topic": "독립 vs 무상관",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "ICA의 핵심 가정인 독립(independence)과 무상관(uncorrelatedness)의 관계로 옳은 것은?",
+      "choices": [
+        "① 무상관이면 항상 독립이다",
+        "② 독립과 무상관은 완전히 같은 개념이다",
+        "③ 독립은 무상관보다 강한 조건이다 — 무상관은 선형 관계만 없는 것이고 독립은 선형·비선형 모두 무관한 것이며, PCA는 무상관은 보장하나 독립은 보장하지 못한다",
+        "④ PCA는 독립 성분을 보장한다"
+      ],
+      "answer": 2,
+      "brief": "독립 > 무상관. 무상관=선형만, 독립=선·비선형 모두. PCA는 독립 보장 X.",
+      "detailed": "슬라이드: statistical independence is a stronger condition than mere uncorrelatedness. 무상관은 선형 관계만 없는 것(예: Y=X²는 무상관이지만 종속)이고, 독립은 선형·비선형 모두 무관한 것이다. PCA는 직교 성분으로 무상관은 보장하나 독립은 보장 못 해 X자 데이터의 소스 방향을 놓치며, ICA는 독립성만으로 이를 캡처한다.",
+      "source": "Dimension PDF p.38-39; 11주차 § 5"
+    },
+    {
+      "id": "MLW11Q18",
+      "set": 11,
+      "week": 11,
+      "topic": "비가우시안성 가정",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "ICA가 소스는 비가우시안(non-Gaussian)이다라고 가정하는 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 가우시안은 계산이 너무 느리기 때문",
+        "② 가우시안 소스들을 선형 결합하면 결과도 또 다른 가우시안이 되어, 섞인 결과만으로는 소스를 유일하게 분리할 단서가 사라지기 때문",
+        "③ 비가우시안 분포는 존재하지 않기 때문",
+        "④ 가우시안은 평균이 항상 0이기 때문"
+      ],
+      "answer": 1,
+      "brief": "가우시안끼리 섞으면 또 가우시안 → 분리 단서 소멸.",
+      "detailed": "슬라이드: if the sources are Gaussian, different mixtures can look very similar, making it impossible to separate them uniquely. 비가우시안(뾰족하거나 평평한 분포)은 섞여도 distinct한 특징이 남아 분리가 가능하다. 그래서 소스 분리가 목적인 ICA에 가우시안은 최악의 가정이다.",
+      "source": "Dimension PDF p.40-41,44; 11주차 § 5"
+    },
+    {
+      "id": "MLW11Q19",
+      "set": 11,
+      "week": 11,
+      "topic": "Mixing / Unmixing 행렬",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ICA의 수학적 모델에서 mixing matrix A와 unmixing matrix W의 관계로 옳은 것은?",
+      "choices": [
+        "① 관측 x = A s (A는 미지의 혼합 행렬)이고, 우리가 찾는 것은 W = A^-1로 s = W x를 통해 소스를 복원한다",
+        "② x = W s 이고 A = W^-1를 찾는다",
+        "③ A와 W는 같은 행렬이다",
+        "④ s = A x 이고 x = W s 이다"
+      ],
+      "answer": 0,
+      "brief": "x=As, s=Wx, W=A^-1 (W가 찾는 값).",
+      "detailed": "슬라이드: x = As (A는 미지의 d×d mixing matrix), W = A^-1 (unmixing matrix)로 s = Wx. 관측되는 것은 섞인 x뿐이므로 W를 데이터로부터 추정해야 한다. w_i^T(W의 i번째 행)로 각 소스는 s_i = w_i^T x이다.",
+      "source": "Dimension PDF p.43,45; 11주차 § 6"
+    },
+    {
+      "id": "MLW11Q20",
+      "set": 11,
+      "week": 11,
+      "topic": "ICA 최대우도와 모호성",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "ICA의 최대 우도 추정과 모호성에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 변환 x→s에서 부피 변화를 무시해도 확률이 보존된다",
+        "② ICA는 분산을 최대화하는 방향으로 W를 학습한다",
+        "③ s=Wx 변환의 부피 변화를 |det(W)|로 보정해 p(x)=p(s)|det(W)|로 쓰고, 로그 우도를 Gradient Ascent로 최대화하며 직관적으로 비가우시안성을 최대화한다. 단 순서(permutation)·크기(scaling) 모호성이 남는다",
+        "④ ICA는 고유값으로 소스의 순서와 크기를 항상 정확히 결정한다"
+      ],
+      "answer": 2,
+      "brief": "|det(W)| 부피 보정 + Gradient Ascent + 비가우시안성 최대화, permutation·scaling 모호성.",
+      "detailed": "p(x)=p(s)|det(W)|로 부피를 보정하고, 로그 우도 L(W)=ΣΣ log p_s(w_i^T x)+log|det(W)|를 비가우시안 함수(시그모이드 도함수 g')로 두고 Gradient Ascent로 W를 갱신한다. 전사 Q&A: 직관적으로 비가우시안성(Non-Gaussianity)을 최대화한다. PCA와 달리 순서(permutation)·크기(scaling) 모호성이 남지만 실제 활용엔 보통 문제 되지 않는다.",
+      "source": "Dimension PDF p.46-48,56; 11주차 § 6,7"
+    }
+  ]
+}
