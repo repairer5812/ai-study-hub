@@ -1,0 +1,393 @@
+{
+  "subject": "ds",
+  "week": 12,
+  "title": "12차시 시험 — 그래프 II: 신장트리·최소신장트리(Kruskal·Prim)·최단경로(Dijkstra)·추이적 폐쇄 (객관식 20)",
+  "set_meta": {
+    "id": 12,
+    "title": "Week 12",
+    "label": "Graphs II: Spanning Tree, MCST, Shortest Path, Transitive Closure",
+    "desc": "신장트리 정의 · 비트리에지 사이클 · n^(n-2) · Kruskal(간선) · Prim(정점) · 가중치 동률 규칙 · Dijkstra distance 갱신 · Relaxation · 도달 가능성 · 추이적 폐쇄 행렬"
+  },
+  "questions": [
+    {
+      "id": "DSW12Q1",
+      "set": 12,
+      "week": 12,
+      "topic": "신장트리 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "그래프 G의 신장트리(Spanning Tree) G'가 만족해야 하는 조건으로 옳지 않은 것은?",
+      "choices": [
+        "① V(G') = V(G): 원래 그래프의 모든 정점을 포함한다",
+        "② G'는 연결(connected) 그래프이다",
+        "③ 간선 수가 정점 수보다 1개 적다: |E(G')| = n + 1",
+        "④ 사이클(cycle)이 없다"
+      ],
+      "answer": 2,
+      "brief": "신장트리 간선 수는 n-1이지 n+1이 아니다.",
+      "detailed": "신장트리는 모든 정점을 포함(V(G')=V(G))하고 연결되어 있으며 간선 수가 정점 수보다 1개 적은 n-1개여야 한다. 간선이 n-1개이므로 사이클이 생기지 않는다. ③은 n+1로 틀렸다.",
+      "source": "12차시 슬라이드 4"
+    },
+    {
+      "id": "DSW12Q2",
+      "set": 12,
+      "week": 12,
+      "topic": "비트리 에지",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "이미 만들어진 신장트리에 비트리 에지(nontree edge) (v,w)를 하나 추가하면 어떤 일이 생기는가?",
+      "choices": [
+        "① 정점이 하나 더 늘어난다",
+        "② 반드시 사이클(cycle)이 생긴다",
+        "③ 트리가 두 개로 분리된다",
+        "④ 아무 변화도 없다"
+      ],
+      "answer": 1,
+      "brief": "비트리 에지를 더하면 항상 사이클 발생.",
+      "detailed": "신장트리는 이미 모든 정점을 n-1개 간선으로 연결한 상태다. 여기에 트리에 없던 간선(비트리 에지)을 더하면 두 정점 사이에 경로가 두 개가 되어 반드시 사이클이 만들어진다. 슬라이드 명시 성질이다.",
+      "source": "12차시 슬라이드 7"
+    },
+    {
+      "id": "DSW12Q3",
+      "set": 12,
+      "week": 12,
+      "topic": "완전 그래프 신장트리 개수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "정점이 4개인 완전 그래프가 가질 수 있는 신장트리의 개수는? (완전 그래프 정점 n개의 신장트리 수 = n^(n-2))",
+      "choices": [
+        "① 16개 (= 4^2)",
+        "② 4개 (= 4^1)",
+        "③ 64개 (= 4^3)",
+        "④ 1개 (유일)"
+      ],
+      "answer": 0,
+      "brief": "n^(n-2) = 4^(4-2) = 4^2 = 16.",
+      "detailed": "정점이 n개인 완전 그래프의 신장트리 개수는 n^(n-2)개다(케일리 공식). n=4이면 4^(4-2) = 4^2 = 16개. 교수님이 슬라이드의 '개수는 많다'를 구체 수식 n^(n-2)로 강조했다.",
+      "source": "12차시 슬라이드 7"
+    },
+    {
+      "id": "DSW12Q4",
+      "set": 12,
+      "week": 12,
+      "topic": "DFS/BFS 보조 자료구조",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "그래프 탐색에서 DFS(깊이 우선)와 BFS(너비 우선)가 각각 사용하는 보조 자료구조로 옳은 것은?",
+      "choices": [
+        "① DFS는 큐, BFS는 스택",
+        "② DFS와 BFS 모두 힙(Heap)",
+        "③ DFS와 BFS 모두 우선순위 큐",
+        "④ DFS는 스택(되돌아오기), BFS는 큐(방문 예약)"
+      ],
+      "answer": 3,
+      "brief": "DFS=스택, BFS=큐.",
+      "detailed": "DFS는 '갈 때까지 간다'로 막히면 되돌아오기 위해 스택(Stack)을 쓴다. BFS는 인접 정점을 먼저 모두 방문하려고 다음 방문 노드를 큐(Queue)에 넣어둔다. 두 탐색의 방문 간선만 남기면 신장트리가 된다.",
+      "source": "12차시 슬라이드 5"
+    },
+    {
+      "id": "DSW12Q5",
+      "set": 12,
+      "week": 12,
+      "topic": "최소신장트리 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "최소신장트리(Minimum Cost Spanning Tree, MCST)에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 가중치 합이 최대가 되는 신장트리이다",
+        "② 간선을 n개 모두 포함하는 트리이다",
+        "③ 가중치가 부여된 그래프에서 n-1개 간선의 가중치 합이 최소가 되는 신장트리이며 Kruskal과 Prim으로 구한다",
+        "④ 정점 수와 무관하게 항상 단 하나만 존재한다"
+      ],
+      "answer": 2,
+      "brief": "MCST = n-1개 간선 가중치 합 최소, Kruskal·Prim.",
+      "detailed": "MCST는 각 간선에 비용(거리·시간)이 주어진 그래프에서 n-1개 간선을 택하되 그 가중치 합이 최소가 되는 신장트리다. 대표 알고리즘이 Kruskal(간선 기반)과 Prim(정점 기반)이다.",
+      "source": "12차시 슬라이드 10"
+    },
+    {
+      "id": "DSW12Q6",
+      "set": 12,
+      "week": 12,
+      "topic": "Kruskal 알고리즘",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Kruskal 알고리즘의 동작 원리로 옳은 것은?",
+      "choices": [
+        "① 시작 정점에서 인접한 정점을 하나씩 트리에 추가한다",
+        "② 모든 간선을 가중치 오름차순으로 정렬해 작은 것부터 택하되, 사이클을 만드는 간선은 버리고 n-1개가 될 때까지 반복한다",
+        "③ 가장 가중치가 큰 간선부터 선택한다",
+        "④ 정점을 무작위로 선택해 연결한다"
+      ],
+      "answer": 1,
+      "brief": "간선 오름차순, 작은 것부터, 사이클이면 버림.",
+      "detailed": "Kruskal은 간선 기반이다. 모든 간선을 가중치 오름차순 정렬 후 가장 작은 간선부터 택하고, 추가 시 사이클이 생기면 그 간선을 버린다(discard). 선택 간선이 n-1개가 될 때까지 반복한다. ①은 Prim이다.",
+      "source": "12차시 슬라이드 11"
+    },
+    {
+      "id": "DSW12Q7",
+      "set": 12,
+      "week": 12,
+      "topic": "가중치 동률 규칙",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "교수님이 강조한, Kruskal·Prim에서 여러 간선의 가중치가 같을 때(동률)의 우선순위 규칙은?",
+      "choices": [
+        "① 알파벳이 앞서거나 숫자가 작은 정점을 연결하는 간선을 우선 선택한다",
+        "② 알파벳이 뒤에 오거나 숫자가 큰 정점을 우선 선택한다",
+        "③ 동률이면 둘 다 동시에 선택한다",
+        "④ 동률이면 그 간선들을 모두 버린다"
+      ],
+      "answer": 0,
+      "brief": "동률이면 알파벳 앞·작은 숫자 정점 우선.",
+      "detailed": "교수님 팁: 가중치가 같을 경우 알파벳이 앞서거나 숫자가 작은 정점을 연결하는 간선을 우선적으로 선택한다. 답안의 일관성을 위한 디테일로, 이 우선순위를 놓치지 말라고 마무리에서 다시 강조했다.",
+      "source": "12차시 슬라이드 11"
+    },
+    {
+      "id": "DSW12Q8",
+      "set": 12,
+      "week": 12,
+      "topic": "Kruskal 수행 추적",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "슬라이드의 Kruskal 예에서 간선이 (0,5)10, (2,3)12, (1,6)14, (1,2)16 순으로 선택된 뒤 (3,6)18 차례가 되었다. 이 (3,6) 간선의 처리로 옳은 것은?",
+      "choices": [
+        "① 가중치가 가장 작으므로 무조건 선택한다",
+        "② 정점 6이 새 정점이므로 선택한다",
+        "③ 시작 간선이 아니므로 무시한다",
+        "④ 이미 선택된 간선들로 3과 6이 연결되어 사이클이 생기므로 버린다(discard)"
+      ],
+      "answer": 3,
+      "brief": "(3,6)은 사이클을 만들어 버림.",
+      "detailed": "(2,3),(1,6),(1,2)가 이미 선택되어 3-2-1-6 경로로 3과 6이 연결돼 있다. 여기에 (3,6)을 더하면 사이클이 생기므로 버린다. 이후 (3,4)22 선택, (4,6)24 버림, (4,5)25 선택으로 마무리되어 총 비용 99가 된다.",
+      "source": "12차시 슬라이드 13, 14"
+    },
+    {
+      "id": "DSW12Q9",
+      "set": 12,
+      "week": 12,
+      "topic": "Prim 알고리즘",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Prim 알고리즘의 정점 추가 규칙으로 옳은 것은?",
+      "choices": [
+        "① 전체 간선을 정렬해 가중치가 작은 간선부터 무조건 추가한다",
+        "② 가중치가 가장 큰 간선의 정점을 추가한다",
+        "③ 현재 트리 집합(TV) 안의 정점과 TV 밖의 정점을 잇는 간선 중 가중치가 가장 작은 간선의 정점을 TV에 추가한다",
+        "④ 도달 불가능한 정점부터 추가한다"
+      ],
+      "answer": 2,
+      "brief": "TV 안↔밖 잇는 최소 간선 정점을 추가.",
+      "detailed": "Prim은 정점 기반이다. 시작 정점을 TV에 넣고, u∈TV이고 v∉TV인 간선 (u,v) 중 가중치가 최소인 것을 골라 v를 TV에 추가한다. 이미 TV에 있는 정점은 다시 잇지 않아 사이클이 생기지 않는다. ①은 Kruskal이다.",
+      "source": "12차시 슬라이드 15"
+    },
+    {
+      "id": "DSW12Q10",
+      "set": 12,
+      "week": 12,
+      "topic": "Kruskal vs Prim",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Kruskal과 Prim 알고리즘의 선택 단위(기준) 차이로 옳은 것은?",
+      "choices": [
+        "① Kruskal은 정점 기반, Prim은 간선 기반이다",
+        "② Kruskal은 간선(Edge) 기반, Prim은 정점(Vertex) 기반이다",
+        "③ 둘 다 정점 기반이다",
+        "④ 둘 다 간선 기반이다"
+      ],
+      "answer": 1,
+      "brief": "Kruskal=간선 기반, Prim=정점 기반.",
+      "detailed": "Kruskal은 전체 간선을 가중치 순으로 정렬해 간선을 하나씩 택하는 간선 기반이다. Prim은 한 정점에서 시작해 트리에 정점을 하나씩 붙여 키우는 정점 기반이다. 둘 다 그리디로 n-1개 간선을 모아 최소신장트리를 만든다.",
+      "source": "12차시 슬라이드 11, 15"
+    },
+    {
+      "id": "DSW12Q11",
+      "set": 12,
+      "week": 12,
+      "topic": "그리디 최적성 (Q&A)",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "한 학생이 'Kruskal/Prim이 매번 최소 간선만 고르는데 더 짧은 우회로가 있을 수 있지 않나요?'라고 질문했다. 교수님의 답변 요지로 옳은 것은?",
+      "choices": [
+        "① 두 알고리즘 모두 사이클을 막으면서 매 단계 Local Minimum을 택하므로, 전체 합이 최소인 Global Minimum(최소신장트리)이 수학적으로 보장된다",
+        "② 운이 좋아야 최소신장트리가 나온다",
+        "③ Kruskal만 보장되고 Prim은 보장되지 않는다",
+        "④ 정점 수가 적을 때만 보장된다"
+      ],
+      "answer": 0,
+      "brief": "Local Min 선택 → Global Min 수학적 보장.",
+      "detailed": "교수님 답변: 두 알고리즘 모두 사이클을 방지하면서 항상 현재 상황의 최소 가중치(Local Minimum)만 선택해 연결하므로, 궁극적으로 전체 가중치 합이 최소인 최소신장트리(Global Minimum)를 도출함이 수학적으로 보장된다(그리디 최적성).",
+      "source": "12차시 슬라이드 10"
+    },
+    {
+      "id": "DSW12Q12",
+      "set": 12,
+      "week": 12,
+      "topic": "최단경로 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "최단경로(Shortest Path) 문제의 정의로 옳은 것은?",
+      "choices": [
+        "① 모든 정점을 사이클 없이 잇는 문제",
+        "② 가중치 합이 최대인 경로를 찾는 문제",
+        "③ 정점의 차수를 최대로 만드는 문제",
+        "④ 한 출발 정점에서 다른 정점(들)까지 가는 경로 중 간선 가중치의 합이 최소인 경로를 찾는 문제"
+      ],
+      "answer": 3,
+      "brief": "출발점→목적지 가중치 합 최소 경로.",
+      "detailed": "최단경로는 하나의 출발 정점에서 다른 정점까지 이르는 경로 중 간선 가중치(시간·비용·거리)의 합이 최소가 되는 경로를 찾는 문제다. 역 수만 따지면 모든 간선 가중치를 1로 두면 된다. ①은 (최소)신장트리 문제다.",
+      "source": "12차시 슬라이드 19"
+    },
+    {
+      "id": "DSW12Q13",
+      "set": 12,
+      "week": 12,
+      "topic": "Dijkstra 핵심 원리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "교수님이 강조한 Dijkstra 알고리즘의 핵심 키포인트는?",
+      "choices": [
+        "① 항상 간선 수가 가장 적은 경로만 택한다",
+        "② 항상 직접(바로) 가는 경로만 택한다",
+        "③ 돌아가더라도(우회하더라도) 가중치의 합이 더 작으면 우회 경로를 택한다",
+        "④ 가중치가 가장 큰 경로를 택한다"
+      ],
+      "answer": 2,
+      "brief": "우회해도 합이 작으면 우회 선택.",
+      "detailed": "교수님 키포인트: 돌아가더라도 가중치의 합이 작으면 우회 경로를 선택한다. 즉 바로 가는 distance와 특정 정점 u를 경유한 distance 합 중 더 작은(Minimum) 값으로 거리를 갱신한다(Relaxation).",
+      "source": "12차시 슬라이드 21, 22"
+    },
+    {
+      "id": "DSW12Q14",
+      "set": 12,
+      "week": 12,
+      "topic": "Relaxation 식",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Dijkstra에서 새로 확정한 정점 u를 거쳐 정점 w로 가는 거리를 갱신할 때 사용하는 식으로 옳은 것은?",
+      "choices": [
+        "① distance[w] = distance[u] × cost[u][w]",
+        "② distance[w] = min( distance[w],  distance[u] + cost[u][w] )",
+        "③ distance[w] = max( distance[w],  distance[u] + cost[u][w] )",
+        "④ distance[w] = cost[u][w] − distance[u]"
+      ],
+      "answer": 1,
+      "brief": "distance[w] = min(distance[w], distance[u]+cost[u][w]).",
+      "detailed": "갱신(Relaxation)은 두 후보 중 작은 값을 택한다. ① S만 거쳐 가는 기존 distance[w], ② u를 경유한 distance[u]+cost[u][w]. 즉 distance[w] = min(distance[w], distance[u]+cost[u][w]).",
+      "source": "12차시 슬라이드 22, 24"
+    },
+    {
+      "id": "DSW12Q15",
+      "set": 12,
+      "week": 12,
+      "topic": "choose 함수 (정점 선택)",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Dijkstra의 choose 함수가 매 단계 선택하는 정점은?",
+      "choices": [
+        "① 아직 방문(확정)하지 않은 정점 중 distance 값이 가장 작은 정점",
+        "② 이미 확정된 정점 중 distance가 가장 큰 정점",
+        "③ 인덱스가 가장 큰 정점",
+        "④ 가중치가 무한대인 정점"
+      ],
+      "answer": 0,
+      "brief": "미방문 정점 중 distance 최소를 선택.",
+      "detailed": "choose는 !found[i](아직 S에 없음)인 정점 중 distance[i]가 최소인 위치를 반환한다. 그 정점을 found=TRUE로 확정(S에 추가)한 뒤, 그 정점을 경유하는 이웃들의 distance를 갱신한다.",
+      "source": "12차시 슬라이드 24, 25"
+    },
+    {
+      "id": "DSW12Q16",
+      "set": 12,
+      "week": 12,
+      "topic": "Dijkstra 도달 불가 정점",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "방향 그래프에서 Dijkstra를 수행할 때, 들어오는(incoming) 간선이 전혀 없는 정점 V5의 distance는 끝까지 어떻게 되는가?",
+      "choices": [
+        "① 0이 된다",
+        "② 출발점과 같은 값이 된다",
+        "③ 가장 작은 값으로 갱신된다",
+        "④ 어떤 정점을 거쳐도 도달할 수 없으므로 끝까지 무한대(강의 표현 1000)로 남는다"
+      ],
+      "answer": 3,
+      "brief": "incoming 없는 정점은 도달 불가 → ∞(1000) 유지.",
+      "detailed": "들어오는 간선이 없는 정점은 다른 어떤 정점을 통해서도 도달할 수 없으므로 distance가 갱신되지 않고 초기값 무한대(강의에서는 1000)로 끝까지 남는다. 방향 그래프의 한계를 보여주는 예다.",
+      "source": "12차시 슬라이드 23"
+    },
+    {
+      "id": "DSW12Q17",
+      "set": 12,
+      "week": 12,
+      "topic": "Dijkstra 손풀이 (Boston 예)",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "미국 도시 예에서 Boston(시작)→New York이 250, New York→Chicago가 1000, Boston→Chicago 직행이 1500이다. New York을 먼저 확정한 뒤 Chicago의 distance는 어떻게 갱신되는가?",
+      "choices": [
+        "① 직행 1500을 그대로 유지한다",
+        "② 250으로 갱신된다",
+        "③ New York 경유 250+1000=1250이 직행 1500보다 작아 1250으로 갱신된다",
+        "④ 도달 불가능하다"
+      ],
+      "answer": 2,
+      "brief": "250+1000=1250 < 1500 → 1250으로 갱신.",
+      "detailed": "Boston→Chicago 직행 1500보다 New York 경유 경로(250+1000=1250)가 더 짧으므로 Chicago의 distance를 1250으로 갱신한다. 우회해도 합이 작으면 택하는 Dijkstra 핵심 원리의 대표 사례다.",
+      "source": "12차시 슬라이드 30, 32"
+    },
+    {
+      "id": "DSW12Q18",
+      "set": 12,
+      "week": 12,
+      "topic": "추이적 관계",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "집합 X의 원소 a, b, c에 대해 추이적 관계(Transitive Relation)의 정의로 옳은 것은?",
+      "choices": [
+        "① aRb이면 항상 bRa이다 (대칭)",
+        "② aRb이고 bRc이면 aRc이다",
+        "③ 모든 a에 대해 aRa이다 (반사)",
+        "④ aRb이고 bRa이면 a=b이다 (반대칭)"
+      ],
+      "answer": 1,
+      "brief": "aRb ∧ bRc ⇒ aRc.",
+      "detailed": "추이적 관계는 a가 b와 관계가 있고 b가 c와 관계가 있으면 a도 c와 관계가 있다는 논리다(A→B, B→C ⇒ A→C). '크다·크거나 같다·같다'가 추이적 관계의 예다. 그래프에 적용하면 도달 가능성 문제가 된다.",
+      "source": "12차시 슬라이드 35"
+    },
+    {
+      "id": "DSW12Q19",
+      "set": 12,
+      "week": 12,
+      "topic": "추이적 폐쇄 행렬",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "추이적 폐쇄 행렬 A+ 의 원소 A+[i][j] 값의 의미로 옳은 것은?",
+      "choices": [
+        "① 정점 i에서 j로 가는 경로(길이 > 0)가 하나라도 있으면 1, 없으면 0",
+        "② i에서 j로 가는 간선의 가중치 합",
+        "③ i와 j 사이 최단 거리 값",
+        "④ i와 j의 차수의 곱"
+      ],
+      "answer": 0,
+      "brief": "A+[i][j]=1 ⇔ i→j 경로(길이>0) 존재.",
+      "detailed": "추이적 폐쇄 행렬 A+는 도달 가능성을 나타낸다. 정점 i에서 j로 가는 경로(길이가 0보다 큰 경로)가 하나라도 존재하면 A+[i][j]=1, 전혀 갈 수 없으면 0이다. 인접 행렬 A를 곱해(또는 Floyd-Warshall로) 구한다.",
+      "source": "12차시 슬라이드 36"
+    },
+    {
+      "id": "DSW12Q20",
+      "set": 12,
+      "week": 12,
+      "topic": "방향 그래프 도달 가능성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "방향 그래프에서 어떤 정점 c가 나가는(outgoing) 간선이 전혀 없을 때, 추이적 폐쇄 행렬에서 c에 해당하는 행(c→다른 정점)의 값은?",
+      "choices": [
+        "① 모두 1이다 (모든 정점에 도달 가능)",
+        "② 대각선만 1이다",
+        "③ 무방향 그래프와 동일하게 채워진다",
+        "④ c에서 갈 수 있는 정점이 없으므로 c행은 (자기 자신 외) 모두 0이다"
+      ],
+      "answer": 3,
+      "brief": "나가는 간선 없는 정점 행은 도달 정점 없어 0.",
+      "detailed": "방향 그래프는 화살표 방향 때문에 도달 불가 정점이 생긴다. 나가는 간선이 없는 정점은 다른 어떤 정점에도 도달할 수 없으므로 추이적 폐쇄 행렬에서 그 행은 모두 0이 된다(슬라이드 예의 c행). 추이적 폐쇄는 분산·병렬 시스템 도달성 분석, 파싱 오토마타에 쓰인다.",
+      "source": "12차시 슬라이드 36"
+    }
+  ]
+}

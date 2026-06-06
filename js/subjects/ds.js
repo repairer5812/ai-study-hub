@@ -1680,14 +1680,14 @@ const ALL = [...set1, ...set2, ...set3, ...set4];
 export const META = {
   id: "ds",
   title: "자료구조",
-  subtitle: "1~7차시 · 4세트 × 30문제 = 120문제",
+  subtitle: "1~12차시 · 모의고사 4세트(120문제) + 주차별 확인문제(9~12차시)",
   emoji: "📊",
   color: "#1E7E5F",
   available: true,
   hasExam: true,
   examType: "multiple_choice", // 100% 객관식 (교수님 공지)
   sets: SETS_META,
-  weekCount: 9,
+  weekCount: 12,
   noteIndex: [
     { slug: "00_INDEX_전체_개요", title: "📚 00 INDEX — 전체 개요·족집게", week: 0 },
     { slug: "1차시_과목_오리엔테이션_및_자료구조_전체_숲보기", title: "1차시 — 오리엔테이션·숲보기", week: 1 },
@@ -1698,6 +1698,14 @@ export const META = {
     { slug: "6차시_스택과_수식의_계산", title: "🌟 6차시 — 스택·수식 계산", week: 6 },
     { slug: "7차시_큐_데크_우선순위_큐", title: "🌟 7차시 — 큐·데크·우선순위 큐", week: 7 },
     { slug: "9차시_트리1_이진트리_탐색_BST", title: "🌟 9차시 — 트리 I·이진 트리·탐색·BST", week: 9 },
+    { slug: "10차시_히프와_우선순위_큐", title: "🌟 10차시 — 히프·우선순위 큐", week: 10 },
+    { slug: "11차시_그래프_표현과_탐색", title: "🌟 11차시 — 그래프 I·표현·탐색", week: 11 },
+    { slug: "12차시_그래프_최단경로_신장트리", title: "🌟 12차시 — 그래프 II·MST·최단경로", week: 12 },
+  ],
+  weeklyExams: [
+    { week: 10, slug: "10차시_히프_시험", title: "10차시 시험 — 히프·우선순위 큐 (객관식 20)", count: 20 },
+    { week: 11, slug: "11차시_그래프_시험", title: "11차시 시험 — 그래프 표현·탐색 (객관식 20)", count: 20 },
+    { week: 12, slug: "12차시_그래프2_시험", title: "12차시 시험 — MST·최단경로 (객관식 20)", count: 20 },
   ],
 };
 
