@@ -1,0 +1,393 @@
+{
+  "subject": "dl",
+  "week": 11,
+  "title": "딥러닝 11주차 — Vision Transformer (ViT) 구현",
+  "set_meta": {
+    "id": 11,
+    "title": "Week 11",
+    "label": "Vision Transformer (ViT)",
+    "desc": "Patch Embedding · 차원 계산 · CLS 토큰 · Positional Embedding · Multi-Head · Classification Head · Inductive Bias · Transfer Learning"
+  },
+  "questions": [
+    {
+      "id": "DLW11Q1",
+      "set": 11,
+      "week": 11,
+      "topic": "ViT 전체 흐름",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Vision Transformer(ViT)의 전체 데이터 흐름으로 옳은 것은?",
+      "choices": [
+        "① 이미지 → CNN 인코더 → RNN 디코더 → 문장 생성",
+        "② 이미지를 패치로 분할 → Flatten·Linear 임베딩 → [CLS] 토큰 + Positional Embedding → Transformer Encoder → Classification Head로 분류",
+        "③ 이미지 픽셀 하나하나를 Transformer에 직접 입력",
+        "④ 이미지를 거리 행렬로 바꿔 고유분해"
+      ],
+      "answer": 1,
+      "brief": "패치→임베딩→[CLS]+PE→Encoder→Head.",
+      "detailed": "ViT는 이미지를 16x16 패치로 쪼개 Flatten·Linear Projection으로 토큰화하고, 맨 앞에 [CLS] 토큰을 추가하고 Positional Embedding을 더한 뒤 Transformer Encoder(원래 Transformer의 인코더만)를 통과시켜, [CLS] 출력을 Classification Head(MLP)로 분류한다.",
+      "source": "ViT 실습 p.1; 11주차 § 1"
+    },
+    {
+      "id": "DLW11Q2",
+      "set": 11,
+      "week": 11,
+      "topic": "einops",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "교수님이 실습에서 강조한 einops 라이브러리의 용도는?",
+      "choices": [
+        "① 사전학습 가중치를 불러오는 라이브러리",
+        "② GPU 메모리를 관리하는 라이브러리",
+        "③ reshape/view 대신 rearrange 등으로 텐서 차원 변환을 직관적으로 수행하는 라이브러리",
+        "④ 데이터 증강(augmentation) 전용 라이브러리"
+      ],
+      "answer": 2,
+      "brief": "einops = 텐서 차원 변환을 직관적으로(rearrange).",
+      "detailed": "einops는 복잡한 reshape/view 대신 rearrange/reduce/repeat로 텐서 차원 변환을 직관적으로 표현한다. ViT 구현에서 패치 분할·head 분할·복원 등에 사용된다.",
+      "source": "ViT 실습 p.2; 11주차 § 2"
+    },
+    {
+      "id": "DLW11Q3",
+      "set": 11,
+      "week": 11,
+      "topic": "패치 개수 계산",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "H×W 크기 이미지를 P×P 패치로 나눌 때 패치 개수 N은? (예: 128×128 이미지, P=16)",
+      "choices": [
+        "① N = H × W (전체 픽셀 수)",
+        "② N = P² (=256)",
+        "③ N = H/P (=8)",
+        "④ N = (H×W)/P² (=64)"
+      ],
+      "answer": 3,
+      "brief": "N = HW/P² (128² / 16² = 64).",
+      "detailed": "패치 개수 N = (H×W)/P². 128×128을 16×16으로 쪼개면 64개. CIFAR10(32×32)이면 (32×32)/16² = 4개다.",
+      "source": "ViT 실습 p.5; 11주차 § 3"
+    },
+    {
+      "id": "DLW11Q4",
+      "set": 11,
+      "week": 11,
+      "topic": "패치 Flatten 차원",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "P×P 패치를 Flatten했을 때의 벡터 길이는? (채널 C, 예: P=16, C=3)",
+      "choices": [
+        "① P² × C (=768)",
+        "② P × C (=48)",
+        "③ N × C",
+        "④ P² (=256)"
+      ],
+      "answer": 0,
+      "brief": "Flatten 길이 = P²·C (16·16·3 = 768).",
+      "detailed": "각 패치는 P×P×C 차원이고, 1D로 펴면 길이 P²×C가 된다. P=16, C=3이면 16·16·3 = 768. 최종 패치 텐서는 N×(P²C) 형태(예: 64×768, CIFAR10이면 4×768).",
+      "source": "ViT 실습 p.5-6; 11주차 § 3"
+    },
+    {
+      "id": "DLW11Q5",
+      "set": 11,
+      "week": 11,
+      "topic": "Linear Projection",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Patch Embedding에서 Flatten된 패치(길이 P²C)에 Linear Projection을 적용하는 이유는?",
+      "choices": [
+        "① 패치를 다시 이미지로 복원하기 위해",
+        "② Transformer가 일관되게 사용하는 잠재 벡터 차원 D(emb_size)로 각 토큰을 매핑하기 위해",
+        "③ 채널 수를 늘리기 위해",
+        "④ 패치 개수를 줄이기 위해"
+      ],
+      "answer": 1,
+      "brief": "각 패치를 임베딩 차원 D로 매핑.",
+      "detailed": "Flatten된 패치(P²C)에 학습 가능한 가중치를 곱해 Transformer가 일관되게 쓰는 잠재 차원 D(emb_size)로 매핑한다. 결과적으로 각 토큰이 D차원으로 보정된다.",
+      "source": "ViT 실습 p.7; 11주차 § 3"
+    },
+    {
+      "id": "DLW11Q6",
+      "set": 11,
+      "week": 11,
+      "topic": "Conv2d 패치 임베딩",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Patch Embedding을 Linear 대신 Conv2d로 구현할 때의 이점과 방법으로 옳은 것은?",
+      "choices": [
+        "① Conv2d는 패치를 만들 수 없어 사용 불가하다",
+        "② Conv2d는 파라미터가 없어 학습이 불필요하다",
+        "③ kernel_size=stride=patch_size인 Conv2d를 쓰면 패치 자르기와 임베딩 매핑을 한 번에 하고, 지역 특성(local feature)을 잘 뽑아 성능이 향상될 수 있다",
+        "④ Conv2d는 Positional Embedding을 대체한다"
+      ],
+      "answer": 2,
+      "brief": "Conv2d(kernel=stride=patch)=자르기+임베딩 동시, 지역특성 ↑.",
+      "detailed": "nn.Conv2d(in_channels, emb_size, kernel_size=patch_size, stride=patch_size)를 쓰면 이미지를 패치로 자르는 동시에 emb_size 차원으로 매핑한다. 아직 패치로 쪼개기 전이라 지역 특성을 잘 뽑는 컨볼루션이 유리해 성능이 오를 수 있다(교수님 꿀팁).",
+      "source": "ViT 실습 p.8; 11주차 § 3"
+    },
+    {
+      "id": "DLW11Q7",
+      "set": 11,
+      "week": 11,
+      "topic": "CLS 토큰",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT의 [CLS] 토큰에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 고정된 상수 벡터로 학습되지 않는다",
+        "② 패치 시퀀스의 맨 뒤에 추가된다",
+        "③ 이미지 픽셀 값을 그대로 담는다",
+        "④ 시퀀스 맨 앞(0번)에 추가되는 학습 가능 파라미터로, 분류에 필요한 지배적 특징이 집중되며 최종 Head는 이 토큰만 뽑아 분류한다"
+      ],
+      "answer": 3,
+      "brief": "맨 앞 학습 파라미터, 지배적 특징 집중, Head가 이 토큰만 사용.",
+      "detailed": "[CLS]는 nn.Parameter(torch.randn(1,1,emb_size))로 무작위 초기화된 학습 가능 파라미터다. 배치만큼 repeat 후 패치 앞에 concat하여 토큰 수가 N+1이 된다. 학습이 진행되며 분류에 필요한 지배적 피처가 이 토큰에 모이고, Head는 0번 [CLS] 토큰만 뽑아 MLP에 넣는다.",
+      "source": "ViT 실습 p.9; 11주차 § 4"
+    },
+    {
+      "id": "DLW11Q8",
+      "set": 11,
+      "week": 11,
+      "topic": "Positional Embedding 크기",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT의 Positional Embedding 크기가 (N_PATCHES + 1, EMBED_SIZE)인데, +1이 붙는 이유는?",
+      "choices": [
+        "① 맨 앞에 추가한 [CLS] 토큰의 위치 정보도 필요하기 때문",
+        "② 배치 차원을 추가하기 때문",
+        "③ 채널이 하나 더 있기 때문",
+        "④ 마지막에 패딩 토큰을 넣기 때문"
+      ],
+      "answer": 0,
+      "brief": "[CLS] 토큰 위치 정보 때문에 +1.",
+      "detailed": "Positional Embedding 크기는 (N_PATCHES+1, EMBED_SIZE)이다. +1은 패치들 앞에 추가한 [CLS] 토큰의 위치 정보도 필요하기 때문이다.",
+      "source": "ViT 실습 p.9; 11주차 § 5"
+    },
+    {
+      "id": "DLW11Q9",
+      "set": 11,
+      "week": 11,
+      "topic": "Positional Embedding 결합",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT에서 Positional Embedding을 패치 토큰에 결합하는 방식은?",
+      "choices": [
+        "① [CLS] 토큰처럼 Concat(이어붙이기)으로 결합한다",
+        "② 기존 텐서에 더하기(Add)로 결합한다",
+        "③ 곱하기(Multiply)로 결합한다",
+        "④ 결합하지 않고 별도 입력으로 둔다"
+      ],
+      "answer": 1,
+      "brief": "Positional Embedding은 Add(더하기)로 결합.",
+      "detailed": "[CLS] 토큰은 Concat이지만 Positional Embedding은 x += self.positions처럼 더하기(Add)로 결합한다. 전사: 같은 위치에 같은 값을 더해 위치 정보를 기억하게 한다(Concat 아님).",
+      "source": "ViT 실습 p.10; 11주차 § 5"
+    },
+    {
+      "id": "DLW11Q10",
+      "set": 11,
+      "week": 11,
+      "topic": "Multi-Head Attention scaling",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "ViT의 Multi-Head Attention에서 attention score(energy)에 scaling을 적용하는 이유는?",
+      "choices": [
+        "① 계산을 느리게 하기 위해",
+        "② 헤드 수를 늘리기 위해",
+        "③ Q·K 내적 값이 차원에 따라 커져 퍼지므로, (emb_size//num_heads)^(-0.5)로 나눠 값을 조절(softmax 안정화)하기 위해",
+        "④ Value를 0으로 만들기 위해"
+      ],
+      "answer": 2,
+      "brief": "내적 값이 차원으로 커져 퍼지므로 (d/h)^(-0.5)로 스케일.",
+      "detailed": "scaling = (emb_size // num_heads) ** -0.5. Q와 K를 내적한 energy는 차원이 커지면 값이 커져 softmax가 극단으로 쏠린다. 이를 차원의 제곱근으로 나눠 조절한다. 전사: 값이 곱해져 퍼지므로 차원으로 나눠 조절.",
+      "source": "ViT 실습 p.13; 11주차 § 6"
+    },
+    {
+      "id": "DLW11Q11",
+      "set": 11,
+      "week": 11,
+      "topic": "Residual Connection",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "ViT의 ResidualAdd(잔차 연결) out = fn(x) + x 의 효과는?",
+      "choices": [
+        "① 파라미터 수를 줄인다",
+        "② Positional Embedding을 대체한다",
+        "③ 패치 개수를 늘린다",
+        "④ 레이어 통과 결과에 원래 입력을 더해, 깊은 망에서 기울기 소실(Vanishing Gradient)을 완화하고 학습을 안정화한다"
+      ],
+      "answer": 3,
+      "brief": "fn(x)+x → 기울기 소실 완화, 깊은 망 학습 안정화.",
+      "detailed": "Residual Connection은 레이어(Attention 또는 MLP) 통과 결과에 원래 입력 x를 다시 더한다(out = fn(x) + x). 역전파 시 기울기가 직접 전달되어 Vanishing Gradient를 완화하고 모델이 깊어져도 학습이 잘 되게 한다.",
+      "source": "ViT 실습 p.10; 11주차 § 6"
+    },
+    {
+      "id": "DLW11Q12",
+      "set": 11,
+      "week": 11,
+      "topic": "MLP (Feed Forward)",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT 인코더 블록의 MLP(Feed Forward Block) 구조로 옳은 것은?",
+      "choices": [
+        "① Linear1 → GELU → Dropout → Linear2 (첫 Linear에서 expansion배 확장 후 다시 축소)",
+        "② Conv → ReLU → Pool",
+        "③ Softmax → Linear",
+        "④ LayerNorm만 적용"
+      ],
+      "answer": 0,
+      "brief": "Linear→GELU→Dropout→Linear (4배 확장 후 축소).",
+      "detailed": "FeedForwardBlock: Linear1(emb→expansion*emb) → GELU → Dropout → Linear2(expansion*emb→emb). 첫 Linear에서 보통 4배 확장했다가 둘째 Linear에서 원래 차원으로 축소한다. 활성화는 GELU.",
+      "source": "ViT 실습 p.11; 11주차 § 6"
+    },
+    {
+      "id": "DLW11Q13",
+      "set": 11,
+      "week": 11,
+      "topic": "Encoder Block 구성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT의 TransformerEncoderBlock 구성으로 옳은 것은?",
+      "choices": [
+        "① Conv → Pool → FC 두 번",
+        "② Residual(LayerNorm → Multi-Head Attention → Dropout) + Residual(LayerNorm → FeedForward → Dropout) 구조이며, 이 블록을 depth(예 12)번 반복한다",
+        "③ RNN 셀을 12번 쌓는다",
+        "④ Encoder와 Decoder를 모두 사용한다"
+      ],
+      "answer": 1,
+      "brief": "Residual(LN→MHA)+Residual(LN→FFN), depth번 반복(Encoder만).",
+      "detailed": "TransformerEncoderBlock = ResidualAdd(LayerNorm→MultiHeadAttention→Dropout) + ResidualAdd(LayerNorm→FeedForwardBlock→Dropout). TransformerEncoder는 이 블록을 depth(=12)개 반복한다. ViT는 원래 Transformer의 Encoder만 사용한다.",
+      "source": "ViT 실습 p.12; 11주차 § 6"
+    },
+    {
+      "id": "DLW11Q14",
+      "set": 11,
+      "week": 11,
+      "topic": "Classification Head 비교",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT 실습의 두 가지 Classification Head 차이로 옳은 것은?",
+      "choices": [
+        "① 둘 다 모든 토큰을 더한다",
+        "② Head1과 Head2는 동일하다",
+        "③ Head1은 모든 토큰 출력의 평균(mean)을 써 전반적 배경·맥락을, Head2는 0번 [CLS] 토큰만 써 분류의 지배적 특징을 잡는다 (원래 논문 기본은 Head2)",
+        "④ Head1은 CLS 토큰, Head2는 평균을 쓴다"
+      ],
+      "answer": 2,
+      "brief": "Head1=평균(배경/맥락), Head2=CLS(지배적 특징). 논문 기본=Head2.",
+      "detailed": "Head1: Reduce('b n e -> b e','mean')으로 모든 토큰 평균 → 전반적 이미지 배경·맥락. Head2: x[:,0]으로 [CLS] 토큰만 → 분류의 지배적 특징. 둘 다 LayerNorm→Linear. 원래 ViT 논문 기본은 Head2(CLS).",
+      "source": "ViT 실습 p.14; 11주차 § 7"
+    },
+    {
+      "id": "DLW11Q15",
+      "set": 11,
+      "week": 11,
+      "topic": "ViT 규모",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "실습에서 조립한 Base ViT 모델의 대략적인 파라미터 수는?",
+      "choices": [
+        "① 약 1만 개",
+        "② 약 100만 개",
+        "③ 약 1,000만 개",
+        "④ 약 8,500만 개(85M)"
+      ],
+      "answer": 3,
+      "brief": "약 85M(85,654,282) 파라미터.",
+      "detailed": "torchsummary 결과 Total params ≈ 85,654,282(약 85M). 매우 무거운 모델이다.",
+      "source": "ViT 실습 p.16; 11주차 § 8"
+    },
+    {
+      "id": "DLW11Q16",
+      "set": 11,
+      "week": 11,
+      "topic": "Inductive Bias 정의",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Inductive Bias(귀납적 편향)의 정의로 옳은 것은?",
+      "choices": [
+        "① 모델이 처음 보는 데이터를 예측할 때 사용하는 추가적인 가정",
+        "② 데이터의 평균과 분산",
+        "③ 학습률을 조절하는 하이퍼파라미터",
+        "④ 손실 함수의 종류"
+      ],
+      "answer": 0,
+      "brief": "처음 보는 데이터 예측에 쓰는 추가적인 가정.",
+      "detailed": "Inductive Bias는 모델이 처음 보는 데이터에 대해 예측할 때 사용하는 추가적인 가정이다. CNN은 Locality·Translation Equivariance라는 강한 Inductive Bias를 가진다.",
+      "source": "ViT 실습 p.27; 11주차 § 9"
+    },
+    {
+      "id": "DLW11Q17",
+      "set": 11,
+      "week": 11,
+      "topic": "CNN의 Inductive Bias",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "CNN이 가지는 대표적인 Inductive Bias 두 가지는?",
+      "choices": [
+        "① Attention과 Recurrence",
+        "② Locality(가까운 픽셀끼리 연관성 높음)와 Translation Equivariance(객체 위치가 바뀌어도 같은 피처)",
+        "③ Self-Attention과 Masking",
+        "④ Dropout과 Batch Normalization"
+      ],
+      "answer": 1,
+      "brief": "Locality + Translation Equivariance.",
+      "detailed": "CNN의 Inductive Bias: Locality(가까운 픽셀끼리 연관성이 높다는 가정, Convolution 필터)와 Translation Equivariance(객체가 어디 있든 같은 피처로 뽑힌다는 가정). ViT는 전체 패치를 한 번에 보는 Attention 구조라 이런 Bias가 부족하다.",
+      "source": "ViT 실습 p.27; 11주차 § 9"
+    },
+    {
+      "id": "DLW11Q18",
+      "set": 11,
+      "week": 11,
+      "topic": "ViT 한계",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "ViT를 CIFAR-10 같은 소규모 데이터로 바닥부터(from scratch) 학습할 때의 결과로 옳은 것은?",
+      "choices": [
+        "① 항상 CNN보다 높은 성능을 낸다",
+        "② 데이터 양과 무관하게 동일한 성능을 낸다",
+        "③ Inductive Bias가 부족해 ResNet 같은 CNN보다 성능이 훨씬 낮게(오버피팅) 나온다",
+        "④ 학습 자체가 불가능하다"
+      ],
+      "answer": 2,
+      "brief": "Inductive Bias 부재 → 소규모 from-scratch면 CNN보다 저조.",
+      "detailed": "ViT는 Inductive Bias가 부족해, CIFAR-10처럼 적은 데이터로 바닥부터 학습하면 ResNet 같은 CNN보다 성능이 훨씬 떨어진다(오버피팅). 실습 스켈레톤도 from-scratch 분류 성능이 낮았다(val loss ~1.3대).",
+      "source": "ViT 실습 p.27; 11주차 § 9"
+    },
+    {
+      "id": "DLW11Q19",
+      "set": 11,
+      "week": 11,
+      "topic": "ViT 한계 해결책",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "ViT가 Inductive Bias 부재를 극복해 CNN을 능가하는 방법은?",
+      "choices": [
+        "① Convolution 레이어를 추가한다",
+        "② RNN을 결합한다",
+        "③ 학습률을 크게 키운다",
+        "④ ImageNet·JFT-300M 같은 방대한 데이터로 사전학습(Pre-training)하여 데이터 양으로 Inductive Bias 부재를 보완한다"
+      ],
+      "answer": 3,
+      "brief": "방대한 데이터로 사전학습 → 데이터 양으로 Bias 부재 극복.",
+      "detailed": "ViT는 ImageNet·JFT-300M 같은 수천만 장으로 사전학습하면 데이터의 양으로 Inductive Bias의 부재를 극복해 CNN을 능가한다. 이것이 ViT가 SOTA를 달성한 핵심 조건이다.",
+      "source": "ViT 실습 p.27; 11주차 § 9"
+    },
+    {
+      "id": "DLW11Q20",
+      "set": 11,
+      "week": 11,
+      "topic": "Transfer Learning / Linear Probing",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "timm로 사전학습 ViT를 가져와 CIFAR-10에 적용하는 Linear Probing의 로직과 결과로 옳은 것은?",
+      "choices": [
+        "① 마지막 분류 헤드를 클래스 수에 맞게 교체하고, 헤드 외 backbone은 동결(requires_grad=False)한 뒤 헤드만 학습 → 정확도 약 93%로 from-scratch보다 압도적으로 높다",
+        "② 전체 모델을 처음부터 다시 학습한다",
+        "③ 사전학습 가중치를 버리고 무작위 초기화한다",
+        "④ 헤드를 동결하고 backbone만 학습한다"
+      ],
+      "answer": 0,
+      "brief": "헤드 교체 + backbone 동결 + 헤드만 학습 → 약 93%.",
+      "detailed": "timm.create_model('vit_base_patch16_224', pretrained=True)로 사전학습 ViT를 불러와 model.head를 클래스 수(10)에 맞게 교체하고, 헤드 외 전체 param.requires_grad=False(backbone 동결), 헤드만 True로 학습한다(Linear Probing). 입력은 Resize 224·ImageNet 정규화. 결과 정확도 약 93%로 바닥부터 학습보다 훨씬 빠르고 높다.",
+      "source": "ViT 실습 p.27-29; 11주차 § 10"
+    }
+  ]
+}
