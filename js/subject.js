@@ -51,6 +51,15 @@ function formatTime(sec) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+function showTbaToast() {
+  let t = document.getElementById("subj-toast");
+  if (!t) { t = document.createElement("div"); t.id = "subj-toast"; t.className = "toast"; document.body.appendChild(t); }
+  t.textContent = "기말고사 모의고사는 추후 공개 예정입니다 (TBA)";
+  t.classList.add("show");
+  clearTimeout(showTbaToast._t);
+  showTbaToast._t = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
 function renderExamSection() {
   const modeKey = `ai-study:${subjectId}:mode`;
   let mode = localStorage.getItem(modeKey) || "batch";
@@ -73,8 +82,8 @@ function renderExamSection() {
       // 준비 중(placeholder): 회색 · 비클릭
       if (s.placeholder) {
         return `
-        <div class="set-card is-placeholder" aria-disabled="true" title="준비 중 — 추후 업데이트">
-          <span class="placeholder-badge">🔒 준비 중</span>
+        <div class="set-card is-placeholder tba-card" role="button" tabindex="0" title="준비 중 — 추후 업데이트">
+          <span class="placeholder-badge">🔒 TBA</span>
           ${isJong ? '<span class="jonghap-badge" style="left:12px; right:auto;">🏆 종합</span>' : ""}
           <div class="set-num">${s.label.toUpperCase()}</div>
           <div class="set-title">${s.title}</div>
@@ -105,6 +114,10 @@ function renderExamSection() {
     } else {
       grid.innerHTML = meta.sets.map(card).join("");
     }
+    grid.querySelectorAll(".tba-card").forEach(el => {
+      el.addEventListener("click", showTbaToast);
+      el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showTbaToast(); } });
+    });
   }
 }
 

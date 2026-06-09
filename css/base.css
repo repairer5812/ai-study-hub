@@ -686,7 +686,7 @@ details.explain-toggle[open] summary::before { transform: rotate(90deg); }
 .set-card.is-jonghap .jonghap-badge { position:absolute; top:12px; right:12px; background:#f0a500; color:#fff; font-size:11px; font-weight:800; padding:2px 9px; border-radius:999px; letter-spacing:0; box-shadow:0 1px 4px rgba(0,0,0,.18); }
 
 /* ── 준비 중(placeholder) 세트 — 회색 ── */
-.set-card.is-placeholder { opacity:.62; cursor:not-allowed; }
+.set-card.is-placeholder { opacity:.62; cursor:pointer; }
 .set-card.is-placeholder::before { background:#aab2bd !important; opacity:.85; }
 .set-card.is-placeholder .set-title, .set-card.is-placeholder .set-num { color:#8a93a0 !important; }
 .set-card .placeholder-badge { position:absolute; top:12px; right:12px; background:#8a93a0; color:#fff; font-size:11px; font-weight:700; padding:2px 9px; border-radius:999px; }
