@@ -13,3 +13,5 @@ notes/**/_patches.json
 notes/**/_predecessors.json
 notes/**/_predecessors.py
 notes/**/_notion_sync/
+
+_audit_report.md
