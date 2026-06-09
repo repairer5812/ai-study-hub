@@ -195,17 +195,25 @@
     `;
     main.insertBefore(head, main.firstChild);
 
+    // 세트 스위처: 과목 메타에서 동적 생성 (중간/기말 분류 반영)
+    const m2 = (() => { try { return getSubjectMeta(subjectId); } catch { return null; } })();
+    const sets = (m2 && Array.isArray(m2.sets) && m2.sets.length)
+      ? m2.sets : [1,2,3,4,5].map(id => ({ id, title: `SET ${id}` }));
+    const hasGroups = sets.some(s => s.exam === "final") && sets.some(s => (s.exam || "midterm") !== "final");
     const switcher = document.createElement("div");
     switcher.className = "mode-selector";
-    switcher.style.marginBottom = "20px";
-    [1,2,3,4,5].forEach(n => {
+    switcher.style.cssText = "margin-bottom:20px; flex-wrap:wrap;";
+    sets.forEach(s => {
+      const id = s.id;
       const b = document.createElement("button");
-      b.className = "mode-btn" + (n === initialSet ? " active" : "");
-      b.textContent = `SET ${n}`;
+      b.className = "mode-btn" + (id === initialSet ? " active" : "");
+      const prefix = hasGroups ? (s.exam === "final" ? "기말 " : "중간 ") : "";
+      const short = (s.label || "").includes("종합") ? "종합" : String(s.title || `SET ${id}`).replace("SET ", "");
+      b.textContent = prefix + short;
       b.addEventListener("click", () => {
         switcher.querySelectorAll(".mode-btn").forEach(x => x.classList.remove("active"));
         b.classList.add("active");
-        loadRanking(n, null, 0, 0);
+        loadRanking(id, null, 0, 0);
       });
       switcher.appendChild(b);
     });
