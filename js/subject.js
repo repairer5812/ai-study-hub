@@ -69,13 +69,26 @@ function renderExamSection() {
   function renderSets() {
     const grid = document.getElementById("set-grid");
     const card = (s) => {
+      const isJong = (s.label || "").includes("종합");
+      // 준비 중(placeholder): 회색 · 비클릭
+      if (s.placeholder) {
+        return `
+        <div class="set-card is-placeholder" aria-disabled="true" title="준비 중 — 추후 업데이트">
+          <span class="placeholder-badge">🔒 준비 중</span>
+          ${isJong ? '<span class="jonghap-badge" style="left:12px; right:auto;">🏆 종합</span>' : ""}
+          <div class="set-num">${s.label.toUpperCase()}</div>
+          <div class="set-title">${s.title}</div>
+          <div class="muted small">${s.desc}</div>
+          <div class="set-meta"><span class="muted small">업데이트 예정</span></div>
+        </div>`;
+      }
       const best = getBest(s.id, subjectId);
       const bestHtml = best
         ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
         : `<span class="set-best unplayed">미응시</span>`;
       return `
-        <a class="${(s.label||'').includes('종합') ? 'set-card is-jonghap' : 'set-card'}" href="exam.html?s=${subjectId}&set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">
-          ${(s.label||'').includes('종합') ? '<span class="jonghap-badge">🏆 종합</span>' : ''}
+        <a class="${isJong ? 'set-card is-jonghap' : 'set-card'}" href="exam.html?s=${subjectId}&set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">
+          ${isJong ? '<span class="jonghap-badge">🏆 종합</span>' : ''}
           <div class="set-num">${s.label.toUpperCase()}</div>
           <div class="set-title">${s.title}</div>
           <div class="muted small">${s.desc}</div>

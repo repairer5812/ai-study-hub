@@ -1,16 +1,25 @@
 // subjects/ml.js — 기계학습 과목 메타 + 문제 로드 래퍼
 import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js";
 
+// 중간고사 = 기존 5세트(Week 2~7). 기말고사 = 준비 중 placeholder(오늘 마지막 수업, 추후 업데이트)
+const ML_MID = ML_SETS.map(s => ({ ...s, exam: "midterm" }));
+const ML_FINAL = [
+  { id: 101, exam: "final", placeholder: true, title: "SET 1", label: "기본 균형", desc: "기말 준비 중 (추후 업데이트)" },
+  { id: 102, exam: "final", placeholder: true, title: "SET 2", label: "족집게 집중", desc: "기말 준비 중 (추후 업데이트)" },
+  { id: 103, exam: "final", placeholder: true, title: "SET 3", label: "심화", desc: "기말 준비 중 (추후 업데이트)" },
+  { id: 104, exam: "final", placeholder: true, title: "SET 4", label: "종합 모의고사", desc: "기말 종합 — 추후 업데이트" },
+];
+
 export const META = {
   id: "ml",
   title: "기계학습",
-  subtitle: "Week 2~7 · 150문제",
+  subtitle: "중간 5세트(150문제) · 주차별 9~12 · 기말 준비 중",
   emoji: "🤖",
   color: "#234E70",
   available: true,
   hasExam: true,
   examType: "mixed", // 객관식 + 주관식
-  sets: ML_SETS,
+  sets: [...ML_MID, ...ML_FINAL],
   weekCount: 12,
   noteIndex: [
     { slug: "00_개요",           title: "00 개요",                  week: 0 },
