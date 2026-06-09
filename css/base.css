@@ -677,3 +677,9 @@ details.explain-toggle[open] summary::before { transform: rotate(90deg); }
 /* ── KaTeX ── */
 .katex { font-size: 1.05em; }
 .question-body .katex { font-size: 1.1em; }
+
+/* ── 종합 모의고사 강조 ── */
+.set-card.is-jonghap { border-color:#e8930c; box-shadow:0 0 0 2px rgba(232,147,12,.28), var(--c-shadow); }
+.set-card.is-jonghap::before { background:linear-gradient(90deg,#f0a500,#ff7a00) !important; opacity:1 !important; height:5px; }
+.set-card.is-jonghap .set-num { color:#c97a00; }
+.set-card.is-jonghap .jonghap-badge { position:absolute; top:12px; right:12px; background:#f0a500; color:#fff; font-size:11px; font-weight:800; padding:2px 9px; border-radius:999px; letter-spacing:0; box-shadow:0 1px 4px rgba(0,0,0,.18); }

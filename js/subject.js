@@ -74,7 +74,8 @@ function renderExamSection() {
         ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
         : `<span class="set-best unplayed">미응시</span>`;
       return `
-        <a class="set-card" href="exam.html?s=${subjectId}&set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">
+        <a class="${(s.label||'').includes('종합') ? 'set-card is-jonghap' : 'set-card'}" href="exam.html?s=${subjectId}&set=${s.id}&mode=${mode}" aria-label="${s.title} 시작">
+          ${(s.label||'').includes('종합') ? '<span class="jonghap-badge">🏆 종합</span>' : ''}
           <div class="set-num">${s.label.toUpperCase()}</div>
           <div class="set-title">${s.title}</div>
           <div class="muted small">${s.desc}</div>
