@@ -16,11 +16,11 @@ export const SETS_META = [
   { id: 1, exam: "midterm", title: "SET 1", label: "기본 균형", desc: "전범위 고루 출제 + ADT/매트릭스 (2~7차시)" },
   { id: 2, exam: "midterm", title: "SET 2", label: "족집게 집중", desc: "교수님 예고 영역 (LL·수식·원형 큐)" },
   { id: 3, exam: "midterm", title: "SET 3", label: "코드 추적·변별", desc: "심화 hard 위주" },
-  { id: 4, exam: "midterm", title: "SET 4", label: "통합 모의고사", desc: "중간 전범위 실전 진단" },
+  { id: 4, exam: "midterm", title: "SET 4", label: "종합 모의고사", desc: "중간 2~7차시 전범위 종합" },
   { id: 5, exam: "final", title: "SET 1", label: "기본 균형", desc: "트리·히프·그래프·정렬 9~13차시 균형" },
   { id: 6, exam: "final", title: "SET 2", label: "족집게 집중", desc: "출제 예고 포인트 (힙=완전이진트리·퀵 최악 등)" },
   { id: 7, exam: "final", title: "SET 3", label: "코드·계산 심화", desc: "탐색·트레이싱·복잡도 심화" },
-  { id: 8, exam: "final", title: "SET 4", label: "통합 모의고사", desc: "기말 9~13차시 전범위 실전" },
+  { id: 8, exam: "final", title: "SET 4", label: "종합 모의고사", desc: "기말 9~13차시 전범위 종합" },
 ];
 
 // ═══════════════════════════════════════════════════════════════
