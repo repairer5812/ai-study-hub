@@ -68,7 +68,7 @@ function renderExamSection() {
 
   function renderSets() {
     const grid = document.getElementById("set-grid");
-    grid.innerHTML = meta.sets.map(s => {
+    const card = (s) => {
       const best = getBest(s.id, subjectId);
       const bestHtml = best
         ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
@@ -80,7 +80,17 @@ function renderExamSection() {
           <div class="muted small">${s.desc}</div>
           <div class="set-meta">${bestHtml}</div>
         </a>`;
-    }).join("");
+    };
+    const mid = meta.sets.filter(s => (s.exam || "midterm") !== "final");
+    const fin = meta.sets.filter(s => s.exam === "final");
+    if (mid.length && fin.length) {
+      const grp = (label, list) =>
+        `<div class="exam-group" style="grid-column:1/-1; flex-basis:100%; width:100%; margin:10px 0 2px; font-weight:800; font-size:15px;">${label}</div>`
+        + list.map(card).join("");
+      grid.innerHTML = grp("🟦 중간고사", mid) + grp("🟥 기말고사", fin);
+    } else {
+      grid.innerHTML = meta.sets.map(card).join("");
+    }
   }
 }
 
