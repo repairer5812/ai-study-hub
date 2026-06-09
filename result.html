@@ -197,16 +197,18 @@
 
     // 세트 스위처: 과목 메타에서 동적 생성 (중간/기말 분류 반영)
     const m2 = (() => { try { return getSubjectMeta(subjectId); } catch { return null; } })();
-    const sets = (m2 && Array.isArray(m2.sets) && m2.sets.length)
+    const rawSets = (m2 && Array.isArray(m2.sets) && m2.sets.length)
       ? m2.sets : [1,2,3,4,5].map(id => ({ id, title: `SET ${id}` }));
+    const sets = rawSets.filter(s => !s.placeholder);   // 준비 중 세트는 랭킹 제외
     const hasGroups = sets.some(s => s.exam === "final") && sets.some(s => (s.exam || "midterm") !== "final");
     const switcher = document.createElement("div");
     switcher.className = "mode-selector";
-    switcher.style.cssText = "margin-bottom:20px; flex-wrap:wrap;";
+    switcher.style.cssText = "margin-bottom:20px; flex-wrap:wrap; max-width:none; justify-content:center; gap:8px;";
     sets.forEach(s => {
       const id = s.id;
       const b = document.createElement("button");
       b.className = "mode-btn" + (id === initialSet ? " active" : "");
+      b.style.flex = "0 0 auto";   // 텍스트 폭만큼 (세로 줄바꿈 방지)
       const prefix = hasGroups ? (s.exam === "final" ? "기말 " : "중간 ") : "";
       const short = (s.label || "").includes("종합") ? "종합" : String(s.title || `SET ${id}`).replace("SET ", "");
       b.textContent = prefix + short;
