@@ -18,12 +18,12 @@
       "difficulty": "easy",
       "question": "매니폴드(manifold)의 정의로 가장 적절한 것은?",
       "choices": [
-        "① 고차원 데이터가 모든 방향으로 자유롭게 퍼져 있는 평탄한 구조",
-        "② 고차원에 임베딩되어 있으나 국소적으로는 저차원처럼 행동하는 매끄러운 구조",
+        "① 고차원에 임베딩되어 있으나 국소적으로는 저차원처럼 행동하는 매끄러운 구조",
+        "② 고차원 데이터가 모든 방향으로 자유롭게 퍼져 있는 평탄한 구조",
         "③ 언제나 직선으로만 이루어진 굽지 않은 1차원 구조",
         "④ 클래스 라벨이 부여된 지도학습 전용 데이터셋 구조"
       ],
-      "answer": 1,
+      "answer": 0,
       "brief": "고차원에 임베딩됐지만 국소적으로 저차원처럼 행동하는 매끄러운 구조.",
       "detailed": "슬라이드: a manifold can be understood as a smooth space that may be curved or embedded inside a higher-dimensional space, but locally behaves like a simpler low-dimensional space. 스위스 롤이 대표 예(3D에 말려 있지만 본질은 2D 매니폴드).",
       "source": "Manifold PDF p.3; 12주차 § 1"
@@ -38,11 +38,11 @@
       "question": "매니폴드 학습(manifold learning)이 일반 차원 축소와 구별되는 강조점은?",
       "choices": [
         "① 정답 라벨을 예측하는 분류 성능에 집중한다",
-        "② 데이터의 차원을 오히려 늘리는 데 집중한다",
-        "③ 데이터의 기하학적·위상학적 속성을 보존하는 데 집중한다",
+        "② 데이터의 기하학적·위상학적 속성을 보존하는 데 집중한다",
+        "③ 데이터의 차원을 오히려 늘리는 데 집중한다",
         "④ 데이터를 정규분포 형태로 변환하는 데 집중한다"
       ],
-      "answer": 2,
+      "answer": 1,
       "brief": "기하·위상 속성 보존에 더 강조.",
       "detailed": "슬라이드: manifold learning places stronger emphasis on preserving the geometric or topological properties of the data. 차원 축소와 목적은 비슷하나 고차원 구조를 잘 유지하는 데 더 초점을 둔다.",
       "source": "Manifold PDF p.4; 12주차 § 1"
@@ -58,10 +58,10 @@
       "choices": [
         "① 라벨이 주어져야만 동작하는 지도학습 기법이다",
         "② 계산량이 지나치게 커서 실행이 사실상 불가능하다",
-        "③ 입력 데이터를 언제나 1차원으로만 축소한다",
-        "④ 선형 투영만 가능해 비선형으로 말린 구조를 펼치지 못한다"
+        "③ 선형 투영만 가능해 비선형으로 말린 구조를 펼치지 못한다",
+        "④ 입력 데이터를 언제나 1차원으로만 축소한다"
       ],
-      "answer": 3,
+      "answer": 2,
       "brief": "PCA는 선형만 → 스위스 롤 같은 비선형 구조 실패.",
       "detailed": "슬라이드: PCA is restricted to modeling linear structure... PCA cannot properly unroll the Swiss roll because it can only produce linear projections. 그래서 t-SNE·UMAP 같은 비선형 기법이 필요하다.",
       "source": "Manifold PDF p.6; 12주차 § 2"
@@ -72,15 +72,15 @@
       "week": 12,
       "topic": "MDS 입력",
       "type": "multiple_choice",
-      "difficulty": "medium",
+      "difficulty": "easy",
       "question": "MDS(Multi-Dimensional Scaling)의 입력으로 주어지는 것은?",
       "choices": [
-        "① 데이터 간 거리를 담은 $N \\times N$ 거리 행렬 $D$",
-        "② 각 데이터의 원본 좌표를 담은 행렬 $X$",
-        "③ 각 데이터의 클래스 라벨을 담은 벡터",
-        "④ 공분산 행렬을 분해해 얻은 고유값 집합"
+        "① 각 데이터의 원본 좌표를 담은 행렬 $X$",
+        "② 각 데이터의 클래스 라벨을 담은 벡터",
+        "③ 공분산 행렬을 분해해 얻은 고유값 집합",
+        "④ 데이터 간 거리를 담은 $N \\times N$ 거리 행렬 $D$"
       ],
-      "answer": 0,
+      "answer": 3,
       "brief": "입력 = $N \\times N$ 거리(dissimilarity) 행렬 $D$.",
       "detailed": "슬라이드: assume we are given the pairwise distances $d_{ij}$ between $N$ data points, but their coordinates are unknown... summarized in an $N \\times N$ matrix $D$. MDS는 좌표 $X$가 아니라 거리 $D$만으로 저차원 좌표를 복원한다.",
       "source": "Manifold PDF p.8; 12주차 § 3"
@@ -91,17 +91,17 @@
       "week": 12,
       "topic": "그램 행렬",
       "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "MDS에서 거리 정보를 좌표로 바꾸기 위해 사용하는 그램 행렬(Gram matrix) $B$는?",
+      "difficulty": "easy",
+      "question": "MDS가 거리 행렬만 가지고 좌표를 복원할 수 있는 핵심 아이디어는?",
       "choices": [
-        "① $B = D$, 즉 거리 행렬을 그대로 사용한다",
-        "② $B = X^T X$, 즉 변수 간 공분산 행렬이다",
-        "③ $B = X X^T$, 즉 데이터 포인트 간 내적의 모음이다",
-        "④ $B = X^{-1}$, 즉 데이터 행렬의 역행렬이다"
+        "① 거리를 점 간 내적(그램 행렬)으로 바꾼 뒤 고유분해해 좌표를 얻는다",
+        "② 거리 행렬을 그대로 좌표로 사용하면 되므로 별도 변환이 필요 없다",
+        "③ 각 점에 라벨을 부여해 지도학습으로 좌표를 예측한다",
+        "④ 거리 행렬에 소프트맥스를 적용해 확률로 바꾼다"
       ],
-      "answer": 2,
-      "brief": "그램 행렬 $B = X X^T$ (샘플 간 내적).",
-      "detailed": "$\\|x_i - x_j\\|^2 = x_i^T x_i + x_j^T x_j - 2 x_i^T x_j$ 처럼 거리는 내적의 조합으로 표현되고, 모든 내적을 모으면 $B = X X^T$가 된다. $B$를 알면 고유값 분해로 좌표 $X$를 복원할 수 있다. ②의 $X^T X$는 PCA의 공분산이다.",
+      "answer": 0,
+      "brief": "거리 → 점 간 내적(그램 행렬 $B = X X^T$)으로 바꿔 고유분해.",
+      "detailed": "거리는 내적의 조합으로 표현되므로($\\|x_i - x_j\\|^2 = x_i^T x_i + x_j^T x_j - 2 x_i^T x_j$), 모든 내적을 모은 그램 행렬 $B = X X^T$를 거리로부터 복구할 수 있다. $B$를 고유분해하면 좌표 $X$가 나온다. 핵심은 거리(스칼라)를 점 사이 내적(그램 행렬)으로 환원하는 발상이다.",
       "source": "Manifold PDF p.10; 12주차 § 3"
     },
     {
@@ -110,17 +110,17 @@
       "week": 12,
       "topic": "더블 센터링",
       "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "MDS에서 거리 행렬 $D$로부터 그램 행렬 $B$를 얻기 위해 사용하는 기법은?",
+      "difficulty": "easy",
+      "question": "MDS에서 더블 센터링(double-centering) 기법이 하는 역할은?",
       "choices": [
-        "① 출력을 확률로 바꾸는 소프트맥스 정규화 기법",
-        "② 제곱 거리에서 행·열 평균을 빼고 전체 평균을 더하는 더블 센터링",
-        "③ 데이터에 단일 가우시안 분포를 적합하는 기법",
-        "④ 경사하강법으로 $B$를 직접 학습해 구하는 기법"
+        "① 좌표를 확률 분포로 바꿔 KL 발산을 계산하게 한다",
+        "② 거리 행렬 $D$를 내적(그램 행렬 $B$)으로 변환해 준다",
+        "③ 데이터에 단일 가우시안 분포를 적합한다",
+        "④ 고유값을 모두 1로 정규화한다"
       ],
       "answer": 1,
-      "brief": "더블 센터링(행평균·열평균 빼고 전체평균 더함)으로 $D \\to B$.",
-      "detailed": "슬라이드: classical MDS uses double-centering to convert squared distances into inner products. $B_{ij} = -\\frac{1}{2}(d_{ij}^2 - \\bar{d}_{i\\cdot}^2 - \\bar{d}_{\\cdot j}^2 + \\bar{d}_{\\cdot\\cdot}^2)$. 전사: 이는 데이터를 평균 0으로 센터링하는 것과 동일($B = \\tilde{X}\\tilde{X}^T$).",
+      "brief": "더블 센터링은 거리 행렬 $D$를 그램 행렬 $B$(내적)로 변환하는 역할.",
+      "detailed": "슬라이드: classical MDS uses double-centering to convert squared distances into inner products. 제곱 거리에서 행 평균·열 평균을 빼고 전체 평균을 더하면 데이터를 평균 0으로 센터링한 뒤의 내적 $B = \\tilde{X}\\tilde{X}^T$가 된다. 즉 식 자체를 외우기보다 '거리 → 내적' 변환 단계라는 점이 핵심이다.",
       "source": "Manifold PDF p.11-12; 12주차 § 3"
     },
     {
@@ -130,16 +130,16 @@
       "topic": "MDS 좌표 복원",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "MDS에서 그램 행렬 $B$를 고유값 분해($B = V \\Lambda V^T$)한 뒤 저차원 좌표 $X$를 복원하는 식은?",
+      "question": "MDS에서 그램 행렬 $B$를 고유분해($B = V \\Lambda V^T$)한 다음, 저차원 표현을 얻기 위해 하는 일은?",
       "choices": [
-        "① $X = B^{-1}$, 그램 행렬 $B$의 역행렬로 둠",
-        "② $X = V + \\Lambda$, 고유벡터와 고유값의 합",
-        "③ $X = D V$, 거리 행렬과 고유벡터의 곱",
-        "④ $X = V \\Lambda^{1/2}$, 고유벡터에 고유값 제곱근을 곱함"
+        "① 그램 행렬 $B$의 역행렬을 그대로 좌표로 사용한다",
+        "② 거리 행렬 $D$와 고유벡터를 곱해 좌표를 만든다",
+        "③ 가장 큰 고유값·고유벡터를 골라 저차원 좌표로 삼는다",
+        "④ 모든 고유값을 1로 바꾼 뒤 고유벡터만 사용한다"
       ],
-      "answer": 3,
-      "brief": "$X = V \\Lambda^{1/2}$.",
-      "detailed": "슬라이드: once $B$ is known, factor it as $B = V \\Lambda V^T$, then set $X = V \\Lambda^{1/2}$. 가장 큰 고유값·고유벡터를 선택하면 가장 중요한 기하 구조를 보존한 저차원 표현을 얻는다.",
+      "answer": 2,
+      "brief": "큰 고유값·고유벡터를 선택해 저차원 좌표로 사용($X = V \\Lambda^{1/2}$).",
+      "detailed": "슬라이드: once $B$ is known, factor it as $B = V \\Lambda V^T$, then set $X = V \\Lambda^{1/2}$. 가장 큰 고유값과 그에 대응하는 고유벡터를 선택하면 가장 중요한 기하 구조를 보존한 저차원 표현을 얻는다. 핵심은 '큰 고유값=중요한 방향'을 고른다는 점이다.",
       "source": "Manifold PDF p.13-14; 12주차 § 3"
     },
     {
@@ -148,17 +148,17 @@
       "week": 12,
       "topic": "PCA vs MDS",
       "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "PCA와 MDS의 핵심 차이를 행렬 관점에서 옳게 설명한 것은?",
+      "difficulty": "medium",
+      "question": "PCA와 MDS가 각각 무엇 사이의 관계에 초점을 두는지 옳게 설명한 것은?",
       "choices": [
-        "① PCA와 MDS 모두 거리 행렬 $D$를 직접 고유분해한다",
-        "② PCA는 그램 행렬 $X X^T$를, MDS는 공분산 $X^T X$를 분해한다",
-        "③ PCA는 공분산 $X^T X$를, MDS는 그램 $X X^T$를 분해한다",
-        "④ PCA와 MDS는 서로 완전히 무관한 별개의 알고리즘이다"
+        "① PCA는 샘플 간 관계를, MDS는 변수 간 관계를 분해한다",
+        "② PCA와 MDS 모두 거리 행렬 $D$를 직접 고유분해한다",
+        "③ PCA와 MDS는 서로 완전히 무관한 별개의 알고리즘이다",
+        "④ PCA는 변수(피처) 간 관계를, MDS는 샘플(점) 간 관계를 분해한다"
       ],
-      "answer": 2,
-      "brief": "PCA $= X^T X$(공분산, 변수), MDS $= X X^T$(그램, 샘플).",
-      "detailed": "슬라이드: PCA computes the covariance matrix $S = \\frac{1}{N}X^T X$(변수 간 관계), 반면 classical MDS는 거리를 그램 행렬 $B = X X^T$(샘플 간 관계)로 변환해 고유분해한다. Transpose 위치가 다르다.",
+      "answer": 3,
+      "brief": "PCA=변수 간 관계($X^T X$), MDS=샘플 간 관계($X X^T$).",
+      "detailed": "슬라이드: PCA는 변수 간 관계인 공분산 $S = \\frac{1}{N}X^T X$를, classical MDS는 샘플(점) 간 관계인 그램 행렬 $B = X X^T$를 고유분해한다. 행렬에서 transpose 위치가 다를 뿐 같은 데이터의 두 시점이며, 외울 점은 'PCA=피처 관점, MDS=샘플 관점'이라는 의미다.",
       "source": "Manifold PDF p.17-18; 12주차 § 3"
     },
     {
@@ -168,16 +168,16 @@
       "topic": "Classical MDS = PCA",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "Classical MDS(유클리드 거리 사용)와 PCA의 관계로 옳은 것은?",
+      "question": "유클리드 거리를 사용할 때(Classical MDS) MDS와 PCA의 결과 관계는?",
       "choices": [
-        "① 수학적으로 동일하며, $X^T X u = \\lambda u$에 $X$를 곱하면 그램 고유값 문제가 된다",
-        "② 서로 전혀 다른 결과를 내어 둘을 비교하는 것이 불가능하다",
-        "③ MDS가 PCA보다 언제나 더 낮은 차원을 만들어 낸다",
-        "④ PCA는 비선형 기법이고 Classical MDS는 선형 기법이다"
+        "① 수학적으로 동일한 임베딩을 만들어 낸다",
+        "② 서로 전혀 다른 결과를 내어 비교가 불가능하다",
+        "③ MDS가 PCA보다 언제나 더 낮은 차원을 만든다",
+        "④ PCA는 비선형, Classical MDS는 선형이라 정반대다"
       ],
       "answer": 0,
-      "brief": "Euclid면 Classical MDS = PCA ($X^T X u = \\lambda u \\to X X^T(Xu) = \\lambda(Xu)$).",
-      "detailed": "슬라이드: when MDS is applied to Euclidean distances (classical MDS), the resulting embedding is mathematically equivalent to PCA. 증명: $X^T X u = \\lambda u$에 $X$를 곱하면 $(X X^T)(Xu) = \\lambda(Xu) \\to (X X^T)v = \\lambda v$. 둘 다 선형 기법이라 스위스 롤은 실패한다.",
+      "brief": "유클리드 거리면 Classical MDS = PCA(수학적으로 동일).",
+      "detailed": "슬라이드: when MDS is applied to Euclidean distances (classical MDS), the resulting embedding is mathematically equivalent to PCA. 공분산 $X^T X$와 그램 $X X^T$가 같은 고유값을 공유하기 때문이다($X^T X u = \\lambda u$에 $X$를 곱하면 $X X^T(Xu) = \\lambda(Xu)$). 둘 다 선형 기법이라 스위스 롤은 펼치지 못한다.",
       "source": "Manifold PDF p.18; 12주차 § 3"
     },
     {
@@ -227,12 +227,12 @@
       "difficulty": "medium",
       "question": "t-SNE에서 비대칭인 $p_{j \\mid i}$를 대칭 결합확률 $p_{ij}$로 만드는 방법은?",
       "choices": [
-        "① $p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$, 두 방향의 평균",
-        "② $p_{ij} = p_{j \\mid i} \\times p_{i \\mid j}$, 두 방향의 곱",
-        "③ $p_{ij} = \\max(p_{j \\mid i}, p_{i \\mid j})$, 두 방향의 최댓값",
-        "④ $p_{ij} = p_{j \\mid i} - p_{i \\mid j}$, 두 방향의 차"
+        "① $p_{ij} = p_{j \\mid i} \\times p_{i \\mid j}$, 두 방향의 곱",
+        "② $p_{ij} = \\max(p_{j \\mid i}, p_{i \\mid j})$, 두 방향의 최댓값",
+        "③ $p_{ij} = p_{j \\mid i} - p_{i \\mid j}$, 두 방향의 차",
+        "④ $p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$, 두 방향의 평균"
       ],
-      "answer": 0,
+      "answer": 3,
       "brief": "$p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$ (평균으로 대칭화).",
       "detailed": "$\\sigma_i \\neq \\sigma_j$라 $p_{j \\mid i} \\neq p_{i \\mid j}$(비대칭)이다. 슬라이드: to make the similarity symmetric, define the joint probability $p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$. UMAP의 fuzzy-set union 대칭화와 대비된다.",
       "source": "Manifold PDF p.26; 12주차 § 4"
@@ -243,17 +243,17 @@
       "week": 12,
       "topic": "t-SNE t-분포와 crowding",
       "type": "multiple_choice",
-      "difficulty": "hard",
-      "question": "t-SNE가 저차원 공간에서 가우시안 대신 Student's t-분포를 쓰는 이유는?",
+      "difficulty": "medium",
+      "question": "t-SNE가 저차원 공간에서 가우시안 대신 Student's t-분포를 쓰면 얻는 효과는?",
       "choices": [
-        "① t-분포가 가우시안보다 계산 속도가 더 빠르기 때문에",
-        "② 저차원에서 점들을 한곳으로 더 강하게 뭉치게 하려고",
-        "③ 임베딩에 클래스 라벨 정보까지 함께 반영하기 위해",
-        "④ 두꺼운 꼬리로 crowding problem을 풀어 먼 점을 멀게 남기려고"
+        "① 두꺼운 꼬리 덕분에 점들이 퍼져 crowding problem이 완화된다",
+        "② 임베딩에 클래스 라벨 정보까지 함께 반영된다",
+        "③ 모든 점이 한곳으로 더 강하게 뭉쳐진다",
+        "④ 고차원 유사도 계산이 필요 없어진다"
       ],
-      "answer": 3,
-      "brief": "저차원 t-분포(heavy tail) → crowding problem 해결.",
-      "detailed": "슬라이드: simply using a Gaussian can lead to the crowding problem... the Student's t-distribution addresses this by having heavier tails, allowing points to spread out so that distant points remain well separated. 자유도 1의 t-분포를 사용한다.",
+      "answer": 0,
+      "brief": "저차원 t-분포(heavy tail) → crowding problem 완화, 먼 점은 멀게 유지.",
+      "detailed": "슬라이드: simply using a Gaussian can lead to the crowding problem... the Student's t-distribution addresses this by having heavier tails, allowing points to spread out so that distant points remain well separated. 두꺼운 꼬리가 먼 점에도 어느 정도 유사도를 주어 한곳에 뭉치는 현상을 막는다. 자유도 1의 t-분포를 사용한다.",
       "source": "Manifold PDF p.27,29-30; 12주차 § 4"
     },
     {
@@ -303,12 +303,12 @@
       "difficulty": "medium",
       "question": "UMAP이 t-SNE와 구별되는 결정적 차이는?",
       "choices": [
-        "① t-SNE는 확률 분포로 KL을 최소화하나 UMAP은 가중 그래프 구조를 보존한다",
-        "② UMAP은 선형 기법이고 t-SNE는 비선형 기법이다",
-        "③ UMAP은 라벨이 필요하고 t-SNE는 필요하지 않다",
-        "④ UMAP은 거리 행렬만, t-SNE는 좌표만 입력받는다"
+        "① UMAP은 선형 기법이고 t-SNE는 비선형 기법이다",
+        "② UMAP은 라벨이 필요하고 t-SNE는 필요하지 않다",
+        "③ UMAP은 거리 행렬만, t-SNE는 좌표만 입력받는다",
+        "④ t-SNE는 확률 분포로 KL을 최소화하나 UMAP은 가중 그래프 구조를 보존한다"
       ],
-      "answer": 0,
+      "answer": 3,
       "brief": "t-SNE=확률 분포+KL, UMAP=그래프 구조 보존.",
       "detailed": "슬라이드: unlike t-SNE which models pairwise similarities using probability distributions and minimizes KL divergence, UMAP constructs a weighted graph to capture local structure and learns an embedding that preserves this graph structure. 둘 다 비선형이다.",
       "source": "Manifold PDF p.36; 12주차 § 5"
@@ -320,16 +320,16 @@
       "topic": "UMAP Fuzzy-set union",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "UMAP에서 방향성 있는 가중치 $w_{ij}$를 대칭(무방향)으로 결합하는 방법은?",
+      "question": "UMAP이 방향성 있는 가중치 $w_{ij}$를 대칭(무방향)으로 결합할 때 쓰는 방식과 그 의도는?",
       "choices": [
-        "① 단순 평균 $(w_{ij} + w_{ji})/2N$ 로 결합한다",
-        "② 두 방향 가중치의 곱 $w_{ij} \\cdot w_{ji}$ 로 결합한다",
-        "③ 두 방향 가중치의 최댓값 $\\max(w_{ij}, w_{ji})$로 결합한다",
-        "④ Fuzzy-set union $w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$ 로 결합한다"
+        "① 두 방향 중 하나만 강해도 강하게 잇는 fuzzy-set union 방식으로 결합한다",
+        "② 두 방향 가중치의 차로 결합해 약한 연결만 남긴다",
+        "③ 두 방향 가중치를 곱해 둘 다 강할 때만 연결을 남긴다",
+        "④ 항상 단순 평균만 사용해 t-SNE와 완전히 동일하게 처리한다"
       ],
-      "answer": 3,
-      "brief": "Fuzzy-set union $w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$ (t-SNE 평균과 다름).",
-      "detailed": "슬라이드: UMAP combines two directed weights using a fuzzy-set union, $w_{ij}^{(sym)} = w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$. 어느 방향이든 강하면 강하게, 둘 다 강하면 더 강하게(빼기 항은 중복 방지). t-SNE의 단순 평균 대칭화와 대비된다.",
+      "answer": 0,
+      "brief": "fuzzy-set union: 한 방향만 강해도 강하게 연결(t-SNE 단순 평균과 다름).",
+      "detailed": "슬라이드: UMAP combines two directed weights using a fuzzy-set union, $w_{ij}^{(sym)} = w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$. 어느 방향이든 강하면 강하게 연결하고(빼기 항은 중복 가중을 방지) 둘 다 강하면 더 강하게 잇는다. t-SNE의 단순 평균 대칭화와 대비되는 점이 핵심이다.",
       "source": "Manifold PDF p.40; 12주차 § 5"
     },
     {
@@ -357,7 +357,7 @@
       "week": 12,
       "topic": "UMAP a,b 파라미터",
       "type": "multiple_choice",
-      "difficulty": "medium",
+      "difficulty": "hard",
       "question": "UMAP의 저차원 유사도 $v_{ij} = 1/(1 + a\\|y_i - y_j\\|^{2b})$의 $a$, $b$에 대한 설명으로 옳은 것은? (전사 Q&A)",
       "choices": [
         "① 사용자가 직접 튜닝하는 핵심 하이퍼파라미터다",
@@ -379,12 +379,12 @@
       "difficulty": "medium",
       "question": "오토인코더(Auto-Encoder)에 대한 설명으로 옳은 것은? (전사 보강)",
       "choices": [
-        "① 병목 층으로 핵심 피처만 압축·복원하는 비선형 차원 축소 기법이다",
-        "② 입력의 클래스 라벨을 예측하는 지도학습 분류기다",
-        "③ 거리 행렬을 고유분해하는 선형 차원 축소 기법이다",
-        "④ KL Divergence를 최소화하는 t-SNE의 변형 기법이다"
+        "① 입력의 클래스 라벨을 예측하는 지도학습 분류기다",
+        "② 거리 행렬을 고유분해하는 선형 차원 축소 기법이다",
+        "③ KL Divergence를 최소화하는 t-SNE의 변형 기법이다",
+        "④ 병목 층으로 핵심 피처만 압축·복원하는 비선형 차원 축소 기법이다"
       ],
-      "answer": 0,
+      "answer": 3,
       "brief": "AE = 병목으로 핵심 피처 압축·복원하는 비선형 차원축소, Hinton 2006 AE>PCA.",
       "detailed": "전사(슬라이드 외 강의 보강): 오토인코더는 입력=출력이 되도록 훈련하며, 좁은 hidden layer(bottleneck)를 통과시켜 핵심 히든 구조만 압축 학습한다. 2006년 Hinton의 Science 논문에서 PCA보다 비선형 차원 축소가 우수함을 증명했다.",
       "source": "전사(강의 보강); 12주차 § 6"
