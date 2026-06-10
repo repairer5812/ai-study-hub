@@ -19,12 +19,12 @@
       "question": "클러스터링(Clustering)과 밀도 추정(Density Estimation)의 관계로 가장 적절한 것은?",
       "choices": [
         "① 정답 라벨로 분류 경계를 학습하는 지도학습 기법이다",
-        "② 분포 p(x)를 추정하고, 클러스터링은 데이터를 그룹으로 묶는다",
+        "② 분포 $p(x)$를 추정하고, 클러스터링은 데이터를 그룹으로 묶는다",
         "③ 둘 다 연속값을 예측하는 회귀(regression) 기법이다",
         "④ 차원 축소의 일종으로 데이터를 항상 2차원으로 압축한다"
       ],
       "answer": 1,
-      "brief": "밀도추정=분포 p(x) 모델링, 클러스터링=데이터를 그룹으로 묶어 구조 발견(둘 다 비지도).",
+      "brief": "밀도추정=분포 $p(x)$ 모델링, 클러스터링=데이터를 그룹으로 묶어 구조 발견(둘 다 비지도).",
       "detailed": "슬라이드: while density estimation seeks to model the underlying probability distribution of data, clustering focuses on discovering meaningful structure within the dataset by organizing data points into groups. 둘 다 비지도학습이지만 목표가 다르다. ①·③은 지도학습 설명, ④는 차원 축소(11주차)와 혼동한 것이다.",
       "source": "Clustering PDF p.2; 10주차 § 1"
     },
@@ -73,7 +73,7 @@
       "topic": "K-Means 목적 함수",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "K-Means 목적 함수 J = ΣΣ r_nk · ||x^(n) − μ_k||² 가 측정하는 것은?",
+      "question": "K-Means 목적 함수 $J = \\sum_n \\sum_k r_{nk} \\cdot \\|x^{(n)} - \\mu_k\\|^2$ 가 측정하는 것은?",
       "choices": [
         "① 서로 다른 군집 중심 사이 거리의 최댓값을 측정",
         "② 모든 점의 평균과 분산을 결합한 표준화 점수를 측정",
@@ -81,8 +81,8 @@
         "④ 각 점과 군집 중심 간 제곱 거리의 총합, 즉 군집 내 분산"
       ],
       "answer": 3,
-      "brief": "J = 총 군집 내 분산(점과 중심 간 제곱거리의 가중 합).",
-      "detailed": "슬라이드: objective function J, which measures the total within-cluster variance. r_nk는 할당 지시 변수, ||x^(n)−μ_k||²는 제곱 유클리드 거리. J를 최소화하는 r_nk와 μ_k를 찾는 것이 K-means의 목표다.",
+      "brief": "$J$ = 총 군집 내 분산(점과 중심 간 제곱거리의 가중 합).",
+      "detailed": "슬라이드: objective function $J$, which measures the total within-cluster variance. $r_{nk}$는 할당 지시 변수, $\\|x^{(n)}-\\mu_k\\|^2$는 제곱 유클리드 거리. $J$를 최소화하는 $r_{nk}$와 $\\mu_k$를 찾는 것이 K-means의 목표다.",
       "source": "Clustering PDF p.6; 10주차 § 2"
     },
     {
@@ -92,16 +92,16 @@
       "topic": "지시 변수 r_nk",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "K-Means 목적 함수의 지시 변수 r_nk에 대한 설명으로 옳은 것은?",
+      "question": "K-Means 목적 함수의 지시 변수 $r_{nk}$에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 점이 군집 k에 할당되면 1, 아니면 0인 하드 지시 변수",
-        "② 점이 군집 k에 속할 사후확률을 나타내는 0~1 실수",
-        "③ 군집 k의 중심 좌표를 나타내는 위치 벡터",
+        "① 점이 군집 $k$에 할당되면 1, 아니면 0인 하드 지시 변수",
+        "② 점이 군집 $k$에 속할 사후확률을 나타내는 0~1 실수",
+        "③ 군집 $k$의 중심 좌표를 나타내는 위치 벡터",
         "④ 점과 군집 중심 사이의 유클리드 거리 값"
       ],
       "answer": 0,
-      "brief": "r_nk = 0/1 하드 지시 변수(할당되면 1).",
-      "detailed": "슬라이드: r_nk = 1 if point x^(n) is assigned to cluster k, 0 otherwise. 하드 할당의 핵심이다. GMM의 책임값 γ(z_nk)(0~1 실수, ②)와 대비된다.",
+      "brief": "$r_{nk}$ = 0/1 하드 지시 변수(할당되면 1).",
+      "detailed": "슬라이드: $r_{nk} = 1$ if point $x^{(n)}$ is assigned to cluster $k$, 0 otherwise. 하드 할당의 핵심이다. GMM의 책임값 $\\gamma(z_{nk})$(0~1 실수, ②)와 대비된다.",
       "source": "Clustering PDF p.7; 10주차 § 2"
     },
     {
@@ -111,16 +111,16 @@
       "topic": "할당 단계 (E-step 대응)",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "K-Means 좌표 하강의 첫 단계(중심 μ_k 고정)에서 각 점의 할당 규칙은?",
+      "question": "K-Means 좌표 하강의 첫 단계(중심 $\\mu_k$ 고정)에서 각 점의 할당 규칙은?",
       "choices": [
         "① 모든 군집에 동일 확률로 분산해 할당한다",
-        "② 거리 ||x−μ_k||²를 최소화하는 군집 k에 할당한다",
-        "③ 거리 ||x−μ_k||²를 최대화하는 군집 k에 할당한다",
+        "② 거리 $\\|x-\\mu_k\\|^2$를 최소화하는 군집 $k$에 할당한다",
+        "③ 거리 $\\|x-\\mu_k\\|^2$를 최대화하는 군집 $k$에 할당한다",
         "④ 가장 많은 점이 모여 있는 군집에 할당한다"
       ],
       "answer": 1,
-      "brief": "r_nk=1 if k=argmin ||x−μ_k||² (가장 가까운 중심).",
-      "detailed": "슬라이드 Step 1: assign it to the closest cluster by choosing the k-th cluster that minimizes the distance ||x^(n)−μ_k||². 중심 μ_k를 고정한 채 할당 r_nk를 갱신하는 단계로, EM의 E-step에 대응한다.",
+      "brief": "$r_{nk}=1$ if $k=\\arg\\min \\|x-\\mu_k\\|^2$ (가장 가까운 중심).",
+      "detailed": "슬라이드 Step 1: assign it to the closest cluster by choosing the k-th cluster that minimizes the distance $\\|x^{(n)}-\\mu_k\\|^2$. 중심 $\\mu_k$를 고정한 채 할당 $r_{nk}$를 갱신하는 단계로, EM의 E-step에 대응한다.",
       "source": "Clustering PDF p.8; 10주차 § 2"
     },
     {
@@ -130,7 +130,7 @@
       "topic": "갱신 단계 (M-step 대응)",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "할당 r_nk를 고정한 뒤 K-Means가 중심 μ_k를 갱신하면, 그 값은 무엇이 되는가?",
+      "question": "할당 $r_{nk}$를 고정한 뒤 K-Means가 중심 $\\mu_k$를 갱신하면, 그 값은 무엇이 되는가?",
       "choices": [
         "① 군집에 할당된 점들의 중앙값(median)이 된다",
         "② 군집과 무관하게 전체 데이터의 평균이 된다",
@@ -138,8 +138,8 @@
         "④ 군집에서 가장 멀리 있는 점(최대 거리점)이 된다"
       ],
       "answer": 2,
-      "brief": "μ_k = 할당된 점들의 평균 → 이름 K-means.",
-      "detailed": "J를 μ_k로 미분해 0으로 두면 ∂J/∂μ_k = 2Σ r_nk(x^(n)−μ_k)=0 → μ_k = (Σ r_nk x^(n)) / (Σ r_nk). 슬라이드: each cluster center is the mean of all data points assigned to that cluster. That is precisely why the algorithm is called K-means.",
+      "brief": "$\\mu_k$ = 할당된 점들의 평균 → 이름 K-means.",
+      "detailed": "$J$를 $\\mu_k$로 미분해 0으로 두면 $\\partial J/\\partial \\mu_k = 2\\sum_n r_{nk}(x^{(n)}-\\mu_k)=0$ → $\\mu_k = (\\sum_n r_{nk} x^{(n)}) / (\\sum_n r_{nk})$. 슬라이드: each cluster center is the mean of all data points assigned to that cluster. That is precisely why the algorithm is called K-means.",
       "source": "Clustering PDF p.9-10; 10주차 § 2"
     },
     {
@@ -151,14 +151,14 @@
       "difficulty": "medium",
       "question": "K-Means의 2단계 반복 절차(좌표 하강, coordinate descent)에 대한 설명으로 가장 정확한 것은?",
       "choices": [
-        "① 두 단계가 모두 J를 증가시켜 결국 발산하는 절차다",
-        "② 두 변수 집합을 번갈아 갱신하며 J가 단조 감소해 수렴한다",
+        "① 두 단계가 모두 $J$를 증가시켜 결국 발산하는 절차다",
+        "② 두 변수 집합을 번갈아 갱신하며 $J$가 단조 감소해 수렴한다",
         "③ 항상 전역 최적해(global optimum)로 수렴함이 보장된다",
         "④ 중심을 한 번만 계산하고 즉시 종료하는 절차다"
       ],
       "answer": 1,
-      "brief": "좌표 하강(2-step 번갈아), J 단조 감소 → 수렴(단 전역 최적 보장은 아님).",
-      "detailed": "슬라이드: coordinate descent... minimizes a function by alternately updating one set of variables while keeping the others fixed. 할당·갱신을 r_nk와 μ_k가 더 안 변할 때까지 반복하면 J가 매 단계 감소해 수렴한다. 단 초기값에 따라 지역 최적에 빠질 수 있어 전역 최적은 보장되지 않는다(③ 오답).",
+      "brief": "좌표 하강(2-step 번갈아), $J$ 단조 감소 → 수렴(단 전역 최적 보장은 아님).",
+      "detailed": "슬라이드: coordinate descent... minimizes a function by alternately updating one set of variables while keeping the others fixed. 할당·갱신을 $r_{nk}$와 $\\mu_k$가 더 안 변할 때까지 반복하면 $J$가 매 단계 감소해 수렴한다. 단 초기값에 따라 지역 최적에 빠질 수 있어 전역 최적은 보장되지 않는다(③ 오답).",
       "source": "Clustering PDF p.7,11-12; 10주차 § 2"
     },
     {
@@ -173,11 +173,11 @@
         "① 실루엣 점수를 최소화하는 K를 골라 선택한다",
         "② 로그 우도를 최대화하는 K를 해석적으로 계산한다",
         "③ 데이터와 무관하게 항상 K=2로만 고정해 둔다",
-        "④ W(K) 감소가 완만해지는 팔꿈치 지점의 K를 선택"
+        "④ $W(K)$ 감소가 완만해지는 팔꿈치 지점의 K를 선택"
       ],
       "answer": 3,
-      "brief": "W(K) vs K 그래프에서 감소가 꺾이는 elbow를 K로 선택.",
-      "detailed": "슬라이드: compute the within-cluster sum of squares W(K)=ΣΣ||x_i−μ_k||²... choose K where the decrease becomes much slower, forming an elbow. 전사 농담: 데이터 90개에 K=90이면 W(K)≈0이 되지만 클러스터링의 목적이 사라진다 → 적절한 K가 중요하다.",
+      "brief": "$W(K)$ vs $K$ 그래프에서 감소가 꺾이는 elbow를 K로 선택.",
+      "detailed": "슬라이드: compute the within-cluster sum of squares $W(K)=\\sum_k \\sum_i \\|x_i-\\mu_k\\|^2$... choose K where the decrease becomes much slower, forming an elbow. 전사 농담: 데이터 90개에 K=90이면 $W(K)\\approx 0$이 되지만 클러스터링의 목적이 사라진다 → 적절한 K가 중요하다.",
       "source": "Clustering PDF p.14-15; 10주차 § 2"
     },
     {
@@ -187,16 +187,16 @@
       "topic": "K 결정: Silhouette",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "실루엣 점수 s_i = (b_i − a_i) / max(a_i, b_i) 에서 a_i와 b_i의 정의로 옳은 것은?",
+      "question": "실루엣 점수 $s_i = (b_i - a_i) / \\max(a_i, b_i)$ 에서 $a_i$와 $b_i$의 정의로 옳은 것은?",
       "choices": [
-        "① a_i=이웃 군집까지의 평균 거리, b_i=자기 군집 내 평균 거리",
-        "② a_i와 b_i 모두 전체 데이터 전체까지의 평균 거리",
-        "③ a_i=전체 군집의 개수이고, b_i=데이터의 차원 수",
-        "④ a_i=자기 군집 내 평균 거리, b_i=가장 가까운 군집까지 거리"
+        "① $a_i$=이웃 군집까지의 평균 거리, $b_i$=자기 군집 내 평균 거리",
+        "② $a_i$와 $b_i$ 모두 전체 데이터 전체까지의 평균 거리",
+        "③ $a_i$=전체 군집의 개수이고, $b_i$=데이터의 차원 수",
+        "④ $a_i$=자기 군집 내 평균 거리, $b_i$=가장 가까운 군집까지 거리"
       ],
       "answer": 3,
-      "brief": "a_i=자기 군집 내 평균거리(응집), b_i=가장 가까운 이웃 군집 평균거리(분리).",
-      "detailed": "슬라이드: a_i as the average distance from x_i to the other points in its own cluster, and b_i as the average distance from x_i to the points in the nearest neighboring cluster. s_i가 1에 가까울수록 잘 군집된 것이고, 전체 점수는 S(K)=(1/N)Σ s_i 이다.",
+      "brief": "$a_i$=자기 군집 내 평균거리(응집), $b_i$=가장 가까운 이웃 군집 평균거리(분리).",
+      "detailed": "슬라이드: $a_i$ as the average distance from $x_i$ to the other points in its own cluster, and $b_i$ as the average distance from $x_i$ to the points in the nearest neighboring cluster. $s_i$가 1에 가까울수록 잘 군집된 것이고, 전체 점수는 $S(K)=(1/N)\\sum_i s_i$ 이다.",
       "source": "Clustering PDF p.16; 10주차 § 2"
     },
     {
@@ -272,7 +272,7 @@
       ],
       "answer": 0,
       "brief": "각 가우시안 컴포넌트=군집 1개, 소프트 할당(확률).",
-      "detailed": "슬라이드: we view each Gaussian component as representing a cluster. 고유 공분산 Σ_k로 군집의 모양·크기·방향을 표현하고, 각 점이 컴포넌트에 속할 사후확률을 계산하는 소프트 할당을 한다. 전사 Q&A: GMM의 K(가우시안 개수)도 K-means처럼 사용자가 정하는 하이퍼파라미터다.",
+      "detailed": "슬라이드: we view each Gaussian component as representing a cluster. 고유 공분산 $\\Sigma_k$로 군집의 모양·크기·방향을 표현하고, 각 점이 컴포넌트에 속할 사후확률을 계산하는 소프트 할당을 한다. 전사 Q&A: GMM의 K(가우시안 개수)도 K-means처럼 사용자가 정하는 하이퍼파라미터다.",
       "source": "Clustering PDF p.20-21; 10주차 § 3"
     },
     {
@@ -282,16 +282,16 @@
       "topic": "E-step: responsibility",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "GMM EM의 E-step에서 계산하는 책임값(responsibility) γ(z_k)의 의미와 식으로 옳은 것은?",
+      "question": "GMM EM의 E-step에서 계산하는 책임값(responsibility) $\\gamma(z_k)$의 의미와 식으로 옳은 것은?",
       "choices": [
-        "① 데이터와 무관한 상수로서 γ(z_k)=π_k 이다",
-        "② 거리로 정의되어 γ(z_k)=||x−μ_k||² 이다",
-        "③ x가 컴포넌트 k에서 나왔을 사후확률 π_k·N(x|μ_k,Σ_k)에 비례",
-        "④ 혼합 계수와 같아서 γ(z_k)=N_k/N 이다"
+        "① 데이터와 무관한 상수로서 $\\gamma(z_k)=\\pi_k$ 이다",
+        "② 거리로 정의되어 $\\gamma(z_k)=\\|x-\\mu_k\\|^2$ 이다",
+        "③ $x$가 컴포넌트 $k$에서 나왔을 사후확률 $\\pi_k \\cdot \\mathcal{N}(x \\mid \\mu_k,\\Sigma_k)$에 비례",
+        "④ 혼합 계수와 같아서 $\\gamma(z_k)=N_k/N$ 이다"
       ],
       "answer": 2,
-      "brief": "γ(z_k)=사후확률 = π_k·N(...) / Σ_j π_j·N(...).",
-      "detailed": "슬라이드: the responsibility γ(z_k)=p(z_k=1|x)=π_k·N(x|μ_k,Σ_k) / Σ_j π_j·N(x|μ_j,Σ_j). 컴포넌트 k가 점 x를 설명하는 정도이며 K-means 하드 할당의 소프트 버전이다. 전사 Q&A: 분모는 베이즈 정리에서 전체 확률(evidence)로 나눠 정규화하는 역할로 Σ_k γ(z_k)=1을 보장한다. ④의 N_k/N은 M-step의 π_k 갱신식이다.",
+      "brief": "$\\gamma(z_k)$=사후확률 = $\\pi_k \\cdot \\mathcal{N}(\\cdots) / \\sum_j \\pi_j \\cdot \\mathcal{N}(\\cdots)$.",
+      "detailed": "슬라이드: the responsibility $\\gamma(z_k)=p(z_k=1 \\mid x)=\\pi_k \\cdot \\mathcal{N}(x \\mid \\mu_k,\\Sigma_k) / \\sum_j \\pi_j \\cdot \\mathcal{N}(x \\mid \\mu_j,\\Sigma_j)$. 컴포넌트 $k$가 점 $x$를 설명하는 정도이며 K-means 하드 할당의 소프트 버전이다. 전사 Q&A: 분모는 베이즈 정리에서 전체 확률(evidence)로 나눠 정규화하는 역할로 $\\sum_k \\gamma(z_k)=1$을 보장한다. ④의 $N_k/N$은 M-step의 $\\pi_k$ 갱신식이다.",
       "source": "Clustering PDF p.25; 10주차 § 4"
     },
     {
@@ -301,16 +301,16 @@
       "topic": "M-step: 평균과 N_k",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "EM M-step의 평균 갱신식 μ_k = (1/N_k) Σ γ(z_nk) x^(n) 에서 N_k의 의미로 옳은 것은?",
+      "question": "EM M-step의 평균 갱신식 $\\mu_k = (1/N_k) \\sum_n \\gamma(z_{nk}) x^{(n)}$ 에서 $N_k$의 의미로 옳은 것은?",
       "choices": [
-        "① 전체 데이터의 총개수 N과 같은 값이다",
-        "② Σγ(z_nk), 컴포넌트 k가 책임지는 유효 데이터 수",
-        "③ 군집 k에 하드 할당된 정수 개수로 항상 정수다",
-        "④ 데이터 벡터의 차원 수 D와 같은 값이다"
+        "① 전체 데이터의 총개수 $N$과 같은 값이다",
+        "② $\\sum_n \\gamma(z_{nk})$, 컴포넌트 $k$가 책임지는 유효 데이터 수",
+        "③ 군집 $k$에 하드 할당된 정수 개수로 항상 정수다",
+        "④ 데이터 벡터의 차원 수 $D$와 같은 값이다"
       ],
       "answer": 1,
-      "brief": "N_k=Σγ(z_nk) = 유효 데이터 수(소프트, 일반적으로 비정수).",
-      "detailed": "슬라이드: μ_k=(1/N_k)Σγ(z_nk)x^(n), where N_k=Σγ(z_nk). μ_k는 책임값으로 가중한 데이터 평균이고, N_k는 책임값(0~1 실수)의 합이라 정수가 아닐 수 있다(③ 오답: 하드 카운트가 아님).",
+      "brief": "$N_k=\\sum_n \\gamma(z_{nk})$ = 유효 데이터 수(소프트, 일반적으로 비정수).",
+      "detailed": "슬라이드: $\\mu_k=(1/N_k)\\sum_n \\gamma(z_{nk})x^{(n)}$, where $N_k=\\sum_n \\gamma(z_{nk})$. $\\mu_k$는 책임값으로 가중한 데이터 평균이고, $N_k$는 책임값(0~1 실수)의 합이라 정수가 아닐 수 있다(③ 오답: 하드 카운트가 아님).",
       "source": "Clustering PDF p.30; 10주차 § 4"
     },
     {
@@ -320,16 +320,16 @@
       "topic": "M-step: 혼합 계수와 라그랑주",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "EM M-step에서 혼합 계수 π_k를 유도할 때 제약 Σπ_k=1을 다루는 방법과 그 결과는?",
+      "question": "EM M-step에서 혼합 계수 $\\pi_k$를 유도할 때 제약 $\\sum_k \\pi_k=1$을 다루는 방법과 그 결과는?",
       "choices": [
-        "① 제약 없이 그냥 미분해 π_k=0을 얻는다",
+        "① 제약 없이 그냥 미분해 $\\pi_k=0$을 얻는다",
         "② 경사하강법으로 학습률을 조정해 수치적으로만 구한다",
-        "③ π_k=1/K 로 항상 균등하게 고정한다",
-        "④ 라그랑주 승수 λ로 정리해 π_k=N_k/N 을 얻는다"
+        "③ $\\pi_k=1/K$ 로 항상 균등하게 고정한다",
+        "④ 라그랑주 승수 $\\lambda$로 정리해 $\\pi_k=N_k/N$ 을 얻는다"
       ],
       "answer": 3,
-      "brief": "라그랑주 승수 λ로 제약 처리 → λ=−N → π_k=N_k/N.",
-      "detailed": "L=ln p(X)+λ(Σπ_k−1)을 π_k로 미분하고 양변에 π_k를 곱해 k에 대해 합하면, 제약 Σπ_k=1에 의해 내부 합이 1이 되어 Σ_n 1 = N → N+λ=0 → λ=−N. 이를 대입해 정리하면 π_k=N_k/N (N_k=Σγ(z_nk))가 된다. 슬라이드 전개 그대로다.",
+      "brief": "라그랑주 승수 $\\lambda$로 제약 처리 → $\\lambda=-N$ → $\\pi_k=N_k/N$.",
+      "detailed": "$L=\\ln p(X)+\\lambda(\\sum_k \\pi_k-1)$을 $\\pi_k$로 미분하고 양변에 $\\pi_k$를 곱해 $k$에 대해 합하면, 제약 $\\sum_k \\pi_k=1$에 의해 내부 합이 1이 되어 $\\sum_n 1 = N$ → $N+\\lambda=0$ → $\\lambda=-N$. 이를 대입해 정리하면 $\\pi_k=N_k/N$ ($N_k=\\sum_n \\gamma(z_{nk})$)가 된다. 슬라이드 전개 그대로다.",
       "source": "Clustering PDF p.32-37; 10주차 § 4"
     },
     {
@@ -386,7 +386,7 @@
       ],
       "answer": 2,
       "brief": "Ward=군집 내 분산 증가 최소화(크기 가중 중심거리). Single=min, Complete=max.",
-      "detailed": "슬라이드: Ward's method merges clusters to minimize the increase in within-cluster variance, D_Ward=(|Ca||Cb|/(|Ca|+|Cb|))·||μ_Ca−μ_Cb||². ① Single은 최소(min) 거리, ② Complete는 최대(max) 거리이며 중심 간 거리는 Centroid linkage다. ④ 서로 다른 linkage는 다른 결과를 낼 수 있다(different linkage choices can lead to different clustering outcomes).",
+      "detailed": "슬라이드: Ward's method merges clusters to minimize the increase in within-cluster variance, $D_{\\mathrm{Ward}}=(|C_a||C_b|/(|C_a|+|C_b|))\\cdot\\|\\mu_{C_a}-\\mu_{C_b}\\|^2$. ① Single은 최소(min) 거리, ② Complete는 최대(max) 거리이며 중심 간 거리는 Centroid linkage다. ④ 서로 다른 linkage는 다른 결과를 낼 수 있다(different linkage choices can lead to different clustering outcomes).",
       "source": "Clustering PDF p.44-47; 10주차 § 5"
     }
   ]

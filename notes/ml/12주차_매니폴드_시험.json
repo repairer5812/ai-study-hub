@@ -75,14 +75,14 @@
       "difficulty": "medium",
       "question": "MDS(Multi-Dimensional Scaling)의 입력으로 주어지는 것은?",
       "choices": [
-        "① 데이터 간 거리를 담은 N×N 거리 행렬 D",
-        "② 각 데이터의 원본 좌표를 담은 행렬 X",
+        "① 데이터 간 거리를 담은 $N \\times N$ 거리 행렬 $D$",
+        "② 각 데이터의 원본 좌표를 담은 행렬 $X$",
         "③ 각 데이터의 클래스 라벨을 담은 벡터",
         "④ 공분산 행렬을 분해해 얻은 고유값 집합"
       ],
       "answer": 0,
-      "brief": "입력 = N×N 거리(dissimilarity) 행렬 D.",
-      "detailed": "슬라이드: assume we are given the pairwise distances d_ij between N data points, but their coordinates are unknown... summarized in an N×N matrix D. MDS는 좌표 X가 아니라 거리 D만으로 저차원 좌표를 복원한다.",
+      "brief": "입력 = $N \\times N$ 거리(dissimilarity) 행렬 $D$.",
+      "detailed": "슬라이드: assume we are given the pairwise distances $d_{ij}$ between $N$ data points, but their coordinates are unknown... summarized in an $N \\times N$ matrix $D$. MDS는 좌표 $X$가 아니라 거리 $D$만으로 저차원 좌표를 복원한다.",
       "source": "Manifold PDF p.8; 12주차 § 3"
     },
     {
@@ -92,16 +92,16 @@
       "topic": "그램 행렬",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "MDS에서 거리 정보를 좌표로 바꾸기 위해 사용하는 그램 행렬(Gram matrix) B는?",
+      "question": "MDS에서 거리 정보를 좌표로 바꾸기 위해 사용하는 그램 행렬(Gram matrix) $B$는?",
       "choices": [
-        "① B = D, 즉 거리 행렬을 그대로 사용한다",
-        "② B = XᵀX, 즉 변수 간 공분산 행렬이다",
-        "③ B = XXᵀ, 즉 데이터 포인트 간 내적의 모음이다",
-        "④ B = X⁻¹, 즉 데이터 행렬의 역행렬이다"
+        "① $B = D$, 즉 거리 행렬을 그대로 사용한다",
+        "② $B = X^T X$, 즉 변수 간 공분산 행렬이다",
+        "③ $B = X X^T$, 즉 데이터 포인트 간 내적의 모음이다",
+        "④ $B = X^{-1}$, 즉 데이터 행렬의 역행렬이다"
       ],
       "answer": 2,
-      "brief": "그램 행렬 B = X X^T (샘플 간 내적).",
-      "detailed": "||x_i−x_j||² = x_i^T x_i + x_j^T x_j − 2 x_i^T x_j 처럼 거리는 내적의 조합으로 표현되고, 모든 내적을 모으면 B=XX^T가 된다. B를 알면 고유값 분해로 좌표 X를 복원할 수 있다. ②의 X^T X는 PCA의 공분산이다.",
+      "brief": "그램 행렬 $B = X X^T$ (샘플 간 내적).",
+      "detailed": "$\\|x_i - x_j\\|^2 = x_i^T x_i + x_j^T x_j - 2 x_i^T x_j$ 처럼 거리는 내적의 조합으로 표현되고, 모든 내적을 모으면 $B = X X^T$가 된다. $B$를 알면 고유값 분해로 좌표 $X$를 복원할 수 있다. ②의 $X^T X$는 PCA의 공분산이다.",
       "source": "Manifold PDF p.10; 12주차 § 3"
     },
     {
@@ -111,16 +111,16 @@
       "topic": "더블 센터링",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "MDS에서 거리 행렬 D로부터 그램 행렬 B를 얻기 위해 사용하는 기법은?",
+      "question": "MDS에서 거리 행렬 $D$로부터 그램 행렬 $B$를 얻기 위해 사용하는 기법은?",
       "choices": [
         "① 출력을 확률로 바꾸는 소프트맥스 정규화 기법",
         "② 제곱 거리에서 행·열 평균을 빼고 전체 평균을 더하는 더블 센터링",
         "③ 데이터에 단일 가우시안 분포를 적합하는 기법",
-        "④ 경사하강법으로 B를 직접 학습해 구하는 기법"
+        "④ 경사하강법으로 $B$를 직접 학습해 구하는 기법"
       ],
       "answer": 1,
-      "brief": "더블 센터링(행평균·열평균 빼고 전체평균 더함)으로 D→B.",
-      "detailed": "슬라이드: classical MDS uses double-centering to convert squared distances into inner products. B_ij = −1/2(d_ij² − d̄_i.² − d̄_.j² + d̄_..²). 전사: 이는 데이터를 평균 0으로 센터링하는 것과 동일(B=X̃X̃^T).",
+      "brief": "더블 센터링(행평균·열평균 빼고 전체평균 더함)으로 $D \\to B$.",
+      "detailed": "슬라이드: classical MDS uses double-centering to convert squared distances into inner products. $B_{ij} = -\\frac{1}{2}(d_{ij}^2 - \\bar{d}_{i\\cdot}^2 - \\bar{d}_{\\cdot j}^2 + \\bar{d}_{\\cdot\\cdot}^2)$. 전사: 이는 데이터를 평균 0으로 센터링하는 것과 동일($B = \\tilde{X}\\tilde{X}^T$).",
       "source": "Manifold PDF p.11-12; 12주차 § 3"
     },
     {
@@ -130,16 +130,16 @@
       "topic": "MDS 좌표 복원",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "MDS에서 그램 행렬 B를 고유값 분해(B=VΛV^T)한 뒤 저차원 좌표 X를 복원하는 식은?",
+      "question": "MDS에서 그램 행렬 $B$를 고유값 분해($B = V \\Lambda V^T$)한 뒤 저차원 좌표 $X$를 복원하는 식은?",
       "choices": [
-        "① X = B⁻¹, 그램 행렬 B의 역행렬로 둠",
-        "② X = V + Λ, 고유벡터와 고유값의 합",
-        "③ X = D V, 거리 행렬과 고유벡터의 곱",
-        "④ X = V Λ^{1/2}, 고유벡터에 고유값 제곱근을 곱함"
+        "① $X = B^{-1}$, 그램 행렬 $B$의 역행렬로 둠",
+        "② $X = V + \\Lambda$, 고유벡터와 고유값의 합",
+        "③ $X = D V$, 거리 행렬과 고유벡터의 곱",
+        "④ $X = V \\Lambda^{1/2}$, 고유벡터에 고유값 제곱근을 곱함"
       ],
       "answer": 3,
-      "brief": "X = V Λ^{1/2}.",
-      "detailed": "슬라이드: once B is known, factor it as B=VΛV^T, then set X = VΛ^{1/2}. 가장 큰 고유값·고유벡터를 선택하면 가장 중요한 기하 구조를 보존한 저차원 표현을 얻는다.",
+      "brief": "$X = V \\Lambda^{1/2}$.",
+      "detailed": "슬라이드: once $B$ is known, factor it as $B = V \\Lambda V^T$, then set $X = V \\Lambda^{1/2}$. 가장 큰 고유값·고유벡터를 선택하면 가장 중요한 기하 구조를 보존한 저차원 표현을 얻는다.",
       "source": "Manifold PDF p.13-14; 12주차 § 3"
     },
     {
@@ -151,14 +151,14 @@
       "difficulty": "hard",
       "question": "PCA와 MDS의 핵심 차이를 행렬 관점에서 옳게 설명한 것은?",
       "choices": [
-        "① PCA와 MDS 모두 거리 행렬 D를 직접 고유분해한다",
-        "② PCA는 그램 행렬 XXᵀ를, MDS는 공분산 XᵀX를 분해한다",
-        "③ PCA는 공분산 XᵀX를, MDS는 그램 XXᵀ를 분해한다",
+        "① PCA와 MDS 모두 거리 행렬 $D$를 직접 고유분해한다",
+        "② PCA는 그램 행렬 $X X^T$를, MDS는 공분산 $X^T X$를 분해한다",
+        "③ PCA는 공분산 $X^T X$를, MDS는 그램 $X X^T$를 분해한다",
         "④ PCA와 MDS는 서로 완전히 무관한 별개의 알고리즘이다"
       ],
       "answer": 2,
-      "brief": "PCA=X^T X(공분산, 변수), MDS=X X^T(그램, 샘플).",
-      "detailed": "슬라이드: PCA computes the covariance matrix S=(1/N)X^T X(변수 간 관계), 반면 classical MDS는 거리를 그램 행렬 B=XX^T(샘플 간 관계)로 변환해 고유분해한다. Transpose 위치가 다르다.",
+      "brief": "PCA $= X^T X$(공분산, 변수), MDS $= X X^T$(그램, 샘플).",
+      "detailed": "슬라이드: PCA computes the covariance matrix $S = \\frac{1}{N}X^T X$(변수 간 관계), 반면 classical MDS는 거리를 그램 행렬 $B = X X^T$(샘플 간 관계)로 변환해 고유분해한다. Transpose 위치가 다르다.",
       "source": "Manifold PDF p.17-18; 12주차 § 3"
     },
     {
@@ -170,14 +170,14 @@
       "difficulty": "hard",
       "question": "Classical MDS(유클리드 거리 사용)와 PCA의 관계로 옳은 것은?",
       "choices": [
-        "① 수학적으로 동일하며, XᵀXu=λu에 X를 곱하면 그램 고유값 문제가 된다",
+        "① 수학적으로 동일하며, $X^T X u = \\lambda u$에 $X$를 곱하면 그램 고유값 문제가 된다",
         "② 서로 전혀 다른 결과를 내어 둘을 비교하는 것이 불가능하다",
         "③ MDS가 PCA보다 언제나 더 낮은 차원을 만들어 낸다",
         "④ PCA는 비선형 기법이고 Classical MDS는 선형 기법이다"
       ],
       "answer": 0,
-      "brief": "Euclid면 Classical MDS = PCA (XᵀXu=λu → XXᵀ(Xu)=λ(Xu)).",
-      "detailed": "슬라이드: when MDS is applied to Euclidean distances (classical MDS), the resulting embedding is mathematically equivalent to PCA. 증명: X^T X u=λu에 X를 곱하면 (XX^T)(Xu)=λ(Xu) → (XX^T)v=λv. 둘 다 선형 기법이라 스위스 롤은 실패한다.",
+      "brief": "Euclid면 Classical MDS = PCA ($X^T X u = \\lambda u \\to X X^T(Xu) = \\lambda(Xu)$).",
+      "detailed": "슬라이드: when MDS is applied to Euclidean distances (classical MDS), the resulting embedding is mathematically equivalent to PCA. 증명: $X^T X u = \\lambda u$에 $X$를 곱하면 $(X X^T)(Xu) = \\lambda(Xu) \\to (X X^T)v = \\lambda v$. 둘 다 선형 기법이라 스위스 롤은 실패한다.",
       "source": "Manifold PDF p.18; 12주차 § 3"
     },
     {
@@ -206,7 +206,7 @@
       "topic": "t-SNE 고차원 가우시안",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "t-SNE가 고차원 공간에서 유사도 p_(j|i)를 정의할 때 사용하는 분포와 그 이유는?",
+      "question": "t-SNE가 고차원 공간에서 유사도 $p_{j \\mid i}$를 정의할 때 사용하는 분포와 그 이유는?",
       "choices": [
         "① 균일분포, 모든 점에 같은 유사도를 부여하려고",
         "② t-분포, 분포의 꼬리를 두껍게 만들려고",
@@ -215,7 +215,7 @@
       ],
       "answer": 2,
       "brief": "고차원은 가우시안 → 가까운 이웃에만 높은 유사도(로컬 집중).",
-      "detailed": "슬라이드: p_(j|i) is defined using a Gaussian distribution centered at x^(i). 가우시안은 거리에 따라 빠르게 감쇠해 로컬 이웃에 집중한다. σ_i가 이웃의 폭(bandwidth)을 조절한다.",
+      "detailed": "슬라이드: $p_{j \\mid i}$ is defined using a Gaussian distribution centered at $x^{(i)}$. 가우시안은 거리에 따라 빠르게 감쇠해 로컬 이웃에 집중한다. $\\sigma_i$가 이웃의 폭(bandwidth)을 조절한다.",
       "source": "Manifold PDF p.25,28; 12주차 § 4"
     },
     {
@@ -225,16 +225,16 @@
       "topic": "t-SNE 대칭화",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "t-SNE에서 비대칭인 p_(j|i)를 대칭 결합확률 p_(ij)로 만드는 방법은?",
+      "question": "t-SNE에서 비대칭인 $p_{j \\mid i}$를 대칭 결합확률 $p_{ij}$로 만드는 방법은?",
       "choices": [
-        "① p_ij = (p_{j|i}+p_{i|j})/2N, 두 방향의 평균",
-        "② p_ij = p_{j|i} × p_{i|j}, 두 방향의 곱",
-        "③ p_ij = max(p_{j|i}, p_{i|j}), 두 방향의 최댓값",
-        "④ p_ij = p_{j|i} − p_{i|j}, 두 방향의 차"
+        "① $p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$, 두 방향의 평균",
+        "② $p_{ij} = p_{j \\mid i} \\times p_{i \\mid j}$, 두 방향의 곱",
+        "③ $p_{ij} = \\max(p_{j \\mid i}, p_{i \\mid j})$, 두 방향의 최댓값",
+        "④ $p_{ij} = p_{j \\mid i} - p_{i \\mid j}$, 두 방향의 차"
       ],
       "answer": 0,
-      "brief": "p_ij = (p_(j|i)+p_(i|j))/2N (평균으로 대칭화).",
-      "detailed": "σ_i≠σ_j라 p_(j|i)≠p_(i|j)(비대칭)이다. 슬라이드: to make the similarity symmetric, define the joint probability p_ij = (p_(j|i)+p_(i|j))/2N. UMAP의 fuzzy-set union 대칭화와 대비된다.",
+      "brief": "$p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$ (평균으로 대칭화).",
+      "detailed": "$\\sigma_i \\neq \\sigma_j$라 $p_{j \\mid i} \\neq p_{i \\mid j}$(비대칭)이다. 슬라이드: to make the similarity symmetric, define the joint probability $p_{ij} = (p_{j \\mid i} + p_{i \\mid j})/2N$. UMAP의 fuzzy-set union 대칭화와 대비된다.",
       "source": "Manifold PDF p.26; 12주차 § 4"
     },
     {
@@ -263,16 +263,16 @@
       "topic": "t-SNE 목적 함수",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "t-SNE가 고차원 분포 P와 저차원 분포 Q를 일치시키기 위해 최소화하는 목적 함수는?",
+      "question": "t-SNE가 고차원 분포 $P$와 저차원 분포 $Q$를 일치시키기 위해 최소화하는 목적 함수는?",
       "choices": [
         "① Cross-Entropy, 두 분포의 교차 엔트로피",
-        "② KL Divergence, Σ p_ij log(p_ij/q_ij)",
+        "② KL Divergence, $\\sum p_{ij} \\log(p_{ij}/q_{ij})$",
         "③ 평균 제곱 오차(MSE), 좌표 간 제곱 오차의 합",
         "④ 공분산 행렬의 trace, 대각 원소의 합"
       ],
       "answer": 1,
       "brief": "KL Divergence 최소화(Gradient Descent).",
-      "detailed": "슬라이드: t-SNE seeks to minimize the KL divergence KL(P||Q)=Σ p_ij log(p_ij/q_ij) by gradient descent on the low-dimensional coordinates Y. UMAP이 Cross-Entropy를 쓰는 것과 대비된다.",
+      "detailed": "슬라이드: t-SNE seeks to minimize the KL divergence $KL(P \\| Q) = \\sum p_{ij} \\log(p_{ij}/q_{ij})$ by gradient descent on the low-dimensional coordinates $Y$. UMAP이 Cross-Entropy를 쓰는 것과 대비된다.",
       "source": "Manifold PDF p.31-32; 12주차 § 4"
     },
     {
@@ -286,12 +286,12 @@
       "choices": [
         "① 저차원 t-분포의 자유도를 결정하는 값이다",
         "② KL Divergence 최소화에 쓰이는 학습률이다",
-        "③ 유효 이웃 수에 해당하며 가우시안 σ_i를 결정한다",
+        "③ 유효 이웃 수에 해당하며 가우시안 $\\sigma_i$를 결정한다",
         "④ 입력 데이터의 차원 수와 같은 값이다"
       ],
       "answer": 2,
-      "brief": "perplexity = 유효 이웃 수, σ_i 결정 (2^{H(P_i)}).",
-      "detailed": "슬라이드: instead of choosing σ_i directly, t-SNE specifies a perplexity, Perplexity(P_i)=2^{H(P_i)}. perplexity가 작으면 아주 로컬, 크면 넓은 이웃을 반영한다. 점마다 σ_i가 다르게 결정된다.",
+      "brief": "perplexity = 유효 이웃 수, $\\sigma_i$ 결정 ($2^{H(P_i)}$).",
+      "detailed": "슬라이드: instead of choosing $\\sigma_i$ directly, t-SNE specifies a perplexity, $\\text{Perplexity}(P_i) = 2^{H(P_i)}$. perplexity가 작으면 아주 로컬, 크면 넓은 이웃을 반영한다. 점마다 $\\sigma_i$가 다르게 결정된다.",
       "source": "Manifold PDF p.33-34; 12주차 § 4"
     },
     {
@@ -320,16 +320,16 @@
       "topic": "UMAP Fuzzy-set union",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "UMAP에서 방향성 있는 가중치 w_ij를 대칭(무방향)으로 결합하는 방법은?",
+      "question": "UMAP에서 방향성 있는 가중치 $w_{ij}$를 대칭(무방향)으로 결합하는 방법은?",
       "choices": [
-        "① 단순 평균 (w_ij + w_ji)/2N 로 결합한다",
-        "② 두 방향 가중치의 곱 w_ij·w_ji 로 결합한다",
-        "③ 두 방향 가중치의 최댓값 max(w_ij, w_ji)로 결합한다",
-        "④ Fuzzy-set union w_ij + w_ji − w_ij·w_ji 로 결합한다"
+        "① 단순 평균 $(w_{ij} + w_{ji})/2N$ 로 결합한다",
+        "② 두 방향 가중치의 곱 $w_{ij} \\cdot w_{ji}$ 로 결합한다",
+        "③ 두 방향 가중치의 최댓값 $\\max(w_{ij}, w_{ji})$로 결합한다",
+        "④ Fuzzy-set union $w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$ 로 결합한다"
       ],
       "answer": 3,
-      "brief": "Fuzzy-set union w_ij + w_ji − w_ij·w_ji (t-SNE 평균과 다름).",
-      "detailed": "슬라이드: UMAP combines two directed weights using a fuzzy-set union, w_ij^(sym) = w_ij + w_ji − w_ij·w_ji. 어느 방향이든 강하면 강하게, 둘 다 강하면 더 강하게(빼기 항은 중복 방지). t-SNE의 단순 평균 대칭화와 대비된다.",
+      "brief": "Fuzzy-set union $w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$ (t-SNE 평균과 다름).",
+      "detailed": "슬라이드: UMAP combines two directed weights using a fuzzy-set union, $w_{ij}^{(sym)} = w_{ij} + w_{ji} - w_{ij} \\cdot w_{ji}$. 어느 방향이든 강하면 강하게, 둘 다 강하면 더 강하게(빼기 항은 중복 방지). t-SNE의 단순 평균 대칭화와 대비된다.",
       "source": "Manifold PDF p.40; 12주차 § 5"
     },
     {
@@ -358,16 +358,16 @@
       "topic": "UMAP a,b 파라미터",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "UMAP의 저차원 유사도 v_ij = 1/(1 + a||y_i − y_j||^{2b})의 a, b에 대한 설명으로 옳은 것은? (전사 Q&A)",
+      "question": "UMAP의 저차원 유사도 $v_{ij} = 1/(1 + a\\|y_i - y_j\\|^{2b})$의 $a$, $b$에 대한 설명으로 옳은 것은? (전사 Q&A)",
       "choices": [
         "① 사용자가 직접 튜닝하는 핵심 하이퍼파라미터다",
         "② 데이터와 무관하게 언제나 1로 고정되는 상수다",
-        "③ k(이웃 수)나 ρ(최소 거리)를 정하면 자동으로 결정된다",
+        "③ $k$(이웃 수)나 $\\rho$(최소 거리)를 정하면 자동으로 결정된다",
         "④ KL Divergence 값으로부터 역산해 계산된다"
       ],
       "answer": 2,
-      "brief": "a,b는 k·ρ를 정하면 자동 결정(직접 튜닝 X).",
-      "detailed": "전사 Q&A: 학생이 a,b도 하이퍼파라미터냐 묻자, 교수님은 'k나 ρ를 결정하면 모델 내에서 a,b가 자동 결정되는 것으로 안다(직접 튜닝 X)'고 답했다. UMAP의 주 하이퍼파라미터는 k(이웃 수)와 ρ(최소 거리)다.",
+      "brief": "$a$, $b$는 $k \\cdot \\rho$를 정하면 자동 결정(직접 튜닝 X).",
+      "detailed": "전사 Q&A: 학생이 $a$, $b$도 하이퍼파라미터냐 묻자, 교수님은 '$k$나 $\\rho$를 결정하면 모델 내에서 $a$, $b$가 자동 결정되는 것으로 안다(직접 튜닝 X)'고 답했다. UMAP의 주 하이퍼파라미터는 $k$(이웃 수)와 $\\rho$(최소 거리)다.",
       "source": "Manifold PDF p.41; 12주차 § 5"
     },
     {
