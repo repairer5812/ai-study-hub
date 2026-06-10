@@ -2,16 +2,26 @@
   "subject": "ds",
   "week": 13,
   "title": "13차시 시험 — 정렬 알고리즘 (객관식 20)",
-  "set_meta": { "id": 13, "title": "Week 13", "label": "Sorting", "desc": "정렬 개념·분류·성능평가(비교/이동)·선택/버블/삽입·퀵·힙·셸/머지/기수, 시간복잡도와 안정성" },
+  "set_meta": {
+    "id": 13,
+    "title": "Week 13",
+    "label": "Sorting",
+    "desc": "정렬 개념·분류·성능평가(비교/이동)·선택/버블/삽입·퀵·힙·셸/머지/기수, 시간복잡도와 안정성"
+  },
   "questions": [
     {
-      "id": "DSW13Q1", "set": 13, "week": 13, "topic": "정렬의 목적", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q1",
+      "set": 13,
+      "week": 13,
+      "topic": "정렬의 목적",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "정렬(Sorting)을 수행하는 가장 근본적인 목적으로 가장 적절한 것은?",
       "choices": [
         "① 데이터의 저장 공간을 줄이기 위해",
-        "② 이후의 검색(Search)을 빠르게 하기 위해",
-        "③ 데이터를 암호화하기 위해",
-        "④ 중복 데이터를 제거하기 위해"
+        "② 이후의 검색을 빠르게 하기 위해",
+        "③ 데이터를 안전하게 암호화하기 위해",
+        "④ 데이터의 중복 항목을 제거하기 위해"
       ],
       "answer": 1,
       "brief": "정렬의 목적 = 검색 가속.",
@@ -19,13 +29,18 @@
       "source": "13차시 §1 정렬의 개념"
     },
     {
-      "id": "DSW13Q2", "set": 13, "week": 13, "topic": "내부/외부 정렬", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q2",
+      "set": 13,
+      "week": 13,
+      "topic": "내부/외부 정렬",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "정렬 방식의 분류에 대한 설명으로 옳은 것은?",
       "choices": [
         "① 내부 정렬은 디스크 등 외부 기억장치를 사용한다",
         "② 외부 정렬은 데이터가 주기억장치 용량보다 작을 때 쓴다",
-        "③ 머지 정렬은 데이터가 커서 분할 정렬 후 합치는 외부 정렬에 주로 쓰인다",
-        "④ 퀵 정렬은 대표적인 외부 정렬이다"
+        "③ 머지 정렬은 분할 정렬 후 합치는 외부 정렬에 쓰인다",
+        "④ 퀵 정렬은 디스크를 쓰는 대표적 외부 정렬이다"
       ],
       "answer": 2,
       "brief": "외부 정렬 대표 = 머지.",
@@ -33,7 +48,12 @@
       "source": "13차시 §1 정렬의 분류"
     },
     {
-      "id": "DSW13Q3", "set": 13, "week": 13, "topic": "Swap 이동 횟수", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q3",
+      "set": 13,
+      "week": 13,
+      "topic": "Swap 이동 횟수",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "두 데이터 A와 B의 값을 서로 교환(Swap)할 때 발생하는 데이터 이동(저장) 연산 횟수는?",
       "choices": [
         "① 1번",
@@ -47,7 +67,12 @@
       "source": "13차시 §1-2 비교와 이동"
     },
     {
-      "id": "DSW13Q4", "set": 13, "week": 13, "topic": "선택 정렬 비교 횟수", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q4",
+      "set": 13,
+      "week": 13,
+      "topic": "선택 정렬 비교 횟수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "데이터 N개에 대한 선택 정렬(Selection Sort)의 총 비교 횟수로 옳은 것은?",
       "choices": [
         "① N",
@@ -61,13 +86,18 @@
       "source": "13차시 §4 선택 정렬"
     },
     {
-      "id": "DSW13Q5", "set": 13, "week": 13, "topic": "선택 정렬 이동·안정성", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q5",
+      "set": 13,
+      "week": 13,
+      "topic": "선택 정렬 이동·안정성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "선택 정렬의 이동 횟수와 안정성에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 단계마다 Swap이 일어나 총 이동은 3(N−1)이고 불안정 정렬이다",
-        "② 이동이 전혀 없고 안정 정렬이다",
+        "① 총 이동은 3(N−1)이고 불안정 정렬이다",
+        "② 데이터 이동이 전혀 없고 안정 정렬이다",
         "③ 총 이동은 N(N−1)/2이고 안정 정렬이다",
-        "④ 이동은 N번이고 불안정 정렬이다"
+        "④ 총 이동은 N번이고 불안정 정렬이다"
       ],
       "answer": 0,
       "brief": "이동 3(N−1), 불안정.",
@@ -75,13 +105,18 @@
       "source": "13차시 §4 선택 정렬"
     },
     {
-      "id": "DSW13Q6", "set": 13, "week": 13, "topic": "버블 정렬 1단계", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q6",
+      "set": 13,
+      "week": 13,
+      "topic": "버블 정렬 1단계",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "버블 정렬(Bubble Sort)의 1단계(한 번의 전체 패스)가 끝났을 때의 결과로 옳은 것은?",
       "choices": [
         "① 가장 작은 값이 맨 앞으로 이동한다",
         "② 가장 큰 값이 맨 뒤로 이동한다",
-        "③ 중앙값이 가운데로 이동한다",
-        "④ 아무 변화가 없다"
+        "③ 중앙값이 리스트 가운데로 이동한다",
+        "④ 데이터 순서에 아무 변화가 없다"
       ],
       "answer": 1,
       "brief": "큰 값이 맨 뒤로 → 정렬 그룹이 뒤에서 형성.",
@@ -89,7 +124,12 @@
       "source": "13차시 §5 버블 정렬"
     },
     {
-      "id": "DSW13Q7", "set": 13, "week": 13, "topic": "버블 정렬 최악 이동", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q7",
+      "set": 13,
+      "week": 13,
+      "topic": "버블 정렬 최악 이동",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "데이터가 역순으로 정렬되어 있을 때 버블 정렬의 최악 이동 횟수로 옳은 것은?",
       "choices": [
         "① N(N−1)/2",
@@ -103,13 +143,18 @@
       "source": "13차시 §5 버블 정렬"
     },
     {
-      "id": "DSW13Q8", "set": 13, "week": 13, "topic": "삽입 정렬 Shift", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q8",
+      "set": 13,
+      "week": 13,
+      "topic": "삽입 정렬 Shift",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "삽입 정렬(Insertion Sort)이 선택·버블 정렬과 비교해 데이터 이동에서 갖는 차이로 옳은 것은?",
       "choices": [
-        "① 무조건 Swap(이동 3번)을 사용한다",
-        "② 타겟을 빼두고 큰 값들을 한 칸씩 미는 Shift를 사용해 이동을 줄일 수 있다",
-        "③ 데이터를 전혀 이동하지 않는다",
-        "④ 항상 선택 정렬보다 이동이 많다"
+        "① 모든 비교에서 무조건 Swap(이동 3번)을 한다",
+        "② 큰 값들을 한 칸씩 미는 Shift로 이동을 줄인다",
+        "③ 정렬 중 데이터를 전혀 이동하지 않는다",
+        "④ 항상 선택 정렬보다 이동 횟수가 더 많다"
       ],
       "answer": 1,
       "brief": "삽입 = Shift(이동 절약).",
@@ -117,7 +162,12 @@
       "source": "13차시 §6 삽입 정렬"
     },
     {
-      "id": "DSW13Q9", "set": 13, "week": 13, "topic": "삽입 정렬 최선", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q9",
+      "set": 13,
+      "week": 13,
+      "topic": "삽입 정렬 최선",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "이미 오름차순으로 정렬된 데이터에 삽입 정렬을 적용할 때의 시간 복잡도는?",
       "choices": [
         "① O(1)",
@@ -131,13 +181,18 @@
       "source": "13차시 §6 삽입 정렬"
     },
     {
-      "id": "DSW13Q10", "set": 13, "week": 13, "topic": "퀵 정렬 전략", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q10",
+      "set": 13,
+      "week": 13,
+      "topic": "퀵 정렬 전략",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "퀵 정렬(Quick Sort)의 기본 전략에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 정렬된 그룹에 데이터를 하나씩 추가한다",
-        "② 피벗을 기준으로 대상을 분할해 정복하는 분할 정복 방식이며 평균적으로 가장 빠르다",
-        "③ 비교를 하지 않고 버킷으로 분류한다",
-        "④ 입력과 무관하게 항상 O(N²)이다"
+        "① 정렬된 그룹에 데이터를 하나씩 추가해 넣는다",
+        "② 피벗 기준으로 분할·정복하며 평균적으로 빠르다",
+        "③ 값을 비교하지 않고 버킷으로 분류한다",
+        "④ 입력과 무관하게 항상 O(N²)에 동작한다"
       ],
       "answer": 1,
       "brief": "분할정복·피벗, 평균 최속.",
@@ -145,13 +200,18 @@
       "source": "13차시 §7 퀵 정렬"
     },
     {
-      "id": "DSW13Q11", "set": 13, "week": 13, "topic": "퀵 정렬 분할", "type": "multiple_choice", "difficulty": "hard",
+      "id": "DSW13Q11",
+      "set": 13,
+      "week": 13,
+      "topic": "퀵 정렬 분할",
+      "type": "multiple_choice",
+      "difficulty": "hard",
       "question": "퀵 정렬의 분할 과정에서 왼쪽(Low)·오른쪽(High) 포인터가 엇갈렸을 때(Low > High) 수행하는 동작으로 옳은 것은?",
       "choices": [
-        "① Low가 가리키는 값과 피벗을 교환한다",
-        "② High가 가리키는 값과 피벗을 교환해 피벗 위치를 확정한다",
-        "③ 분할을 중단하고 전체를 처음부터 다시 시작한다",
-        "④ 피벗을 무조건 리스트 맨 뒤로 보낸다"
+        "① Low가 가리키는 값과 피벗을 서로 교환한다",
+        "② High가 가리키는 값과 피벗을 서로 교환한다",
+        "③ 분할을 중단하고 전체를 처음부터 다시 한다",
+        "④ 피벗을 무조건 리스트의 맨 뒤로 보낸다"
       ],
       "answer": 1,
       "brief": "엇갈리면 High값 ↔ 피벗.",
@@ -159,7 +219,12 @@
       "source": "13차시 §7-2 퀵 정렬 분할"
     },
     {
-      "id": "DSW13Q12", "set": 13, "week": 13, "topic": "퀵 정렬 복잡도 유도", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q12",
+      "set": 13,
+      "week": 13,
+      "topic": "퀵 정렬 복잡도 유도",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "퀵 정렬의 평균 복잡도 유도에서 T(N) ≤ cN + 2·T(N/2)를 전개해 N/2^k = 1이 될 때, k 값과 최종 시간 복잡도로 옳은 것은?",
       "choices": [
         "① k = N, O(N²)",
@@ -173,13 +238,18 @@
       "source": "13차시 §7-3 퀵 정렬 성능"
     },
     {
-      "id": "DSW13Q13", "set": 13, "week": 13, "topic": "퀵 정렬 최악", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q13",
+      "set": 13,
+      "week": 13,
+      "topic": "퀵 정렬 최악",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "퀵 정렬이 최악의 경우 O(N²)으로 전락하는 상황으로 옳은 것은?",
       "choices": [
-        "① 데이터가 이미 무작위로 섞여 있을 때",
-        "② 피벗이 매번 최소값 또는 최대값으로 선택되어 리스트가 1개와 N−1개로 나뉠 때",
-        "③ 피벗을 중간값(median)으로 선택할 때",
-        "④ 데이터 개수가 짝수일 때"
+        "① 데이터가 이미 무작위로 골고루 섞여 있을 때",
+        "② 피벗이 매번 최소 또는 최대값으로 선택될 때",
+        "③ 피벗을 매번 중간값(median)으로 선택할 때",
+        "④ 데이터의 개수가 항상 짝수로 주어질 때"
       ],
       "answer": 1,
       "brief": "피벗=최소/최대 → 1:(N−1) 분할.",
@@ -187,26 +257,36 @@
       "source": "13차시 §7-3 퀵 정렬 최악"
     },
     {
-      "id": "DSW13Q14", "set": 13, "week": 13, "topic": "힙 정의", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q14",
+      "set": 13,
+      "week": 13,
+      "topic": "힙 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "힙(Heap)의 구조적 정의로 가장 정확한 것은? (교수님 출제 예고 포인트)",
       "choices": [
         "① 모든 노드가 두 자식을 갖는 포화 이진 트리",
-        "② 부모가 자식보다 크거나 작은 완전 이진 트리(Complete Binary Tree)",
-        "③ 왼쪽 < 루트 < 오른쪽인 이진 탐색 트리(BST)",
-        "④ 차수가 일정한 일반 트리"
+        "② 부모가 자식보다 크거나 작은 완전 이진 트리",
+        "③ 왼쪽 < 루트 < 오른쪽인 이진 탐색 트리",
+        "④ 노드의 차수가 일정하게 유지되는 일반 트리"
       ],
       "answer": 1,
       "brief": "힙 = 완전 이진 트리(+부모·자식 대소).",
-      "detailed": "힙은 '부모 노드 값이 자식보다 크거나(Max) 작은(Min) 완전 이진 트리'다. 핵심은 반드시 완전 이진 트리라는 점(출제 예고)이며, BST(L<Root<R)와 혼동하면 안 된다.",
+      "detailed": "힙은 '부모 노드 값이 자식보다 크거나(Max) 작은(Min) 완전 이진 트리'다. 핵심은 반드시 완전 이진 트리(Complete Binary Tree)라는 점(출제 예고)이며, 이진 탐색 트리(L<Root<R)와 혼동하면 안 된다.",
       "source": "13차시 §8 힙 정렬"
     },
     {
-      "id": "DSW13Q15", "set": 13, "week": 13, "topic": "Max Heap 루트", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW13Q15",
+      "set": 13,
+      "week": 13,
+      "topic": "Max Heap 루트",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "최대 힙(Max Heap)에서 루트(Root) 노드에 대한 설명으로 옳은 것은?",
       "choices": [
         "① 항상 가장 작은 값이 위치한다",
         "② 항상 가장 큰 값이 위치한다",
-        "③ 중앙값이 위치한다",
+        "③ 항상 중앙값(median)이 위치한다",
         "④ 마지막에 삽입된 값이 위치한다"
       ],
       "answer": 1,
@@ -215,7 +295,12 @@
       "source": "13차시 §8 힙 정렬"
     },
     {
-      "id": "DSW13Q16", "set": 13, "week": 13, "topic": "힙 배열 인덱스", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q16",
+      "set": 13,
+      "week": 13,
+      "topic": "힙 배열 인덱스",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "힙을 배열에 저장할 때(루트를 인덱스 1로 하는 1-인덱스 방식) 노드 i의 부모·왼쪽 자식·오른쪽 자식 인덱스로 옳은 것은?",
       "choices": [
         "① 부모 2i, 좌 i/2, 우 i/2+1",
@@ -229,13 +314,18 @@
       "source": "13차시 §8 힙 정렬"
     },
     {
-      "id": "DSW13Q17", "set": 13, "week": 13, "topic": "힙 정렬 과정", "type": "multiple_choice", "difficulty": "hard",
+      "id": "DSW13Q17",
+      "set": 13,
+      "week": 13,
+      "topic": "힙 정렬 과정",
+      "type": "multiple_choice",
+      "difficulty": "hard",
       "question": "힙 정렬에서 루트를 삭제한 직후의 재구성(Down-heap) 절차로 옳은 것은?",
       "choices": [
-        "① 빈 루트에 마지막 노드를 올린 뒤, 더 큰 자식과 비교하며 아래로 내려 힙을 재구성한다",
-        "② 빈 루트에 가장 작은 값을 새로 삽입한다",
-        "③ 전체 트리를 처음부터 다시 만든다",
-        "④ 빈 루트를 그대로 두고 다음 삭제로 넘어간다"
+        "① 빈 루트에 마지막 노드를 올리고 아래로 내려보낸다",
+        "② 빈 루트에 가장 작은 값을 새로 찾아 삽입한다",
+        "③ 전체 트리를 처음부터 완전히 다시 만든다",
+        "④ 빈 루트를 그대로 둔 채 다음 삭제로 넘어간다"
       ],
       "answer": 0,
       "brief": "마지막→루트, 더 큰 자식과 비교 down.",
@@ -243,7 +333,12 @@
       "source": "13차시 §8-2 힙 정렬 과정"
     },
     {
-      "id": "DSW13Q18", "set": 13, "week": 13, "topic": "힙 정렬 복잡도", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q18",
+      "set": 13,
+      "week": 13,
+      "topic": "힙 정렬 복잡도",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "힙 정렬의 시간 복잡도에 대한 설명으로 옳은 것은?",
       "choices": [
         "① 평균 O(N), 최악 O(N²)",
@@ -257,12 +352,17 @@
       "source": "13차시 §8-3 힙 정렬 성능"
     },
     {
-      "id": "DSW13Q19", "set": 13, "week": 13, "topic": "기수 정렬", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW13Q19",
+      "set": 13,
+      "week": 13,
+      "topic": "기수 정렬",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "기수 정렬(Radix Sort)에 대한 설명으로 옳지 않은 것은?",
       "choices": [
         "① 데이터를 비교하지 않고 정렬하는 유일한 알고리즘이다",
-        "② 자리수별로 버킷에 넣었다 빼며, 버킷은 선입선출을 위해 큐(Queue)로 구현한다",
-        "③ 시간 복잡도는 O(d·N)으로 비교 정렬보다 빠를 수 있다",
+        "② 자리수별로 버킷에 분배·수집하며 버킷은 큐로 구현한다",
+        "③ 시간 복잡도 O(d·N)으로 비교 정렬보다 빠를 수 있다",
         "④ 실수·한글·한자를 포함한 모든 데이터에 적용할 수 있다"
       ],
       "answer": 3,
@@ -271,7 +371,12 @@
       "source": "13차시 §9-3 기수 정렬"
     },
     {
-      "id": "DSW13Q20", "set": 13, "week": 13, "topic": "정렬 안정성 종합", "type": "multiple_choice", "difficulty": "hard",
+      "id": "DSW13Q20",
+      "set": 13,
+      "week": 13,
+      "topic": "정렬 안정성 종합",
+      "type": "multiple_choice",
+      "difficulty": "hard",
       "question": "다음 중 '안정 정렬(Stable Sort)'에 해당하는 것만 모두 고른 것은?",
       "choices": [
         "① 선택, 퀵, 힙",

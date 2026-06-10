@@ -2,16 +2,26 @@
   "subject": "ds",
   "week": 9,
   "title": "9차시 시험 — 트리·이진트리·탐색·BST (객관식 20)",
-  "set_meta": { "id": 9, "title": "Week 9", "label": "Tree & BST", "desc": "트리 정의·이진트리 수학·4종 탐색·쓰레드 이진트리·BST 삭제·BST vs Heap" },
+  "set_meta": {
+    "id": 9,
+    "title": "Week 9",
+    "label": "Tree & BST",
+    "desc": "트리 정의·이진트리 수학·4종 탐색·쓰레드 이진트리·BST 삭제·BST vs Heap"
+  },
   "questions": [
     {
-      "id": "DSW9Q1", "set": 9, "week": 9, "topic": "트리의 정의", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q1",
+      "set": 9,
+      "week": 9,
+      "topic": "트리의 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "정점이 N개인 그래프가 '트리'가 되기 위한 조건으로 가장 적절한 것은?",
       "choices": [
-        "① 모든 정점이 연결되어 있고 간선 수가 N−1개여서 사이클이 없다",
-        "② 모든 정점의 차수가 2 이하이다",
-        "③ 간선 수가 N개 이상이다",
-        "④ 루트가 2개 이상 존재한다"
+        "① 모든 정점이 연결되어 있고 간선 수가 정확히 N−1개이다",
+        "② 모든 정점의 차수가 2 이하로 제한되어 있다",
+        "③ 간선 수가 N개 이상으로 정점 수보다 많다",
+        "④ 루트 역할을 하는 정점이 2개 이상 존재한다"
       ],
       "answer": 0,
       "brief": "연결 + 간선 N−1 = 사이클 없는 트리.",
@@ -19,13 +29,18 @@
       "source": "9차시 §1 트리의 개념"
     },
     {
-      "id": "DSW9Q2", "set": 9, "week": 9, "topic": "트리 용어", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q2",
+      "set": 9,
+      "week": 9,
+      "topic": "트리 용어",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "트리 용어에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 노드의 차수(degree)는 그 노드의 조상 수이다",
-        "② 단말 노드(leaf)는 차수가 0인 노드, 즉 자식이 없는 노드이다",
-        "③ 레벨(level)은 항상 0부터 시작한다",
-        "④ 트리의 높이는 노드의 최소 레벨이다"
+        "① 노드의 차수(degree)는 그 노드가 가진 조상의 수이다",
+        "② 단말 노드(leaf)는 차수가 0인, 자식이 없는 노드이다",
+        "③ 레벨(level)은 어떤 트리에서나 항상 0부터 시작한다",
+        "④ 트리의 높이는 트리에 존재하는 노드의 최소 레벨이다"
       ],
       "answer": 1,
       "brief": "단말 노드 = 차수 0(자식 없음).",
@@ -33,13 +48,18 @@
       "source": "9차시 §3 트리 용어"
     },
     {
-      "id": "DSW9Q3", "set": 9, "week": 9, "topic": "Left-Child Right-Sibling", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q3",
+      "set": 9,
+      "week": 9,
+      "topic": "Left-Child Right-Sibling",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "Left-Child Right-Sibling(왼쪽 자식-오른쪽 형제) 표현법에 대한 설명으로 옳은 것은?",
       "choices": [
         "① 노드마다 자식 수만큼 링크를 두어 메모리를 절약한다",
-        "② 왼쪽 링크는 오른쪽 형제, 오른쪽 링크는 부모를 가리킨다",
-        "③ 모든 노드의 링크를 2개로 고정하고, 45도 회전하면 이진 트리로 변환된다",
-        "④ 일반 트리를 표현할 수 없고 이진 트리에만 쓰인다"
+        "② 왼쪽 링크는 오른쪽 형제를, 오른쪽 링크는 부모를 가리킨다",
+        "③ 링크를 2개로 고정하고 45도 회전하면 이진 트리가 된다",
+        "④ 일반 트리는 표현하지 못하고 이진 트리 전용으로만 쓰인다"
       ],
       "answer": 2,
       "brief": "링크 2개 고정 + 45도 회전 → 이진 트리.",
@@ -47,7 +67,12 @@
       "source": "9차시 §4 표현 방법"
     },
     {
-      "id": "DSW9Q4", "set": 9, "week": 9, "topic": "이진트리 수학적 성질", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q4",
+      "set": 9,
+      "week": 9,
+      "topic": "이진트리 수학적 성질",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "이진 트리에서 레벨 i(루트=레벨 1)가 가질 수 있는 최대 노드 수는?",
       "choices": [
         "① i개",
@@ -61,7 +86,12 @@
       "source": "9차시 §5 이진 트리 수학적 성질"
     },
     {
-      "id": "DSW9Q5", "set": 9, "week": 9, "topic": "이진트리 수학적 성질", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q5",
+      "set": 9,
+      "week": 9,
+      "topic": "이진트리 수학적 성질",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "노드가 n개인 이진 트리의 간선(edge) 수는?",
       "choices": [
         "① n−1개",
@@ -75,7 +105,12 @@
       "source": "9차시 §5 이진 트리 수학적 성질"
     },
     {
-      "id": "DSW9Q6", "set": 9, "week": 9, "topic": "이진트리 종류", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q6",
+      "set": 9,
+      "week": 9,
+      "topic": "이진트리 종류",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "높이가 h인 포화 이진 트리(Full Binary Tree)의 노드 수는?",
       "choices": [
         "① h개",
@@ -89,7 +124,12 @@
       "source": "9차시 §5 이진 트리 종류"
     },
     {
-      "id": "DSW9Q7", "set": 9, "week": 9, "topic": "이진트리 최소 높이", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q7",
+      "set": 9,
+      "week": 9,
+      "topic": "이진트리 최소 높이",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "노드가 n개일 때 이진 트리가 가질 수 있는 최소 높이는?",
       "choices": [
         "① n",
@@ -103,13 +143,18 @@
       "source": "9차시 §5 이진 트리 수학적 성질"
     },
     {
-      "id": "DSW9Q8", "set": 9, "week": 9, "topic": "이진트리 종류", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q8",
+      "set": 9,
+      "week": 9,
+      "topic": "이진트리 종류",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "완전 이진 트리(Complete Binary Tree)에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 모든 레벨이 예외 없이 꽉 차 있어야 한다",
-        "② 한쪽으로만 자식이 이어진 선형 구조이다",
-        "③ 자식 수가 항상 1개인 트리이다",
-        "④ 마지막 레벨을 제외하고 꽉 차 있으며, 마지막 레벨은 왼쪽부터 빈틈없이 채워진다"
+        "① 모든 레벨이 예외 없이 빈틈없게 꽉 차 있어야 한다",
+        "② 한쪽으로만 자식이 이어진 선형 구조를 이룬다",
+        "③ 모든 내부 노드의 자식 수가 항상 1개인 트리이다",
+        "④ 마지막 레벨을 빼고 꽉 차며, 마지막 레벨은 왼쪽부터 채운다"
       ],
       "answer": 3,
       "brief": "마지막 레벨만 왼쪽부터 빈틈없이 채움.",
@@ -117,7 +162,12 @@
       "source": "9차시 §5 이진 트리 종류"
     },
     {
-      "id": "DSW9Q9", "set": 9, "week": 9, "topic": "배열 저장 인덱스", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q9",
+      "set": 9,
+      "week": 9,
+      "topic": "배열 저장 인덱스",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "이진 트리를 0-인덱스(인덱스 0부터 시작) 배열로 저장할 때, 인덱스 i 노드의 왼쪽 자식 인덱스는?",
       "choices": [
         "① 2i + 1",
@@ -131,7 +181,12 @@
       "source": "9차시 §6 배열 저장"
     },
     {
-      "id": "DSW9Q10", "set": 9, "week": 9, "topic": "배열 저장 인덱스", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q10",
+      "set": 9,
+      "week": 9,
+      "topic": "배열 저장 인덱스",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "0-인덱스 배열 저장에서 인덱스 6에 있는 노드의 부모 인덱스는? (부모 = ⌊(i−1)/2⌋)",
       "choices": [
         "① 3",
@@ -145,13 +200,18 @@
       "source": "9차시 §6 배열 저장"
     },
     {
-      "id": "DSW9Q11", "set": 9, "week": 9, "topic": "트리 탐색", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q11",
+      "set": 9,
+      "week": 9,
+      "topic": "트리 탐색",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "중위 탐색(Inorder Traversal)의 방문 순서와 대응하는 수식 표기는?",
       "choices": [
         "① 루트 → 왼쪽 → 오른쪽 (V→L→R), 전위 표기",
         "② 왼쪽 → 오른쪽 → 루트 (L→R→V), 후위 표기",
         "③ 왼쪽 → 루트 → 오른쪽 (L→V→R), 중위 표기",
-        "④ 레벨 순서, 표기 없음"
+        "④ 레벨 순서 (위 레벨부터 차례로), 대응 표기 없음"
       ],
       "answer": 2,
       "brief": "중위 = L→V→R = Infix.",
@@ -159,13 +219,18 @@
       "source": "9차시 §7 트리 탐색"
     },
     {
-      "id": "DSW9Q12", "set": 9, "week": 9, "topic": "탐색 활용", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q12",
+      "set": 9,
+      "week": 9,
+      "topic": "탐색 활용",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "이진 트리를 '복사(Copy)'할 때 가장 적합한 탐색 방법과 그 이유로 옳은 것은?",
       "choices": [
-        "① 레벨 탐색 — 큐로 한 층씩 복사하기 때문",
-        "② 중위 탐색 — 오름차순으로 복사되기 때문",
-        "③ 전위 탐색 — 루트를 먼저 비교하기 때문",
-        "④ 후위 탐색 — 왼쪽·오른쪽 서브트리를 먼저 복사한 뒤 루트를 생성·연결해야 하기 때문"
+        "① 레벨 탐색 — 큐로 한 층씩 위에서부터 복사하기 때문",
+        "② 중위 탐색 — 키값이 오름차순으로 복사되기 때문",
+        "③ 전위 탐색 — 루트를 가장 먼저 비교·복사하기 때문",
+        "④ 후위 탐색 — 양쪽 서브트리를 먼저 복사한 뒤 루트를 잇기 때문"
       ],
       "answer": 3,
       "brief": "복사 = 후위(자식 먼저 생성 후 루트).",
@@ -173,13 +238,18 @@
       "source": "9차시 §8 이진 트리 알고리즘"
     },
     {
-      "id": "DSW9Q13", "set": 9, "week": 9, "topic": "레벨 탐색", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q13",
+      "set": 9,
+      "week": 9,
+      "topic": "레벨 탐색",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "레벨 순서 탐색(Level Order Traversal)을 구현할 때 핵심적으로 사용하는 자료구조는?",
       "choices": [
         "① 큐(Queue)",
         "② 스택(Stack)",
-        "③ 우선순위 큐만 가능",
-        "④ 해시 테이블"
+        "③ 우선순위 큐(Priority Queue)",
+        "④ 해시 테이블(Hash Table)"
       ],
       "answer": 0,
       "brief": "레벨 탐색 = 큐(FIFO).",
@@ -187,7 +257,12 @@
       "source": "9차시 §7 레벨 탐색"
     },
     {
-      "id": "DSW9Q14", "set": 9, "week": 9, "topic": "탐색 트레이싱", "type": "multiple_choice", "difficulty": "hard",
+      "id": "DSW9Q14",
+      "set": 9,
+      "week": 9,
+      "topic": "탐색 트레이싱",
+      "type": "multiple_choice",
+      "difficulty": "hard",
       "question": "루트 A, A의 왼쪽 자식 B·오른쪽 자식 C, B의 왼쪽 자식 D·오른쪽 자식 E, C의 왼쪽 자식 F인 이진 트리가 있다. 중위 탐색(Inorder) 결과는?",
       "choices": [
         "① A B D E C F",
@@ -201,7 +276,12 @@
       "source": "9차시 §7 트리 탐색 (트레이싱)"
     },
     {
-      "id": "DSW9Q15", "set": 9, "week": 9, "topic": "쓰레드 이진트리", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q15",
+      "set": 9,
+      "week": 9,
+      "topic": "쓰레드 이진트리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "노드가 n개인 이진 트리에서 NULL인 링크(스레드로 재활용 가능한 링크)의 개수는?",
       "choices": [
         "① n − 1개",
@@ -215,13 +295,18 @@
       "source": "9차시 §9 쓰레드 이진 트리"
     },
     {
-      "id": "DSW9Q16", "set": 9, "week": 9, "topic": "쓰레드 이진트리", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q16",
+      "set": 9,
+      "week": 9,
+      "topic": "쓰레드 이진트리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "스레드 이진 트리에서 어떤 노드의 '오른쪽 링크가 NULL'일 때, 이 링크를 스레드로 사용하면 무엇을 가리키도록 설정하는가?",
       "choices": [
-        "① 자기 자신",
-        "② 트리의 루트",
-        "③ 중위 탐색 순서상 바로 앞 노드(선행자)",
-        "④ 중위 탐색 순서상 바로 다음 노드(후속자, Successor)"
+        "① 자기 자신(현재 노드)을 가리키도록 설정한다",
+        "② 트리의 루트 노드를 가리키도록 설정한다",
+        "③ 중위 탐색 순서상 바로 앞 노드(선행자)를 가리킨다",
+        "④ 중위 탐색 순서상 바로 다음 노드(후속자)를 가리킨다"
       ],
       "answer": 3,
       "brief": "오른쪽 NULL → 중위 후속자(successor).",
@@ -229,12 +314,17 @@
       "source": "9차시 §9 쓰레드 이진 트리"
     },
     {
-      "id": "DSW9Q17", "set": 9, "week": 9, "topic": "BST 정의", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q17",
+      "set": 9,
+      "week": 9,
+      "topic": "BST 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "이진 탐색 트리(BST)의 절대 규칙으로 옳은 것은?",
       "choices": [
-        "① 왼쪽 서브트리의 모든 키 < 루트 키 < 오른쪽 서브트리의 모든 키",
-        "② 부모의 키가 항상 자식의 키보다 크다(좌우 무관)",
-        "③ 모든 레벨이 꽉 차 있어야 한다",
+        "① 왼쪽 서브트리 모든 키 < 루트 키 < 오른쪽 서브트리 모든 키",
+        "② 부모의 키가 좌우 구분 없이 항상 자식의 키보다 크다",
+        "③ 마지막 레벨까지 모든 레벨이 빈틈없이 꽉 차 있어야 한다",
         "④ 왼쪽 서브트리의 키가 항상 오른쪽 서브트리의 키보다 크다"
       ],
       "answer": 0,
@@ -243,13 +333,18 @@
       "source": "9차시 §10 BST 정의"
     },
     {
-      "id": "DSW9Q18", "set": 9, "week": 9, "topic": "BST 중위 탐색", "type": "multiple_choice", "difficulty": "basic",
+      "id": "DSW9Q18",
+      "set": 9,
+      "week": 9,
+      "topic": "BST 중위 탐색",
+      "type": "multiple_choice",
+      "difficulty": "basic",
       "question": "이진 탐색 트리(BST)를 중위 탐색(Inorder)하면 출력되는 결과는?",
       "choices": [
-        "① 무작위 순서",
-        "② 키값이 오름차순(작은 값부터)으로 정렬되어 출력",
-        "③ 키값이 내림차순으로 출력",
-        "④ 레벨 순서대로 출력"
+        "① 어떤 규칙도 없는 무작위 순서로 출력된다",
+        "② 키값이 오름차순(작은 값부터)으로 정렬되어 출력된다",
+        "③ 키값이 내림차순(큰 값부터)으로 정렬되어 출력된다",
+        "④ 위 레벨부터 차례로 레벨 순서대로 출력된다"
       ],
       "answer": 1,
       "brief": "BST 중위 탐색 = 오름차순 정렬.",
@@ -257,13 +352,18 @@
       "source": "9차시 §10 BST 중위 탐색"
     },
     {
-      "id": "DSW9Q19", "set": 9, "week": 9, "topic": "BST 삭제", "type": "multiple_choice", "difficulty": "hard",
+      "id": "DSW9Q19",
+      "set": 9,
+      "week": 9,
+      "topic": "BST 삭제",
+      "type": "multiple_choice",
+      "difficulty": "hard",
       "question": "BST에서 자식을 2개 모두 가진 노드를 삭제할 때, 그 자리를 대체할 노드로 올바른 것은?",
       "choices": [
-        "① 트리에서 가장 큰 값을 가진 노드",
-        "② 항상 루트 노드",
-        "③ 왼쪽 서브트리의 최댓값(가장 오른쪽) 또는 오른쪽 서브트리의 최솟값(가장 왼쪽) 노드",
-        "④ 삭제 노드의 부모 노드"
+        "① 트리 전체에서 가장 큰 값을 가진 노드로 대체한다",
+        "② 어떤 경우든 항상 트리의 루트 노드로 대체한다",
+        "③ 왼쪽 서브트리의 최댓값 또는 오른쪽 서브트리의 최솟값 노드",
+        "④ 삭제하려는 노드의 부모 노드로 끌어올려 대체한다"
       ],
       "answer": 2,
       "brief": "왼쪽 최댓값 또는 오른쪽 최솟값으로 대체.",
@@ -271,13 +371,18 @@
       "source": "9차시 §10 BST 삭제 3 Case"
     },
     {
-      "id": "DSW9Q20", "set": 9, "week": 9, "topic": "BST vs Heap", "type": "multiple_choice", "difficulty": "medium",
+      "id": "DSW9Q20",
+      "set": 9,
+      "week": 9,
+      "topic": "BST vs Heap",
+      "type": "multiple_choice",
+      "difficulty": "medium",
       "question": "BST와 힙(Heap, Max Heap 기준)의 차이로 옳지 않은 것은?",
       "choices": [
-        "① BST는 중위 탐색 시 오름차순 정렬이 되지만, 힙은 중위 탐색에 정렬 의미가 없다",
-        "② 힙은 완전 이진 트리 형태를 강제하지만, BST는 모양 제약이 없어 편향될 수 있다",
-        "③ 최댓값/최솟값을 힙은 루트에서 O(1)에 얻지만, BST는 한쪽 끝까지 따라가야 한다",
-        "④ BST와 힙 모두 '부모 ≥ 자식'이라는 동일한 키 규칙을 따른다"
+        "① BST는 중위 탐색 시 오름차순 정렬이 되지만, 힙은 정렬 의미가 없다",
+        "② 힙은 완전 이진 트리 형태를 강제하지만, BST는 편향될 수 있다",
+        "③ 최값을 힙은 루트에서 O(1)에 얻지만, BST는 한쪽 끝까지 따라간다",
+        "④ BST와 힙은 모두 '부모 ≥ 자식'이라는 동일한 키 규칙을 따른다"
       ],
       "answer": 3,
       "brief": "'부모 ≥ 자식'은 힙만의 규칙. 옳지 않음.",
