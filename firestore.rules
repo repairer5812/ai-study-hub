@@ -7,53 +7,72 @@ service cloud.firestore {
 
     // 랭킹 컬렉션: /leaderboards/{leaderKey}/entries/{entryId}
     // leaderKey 규약:
-    //   - "1"~"5"           : 레거시 ML 경로 (기존 데이터 보존)
-    //   - "ml_1"~"ml_5"     : 명시적 ML 경로 (예약, 현재는 사용하지 않음)
-    //   - "ds_1"~"ds_5"     : 데이터사이언스
-    //   - "dl_1"~"dl_5"     : 딥러닝
-    //   - "sec_1"~"sec_5"   : 보안
+    //   - 정기고사(regular): "{setId}"(레거시 ML) 또는 "{subject}_{setId}"
+    //       · ML 중간 1~5, ML 기말 106·201~204, DS 1~8 등 (setId는 정수 1~9999)
+    //   - 주차별(weekly): "{subject}_weekly_w{week}"  (예: ml_weekly_w13)
+    //   - subject ∈ {ml, ds, dl, sec}
     match /leaderboards/{leaderKey}/entries/{entryId} {
 
       // 누구나 읽기 가능 (TOP 랭킹 표시)
       allow read: if true;
 
-      // 쓰기는 엄격하게 검증
-      allow create: if
-        // 경로 키 화이트리스트: 레거시 1~5 또는 {subject}_{1-5}
-        leaderKey.matches('^([1-5]|ml_[1-5]|ds_[1-5]|dl_[1-5]|sec_[1-5])$') &&
+      // ── 정기고사(중간/기말) 기록 ─────────────────────────────
+      // 필드: nickname, score, totalQuestions, durationSec, setId, recordedAt
+      function isRegular() {
+        return
+          leaderKey.matches('^([0-9]{1,4}|(ml|ds|dl|sec)_[0-9]{1,4})$') &&
+          request.resource.data.keys().hasOnly([
+            'nickname', 'score', 'totalQuestions',
+            'durationSec', 'setId', 'recordedAt'
+          ]) &&
+          request.resource.data.nickname is string &&
+          request.resource.data.nickname.size() >= 1 &&
+          request.resource.data.nickname.size() <= 16 &&
+          request.resource.data.score is int &&
+          request.resource.data.score >= 0 &&
+          request.resource.data.score <= 100 &&
+          request.resource.data.totalQuestions is int &&
+          request.resource.data.totalQuestions >= 1 &&
+          request.resource.data.totalQuestions <= 100 &&
+          request.resource.data.durationSec is int &&
+          request.resource.data.durationSec >= 30 &&
+          request.resource.data.durationSec <= 10800 &&
+          request.resource.data.setId is int &&
+          request.resource.data.setId >= 1 &&
+          request.resource.data.setId <= 9999 &&
+          request.resource.data.recordedAt is timestamp;
+      }
 
-        // 필수 필드 타입 체크
-        request.resource.data.nickname is string &&
-        request.resource.data.score is int &&
-        request.resource.data.totalQuestions is int &&
-        request.resource.data.durationSec is int &&
-        request.resource.data.setId is int &&
-        request.resource.data.recordedAt is timestamp &&
+      // ── 주차별 확인문제 기록 ─────────────────────────────────
+      // 필드: nickname, score, totalQuestions, durationSec, week, kind, recordedAt
+      function isWeekly() {
+        return
+          leaderKey.matches('^(ml|ds|dl|sec)_weekly_w[0-9]{1,2}$') &&
+          request.resource.data.keys().hasOnly([
+            'nickname', 'score', 'totalQuestions',
+            'durationSec', 'week', 'kind', 'recordedAt'
+          ]) &&
+          request.resource.data.nickname is string &&
+          request.resource.data.nickname.size() >= 1 &&
+          request.resource.data.nickname.size() <= 16 &&
+          request.resource.data.score is int &&
+          request.resource.data.score >= 0 &&
+          request.resource.data.score <= 100 &&
+          request.resource.data.totalQuestions is int &&
+          request.resource.data.totalQuestions >= 1 &&
+          request.resource.data.totalQuestions <= 50 &&
+          request.resource.data.durationSec is int &&
+          request.resource.data.durationSec >= 10 &&
+          request.resource.data.durationSec <= 10800 &&
+          request.resource.data.week is int &&
+          request.resource.data.week >= 1 &&
+          request.resource.data.week <= 30 &&
+          request.resource.data.kind == 'weekly' &&
+          request.resource.data.recordedAt is timestamp;
+      }
 
-        // 닉네임 길이 (1~16자)
-        request.resource.data.nickname.size() >= 1 &&
-        request.resource.data.nickname.size() <= 16 &&
-
-        // 점수 범위 (0~100)
-        request.resource.data.score >= 0 &&
-        request.resource.data.score <= 100 &&
-
-        // 세트 ID 범위 (1~5)
-        request.resource.data.setId >= 1 &&
-        request.resource.data.setId <= 5 &&
-
-        // 문항 수 (30 고정)
-        request.resource.data.totalQuestions == 30 &&
-
-        // 소요시간: 너무 짧으면 봇/장난 의심 (30초 이상, 3시간 이하)
-        request.resource.data.durationSec >= 30 &&
-        request.resource.data.durationSec <= 10800 &&
-
-        // 불필요한 필드 차단 (추가 필드 금지)
-        request.resource.data.keys().hasOnly([
-          'nickname', 'score', 'totalQuestions',
-          'durationSec', 'setId', 'recordedAt'
-        ]);
+      // 쓰기는 정기고사 또는 주차별 스키마 중 하나를 만족해야 함
+      allow create: if isRegular() || isWeekly();
 
       // 등록된 기록은 수정/삭제 불가 (랭킹 조작 방지)
       allow update, delete: if false;

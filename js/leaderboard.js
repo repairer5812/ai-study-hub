@@ -42,14 +42,14 @@ function validateSubmission({ subjectId, setId, nickname, score, totalQuestions,
   if (!Number.isInteger(score) || score < 0 || score > 100) {
     return "점수는 0~100 사이 정수여야 합니다.";
   }
-  if (!Number.isInteger(setId) || setId < 1 || setId > 5) {
-    return "세트 ID는 1~5 사이 정수여야 합니다.";
+  if (!Number.isInteger(setId) || setId < 1 || setId > 9999) {
+    return "세트 ID가 올바르지 않습니다.";
   }
   if (subjectId !== undefined && subjectId !== null && subjectId !== "" && !VALID_SUBJECTS.includes(subjectId)) {
     return "지원하지 않는 과목입니다.";
   }
-  if (totalQuestions !== 30) {
-    return "총 문항 수는 30이어야 합니다.";
+  if (!Number.isInteger(totalQuestions) || totalQuestions < 1 || totalQuestions > 100) {
+    return "총 문항 수가 올바르지 않습니다.";
   }
   if (!Number.isInteger(durationSec) || durationSec < 30 || durationSec > 10800) {
     return "소요 시간은 30~10800초 사이 정수여야 합니다.";
