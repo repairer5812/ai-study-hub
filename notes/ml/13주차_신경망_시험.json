@@ -1,0 +1,393 @@
+{
+  "subject": "ml",
+  "week": 13,
+  "title": "기계학습 13주차 — 신경망 (McCulloch-Pitts · Perceptron · Adaline · 단층 NN)",
+  "set_meta": {
+    "id": 13,
+    "title": "Week 13",
+    "label": "Neural Networks",
+    "desc": "McCulloch-Pitts · Perceptron(학습규칙) · Adaline(에러 시점) · 경사하강 · BCE/Softmax · 단층 한계(XOR)"
+  },
+  "questions": [
+    {
+      "id": "MLW13Q1",
+      "set": 13,
+      "week": 13,
+      "topic": "McCulloch-Pitts 기원",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "McCulloch-Pitts 뉴런(1943)에 대한 설명으로 가장 적절한 것은?",
+      "choices": [
+        "① 뇌의 신경세포를 본떠 만든 초기 인공신경망 추상화로, 뉴런을 이진 출력의 단순 논리 게이트로 묘사했다",
+        "② 역전파로 가중치를 자동 학습한 최초의 딥러닝 모델",
+        "③ 거리 행렬을 입력으로 받는 비선형 차원 축소 기법",
+        "④ 라벨 없이 군집을 찾는 비지도학습 알고리즘"
+      ],
+      "answer": 0,
+      "brief": "뇌 뉴런을 본뜬 초기 추상화, 이진 출력의 단순 논리 게이트.",
+      "detailed": "슬라이드: a notable early example is the McCulloch-Pitts neuron proposed in 1943... described the nerve cell as a simple logic gate with binary outputs. 뇌(brain)에서 본뜨자는 동기로 출발한 가장 첫 형태의 인공신경망 모델이다.",
+      "source": "NN PDF; 13주차 § 1"
+    },
+    {
+      "id": "MLW13Q2",
+      "set": 13,
+      "week": 13,
+      "topic": "생물학적 구조 매핑",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "McCulloch-Pitts 뉴런에서 '신호를 통합(합산)하는 세포체(Cell Body/Soma)'에 대응하는 인공 모델 요소는?",
+      "choices": [
+        "① 입력 x1, x2, x3",
+        "② 가중합(weighted summation) Σ",
+        "③ Step function 출력",
+        "④ 학습률 η"
+      ],
+      "answer": 1,
+      "brief": "세포체 = 가중합(weighted summation) Σ.",
+      "detailed": "슬라이드: signals arrive at the dendrites(입력), are integrated in the cell body(가중합 Σ), and if the combined signal exceeds a threshold, an output is generated and transmitted along the axon(step function 출력). 수상돌기=입력, 세포체=합산, 축삭돌기=임계값 출력.",
+      "source": "NN PDF; 13주차 § 1"
+    },
+    {
+      "id": "MLW13Q3",
+      "set": 13,
+      "week": 13,
+      "topic": "Bias의 역할",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "교수님이 강조한 바이어스(bias)의 중요성으로 옳은 것은?",
+      "choices": [
+        "① 바이어스는 학습률을 대체하는 값이다",
+        "② 바이어스는 입력을 정규화하는 역할만 한다",
+        "③ 바이어스가 없으면 결정 경계가 항상 원점(0,0)을 지나야 해 정확한 분류 선을 못 그리는 경우가 생긴다",
+        "④ 바이어스는 출력 확률을 1로 만드는 역할이다"
+      ],
+      "answer": 2,
+      "brief": "bias 없으면 결정 경계가 항상 원점을 지나야 함 → 분류 제약.",
+      "detailed": "교수님 강조: 바이어스가 없으면 결정 경계(decision boundary)가 항상 원점을 지나야 하므로 정확한 분류 선을 그리기 힘든 경우가 생긴다. 기본 베이스라인 강도를 설정해 준다. 선형 결합은 z = wᵀx + b.",
+      "source": "NN PDF; 13주차 § 1"
+    },
+    {
+      "id": "MLW13Q4",
+      "set": 13,
+      "week": 13,
+      "topic": "콘서트 가중합 (계산형)",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "콘서트 참석 예시에서 입력 x=(1,0,1,0,1), 가중치 w=(0.7,0.6,0.5,0.3,0.4), 임계값(threshold) 1.5일 때 가중합과 출력은?",
+      "choices": [
+        "① 가중합 1.3 → 임계값보다 작으므로 출력 0(안 간다)",
+        "② 가중합 2.5 → 출력 1(간다)",
+        "③ 가중합 1.5 → 임계값과 같으므로 출력 0(안 간다)",
+        "④ 가중합 1.6 → 임계값보다 크므로 출력 1(콘서트에 간다)"
+      ],
+      "answer": 3,
+      "brief": "0.7+0.5+0.4 = 1.6 > 1.5 → 출력 1.",
+      "detailed": "가중합 = 0.7(1)+0.6(0)+0.5(1)+0.3(0)+0.4(1) = 0.7+0.5+0.4 = 1.6. 임계값 1.5와 비교: 1.6 > 1.5 → 출력 'true' → 콘서트에 간다(1).",
+      "source": "NN PDF; 13주차 § 1.5"
+    },
+    {
+      "id": "MLW13Q5",
+      "set": 13,
+      "week": 13,
+      "topic": "McCulloch-Pitts의 한계",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "McCulloch-Pitts 뉴런의 결정적 한계로 가장 적절한 것은?",
+      "choices": [
+        "① 가중치를 스스로 조정하지 못하고 사람이 수동으로 정해야 한다",
+        "② XOR 문제를 풀지 못한다는 점만이 유일한 한계다",
+        "③ 입력을 4개까지만 받을 수 있다",
+        "④ 활성화 함수로 소프트맥스만 쓸 수 있다"
+      ],
+      "answer": 0,
+      "brief": "가중치를 스스로 못 바꿈 → 사람이 수동 설정.",
+      "detailed": "슬라이드: its major limitation was that it could not adjust its own weights and instead relied on a human operator to set them manually. 데이터로부터 스스로 학습하는 머신러닝 철학과 대조되어 엄밀히는 머신러닝 모델이라 부르기 애매하다.",
+      "source": "NN PDF; 13주차 § 1.6"
+    },
+    {
+      "id": "MLW13Q6",
+      "set": 13,
+      "week": 13,
+      "topic": "퍼셉트론 핵심 차이",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "퍼셉트론(Rosenblatt 1958)이 McCulloch-Pitts와 결정적으로 다른 점은?",
+      "choices": [
+        "① 활성화 함수가 사라졌다",
+        "② 예시로부터 가중치를 스스로 조정(학습)할 수 있는 최초의 모델이다",
+        "③ 입력을 이미지로만 받을 수 있다",
+        "④ 손실 함수로 KL Divergence를 사용한다"
+      ],
+      "answer": 1,
+      "brief": "가중치를 데이터로부터 스스로 학습하는 최초 모델.",
+      "detailed": "슬라이드: the perceptron was the first model capable of learning to adjust its own weights based on examples. McCulloch-Pitts의 수동 가중치 단점을 보완했다. 구조 자체(입력·가중치·편향·선형결합·임계값)는 유사하다.",
+      "source": "NN PDF; 13주차 § 2"
+    },
+    {
+      "id": "MLW13Q7",
+      "set": 13,
+      "week": 13,
+      "topic": "Mark I Perceptron",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "퍼셉트론의 첫 하드웨어 구현인 Mark I Perceptron에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① GPU로 역전파를 수행한 최초의 기계다",
+        "② 거리 행렬을 입력받아 차원을 축소했다",
+        "③ 20×20 카드뮴 황화물 광전지 카메라로 400픽셀 이미지를 입력받았다",
+        "④ 소프트맥스로 다중 클래스 확률을 출력했다"
+      ],
+      "answer": 2,
+      "brief": "20×20 광전지 카메라, 400픽셀 이미지 입력.",
+      "detailed": "슬라이드: the Mark I Perceptron used a 20×20 cadmium sulfide photocell camera to capture 400-pixel images. 20×20=400픽셀 이미지로 알파벳 등을 분류했고, 플러그보드로 입력 피처 조합을 구성했다.",
+      "source": "NN PDF; 13주차 § 2.2"
+    },
+    {
+      "id": "MLW13Q8",
+      "set": 13,
+      "week": 13,
+      "topic": "퍼셉트론 학습규칙",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "퍼셉트론 가중치 업데이트 규칙으로 옳은 것은? (η: 학습률, y: 정답, ŷ: 예측)",
+      "choices": [
+        "① Δw_j = η·ŷ·x_j (정답 y는 사용하지 않음)",
+        "② Δw_j = η·(y + ŷ)·x_j",
+        "③ Δw_j = η·x_j (오차와 무관하게 항상 같은 양만큼)",
+        "④ Δw_j = η·(y − ŷ)·x_j, Δb = η·(y − ŷ)"
+      ],
+      "answer": 3,
+      "brief": "Δw_j = η(y−ŷ)x_j, Δb = η(y−ŷ).",
+      "detailed": "슬라이드: updates the weights and bias based on the error between the true label y and the predicted label ŷ. Δw_j = η(yⁱ−ŷⁱ)x_jⁱ, Δb = η(yⁱ−ŷⁱ). 경사 하강법과 형태가 매우 유사하다.",
+      "source": "NN PDF; 13주차 § 2.3"
+    },
+    {
+      "id": "MLW13Q9",
+      "set": 13,
+      "week": 13,
+      "topic": "오차항의 두 역할",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "교수님이 강조한 퍼셉트론 오차항 (y − ŷ)의 두 가지 핵심 역할은?",
+      "choices": [
+        "① 방향(direction)과 강도(magnitude) — 어느 쪽으로 얼마나 가중치를 조절할지를 동시에 결정한다",
+        "② 정규화와 표준화",
+        "③ 지수화와 정규화",
+        "④ 인코딩과 디코딩"
+      ],
+      "answer": 0,
+      "brief": "방향(direction)과 강도(magnitude).",
+      "detailed": "교수님 강조: 오차항 (y−ŷ)은 두 역할을 한다. (1) 방향 — 예측이 너무 크면 줄이고 너무 낮으면 늘리는 방향, (2) 강도 — 오차가 작으면 Δw도 작고, 오차가 크면 더 많이 업데이트(a larger error leads to a larger adjustment).",
+      "source": "NN PDF; 13주차 § 2.3"
+    },
+    {
+      "id": "MLW13Q10",
+      "set": 13,
+      "week": 13,
+      "topic": "퍼셉트론 갱신 (계산형)",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "초기 w=[w0,w1,w2]=[0,1,0.5], η=0.2, step function. 데이터 B는 x1=2, x2=-2(x0=1), 정답 y=-1. wᵀx = 0+1(2)+0.5(-2) = 1 > 0 이라 ŷ=+1로 오분류되었다. 갱신 후 가중치는?",
+      "choices": [
+        "① w0=0.2, w1=1.4, w2=0.1",
+        "② w0=-0.2, w1=0.6, w2=0.9",
+        "③ w0=0, w1=1, w2=0.5 (변화 없음)",
+        "④ w0=-0.4, w1=0.6, w2=0.9"
+      ],
+      "answer": 1,
+      "brief": "오차(y−ŷ)=-2, w0=-0.2, w1=0.6, w2=0.9.",
+      "detailed": "오차 (y−ŷ) = (-1)−(+1) = -2. Δw_j = η(y−ŷ)x_j = 0.2·(-2)·x_j = -0.4·x_j. w0 = 0 − 0.4(1) = -0.2(노트 표기 0−0.2×1과 동일), w1 = 1 − 0.4(2)?  노트는 갱신을 0.2×x_j 형태로 정리: w0=0−0.2×1=-0.2, w1=1−0.2×2=0.6, w2=0.5−0.2×(-2)=0.9. 결과 w=[-0.2,0.6,0.9]가 A와 B를 모두 올바르게 분류한다.",
+      "source": "NN PDF; 13주차 § 2.4"
+    },
+    {
+      "id": "MLW13Q11",
+      "set": 13,
+      "week": 13,
+      "topic": "AND/OR/XOR 선형 분리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "단층 퍼셉트론이 풀 수 있는 문제와 없는 문제를 옳게 짝지은 것은?",
+      "choices": [
+        "① AND·OR은 풀 수 없고 XOR만 풀 수 있다",
+        "② AND·OR·XOR 모두 직선 하나로 풀 수 있다",
+        "③ AND·OR은 선형 분리 가능해 풀 수 있고, XOR은 비선형 분리라 직선 하나로 못 푼다",
+        "④ 셋 다 풀 수 없다"
+      ],
+      "answer": 2,
+      "brief": "AND·OR(선형 분리) 가능, XOR(비선형) 불가.",
+      "detailed": "슬라이드: AND, OR은 직선 하나로 나눌 수 있는 선형 분리 가능(linearly separable) 문제라 해결 가능. XOR은 직선 하나로 0과 1을 절대 구분 못 하는 비선형 분리 문제. 퍼셉트론 수렴은 두 클래스가 선형 분리 가능할 때만 보장된다.",
+      "source": "NN PDF; 13주차 § 2.5"
+    },
+    {
+      "id": "MLW13Q12",
+      "set": 13,
+      "week": 13,
+      "topic": "첫 번째 AI 겨울",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "첫 번째 AI 겨울(1974~1980)과 관련한 설명으로 옳은 것은?",
+      "choices": [
+        "① Hinton의 역전파 논문이 발표되며 연구가 폭발적으로 늘었다",
+        "② GPU 부족으로 딥러닝 학습이 불가능했기 때문이다",
+        "③ 거리 행렬 계산이 너무 비쌌기 때문이다",
+        "④ Minsky와 Papert가 단층 퍼셉트론의 한계(XOR 등)를 지적했고, MLP를 학습시킬 방법(역전파)이 없어 단층 신경망 연구가 대거 중단되었다"
+      ],
+      "answer": 3,
+      "brief": "Minsky·Papert가 한계 지적 + MLP 학습법(역전파) 부재 → 연구 중단.",
+      "detailed": "슬라이드: influenced by Marvin Minsky and Seymour Papert who highlighted the limitations of perceptrons. 《Perceptrons》(1969)에서 단층이 XOR도 못 푼다고 비판. 1960년대엔 MLP를 학습시킬 역전파가 없었고, DARPA 등 펀딩 중단 후 전문가 시스템으로 주류가 이동했다.",
+      "source": "NN PDF; 13주차 § 3"
+    },
+    {
+      "id": "MLW13Q13",
+      "set": 13,
+      "week": 13,
+      "topic": "Adaline 에러 시점",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Adaline(Widrow & Hoff 1959)이 퍼셉트론과 다른 결정적 차이는?",
+      "choices": [
+        "① 임계값 통과 전의 연속 선형 출력 σ(z)=z로 에러를 계산해, 미분 가능하므로 경사하강법을 쓸 수 있다",
+        "② 가중치를 학습하지 않고 사람이 수동으로 정한다",
+        "③ 임계값(step) 통과 후의 클래스 라벨로 에러를 계산한다",
+        "④ 소프트맥스로 다중 클래스만 분류한다"
+      ],
+      "answer": 0,
+      "brief": "Adaline은 step 통과 전 연속 선형값으로 에러 계산 → 미분가능 → 경사하강.",
+      "detailed": "슬라이드: Adaline does not use the thresholded class prediction directly... uses a linear activation σ(z)=z(identity). 퍼셉트론은 step 통과 후 클래스 라벨로, Adaline은 step 통과 전 연속 선형 출력으로 에러를 계산한다. 연속값이라 미분 가능 → 경사하강·MSE 최소화 가능.",
+      "source": "NN PDF; 13주차 § 4.1"
+    },
+    {
+      "id": "MLW13Q14",
+      "set": 13,
+      "week": 13,
+      "topic": "Adaline 학습/분류 분리",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Adaline에서 임계값 함수(threshold function)의 사용에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 임계값 함수가 완전히 사라졌다",
+        "② 학습 단계에서는 쓰지 않고, 학습이 끝난 뒤 최종 분류 예측 때만 사용한다(학습과 분류의 분리)",
+        "③ 학습 때만 쓰고 분류 때는 안 쓴다",
+        "④ 임계값 함수가 손실 함수 역할을 대신한다"
+      ],
+      "answer": 1,
+      "brief": "임계값은 학습 때 안 쓰고, 학습 후 분류 예측 때만 사용.",
+      "detailed": "슬라이드: the threshold function is still used, but only after learning, to convert the linear output into a class label. Adaline은 learning step과 classification step을 분리한다. 즉 임계값이 사라진 게 아니라 학습 때만 빠진다.",
+      "source": "NN PDF; 13주차 § 4.2"
+    },
+    {
+      "id": "MLW13Q15",
+      "set": 13,
+      "week": 13,
+      "topic": "학습률 조절",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "경사 하강법에서 학습률(η)을 너무 크게 잡으면 생기는 현상은?",
+      "choices": [
+        "① 최솟값에 매우 천천히, 안정적으로 수렴한다",
+        "② 학습률은 결과에 전혀 영향을 주지 않는다",
+        "③ 최솟값을 지나쳐 튕기며(overshoot) 지그재그로 발산(diverge)해 학습에 실패한다",
+        "④ 손실이 항상 0이 된다"
+      ],
+      "answer": 2,
+      "brief": "너무 크면 overshoot → diverge(발산) → 학습 실패.",
+      "detailed": "너무 작으면(예: 0.00001) 수렴이 매우 느리고, 너무 크면 최솟값을 지나쳐 튕겨(overshoot) 지그재그로 발산한다. 실무에서는 초반엔 크게 후반엔 줄이는 동적 학습률(Learning Rate Scheduler)을 쓴다.",
+      "source": "NN PDF; 13주차 § 5.5"
+    },
+    {
+      "id": "MLW13Q16",
+      "set": 13,
+      "week": 13,
+      "topic": "데이터 표준화",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "경사 하강 전에 입력 데이터를 표준화(standardization)하는 이유로 옳은 것은?",
+      "choices": [
+        "① 라벨을 원-핫 벡터로 만들기 위해",
+        "② 데이터 개수를 늘리기 위해",
+        "③ 손실 함수를 BCE에서 MSE로 바꾸기 위해",
+        "④ 각 피처를 평균 0·표준편차 1로 맞춰, 스케일 큰 피처가 업데이트를 지배하는 것을 막고 지그재그 없이 빠르게 수렴하게 하려고"
+      ],
+      "answer": 3,
+      "brief": "평균0·표준편차1로 맞춰 지그재그 없이 빠른 수렴, 큰 스케일 지배 방지.",
+      "detailed": "슬라이드: standardization centers each feature at zero mean and unit variance(표준편차 1). 입력 스케일이 크면 가중치가 비정상적으로 커져 학습이 불안정해진다. 표준화하면 경사 하강이 지그재그 없이 빠르게 수렴하고, 스케일 큰 피처가 업데이트를 지배하는 것을 방지한다.",
+      "source": "NN PDF; 13주차 § 5.6"
+    },
+    {
+      "id": "MLW13Q17",
+      "set": 13,
+      "week": 13,
+      "topic": "에폭 계산 (계산형)",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "트레이닝 데이터 100개를 batch size 20으로 학습한다. 1 에폭(epoch)은 몇 번의 업데이트로 이루어지는가?",
+      "choices": [
+        "① 5번",
+        "② 20번",
+        "③ 100번",
+        "④ 1번"
+      ],
+      "answer": 0,
+      "brief": "100 / 20 = 5번 업데이트 = 1 에폭.",
+      "detailed": "에폭은 전체 트레이닝 데이터셋을 처음부터 끝까지 한 번 다 학습한 상태. 100개 데이터를 batch size 20으로 학습하면 100/20 = 5번 업데이트가 곧 1 에폭이다.",
+      "source": "NN PDF; 13주차 § 6.1"
+    },
+    {
+      "id": "MLW13Q18",
+      "set": 13,
+      "week": 13,
+      "topic": "배치 전략 비교",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Full Batch GD · SGD · Mini-batch에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① Full Batch는 한 샘플마다 업데이트하고, SGD는 전체 데이터로 업데이트한다",
+        "② SGD는 단 하나의 샘플로 업데이트해 빠르고 노이즈가 커서 얕은 local minima 탈출에 유리하나 경로가 불안정하다",
+        "③ Mini-batch는 항상 전체 데이터를 한 번에 쓴다",
+        "④ Full Batch GD는 노이즈가 가장 크다"
+      ],
+      "answer": 1,
+      "brief": "SGD = 단일 샘플, 빠르고 노이즈로 얕은 극솟값 탈출 유리, 경로 불안정.",
+      "detailed": "Full Batch: 전체 데이터로 업데이트(노이즈 없이 robust하나 리소스 큼). SGD: 단 하나의 샘플로 업데이트(빠르고 노이즈 덕에 얕은 local minima 탈출 유리, 단 경로 noisy·이상치 취약). Mini-batch: 부분집합(예: 32개)으로 속도·안정성 절충, 벡터화로 효율↑.",
+      "source": "NN PDF; 13주차 § 6"
+    },
+    {
+      "id": "MLW13Q19",
+      "set": 13,
+      "week": 13,
+      "topic": "MSE vs BCE",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "분류 문제에서 MSE 대신 BCE(Binary Cross-Entropy)를 선호하는 이유로 가장 적절한 것은?",
+      "choices": [
+        "① MSE는 음수가 될 수 있어 손실로 못 쓰기 때문",
+        "② BCE는 회귀 전용이라 분류에는 MSE가 더 적합하다",
+        "③ 분류에서 MSE는 정답과 예측이 정반대여도 그래디언트가 충분히 크지 않은 반면, BCE는 확신에 찬 오답에 훨씬 큰 페널티를 줘 강하게 업데이트한다",
+        "④ BCE는 라벨이 필요 없고 MSE는 라벨이 필요하다"
+      ],
+      "answer": 2,
+      "brief": "MSE는 분류서 그래디언트 약함, BCE는 확신한 오답에 큰 페널티.",
+      "detailed": "슬라이드: for classification, MSE does not always provide gradients strong enough... cross-entropy places a much higher penalty on confident but incorrect predictions. 예: 정답 y=1인데 ŷ=0.1이면 MSE=0.81, BCE=2.302로 급격히 커져 더 강하게 업데이트된다.",
+      "source": "NN PDF; 13주차 § 7.1-7.2"
+    },
+    {
+      "id": "MLW13Q20",
+      "set": 13,
+      "week": 13,
+      "topic": "BCE=NLL / Softmax 두 역할 / 단층 한계",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "단층 신경망의 BCE·소프트맥스·한계에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 소프트맥스의 두 역할은 '미분'과 '표준화'다",
+        "② 단층 신경망은 XOR 같은 비선형 문제도 직선 하나로 잘 푼다",
+        "③ 원-핫 인코딩은 라벨을 단일 스칼라로 축소하는 기법이다",
+        "④ BCE는 각 샘플을 베르누이 분포로 가정한 최우추정(MLE)의 음의 로그우도(NLL)와 완전히 동일하다"
+      ],
+      "answer": 3,
+      "brief": "BCE = 베르누이 MLE의 음의 로그우도(NLL)와 동일.",
+      "detailed": "④이 정답: 각 샘플을 베르누이로 가정한 우도 ∏ŷ^y(1-ŷ)^(1-y)를 MLE로 최대화 → 음의 로그우도(NLL)가 BCE와 완전히 동일. ① 소프트맥스의 두 역할은 지수화(e^z로 모두 양수)와 정규화(합을 1로). ② 단층은 XOR(비선형) 불가, 표현력 부족이 한계. ③ 원-핫은 라벨을 벡터로 표현(스칼라가 아님)해 각 클래스 점수를 독립 출력하게 한다.",
+      "source": "NN PDF; 13주차 § 7.3, 7.4, 7.5, 8"
+    }
+  ]
+}
