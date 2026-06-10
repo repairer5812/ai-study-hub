@@ -37,14 +37,14 @@
       "difficulty": "easy",
       "question": "McCulloch-Pitts 뉴런에서 '신호를 통합(합산)하는 세포체(Cell Body/Soma)'에 대응하는 인공 모델 요소는?",
       "choices": [
-        "① 신호가 처음 도착하는 입력 x1, x2, x3에 해당한다",
-        "② 여러 입력을 더해 통합하는 가중합(weighted summation) Σ에 해당한다",
+        "① 신호가 처음 도착하는 입력 $x_1, x_2, x_3$에 해당한다",
+        "② 여러 입력을 더해 통합하는 가중합(weighted summation) $\\sum$에 해당한다",
         "③ 임계값을 적용해 결과를 내보내는 Step function 출력에 해당한다",
-        "④ 갱신 폭을 조절하는 하이퍼파라미터인 학습률 η에 해당한다"
+        "④ 갱신 폭을 조절하는 하이퍼파라미터인 학습률 $\\eta$에 해당한다"
       ],
       "answer": 1,
-      "brief": "세포체 = 가중합(weighted summation) Σ.",
-      "detailed": "슬라이드: signals arrive at the dendrites(입력), are integrated in the cell body(가중합 Σ), and if the combined signal exceeds a threshold, an output is generated and transmitted along the axon(step function 출력). 수상돌기=입력, 세포체=합산, 축삭돌기=임계값 출력.",
+      "brief": "세포체 = 가중합(weighted summation) $\\sum$.",
+      "detailed": "슬라이드: signals arrive at the dendrites(입력), are integrated in the cell body(가중합 $\\sum$), and if the combined signal exceeds a threshold, an output is generated and transmitted along the axon(step function 출력). 수상돌기=입력, 세포체=합산, 축삭돌기=임계값 출력.",
       "source": "NN PDF; 13주차 § 1"
     },
     {
@@ -63,7 +63,7 @@
       ],
       "answer": 2,
       "brief": "bias 없으면 결정 경계가 항상 원점을 지나야 함 → 분류 제약.",
-      "detailed": "교수님 강조: 바이어스가 없으면 결정 경계(decision boundary)가 항상 원점을 지나야 하므로 정확한 분류 선을 그리기 힘든 경우가 생긴다. 기본 베이스라인 강도를 설정해 준다. 선형 결합은 z = wᵀx + b.",
+      "detailed": "교수님 강조: 바이어스가 없으면 결정 경계(decision boundary)가 항상 원점을 지나야 하므로 정확한 분류 선을 그리기 힘든 경우가 생긴다. 기본 베이스라인 강도를 설정해 준다. 선형 결합은 $z = w^T x + b$.",
       "source": "NN PDF; 13주차 § 1"
     },
     {
@@ -73,7 +73,7 @@
       "topic": "콘서트 가중합 (계산형)",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "콘서트 참석 예시에서 입력 x=(1,0,1,0,1), 가중치 w=(0.7,0.6,0.5,0.3,0.4), 임계값(threshold) 1.5일 때 가중합과 출력은?",
+      "question": "콘서트 참석 예시에서 입력 $x=(1,0,1,0,1)$, 가중치 $w=(0.7,0.6,0.5,0.3,0.4)$, 임계값(threshold) $1.5$일 때 가중합과 출력은?",
       "choices": [
         "① 가중합 1.3 → 임계값보다 작으므로 출력 0(안 간다)",
         "② 가중합 2.5 → 임계값보다 크므로 출력 1(간다)",
@@ -81,8 +81,8 @@
         "④ 가중합 1.6 → 임계값보다 크므로 출력 1(간다)"
       ],
       "answer": 3,
-      "brief": "0.7+0.5+0.4 = 1.6 > 1.5 → 출력 1.",
-      "detailed": "가중합 = 0.7(1)+0.6(0)+0.5(1)+0.3(0)+0.4(1) = 0.7+0.5+0.4 = 1.6. 임계값 1.5와 비교: 1.6 > 1.5 → 출력 'true' → 콘서트에 간다(1).",
+      "brief": "$0.7+0.5+0.4 = 1.6 > 1.5$ → 출력 1.",
+      "detailed": "가중합 $= 0.7(1)+0.6(0)+0.5(1)+0.3(0)+0.4(1) = 0.7+0.5+0.4 = 1.6$. 임계값 $1.5$와 비교: $1.6 > 1.5$ → 출력 'true' → 콘서트에 간다(1).",
       "source": "NN PDF; 13주차 § 1.5"
     },
     {
@@ -149,16 +149,16 @@
       "topic": "퍼셉트론 학습규칙",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "퍼셉트론 가중치 업데이트 규칙으로 옳은 것은? (η: 학습률, y: 정답, ŷ: 예측)",
+      "question": "퍼셉트론 가중치 업데이트 규칙으로 옳은 것은? ($\\eta$: 학습률, $y$: 정답, $\\hat{y}$: 예측)",
       "choices": [
-        "① Δw_j = η·ŷ·x_j 로, 정답 y는 사용하지 않는다",
-        "② Δw_j = η·(y + ŷ)·x_j 로, 정답과 예측을 더한다",
-        "③ Δw_j = η·x_j 로, 오차와 무관하게 항상 같은 양만큼 갱신한다",
-        "④ Δw_j = η·(y − ŷ)·x_j, Δb = η·(y − ŷ) 로 갱신한다"
+        "① $\\Delta w_j = \\eta \\cdot \\hat{y} \\cdot x_j$ 로, 정답 $y$는 사용하지 않는다",
+        "② $\\Delta w_j = \\eta \\cdot (y + \\hat{y}) \\cdot x_j$ 로, 정답과 예측을 더한다",
+        "③ $\\Delta w_j = \\eta \\cdot x_j$ 로, 오차와 무관하게 항상 같은 양만큼 갱신한다",
+        "④ $\\Delta w_j = \\eta \\cdot (y - \\hat{y}) \\cdot x_j$, $\\Delta b = \\eta \\cdot (y - \\hat{y})$ 로 갱신한다"
       ],
       "answer": 3,
-      "brief": "Δw_j = η(y−ŷ)x_j, Δb = η(y−ŷ).",
-      "detailed": "슬라이드: updates the weights and bias based on the error between the true label y and the predicted label ŷ. Δw_j = η(yⁱ−ŷⁱ)x_jⁱ, Δb = η(yⁱ−ŷⁱ). 경사 하강법과 형태가 매우 유사하다.",
+      "brief": "$\\Delta w_j = \\eta (y - \\hat{y}) x_j$, $\\Delta b = \\eta (y - \\hat{y})$.",
+      "detailed": "슬라이드: updates the weights and bias based on the error between the true label $y$ and the predicted label $\\hat{y}$. $\\Delta w_j = \\eta (y^i - \\hat{y}^i) x_j^i$, $\\Delta b = \\eta (y^i - \\hat{y}^i)$. 경사 하강법과 형태가 매우 유사하다.",
       "source": "NN PDF; 13주차 § 2.3"
     },
     {
@@ -168,7 +168,7 @@
       "topic": "오차항의 두 역할",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "교수님이 강조한 퍼셉트론 오차항 (y − ŷ)의 두 가지 핵심 역할은?",
+      "question": "교수님이 강조한 퍼셉트론 오차항 $(y - \\hat{y})$의 두 가지 핵심 역할은?",
       "choices": [
         "① 방향(direction)과 강도(magnitude)로 조절 방향과 양을 정한다",
         "② 값을 0~1로 맞추는 정규화와 평균0·분산1로 맞추는 표준화 역할을 한다",
@@ -177,7 +177,7 @@
       ],
       "answer": 0,
       "brief": "방향(direction)과 강도(magnitude).",
-      "detailed": "교수님 강조: 오차항 (y−ŷ)은 두 역할을 한다. (1) 방향 — 예측이 너무 크면 줄이고 너무 낮으면 늘리는 방향, (2) 강도 — 오차가 작으면 Δw도 작고, 오차가 크면 더 많이 업데이트(a larger error leads to a larger adjustment).",
+      "detailed": "교수님 강조: 오차항 $(y - \\hat{y})$은 두 역할을 한다. (1) 방향 — 예측이 너무 크면 줄이고 너무 낮으면 늘리는 방향, (2) 강도 — 오차가 작으면 $\\Delta w$도 작고, 오차가 크면 더 많이 업데이트(a larger error leads to a larger adjustment).",
       "source": "NN PDF; 13주차 § 2.3"
     },
     {
@@ -187,16 +187,16 @@
       "topic": "퍼셉트론 갱신 (계산형)",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "초기 w=[w0,w1,w2]=[0,1,0.5], η=0.2, step function. 데이터 B는 x1=2, x2=-2(x0=1), 정답 y=-1. wᵀx = 0+1(2)+0.5(-2) = 1 > 0 이라 ŷ=+1로 오분류되었다. 갱신 후 가중치는?",
+      "question": "초기 $w=[w_0,w_1,w_2]=[0,1,0.5]$, $\\eta=0.2$, step function. 데이터 B는 $x_1=2$, $x_2=-2$($x_0=1$), 정답 $y=-1$. $w^T x = 0+1(2)+0.5(-2) = 1 > 0$ 이라 $\\hat{y}=+1$로 오분류되었다. 갱신 후 가중치는?",
       "choices": [
-        "① w0=0.2, w1=1.4, w2=0.1",
-        "② w0=-0.2, w1=0.6, w2=0.9",
-        "③ w0=0, w1=1, w2=0.5 (변화 없음)",
-        "④ w0=-0.4, w1=0.6, w2=0.9"
+        "① $w_0=0.2, w_1=1.4, w_2=0.1$",
+        "② $w_0=-0.2, w_1=0.6, w_2=0.9$",
+        "③ $w_0=0, w_1=1, w_2=0.5$ (변화 없음)",
+        "④ $w_0=-0.4, w_1=0.6, w_2=0.9$"
       ],
       "answer": 1,
-      "brief": "오차(y−ŷ)=-2, w0=-0.2, w1=0.6, w2=0.9.",
-      "detailed": "오차 (y−ŷ) = (-1)−(+1) = -2. Δw_j = η(y−ŷ)x_j = 0.2·(-2)·x_j = -0.4·x_j. w0 = 0 − 0.4(1) = -0.2(노트 표기 0−0.2×1과 동일), w1 = 1 − 0.4(2)?  노트는 갱신을 0.2×x_j 형태로 정리: w0=0−0.2×1=-0.2, w1=1−0.2×2=0.6, w2=0.5−0.2×(-2)=0.9. 결과 w=[-0.2,0.6,0.9]가 A와 B를 모두 올바르게 분류한다.",
+      "brief": "오차$(y - \\hat{y})=-2$, $w_0=-0.2, w_1=0.6, w_2=0.9$.",
+      "detailed": "오차 $(y - \\hat{y}) = (-1)-(+1) = -2$. $\\Delta w_j = \\eta (y - \\hat{y}) x_j = 0.2 \\cdot (-2) \\cdot x_j = -0.4 \\cdot x_j$. $w_0 = 0 - 0.4(1) = -0.2$(노트 표기 $0-0.2 \\times 1$과 동일), $w_1 = 1 - 0.4(2)$?  노트는 갱신을 $0.2 \\times x_j$ 형태로 정리: $w_0=0-0.2 \\times 1=-0.2$, $w_1=1-0.2 \\times 2=0.6$, $w_2=0.5-0.2 \\times (-2)=0.9$. 결과 $w=[-0.2,0.6,0.9]$가 A와 B를 모두 올바르게 분류한다.",
       "source": "NN PDF; 13주차 § 2.4"
     },
     {
@@ -246,14 +246,14 @@
       "difficulty": "hard",
       "question": "Adaline(Widrow & Hoff 1959)이 퍼셉트론과 다른 결정적 차이는?",
       "choices": [
-        "① 임계값 통과 전 연속 선형 출력 σ(z)=z로 에러를 계산해 미분 가능, 경사하강을 쓴다",
+        "① 임계값 통과 전 연속 선형 출력 $\\sigma(z)=z$로 에러를 계산해 미분 가능, 경사하강을 쓴다",
         "② 가중치를 학습하지 않고 사람이 수동으로 정한다는 점이 다르다",
         "③ 임계값(step) 통과 후의 이산 클래스 라벨로 에러를 계산한다는 점이 다르다",
         "④ 소프트맥스를 써서 다중 클래스만 분류할 수 있다는 점이 다르다"
       ],
       "answer": 0,
       "brief": "Adaline은 step 통과 전 연속 선형값으로 에러 계산 → 미분가능 → 경사하강.",
-      "detailed": "슬라이드: Adaline does not use the thresholded class prediction directly... uses a linear activation σ(z)=z(identity). 퍼셉트론은 step 통과 후 클래스 라벨로, Adaline은 step 통과 전 연속 선형 출력으로 에러를 계산한다. 연속값이라 미분 가능 → 경사하강·MSE 최소화 가능.",
+      "detailed": "슬라이드: Adaline does not use the thresholded class prediction directly... uses a linear activation $\\sigma(z)=z$(identity). 퍼셉트론은 step 통과 후 클래스 라벨로, Adaline은 step 통과 전 연속 선형 출력으로 에러를 계산한다. 연속값이라 미분 가능 → 경사하강·MSE 최소화 가능.",
       "source": "NN PDF; 13주차 § 4.1"
     },
     {
@@ -282,7 +282,7 @@
       "topic": "학습률 조절",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "경사 하강법에서 학습률(η)을 너무 크게 잡으면 생기는 현상은?",
+      "question": "경사 하강법에서 학습률($\\eta$)을 너무 크게 잡으면 생기는 현상은?",
       "choices": [
         "① 최솟값에 매우 천천히 그러나 안정적으로 수렴하게 된다",
         "② 학습률 크기는 수렴 결과나 속도에 전혀 영향을 주지 않는다",
@@ -328,8 +328,8 @@
         "④ 1번 업데이트"
       ],
       "answer": 0,
-      "brief": "100 / 20 = 5번 업데이트 = 1 에폭.",
-      "detailed": "에폭은 전체 트레이닝 데이터셋을 처음부터 끝까지 한 번 다 학습한 상태. 100개 데이터를 batch size 20으로 학습하면 100/20 = 5번 업데이트가 곧 1 에폭이다.",
+      "brief": "$100 / 20 = 5$번 업데이트 = 1 에폭.",
+      "detailed": "에폭은 전체 트레이닝 데이터셋을 처음부터 끝까지 한 번 다 학습한 상태. 100개 데이터를 batch size 20으로 학습하면 $100/20 = 5$번 업데이트가 곧 1 에폭이다.",
       "source": "NN PDF; 13주차 § 6.1"
     },
     {
@@ -367,7 +367,7 @@
       ],
       "answer": 2,
       "brief": "MSE는 분류서 그래디언트 약함, BCE는 확신한 오답에 큰 페널티.",
-      "detailed": "슬라이드: for classification, MSE does not always provide gradients strong enough... cross-entropy places a much higher penalty on confident but incorrect predictions. 예: 정답 y=1인데 ŷ=0.1이면 MSE=0.81, BCE=2.302로 급격히 커져 더 강하게 업데이트된다.",
+      "detailed": "슬라이드: for classification, MSE does not always provide gradients strong enough... cross-entropy places a much higher penalty on confident but incorrect predictions. 예: 정답 $y=1$인데 $\\hat{y}=0.1$이면 MSE$=0.81$, BCE$=2.302$로 급격히 커져 더 강하게 업데이트된다.",
       "source": "NN PDF; 13주차 § 7.1-7.2"
     },
     {
@@ -386,7 +386,7 @@
       ],
       "answer": 3,
       "brief": "BCE = 베르누이 MLE의 음의 로그우도(NLL)와 동일.",
-      "detailed": "④이 정답: 각 샘플을 베르누이로 가정한 우도 ∏ŷ^y(1-ŷ)^(1-y)를 MLE로 최대화 → 음의 로그우도(NLL)가 BCE와 완전히 동일. ① 소프트맥스의 두 역할은 지수화(e^z로 모두 양수)와 정규화(합을 1로). ② 단층은 XOR(비선형) 불가, 표현력 부족이 한계. ③ 원-핫은 라벨을 벡터로 표현(스칼라가 아님)해 각 클래스 점수를 독립 출력하게 한다.",
+      "detailed": "④이 정답: 각 샘플을 베르누이로 가정한 우도 $\\prod \\hat{y}^y (1-\\hat{y})^{(1-y)}$를 MLE로 최대화 → 음의 로그우도(NLL)가 BCE와 완전히 동일. ① 소프트맥스의 두 역할은 지수화($e^{z}$로 모두 양수)와 정규화(합을 1로). ② 단층은 XOR(비선형) 불가, 표현력 부족이 한계. ③ 원-핫은 라벨을 벡터로 표현(스칼라가 아님)해 각 클래스 점수를 독립 출력하게 한다.",
       "source": "NN PDF; 13주차 § 7.3, 7.4, 7.5, 8"
     }
   ]
