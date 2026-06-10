@@ -37,10 +37,10 @@ export const set1 = [
       "① 도메인 전문가가 작성한 If-then 규칙에 고정되어 정해진 시나리오 밖의 예외 상황(Edge Case)에는 유연하게 대응하지 못한다",
       "② 환경이나 데이터 분포가 변하면 사람이 일일이 개입해 규칙을 수정해야 하며, 자동 적응(Self-adaptation) 능력이 없다",
       "③ 도메인이 복잡해질수록 고려해야 할 규칙이 기하급수적으로 늘어나 유지보수·확장성(Scalability)이 빠르게 무너진다",
-      "④ 데이터가 쌓일수록 시스템이 스스로 성능을 개선한다"
+      "④ 새로운 데이터가 쌓일수록 사람의 개입 없이 시스템이 스스로 성능을 개선해 환경 변화에 적응해 나간다"
     ],
     answer: 3,
-    brief: "④는 데이터 기반 자동 학습이 가능한 머신러닝의 장점이며, 전문가 시스템은 이런 능력이 없다.",
+    brief: "데이터가 쌓일수록 스스로 성능을 개선한다는 것은 머신러닝의 장점이며, 전문가 시스템에는 이런 자동 학습 능력이 없다.",
     detailed: "전문가 시스템은 도메인 전문가의 지식을 If-then 규칙으로 직접 프로그래밍한 모델(대표 예시: 의료 진단 시스템 MYCIN)이다. 정해진 규칙을 벗어난 예외 상황에 취약하고, 환경 변화에 적응하려면 사람이 직접 규칙을 수정해야 하며, 규칙 수가 늘어나면 유지보수가 폭발적으로 어려워진다(Brittle). 반면 데이터로부터 자동 학습해 환경 변화에 적응하는 것은 머신러닝의 가장 큰 장점으로, 전문가 시스템의 한계점과 정확히 반대된다.",
     source: "Week 2 § 1-2"
   },
@@ -55,7 +55,7 @@ export const set1 = [
     choices: [
       "① 정답 라벨 없이 고객 구매 데이터를 유사도 기준으로 묶어 의미 있는 세그먼트로 그룹핑하는 군집화(Clustering) 문제",
       "② 라벨이 없는 고차원 이미지에서 중요한 특징만 뽑아 2D로 시각화하는 차원 축소(Dimensionality Reduction) 문제",
-      "③ 집의 평수, 층수, 위치를 바탕으로 월세(연속 수치)를 예측한다",
+      "③ 집의 평수·층수·위치를 입력으로, 짝지어진 월세(연속 수치)를 정답으로 예측하도록 학습하는 회귀(Regression) 문제",
       "④ 로봇이 환경과 상호작용하며 받은 보상(Reward)과 처벌(Punishment)만으로 최적 정책(Policy)을 학습하는 강화학습 문제"
     ],
     answer: 2,
@@ -74,7 +74,7 @@ export const set1 = [
     choices: [
       "① 클래스 비율을 고려하지 않고 전체 데이터를 K개로 무작위 분할하는 일반 K-fold Cross-Validation",
       "② 샘플을 1개씩만 테스트로 쓰는 Leave-one-out Cross-Validation을 총 N번 반복해 평가한다",
-      "③ Stratified K-fold Cross-Validation",
+      "③ 각 fold가 원본의 클래스 비율을 유지하도록 분할하는 Stratified K-fold Cross-Validation을 적용한다",
       "④ 데이터를 한 번만 Train/Test로 가르는 단일 Holdout 분할 검증으로 빠르게 평가한다"
     ],
     answer: 2,
@@ -92,7 +92,7 @@ export const set1 = [
     question: "훈련 에러(Training Error)는 거의 0에 가깝지만 검증 에러(Validation Error)가 급격히 증가하는 현상과 그 원인을 올바르게 연결한 것은?",
     choices: [
       "① 과소적합(Underfitting) 상태이며, 모델 용량(Capacity)이 지나치게 커서 단순한 패턴조차 잡아내지 못하고 있기 때문이다",
-      "② 과적합(Overfitting), 모델이 훈련 데이터의 노이즈와 아웃라이어까지 암기하여 (High Variance)",
+      "② 과적합(Overfitting) 상태이며, 모델이 훈련 데이터의 노이즈와 아웃라이어까지 암기해 분산(Variance)이 높기 때문이다",
       "③ 과소적합(Underfitting) 상태이며, 학습률(Learning Rate)이 너무 작아 최적점 근처에서 수렴하지 못하고 있기 때문이다",
       "④ 과적합(Overfitting) 상태이며, 모델의 Bias가 지나치게 높아 훈련 데이터조차 제대로 학습하지 못하고 있기 때문이다"
     ],
@@ -192,7 +192,7 @@ export const set1 = [
       "① 지수함수($e^x$)를 씌우므로 원래 선형 값 $t_c$가 음수였더라도 결과는 항상 양수가 되어 확률 해석의 전제 조건을 만족시킨다",
       "② 전체 합 $\\sum_k \\exp(t_k)$로 나누는 정규화(Normalization) 덕분에 모든 출력이 0에서 1 사이에 놓이고 클래스별 확률의 합이 정확히 1이 된다",
       "③ 지수함수 특성상 가장 큰 입력값이 지배적으로 커지고 작은 값들은 상대적으로 억눌려 클래스 간 차이가 크게 증폭(Amplification)된다",
-      "④ 미분이 불가능하기 때문에 경사하강법(Gradient Descent) 기반 학습에는 사용할 수 없다"
+      "④ 함수 자체가 미분 불가능하므로 Cross-Entropy와 결합한 경사하강법(Gradient Descent) 기반 학습에는 전혀 쓸 수 없다"
     ],
     answer: 3,
     brief: "④는 틀린 설명. Softmax는 미분 가능해 Cross-Entropy와 결합한 경사하강법 학습이 표준이다.",
@@ -230,10 +230,10 @@ export const set1 = [
     difficulty: "medium",
     question: "L1 정규화(Lasso)와 L2 정규화(Ridge)를 비교한 설명으로 가장 적절한 것은?",
     choices: [
-      "① L1은 파라미터 제곱의 합 $\\sum \\theta_i^2$에 페널티를 주고, L2는 절댓값의 합 $\\sum |\\theta_i|$에 페널티를 부여하여 피처 선택(Feature Selection) 효과를 낸다",
-      "② L1은 파라미터 절댓값의 합($\\sum |\\theta_i|$)에, L2는 제곱의 합($\\sum \\theta_i^2$)에 페널티를 주며, L1은 덜 중요한 파라미터를 정확히 0으로 만드는 Sparsity(희소성) 효과가 있다",
-      "③ 2차원 파라미터 공간에서 L1의 기하학적 제약 영역은 원(Circle) 모양이고 L2는 꼭짓점이 뚜렷한 다이아몬드 모양으로 그려진다",
-      "④ L1과 L2 모두 하이퍼파라미터 $\\lambda$가 커질수록 페널티가 줄어들어 모델이 더 복잡해지고 훈련 데이터에 강하게 적합된다"
+      "① L1은 제곱의 합($\\sum \\theta_i^2$)에, L2는 절댓값의 합($\\sum |\\theta_i|$)에 페널티를 부여하며, L1이 피처 선택(Feature Selection) 효과를 낸다",
+      "② L1은 절댓값의 합($\\sum |\\theta_i|$)에, L2는 제곱의 합($\\sum \\theta_i^2$)에 페널티를 주며, L1이 일부 파라미터를 0으로 만드는 Sparsity 효과를 낸다",
+      "③ 2차원 파라미터 공간에서 L1의 기하학적 제약 영역은 매끈한 원(Circle) 모양이고, L2는 꼭짓점이 뚜렷한 다이아몬드 모양으로 그려진다",
+      "④ L1·L2 모두 하이퍼파라미터 $\\lambda$가 커질수록 페널티가 줄어들어 모델이 더 복잡해지고 훈련 데이터에 강하게 적합된다"
     ],
     answer: 1,
     brief: "L1=절댓값 합(다이아몬드, Sparsity 유발), L2=제곱 합(원, Shrinking). $\\lambda$가 커지면 모델은 단순해진다.",
@@ -465,9 +465,9 @@ export const set1 = [
     question: "SVM의 커널 트릭(Kernel Trick)이 고차원 매핑을 효율적으로 수행할 수 있는 수학적 이유는?",
     choices: [
       "① 커널은 학습 단계에서 데이터를 실제로 $\\phi(x)$를 통해 고차원 공간에 명시적으로 매핑해 저장한 뒤, 그 고차원 벡터끼리 직접 내적을 계산하기 때문이다",
-      "② SVM의 최적화 쌍대 문제(Dual Problem) 형태가 데이터 간 내적(Inner Product) $x_i \\cdot x_j$ 만 필요로 하므로, 원래 차원에서 커널 함수 $K(x_i, x_j)$를 계산하는 것만으로 고차원 내적과 같은 결과를 얻기 때문",
-      "③ 커널 트릭은 선형 분리 불가능한 분류 문제를 내부적으로 선형 회귀(Linear Regression) 형태로 자동 변환시켜 풀게 하기 때문이다",
-      "④ 커널은 오히려 데이터의 입력 차원 자체를 낮춰 주는 차원 축소(Dimensionality Reduction) 역할을 하여 연산량을 크게 줄이기 때문이다"
+      "② 쌍대 문제(Dual Problem)가 데이터 간 내적 $x_i \\cdot x_j$ 만 요구하므로, 원래 차원에서 커널 $K(x_i, x_j)$만 계산해도 고차원 내적과 같은 값을 얻기 때문",
+      "③ 커널 트릭은 선형 분리가 불가능한 분류 문제를 내부적으로 선형 회귀(Linear Regression) 형태로 자동 변환시켜 닫힌 해로 풀어 주기 때문이다",
+      "④ 커널은 오히려 데이터의 입력 차원 자체를 낮춰 주는 차원 축소(Dimensionality Reduction) 역할을 하여 전체 연산량을 크게 줄여 주기 때문이다"
     ],
     answer: 1,
     brief: "Dual 문제에서 내적만 등장 → 커널 함수로 고차원 내적을 원래 차원에서 계산 가능.",
@@ -484,7 +484,7 @@ export const set1 = [
     question: "클래스가 $K$개인 다중 클래스 분류에서 SVM을 확장할 때, One-vs-Rest(OvR)와 One-vs-One(OvO) 각각이 학습하는 분류기의 개수는?",
     choices: [
       "① OvR은 모든 클래스 쌍마다 분류기를 만들어 $K(K-1)/2$개, OvO는 각 클래스마다 하나씩 $K$개를 학습시킨다",
-      "② OvR: $K$개, OvO: $K(K-1)/2$개",
+      "② OvR은 각 클래스를 나머지 전체와 구분하는 $K$개를, OvO는 모든 클래스 쌍을 1:1로 구분하는 $K(K-1)/2$개를 학습시킨다",
       "③ OvR과 OvO 모두 각 클래스에 하나씩 대응하는 분류기만 학습시키므로 $K$개로 동일한 개수를 가진다",
       "④ OvR과 OvO 모두 모든 가능한 클래스 쌍 조합에 대해 분류기를 만들어 $K(K-1)/2$개로 동일하다"
     ],
@@ -527,7 +527,7 @@ export const set1 = [
     choices: [
       "① True Positive(TP)로 실제 양성을 정확히 양성으로 맞춘 경우이며, 제1종 오류(Type 1 Error)에 해당한다",
       "② True Negative(TN)로 실제 음성을 정확히 음성으로 맞춘 경우이며, 제2종 오류(Type 2 Error)에 해당한다",
-      "③ False Positive(FP), 제1종 오류(Type 1 Error)",
+      "③ False Positive(FP)로 실제 음성을 양성으로 잘못 예측한 경우이며, 제1종 오류(Type 1 Error)에 해당한다",
       "④ False Negative(FN)로 실제 양성을 음성으로 놓친 경우이며, 제2종 오류(Type 2 Error)에 해당한다"
     ],
     answer: 2,
@@ -647,7 +647,7 @@ export const set2 = [
     difficulty: "medium",
     question: "10-fold Cross-Validation과 Leave-one-out Cross-Validation(LOOCV)의 차이에 대한 설명으로 가장 적절한 것은?",
     choices: [
-      "① LOOCV는 폴드 수가 전체 데이터 수($N$)와 같아 $N$번의 훈련을 반복하므로 연산 비용이 매우 크고, 10-fold는 10번만 반복하므로 실무에서 LOOCV보다 훨씬 자주 쓰인다",
+      "① LOOCV는 폴드 수가 전체 데이터 수($N$)와 같아 $N$번 훈련을 반복하므로 연산 비용이 크고, 10-fold는 10회만 반복해 실무에서 더 자주 쓰인다",
       "② 10-fold는 K=10이라 매번 90%의 데이터로 학습해야 하므로, K=N인 LOOCV보다 총 연산량이 항상 더 많아 대규모 데이터에서는 비효율적이다",
       "③ LOOCV는 매 반복마다 검증 샘플이 1개로 고정되어 있어 소수 클래스가 골고루 분배되므로 클래스 불균형 문제를 자동으로 해결해 준다",
       "④ 10-fold는 폴드 수가 적어 분산이 작기 때문에 항상 LOOCV보다 일반화 성능 추정의 정확도가 더 높다고 이론적으로 증명되어 있다"
@@ -707,10 +707,10 @@ export const set2 = [
     difficulty: "easy",
     question: "Linear Regression 비용 함수 $J(\\theta) = \\frac{1}{2}\\sum_{i=1}^n (f_\\theta(x^{(i)}) - y^{(i)})^2$ 앞에 $\\frac{1}{2}$이 들어간 이유로 가장 적절한 것은?",
     choices: [
-      "① 미분 시 제곱에서 내려오는 2와 약분하여 수식을 깔끔하게 만들기 위한 의도적 상수",
+      "① 미분 시 제곱 지수에서 내려오는 계수 2와 약분되어 그래디언트 수식을 깔끔하게 만들어 주는, 결과에 영향 없는 편의용 상수",
       "② 수학적 정의상 반드시 요구되는 항으로, 이 값이 없으면 argmin이 이동하여 최적해 $\\theta^*$의 위치가 완전히 달라진다",
       "③ 원래 Convex였던 $J(\\theta)$를 Concave 함수로 뒤집어 Gradient Ascent로 Maximize하기 위한 수학적 변환 도구",
-      "④ Linear Regression 전용 상수이며, Logistic Regression이나 다른 Loss Function에는 구조적으로 등장할 수 없는 특수 항"
+      "④ Linear Regression에만 쓰이는 전용 상수이며, Logistic Regression의 Loss Function에는 구조적으로 등장할 수 없는 특수 항"
     ],
     answer: 0,
     brief: "미분 시 제곱에서 내려오는 2와 상쇄시키기 위한 편의용 상수. 최적해 위치는 달라지지 않는다.",
@@ -746,7 +746,7 @@ export const set2 = [
     question: "다중 클래스 분류(Multiclass Classification) 모델의 출력이 '확률'로 해석되려면 반드시 만족해야 하는 두 조건은?",
     choices: [
       "① 모든 출력값이 1보다 크거나 같으며(≥ 1), 전체 값의 합이 0이 되어 상쇄되어야 한다는 두 조건",
-      "② 모든 출력값이 음수가 아니며(≥ 0), 전체 값의 합이 1이다",
+      "② 모든 출력값이 음수가 아니며(≥ 0), 전체 클래스 출력값의 합이 정확히 1이 되어 하나의 확률 분포를 이루어야 한다는 두 조건",
       "③ 모든 출력값이 반드시 정수여야 하고, 클래스 간 가장 큰 값이 정확히 1로 고정되어야 한다는 두 조건",
       "④ 모든 출력값이 서로 동일한 값을 가지며, 그 전체 합은 전체 클래스 수($C$)와 일치해야 한다는 두 조건"
     ],
@@ -824,10 +824,10 @@ export const set2 = [
     difficulty: "medium",
     question: "Naive Bayes의 조건부 독립(Conditionally Independent) 가정이 계산을 현저히 간단하게 만드는 구체적 이유는?",
     choices: [
-      "① 고차원 결합 확률 $p(x \\mid y)$ 를 각 피처의 확률 곱 $\\prod_j p(x_j \\mid y)$ 로 쪼갤 수 있어 차원 저주(Curse of Dimensionality) 문제가 완화되기 때문",
+      "① 고차원 결합 확률 $p(x \\mid y)$ 를 각 피처의 확률 곱 $\\prod_j p(x_j \\mid y)$ 로 쪼갤 수 있어 차원 저주 문제가 크게 완화되기 때문",
       "② 서로 의존하지 않는 피처들은 분류 결과와 무관하므로 학습 전에 임의로 제거해도 Likelihood 계산이 달라지지 않기 때문이다",
       "③ 각 클래스의 사전 확률(Prior) $P(y)$를 별도로 추정할 필요가 없어지고 Likelihood만 비교하면 바로 argmax가 결정되기 때문이다",
-      "④ 모든 피처가 가우시안 분포를 따르도록 자동 정규화되어 $p(x_j \\mid y)$가 명시적 수식 없이도 계산되기 때문이다"
+      "④ 모든 피처가 가우시안 분포를 따르도록 자동 정규화되어 $p(x_j \\mid y)$가 별도의 명시적 분포 수식 없이도 자동으로 계산되어 추정 비용이 사라지기 때문이다"
     ],
     answer: 0,
     brief: "고차원 결합 $p(x|y)$를 1차원 $p(x_j|y)$의 곱으로 축소 → 차원 저주 완화.",
@@ -886,7 +886,7 @@ export const set2 = [
     choices: [
       "① 한 클래스가 100% 차지해 완벽하게 순수(Pure)한 상태일 때 셋 다 각 지표의 정의상 최댓값을 찍는다",
       "② 두 클래스 비율이 99:1에 가까워 한쪽이 지배적일 때 Entropy와 Gini가 로그·제곱 비선형성으로 가장 큰 값을 보인다",
-      "③ 두 클래스 비율이 50:50으로 균등하게 섞일 때",
+      "③ 두 클래스 비율이 50:50으로 균등하게 섞여 불확실성이 가장 클 때 세 지표가 공통으로 각 정의상 최댓값을 찍는다",
       "④ 세 지표는 수학적 정의가 서로 달라 최댓값을 찍는 클래스 비율 조건도 각기 다르게 나타나므로 공통 조건은 존재하지 않는다"
     ],
     answer: 2,
@@ -942,7 +942,7 @@ export const set2 = [
     question: "KNN의 베이즈 유도 과정에서 부피 $V$와 전체 데이터 수 $N$이 분자·분모에서 서로 약분되고, 최종 클래스 결정은 어떤 단순한 비율로 귀결되는가?",
     choices: [
       "① $K_c / N_c$ — 클래스 $c$의 이웃 개수를 해당 클래스의 전체 데이터 수로 나눈 값이며, Likelihood $P(x \\mid C_c)$의 근사로 해석된다",
-      "② $K_c / K$ (K개 이웃 중 클래스 $c$에 속하는 이웃의 수의 비율)",
+      "② $K_c / K$ — K개의 최근접 이웃 중 클래스 $c$에 속하는 이웃의 개수가 차지하는 비율이며, 부피와 전체 데이터 수가 모두 약분된 결과다",
       "③ $N_c / N$ — 전체 데이터 중 클래스 $c$가 차지하는 비율로서 Prior $P(C_c)$ 자체이며, 이웃 개수 $K$와 무관한 값",
       "④ $V / K$ — 탐색 영역의 부피를 이웃 개수로 나눈 비율로서 데이터 밀도(Density)를 추정하는 단위 체적당 샘플 수"
     ],
@@ -1220,9 +1220,9 @@ export const set3 = [
     question: "머신러닝 시스템을 다룰 때 반드시 고려해야 하는 3가지 핵심 요소로 올바르게 묶인 것은?",
     choices: [
       "① 데이터(Data), 알고리즘(Algorithm), 모델(Model)",
-      "② 데이터(Data), Training set, Validation set — 학습 자료와 그 분할 방식이 ML의 본질이므로 이 세 가지로 분류",
-      "③ Loss Function, Optimizer, Learning Rate — 학습 과정을 구성하는 세 가지 수치·함수 요소로서 ML 시스템의 본체",
-      "④ CPU, GPU, Memory — 머신러닝 연산이 수행되는 하드웨어 자원의 세 축이므로 이것이 시스템의 3요소"
+      "② 데이터(Data), Training set(훈련 세트), Validation set(검증 세트)",
+      "③ Loss Function(손실 함수), Optimizer(최적화기), Learning Rate(학습률)",
+      "④ CPU, GPU, Memory — 연산이 수행되는 하드웨어 자원의 세 축"
     ],
     answer: 0,
     brief: "사람 뇌의 경험·학습 방법·인지 단계에 대응되는 3요소: 데이터·알고리즘·모델.",
@@ -1412,10 +1412,10 @@ export const set3 = [
     difficulty: "hard",
     question: "Linear Regression, Logistic Regression, Multi-class Classification은 공통으로 $\\theta^T x$ 라는 선형 뼈대를 공유하는 Generalized Linear Model(GLM)이다. 각 모델이 가정하는 Y의 확률 분포를 올바르게 짝지은 것은?",
     choices: [
-      "① Linear Regression은 정규분포(Gaussian), Logistic Regression은 베르누이 분포(Bernoulli), Multi-class Classification은 다항 분포(Multinomial)를 가정한다",
-      "② Linear Regression은 베르누이 분포, Logistic Regression은 정규분포, Multi-class Classification은 다항 분포를 가정하는 구조로 정리된다",
-      "③ 세 모델 모두 정규분포를 공통 전제로 하며 Link Function만 달라질 뿐 가정하는 분포 자체는 완전히 동일하다고 본다",
-      "④ Linear Regression은 균등 분포, Logistic Regression은 지수 분포, Multi-class Classification은 포아송 분포를 각각 가정한다"
+      "① Linear은 정규분포(Gaussian), Logistic은 베르누이(Bernoulli), Multi-class는 다항(Multinomial)을 가정한다",
+      "② Linear은 베르누이(Bernoulli), Logistic은 정규분포, Multi-class는 다항 분포를 가정한다",
+      "③ 세 모델 모두 정규분포(Gaussian)를 공통 전제로 하며 가정하는 분포 자체는 완전히 동일하다고 본다",
+      "④ Linear은 균등 분포(Uniform), Logistic은 지수 분포(Exponential), Multi-class는 포아송 분포(Poisson)를 가정한다"
     ],
     answer: 0,
     brief: "Linear=정규(Gaussian), Logistic=베르누이(Bernoulli), Multi-class=다항(Multinomial).",
@@ -1434,10 +1434,10 @@ export const set3 = [
     difficulty: "medium",
     question: "L1 정규화와 L2 정규화의 2차원 파라미터 공간에서의 제약 영역 형태로 올바르게 짝지어진 것은?",
     choices: [
-      "① L1: 원(Circle, $\\sum \\theta_i^2 \\le c$), L2: 다이아몬드($\\sum |\\theta_i| \\le c$) — 제곱 합이 L1, 절댓값 합이 L2로 대응",
-      "② L1: 다이아몬드, L2: 원(Circle)",
-      "③ 두 정규화 모두 원(Circle) 형태이며, 차이는 단지 반지름 $c$의 크기(상수)에만 있고 기하학적 형태는 완전히 동일하다",
-      "④ 두 정규화 모두 다이아몬드(마름모) 형태이고, 차이는 대각선 길이 비율에만 있을 뿐 Sparsity 효과도 동일하게 나타난다"
+      "① L1: 원(Circle, 제곱 합 $\\sum \\theta_i^2 \\le c$), L2: 다이아몬드(절댓값 합 $\\sum |\\theta_i| \\le c$)",
+      "② L1: 다이아몬드(절댓값 합 $\\sum |\\theta_i| \\le c$), L2: 원(제곱 합 $\\sum \\theta_i^2 \\le c$)",
+      "③ 두 정규화 모두 원(Circle) 형태이며, 차이는 반지름 $c$의 크기에만 있고 기하학적 형태는 완전히 동일하다",
+      "④ 두 정규화 모두 다이아몬드(마름모) 형태이고, 대각선 길이만 다를 뿐 Sparsity 효과도 동일하게 나타난다"
     ],
     answer: 1,
     brief: "L1 = 절댓값 합 → 다이아몬드(마름모). L2 = 제곱 합 → 원.",
@@ -1626,10 +1626,10 @@ export const set3 = [
     difficulty: "medium",
     question: "Decision Tree의 치명적 단점인 '불안정성(Instability)'에 대한 가장 정확한 설명은?",
     choices: [
-      "① Decision Tree는 계층적 분할 구조 덕분에 Overfitting이 전혀 발생하지 않는 안정적 모델이며, 데이터 변화에도 흔들리지 않는 예측 일관성을 보장한다",
+      "① 계층적 분할 구조 덕분에 Overfitting이 전혀 발생하지 않아 데이터 변화에도 예측이 흔들리지 않는다",
       "② 입력 데이터의 아주 작은 변화(예: 단어 수 50→51)에도 분류 결과가 완전히 뒤바뀔 수 있다",
-      "③ Tree 구조의 계층적 분기 특성 덕분에 훈련·테스트 어느 데이터에서도 100% 정확도를 수학적으로 보장하는 결정론적 모델이기 때문이다",
-      "④ 재귀적 분할 알고리즘의 계산 복잡도가 지나치게 높아 학습·예측 속도가 매우 느리기 때문에 실무 파이프라인에는 거의 쓰이지 않는다"
+      "③ 계층적 분기 특성 덕분에 훈련·테스트 어느 데이터에서도 100% 정확도를 수학적으로 보장한다",
+      "④ 재귀적 분할의 계산 복잡도가 너무 높아 학습·예측 속도가 느려 실무에는 거의 쓰이지 않는다"
     ],
     answer: 1,
     brief: "조그만 입력 변화에도 분할 임계값을 넘겨 예측이 뒤집힘 — 이래서 앙상블(RF)이 필요하다.",
@@ -1645,10 +1645,10 @@ export const set3 = [
     difficulty: "medium",
     question: "Soft-margin SVM에서 도입되는 Slack Variable $\\xi$(여유 변수)의 역할로 가장 적절한 것은?",
     choices: [
-      "① 모든 샘플이 마진 바깥에 놓이도록 강제하는 Hard-margin의 엄격한 제약 $y^{(i)}(w^T x^{(i)} + b) \\ge 1$ 을 그대로 유지하는 장치",
-      "② 일부 샘플이 마진 안쪽에 들어오거나 오분류되는 것을 일정 비용과 함께 허용해 모델에 유연성을 부여",
-      "③ 경사하강법의 학습률(Learning Rate) $\\eta$를 에폭별 Gradient 크기에 따라 자동으로 스케줄링하는 하이퍼파라미터 조정 인자",
-      "④ Linear·Polynomial·RBF 중 어떤 커널 함수를 사용할지를 결정하는 이산 상수이며, 학습 전에 고정되는 커널 선택용 지시 변수"
+      "① 모든 샘플이 마진 바깥에 놓이도록 강제하는 제약 $y^{(i)}(w^T x^{(i)} + b) \\ge 1$ 을 그대로 유지하는 장치",
+      "② 일부 샘플이 마진 안쪽에 들어오거나 오분류되는 것을 일정 비용과 함께 허용해 모델에 유연성을 부여하는 변수",
+      "③ 경사하강법의 학습률(Learning Rate) $\\eta$를 Gradient 크기에 따라 자동 스케줄링하는 조정 인자",
+      "④ Linear·Polynomial·RBF 중 어떤 커널을 쓸지 학습 전에 결정하는 커널 선택용 지시 변수"
     ],
     answer: 1,
     brief: "Slack = '조금 틀려도 OK'라는 여유. $\\xi = 0$ 이면 Hard-margin과 동일.",
@@ -1705,9 +1705,9 @@ export const set3 = [
     difficulty: "easy",
     question: "Confusion Matrix에서 실제로는 Positive(양성)인 데이터를 모델이 Negative(음성)로 잘못 예측한 경우의 명칭과 오류 유형으로 올바른 것은?",
     choices: [
-      "① True Positive(TP), 제1종 오류(Type 1 Error) — 실제 Positive를 Positive로 올바르게 맞힌 경우이지만 오분류로 간주되는 항목",
-      "② True Negative(TN), 제2종 오류(Type 2 Error) — 실제 Negative를 Negative로 맞힌 경우이며 누락형 오류로 분류되는 항목",
-      "③ False Positive(FP), 제1종 오류(Type 1 Error) — 실제 Negative를 Positive로 오진한 과진단 유형의 오류 항목",
+      "① True Positive(TP), 제1종 오류(Type 1 Error)",
+      "② True Negative(TN), 제2종 오류(Type 2 Error)",
+      "③ False Positive(FP), 제1종 오류(Type 1 Error)",
       "④ False Negative(FN), 제2종 오류(Type 2 Error)"
     ],
     answer: 3,
@@ -1869,7 +1869,7 @@ export const set4 = [
     question: "In-distribution 데이터와 Out-of-Distribution(OOD) 데이터의 차이로 가장 적절한 것은?",
     choices: [
       "① In-distribution은 훈련 데이터와 유사한 특성·패턴(분포)을 공유하는 데이터이고, OOD는 훈련 데이터에 없던 새로운 패턴·특징·조건이 포함된 데이터",
-      "② 두 개념은 본질적으로 동의어이며 연구·실무 모두에서 구분 없이 혼용되는 완전히 같은 의미의 용어다",
+      "② 두 개념은 본질적으로 동의어로, 분포 일치 여부와 무관하게 연구·실무 모두에서 구분 없이 혼용되는 완전히 같은 의미의 용어다",
       "③ OOD는 훈련 데이터를 수집하는 단계에서 이미 포함되어 항상 Training Set의 일부분으로 함께 학습되는 데이터를 가리킨다",
       "④ In-distribution은 오직 Test Set에만 나타나는 새로운 분포이고, OOD는 Training Set 안에만 존재하는 기존 분포를 가리킨다"
     ],
@@ -1891,8 +1891,8 @@ export const set4 = [
     question: "Linear Regression과 Logistic Regression의 '뼈대' 공통점과 차이점에 대한 설명으로 가장 적절한 것은?",
     choices: [
       "① 두 모델 모두 $\\theta^T x$ 라는 동일한 선형 뼈대를 공유하지만, Logistic Regression은 그 결과에 Sigmoid 함수를 씌워 0과 1 사이의 확률로 바운드한다",
-      "② 두 모델의 선형 뼈대는 서로 다른 수식으로 유도되며 파라미터화 방식도 달라 구조적으로 어떤 공통점도 찾아볼 수 없다",
-      "③ Linear Regression은 결과를 0과 1 사이로 바운드하기 위해 Sigmoid Link를 씌우고, Logistic Regression은 아무것도 씌우지 않는 Identity Function을 그대로 사용한다",
+      "② 두 모델의 선형 뼈대는 서로 다른 수식으로 유도되고 파라미터화 방식도 달라, $\\theta^T x$ 같은 구조적 공통점을 전혀 찾아볼 수 없다",
+      "③ Linear Regression이 결과를 0~1로 바운드하려 Sigmoid Link를 씌우고, Logistic Regression은 Identity Function을 그대로 쓴다(역할이 뒤바뀜)",
       "④ Logistic Regression은 $\\theta^T x$ 형태의 선형 뼈대를 전혀 사용하지 않고 오직 비선형 함수만으로 확률을 계산하는 구조를 가진다"
     ],
     answer: 0,
@@ -2067,7 +2067,7 @@ export const set4 = [
       "① Posterior $P(y \\mid x)$ — argmax 계산에서 제외 가능한 상수 역할을 하는 항",
       "② Likelihood $P(x \\mid y)$ — 클래스 $y$에 의존하지 않는 상수로 비교에서 소거되는 항",
       "③ Prior $P(y)$ — 관측 데이터 $x$에만 의존하는 정규화 상수로 작용하는 항",
-      "④ Evidence(Marginal Probability) $P(x)$"
+      "④ Evidence $P(x)$ — 클래스 $y$와 무관해 모든 후보에 동일하게 곱해지는 정규화 상수 역할을 하는 항"
     ],
     answer: 3,
     brief: "$P(x)$는 $y$와 무관한 정규화 상수 → argmax 비교에 영향 없음.",
@@ -2086,7 +2086,7 @@ export const set4 = [
       "① 판별 모델은 조건부 확률 $p(y|x)$만 학습해 클래스 경계를 찾고, 생성 모델은 결합 확률 $p(x,y)=p(x|y)p(y)$를 학습해 데이터 생성 과정을 모델링한다",
       "② 판별 모델은 결합 확률 $p(x,y)$를 학습해 데이터 생성을 모델링하고, 생성 모델은 조건부 확률 $p(y|x)$만 학습해 클래스 경계를 찾는다",
       "③ 판별 모델과 생성 모델은 모두 동일하게 조건부 확률 $p(y|x)$를 학습하며 단지 학습 알고리즘만 다를 뿐 본질적 차이는 없다",
-      "④ 판별 모델은 회귀 문제에만, 생성 모델은 분류 문제에만 사용되도록 설계된 확률 학습 기법이다"
+      "④ 판별 모델은 $p(y|x)$로 회귀 문제에만, 생성 모델은 $p(x,y)$로 분류 문제에만 쓰도록 적용 범위가 고정된 확률 학습 기법이다"
     ],
     answer: 0,
     brief: "판별 = 조건부 확률 p(y|x) 학습(경계). 생성 = 결합 확률 p(x,y) 학습(생성 과정).",
@@ -2124,10 +2124,10 @@ export const set4 = [
     difficulty: "medium",
     question: "Parametric 모델(예: Linear Regression)과 Non-parametric 모델(예: KNN)의 가장 큰 차이는?",
     choices: [
-      "① Parametric은 고정된 함수 형태($y = f(x, W)$)를 가정하고 학습된 $W$만으로 예측하며, Non-parametric은 고정 함수 형태 없이 예측 시점에도 트레이닝 데이터 자체를 필요로 한다",
+      "① Parametric은 고정 함수 형태 $y=f(x,W)$를 가정해 학습된 $W$만으로 예측하고, Non-parametric은 함수 형태 없이 예측 시점에 트레이닝 데이터 자체를 필요로 한다",
       "② Parametric 모델은 정답 레이블이 주어진 지도학습에만 사용 가능하고, Non-parametric 모델은 레이블 없이 구조만 찾는 비지도학습에만 적용되는 기법이다",
       "③ Parametric 모델은 복잡한 비선형 결정 경계만 만들 수 있고, Non-parametric 모델은 구조적으로 선형 결정 경계만 표현할 수 있도록 제한된다",
-      "④ 두 분류는 용어 표현만 다를 뿐 모델이 함수 형태를 사전에 가정하는 방식이 같아 실제로는 구분 없이 혼용되는 동일한 개념이다"
+      "④ 두 분류는 용어 표현만 다를 뿐 함수 형태를 사전에 가정하고 $W$만 저장하는 방식이 같아, 실제로는 구분 없이 혼용되는 동일한 개념이다"
     ],
     answer: 0,
     brief: "Parametric: 함수 형태 고정, $W$만 저장. Non-parametric: 함수 형태 없음, 데이터 자체가 모델.",
@@ -2160,12 +2160,12 @@ export const set4 = [
     topic: "Voting 방식 비교",
     type: "multiple_choice",
     difficulty: "medium",
-    question: "앙상블 투표 방식 중, 각 분류기가 내놓은 **확률(Confidence)의 평균**을 계산하여 최종 클래스를 결정하는 방법은?",
+    question: "여러 분류기를 결합하는 앙상블 투표에서, 각 분류기를 동등하게 보되 예측 라벨이 아니라 클래스별 출력 확률을 산술 평균해 최종 클래스를 정하는 방식은?",
     choices: [
-      "① Majority Voting(Hard Voting)",
-      "② Soft Voting",
-      "③ Weighted Voting",
-      "④ Bootstrap Voting"
+      "① Majority Voting(Hard Voting) — 각 분류기의 최종 예측 라벨만 모아 다수결로 결정하는 방식",
+      "② Soft Voting — 각 분류기의 클래스별 확률을 평균 내어 가장 큰 클래스로 결정하는 방식",
+      "③ Weighted Voting — 분류기마다 신뢰도에 비례한 가중치를 곱해 투표 결과를 합산하는 방식",
+      "④ Bootstrap Voting — 부트스트랩 재표본 자체를 투표 단위로 삼는다고 가정한 가상의 방식"
     ],
     answer: 1,
     brief: "Soft Voting = 클래스별 확률 평균. Hard Voting = 예측 라벨 다수결.",
@@ -2181,10 +2181,10 @@ export const set4 = [
     difficulty: "hard",
     question: "Decision Tree의 3가지 Impurity 지표 중, 일반적으로 트리를 성장시키는 단계보다 **Pruning(가지치기) 단계**에서 평가 지표로 주로 사용되는 것은?",
     choices: [
-      "① Entropy",
-      "② Gini Impurity",
-      "③ Classification Error",
-      "④ Information Gain"
+      "① Entropy — 분포 변화에 민감해 트리 성장 단계의 분할 기준으로 주로 쓰이는 지표",
+      "② Gini Impurity — 클래스 분포의 불순도를 재어 성장 단계 분할 기준으로 자주 쓰이는 지표",
+      "③ Classification Error — 분포 변화에 둔감해 트리를 키우기보다 이미 자란 트리를 다듬을 때 주로 쓰이는 지표",
+      "④ Information Gain — 분할 전후 불순도 감소량으로 성장 단계에서 분할을 고르는 지표"
     ],
     answer: 2,
     brief: "Classification Error는 민감도가 낮아 성장보다는 Pruning 평가에 주로 쓰인다.",
@@ -2460,8 +2460,8 @@ export const set5 = [
     difficulty: "hard",
     question: "OpenAI가 발견한 Deep Double Descent 현상과 Scaling Law의 관계로 가장 적절한 것은?",
     choices: [
-      "① 두 현상은 서로 완전히 무관한 독립 개념이며, 하나가 다른 하나를 경험적·이론적으로 설명할 수 없다",
-      "② Deep Double Descent는 '모델 크기·데이터·계산량을 키울수록 성능이 계속 좋아진다'는 Scaling Law의 경험적 근거 중 하나로, 전통적 U자형 Overfitting 이론으로는 설명되지 않는 현상",
+      "① 두 현상은 서로 완전히 무관한 독립 개념이며, 하나가 다른 하나를 경험적으로도 이론적으로도 설명할 수 없는 관계다",
+      "② Deep Double Descent는 키울수록 성능이 좋아진다는 Scaling Law의 경험적 근거이며, 전통적 U자형 Overfitting 이론으로는 설명되지 않는 현상이다",
       "③ Scaling Law는 훈련 Epoch나 모델 크기와 무관한 수렴 속도 법칙이고, Deep Double Descent와는 전혀 별개의 개념이다",
       "④ Deep Double Descent는 학습률(Learning Rate)을 Warm-up 구간에서 두 번 감소시키는 스케줄링 기법의 별칭이다"
     ],
@@ -2480,7 +2480,7 @@ export const set5 = [
     question: "Shortcut Learning과 OOD(Out-of-Distribution) 데이터의 관계로 가장 적절한 것은?",
     choices: [
       "① 두 개념은 서로 완전히 무관한 현상이며, 데이터 분포 이동(Distribution Shift) 이론에서 전혀 다른 축으로 분류된다",
-      "② Shortcut Learning은 훈련 데이터에 우연히 존재하는 허상 패턴(Spurious Pattern)을 정답 힌트로 학습한 결과이기 때문에, 해당 허상 패턴이 없는 OOD 데이터에서 모델이 극도로 취약해지는 근본 원인이 된다",
+      "② Shortcut Learning은 훈련 데이터의 허상 패턴(Spurious Pattern)을 정답 힌트로 학습한 결과여서, 그 패턴이 없는 OOD 데이터에서 모델이 취약해지는 근본 원인이 된다",
       "③ OOD(Out-of-Distribution) 데이터는 오히려 Shortcut Learning이 완전히 해결되어 제거된 상태의 정제된 데이터셋을 가리키는 용어다",
       "④ Shortcut Learning은 오직 이미지 분류 문제의 CNN 백본에서만 관찰되는 현상이며, 자연어·음성 도메인에서는 보고된 사례가 전혀 없다"
     ],
@@ -2520,7 +2520,7 @@ export const set5 = [
     difficulty: "hard",
     question: "비용 함수 $J(\\theta) = \\frac{1}{2}(X\\theta - y)^T(X\\theta - y)$ 를 $\\theta$에 대해 미분하고 0으로 놓은 뒤 Normal Equation $\\theta = (X^T X)^{-1} X^T y$ 를 도출하는 핵심 단계로 가장 적절한 것은?",
     choices: [
-      "① $J(\\theta)$를 $\\theta$에 대해 미분해 0으로 놓고 전개하면 $X^T X \\theta = X^T y$ 가 나오며, 양변 앞에 역행렬 $(X^T X)^{-1}$을 곱해 $\\theta = (X^T X)^{-1} X^T y$ 를 얻는다",
+      "① $J(\\theta)$를 미분해 0으로 놓으면 $X^T X \\theta = X^T y$ 가 나오고, 양변에 $(X^T X)^{-1}$을 곱해 $\\theta = (X^T X)^{-1} X^T y$ 를 얻는다",
       "② Gradient Descent를 충분히 반복해 수렴시키면 해가 나오며, 역행렬 계산 없이 반복 갱신만으로 Closed-form 해가 직접 도출되는 구조다",
       "③ Lagrange 승수법으로 제약 조건을 결합하고 KKT 조건을 풀면 Normal Equation이 자동으로 유도되어 역행렬 계산이 불필요해진다",
       "④ EM 알고리즘의 M-step에서 기대값(Expectation) 형태로 파라미터를 재추정하면 Normal Equation이 자연스럽게 도출되는 구조다"
@@ -2599,7 +2599,7 @@ export const set5 = [
     difficulty: "hard",
     question: "L1과 L2 정규화를 동시에 적용한 Elastic Net에 대한 설명으로 가장 적절한 것은?",
     choices: [
-      "① L1의 Sparsity(일부 파라미터 0화)와 L2의 Shrinking(전체 크기 축소)을 모두 얻을 수 있으며, 상관관계가 높은 피처 그룹에서 L1 단독 사용 시 발생하는 '하나만 선택' 불안정성을 완화한다",
+      "① L1의 Sparsity와 L2의 Shrinking을 모두 얻을 수 있으며, 상관 높은 피처 그룹에서 L1 단독 사용 시 발생하는 '하나만 선택' 불안정성을 완화한다",
       "② L1과 L2는 목적 함수에 동시에 넣으면 Gradient가 상쇄되어 수학적으로 동시에 쓸 수 없는 상호 배타적 정규화다",
       "③ Elastic Net은 항상 L1·L2 단독 정규화보다 성능이 떨어지므로 실무에서는 순수 Lasso·Ridge가 표준으로 사용된다",
       "④ L1 + L2 결합은 항상 Ridge($\\lambda\\sum\\theta^2$)와 완전히 동일한 결과를 내며 Sparsity 효과가 전혀 발생하지 않는다"
@@ -2637,7 +2637,7 @@ export const set5 = [
     difficulty: "hard",
     question: "LDA에서 '모든 클래스의 공분산이 동일하다($\\Sigma_1 = \\Sigma_2 = \\Sigma$)'는 가정이 왜 결정 경계를 선형으로 만드는지 수식적 핵심을 가장 잘 설명한 것은?",
     choices: [
-      "① 두 판별 함수 $g_1(x)$와 $g_2(x)$를 빼서 0으로 둘 때 공분산이 동일하면 $x^T \\Sigma^{-1} x$ 이차항이 양쪽에서 상쇄되어 $w^T x + b = 0$ 형태의 선형 방정식만 남기 때문",
+      "① 두 판별 함수 $g_1(x), g_2(x)$를 빼서 0으로 둘 때 공분산이 같으면 $x^T \\Sigma^{-1} x$ 이차항이 상쇄되어 $w^T x + b = 0$ 선형 방정식만 남기 때문",
       "② 가우시안 분포 자체가 원래부터 선형 경계를 유도하는 분포이므로 공분산 가정과 무관하게 LDA의 결정 경계는 항상 직선으로 결정된다",
       "③ 공분산이 동일하면 판별 함수의 이차항 계수가 정확히 1로 고정되어 방정식이 1차식과 수치적으로 동일한 형태로 간주되기 때문이다",
       "④ 베이즈 정리 자체가 선형 함수이기 때문에 공분산이 같다는 가정이 추가되면 자동으로 결정 경계가 1차 방정식 형태로 닫혀 버린다"
@@ -2735,10 +2735,10 @@ export const set5 = [
     difficulty: "hard",
     question: "AdaBoost에서 등장하는 '데이터 샘플의 가중치 $w^{(i)}$'와 '분류기의 가중치 $\\alpha_j$'의 역할 차이로 가장 적절한 것은?",
     choices: [
-      "① $w^{(i)}$는 다음 분류기 학습 시 해당 샘플에 얼마나 집중할지, $\\alpha_j$는 해당 분류기가 최종 앙상블 투표에서 얼마나 영향을 줄지를 결정하는 서로 다른 가중치다",
-      "② 두 가중치는 기호만 다를 뿐 학습 과정 내부에서 완전히 동일한 값을 공유하는 같은 변수이다",
+      "① $w^{(i)}$는 다음 분류기 학습 시 샘플에 얼마나 집중할지, $\\alpha_j$는 그 분류기가 최종 투표에서 얼마나 영향을 줄지를 정하는 서로 다른 가중치다",
+      "② 두 가중치는 기호만 다를 뿐 학습 과정 내부에서 라운드마다 완전히 동일한 값을 공유하는 같은 변수에 해당한다",
       "③ $w^{(i)}$는 AdaBoost에 존재하지 않고 Bagging·Gradient Boosting에서만 쓰이는 샘플링 가중치일 뿐이다",
-      "④ $\\alpha_j$는 라운드·에러율과 무관하게 모든 분류기에 대해 1로 고정된 단순 상수로 정의된다"
+      "④ $\\alpha_j$는 라운드·에러율과 무관하게 모든 분류기에 대해 항상 1로 고정되는 단순 상수로 정의된다"
     ],
     answer: 0,
     brief: "$w^{(i)}$ = 샘플별 집중도(라운드마다 갱신). $\\alpha_j$ = 분류기별 신뢰도(에러율에 따라 결정).",
@@ -2810,7 +2810,7 @@ export const set5 = [
     difficulty: "hard",
     question: "RBF(Gaussian) Kernel과 Polynomial Kernel의 차이로 가장 적절한 것은?",
     choices: [
-      "① RBF는 두 점 사이의 거리에 기반한 유사도($\\exp(-\\gamma \\|x_i - x_j\\|^2)$)로 비선형 변환하고, Polynomial은 두 점의 내적을 거듭제곱한 형태($(x_i \\cdot x_j + c)^d$)로 다항 비선형 변환한다",
+      "① RBF는 두 점의 거리 기반 유사도 $\\exp(-\\gamma \\|x_i - x_j\\|^2)$로, Polynomial은 내적의 거듭제곱 $(x_i \\cdot x_j + c)^d$로 비선형 변환한다",
       "② RBF Kernel은 특징 공간이 지나치게 조밀해져 어떤 데이터셋에서도 Polynomial Kernel보다 성능이 낮게 측정된다",
       "③ Polynomial Kernel은 차수 $d$가 $d \\le 1$로 제한되어 있어 비선형 결정 경계 자체를 만들어낼 수 없다",
       "④ RBF Kernel은 Gaussian 가정상 오직 이진(Binary) 분류 문제에만 적용 가능하며 다중 클래스에는 쓸 수 없다"
@@ -2829,7 +2829,7 @@ export const set5 = [
     difficulty: "medium",
     question: "Hard-margin SVM이 실전에서 거의 사용되지 않고 Soft-margin이 표준이 된 이유로 가장 적절한 것은?",
     choices: [
-      "① 현실 데이터에는 노이즈와 아웃라이어가 있어 모든 샘플이 마진 바깥에 완벽히 위치해야 한다는 엄격한 조건($\\forall i: y_i(w^T x_i + b) \\ge 1$)을 만족할 수 없고, 소수 아웃라이어만 있어도 결정 경계가 극단적으로 휘어지기 때문",
+      "① 현실 데이터의 노이즈·아웃라이어 탓에 모든 샘플이 마진 바깥에 놓여야 하는 조건 $y_i(w^T x_i + b) \\ge 1$ 을 못 채우고, 소수 아웃라이어로도 경계가 극단적으로 휘기 때문",
       "② Hard-margin SVM의 이차계획(QP) 문제는 볼록성이 깨져 있어 수학적으로 Global Optimum이 원리상 존재하지 않기 때문",
       "③ Hard-margin은 모든 훈련 샘플에 대해 제약을 걸어 Soft-margin보다 계산량이 압도적으로 많아 대규모 데이터에서 비실용적이기 때문",
       "④ Hard-margin은 구조적으로 확률(Posterior) 출력을 전혀 산출할 수 없어 실무 해석에 치명적 제약이 있기 때문"
@@ -2865,7 +2865,7 @@ export const set5 = [
     topic: "SVM·Logistic 확신도 공통 원리",
     type: "multiple_choice",
     difficulty: "hard",
-    question: "SVM과 Logistic Regression은 모두 '결정 경계에서 멀리 있을수록 확신도(Confidence)가 높다'는 공통 원리를 가진다. 이에 대한 설명으로 가장 적절한 것은?",
+    question: "SVM과 Logistic Regression에서 '결정 경계로부터의 거리'와 예측 확신도(Confidence)의 관계에 대한 설명으로 가장 적절한 것은?",
     choices: [
       "① SVM에서는 $|w^T x + b|$ 값이 클수록 마진(경계와의 거리)이 크고 확신이 높으며, Logistic Regression에서도 $|\\theta^T x|$ 값이 클수록 Sigmoid 출력이 0 또는 1에 가까워져 확신도가 커진다",
       "② SVM과 Logistic Regression은 마진 기반·확률 기반이라는 서로 완전히 다른 원리로 작동하므로 확신도 측면에서 어떠한 공통점도 존재하지 않는다",
@@ -2946,9 +2946,9 @@ export const set5 = [
     difficulty: "medium",
     question: "분류기의 Threshold(임계값)를 오른쪽(더 엄격한 Positive 판정, 즉 큰 값에서만 Positive로 예측)으로 이동시켰을 때 지표 변화로 가장 적절한 것은?",
     choices: [
-      "① Threshold를 엄격화하면 TP(True Positive)가 증가함과 동시에 FP(False Positive)도 함께 증가해 두 지표가 같은 방향으로 움직인다",
+      "① Threshold를 엄격화하면 TP와 FP가 함께 증가해 두 지표가 같은 방향으로 움직이는 Trade-off가 발생한다",
       "② Threshold를 오른쪽으로 옮길수록 Precision이 감소하고 Recall이 증가하는 방향의 Trade-off가 발생한다",
-      "③ Precision이 증가하고 Recall이 감소한다 (FN은 늘어나지만 FP는 줄어든다)",
+      "③ Threshold를 엄격화하면 FP가 줄어 Precision이 증가하고, FN이 늘어 Recall이 감소하는 Trade-off가 발생한다",
       "④ Precision과 Recall은 Threshold 위치와 무관하게 모델이 학습한 파라미터에 의해서만 결정되므로 값이 일정하게 유지된다"
     ],
     answer: 2,
