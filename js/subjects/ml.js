@@ -2,14 +2,14 @@
 import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js";
 import { FINAL_SETS, FINAL_META } from "./ml-final.js";
 
-// 중간고사 = 기존 5세트(Week 2~7). 기말고사 = 9~13주차 각 1세트 + 전범위 종합 1세트(ml-final.js).
+// 중간고사 = 기존 5세트(Week 2~7). 기말고사 = 전범위(9~13) 균형 SET 1~4 + 전범위 종합 1세트(ml-final.js).
 const ML_MID = ML_SETS.map(s => ({ ...s, exam: "midterm" }));
 const ML_FINAL = FINAL_META;
 
 export const META = {
   id: "ml",
   title: "기계학습",
-  subtitle: "중간 5세트(150문제) · 주차별 9~13 · 기말 6세트(130문제)",
+  subtitle: "중간 5세트(150문제) · 주차별 9~13 · 기말 4세트+종합(130문제)",
   emoji: "🤖",
   color: "#234E70",
   available: true,
