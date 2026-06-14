@@ -13,16 +13,16 @@ export const FINAL_SETS = {
       "topic": "비지도학습 정의",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "다음 학습 패러다임 중 하나의 목표로 가장 적절한 것은?",
+      "question": "비지도학습(Unsupervised Learning)의 목표로 가장 적절한 것은?",
       "choices": [
-        "① 레이블 없이 데이터에 내재된 구조(패턴·규칙성·숨은 조직)를 발견하는 것",
-        "② 레이블이 달린 입력으로부터 데이터의 클래스를 예측하는 것",
-        "③ 입력을 출력 레이블로 매핑하는 함수를 최소 오차로 학습하는 것",
-        "④ 정답 레이블과의 손실을 최소화하는 회귀 계수를 추정하는 것"
+        "① 정답 레이블과의 손실을 최소화하는 회귀 계수(Regression Coefficient)를 추정한다",
+        "② 레이블 없이 데이터에 내재된 패턴(Pattern), 규칙성(Regularity), 숨은 조직(Hidden Organization)을 발견한다",
+        "③ 입력을 출력 레이블로 매핑하는 함수를 최소 오차로 학습한다",
+        "④ 레이블이 달린 입력으로부터 데이터의 클래스를 예측한다"
       ],
-      "answer": 0,
-      "brief": "레이블 없이 데이터 자체의 내재 구조를 발견.",
-      "detailed": "슬라이드 원문: we are confronted with data that do not come with labeled outcomes. target variable 예측이 아니라 데이터 안의 patterns, regularities, hidden organization을 식별하는 것이 비지도학습의 목표다. 교수님 예시처럼 이미지가 강아지인지 고양이인지 정답이 없을 때 입력 피처만으로 분포를 파악한다. ②③④는 모두 레이블·정답을 쓰는 지도학습 설명이다.",
+      "answer": 1,
+      "brief": "레이블 없이 데이터에 내재된 패턴·규칙성·숨은 조직을 발견하는 것이 비지도학습의 목표.",
+      "detailed": "슬라이드: \"unsupervised learning seeks to identify patterns, regularities, or hidden organization within the observed data.\" 비지도학습(Unsupervised Learning)은 정답 레이블(label) 없이 입력 데이터 자체의 분포·구조를 파악하는 학습 패러다임(Learning Paradigm)이다. ①③④는 모두 정답 레이블을 전제하는 지도학습(Supervised Learning)의 목표이므로 소거하면 ②가 유일한 정답이다.",
       "source": "밀도추정 PDF; 9주차 § 1"
     },
     {
@@ -32,7 +32,7 @@ export const FINAL_SETS = {
       "topic": "KDE vs KNN 갈래",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "공식 $p(x) \\approx \\frac{K}{NV}$에서 두 밀도 추정기가 어느 양을 고정하느냐로 갈린다. 옳게 짝지은 것은? ($N$은 고정)",
+      "question": "공식 $p(x) \\approx \\frac{K}{NV}$에서 두 밀도 추정기(Density Estimator)가 어느 양을 고정하느냐로 갈린다. 옳게 짝지은 것은? ($N$은 고정)",
       "choices": [
         "① KDE는 $K$를 고정해 $V$를 확장하고, KNN은 $V$를 고정해 $K$를 센다",
         "② KDE는 $V$를 고정해 $K$를 세고, KNN은 $K$를 고정해 $V$를 확장한다",
@@ -51,7 +51,7 @@ export const FINAL_SETS = {
       "topic": "KNN density 적응성",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "한 비모수 밀도 추정기의 작동 원리와 적응성으로 옳은 것은?",
+      "question": "한 비모수(Non-parametric) 밀도 추정기(Density Estimator)의 작동 원리와 적응성으로 옳은 것은?",
       "choices": [
         "① 데이터가 밀집한 지역일수록 $V$가 커지므로 그 위치의 $p(x)$는 작아진다",
         "② $V$를 한 값으로 고정하고 $K$만 세므로 모든 위치에 동일한 잣대를 적용한다",
