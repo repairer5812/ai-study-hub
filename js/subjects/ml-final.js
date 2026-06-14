@@ -531,10 +531,10 @@ export const FINAL_SETS = {
       "difficulty": "medium",
       "question": "KNN density estimator에서 파라미터 $K$의 영향으로 옳은 것은?",
       "choices": [
-        "① $K$가 작으면($K=1$) over-smoothed되고 $K$가 크면($K=30$) noisy해져 각 점 위로 뾰족해진다",
-        "② $K$는 평활도에 전혀 영향을 주지 않아 추정 결과가 $K$ 값과 무관하게 늘 동일하게 나온다",
-        "③ $K$가 작으면($K=1$) noisy해 각 점 위로 뾰족하고 $K$가 크면($K=30$) over-smoothed되어 디테일이 사라진다",
-        "④ $K$가 클수록 분산이 줄어 추정이 항상 더 정확하므로 $K$는 최대로 두는 편이 좋다"
+        "① $K$가 작으면($K=1$) over-smoothed(과평활)되고 $K$가 크면($K=30$) noisy해져 각 점 위로 뾰족해진다(spiky)",
+        "② $K$는 평활도(smoothness)에 전혀 영향을 주지 않아 추정 결과가 $K$ 값과 무관하게 늘 동일하게 나온다",
+        "③ $K$가 작으면($K=1$) noisy해 각 점 위로 뾰족하고(spiky) $K$가 크면($K=30$) over-smoothed(과평활)되어 디테일이 사라진다",
+        "④ $K$가 클수록 분산(variance)이 줄어 추정이 항상 더 정확하므로 $K$는 최대로 두는 편이 좋다"
       ],
       "answer": 2,
       "brief": "$K=1$ noisy·뾰족 / $K=30$ over-smoothed.",
