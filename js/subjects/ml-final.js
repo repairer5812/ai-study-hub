@@ -298,7 +298,7 @@ export const FINAL_SETS = {
       "topic": "스위스 롤의 본질 차원",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "스위스 롤(Swiss Roll) 예시에 대한 노트의 설명으로 옳은 것은?",
+      "question": "스위스 롤(Swiss Roll) 데이터의 본질(intrinsic) 차원과 PCA의 한계에 대한 설명으로 옳은 것은?",
       "choices": [
         "① 본질적으로 전혀 휘어짐이 없는 1차원 직선 형태의 구조를 이룬다",
         "② 본질이 선형 구조라 PCA의 선형 투영만으로도 완벽하게 펼칠 수 있다",
@@ -336,7 +336,7 @@ export const FINAL_SETS = {
       "topic": "Auto-Encoder bottleneck과 Hinton",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "오토인코더에 대한 노트(전사 보강)의 설명으로 옳지 않은 것은?",
+      "question": "오토인코더(Auto-Encoder)에 대한 설명으로 옳지 않은 것은?",
       "choices": [
         "① 중간 은닉층(bottleneck) 차원을 입력보다 훨씬 작게 잡아 핵심 히든 구조만 압축 학습한다",
         "② Hinton의 2006년 Science 논문은 PCA가 오토인코더보다 비선형 차원 축소에서 더 우수함을 보였다",
@@ -355,7 +355,7 @@ export const FINAL_SETS = {
       "topic": "Perplexity 계산",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "어떤 점 $i$의 조건부 분포 엔트로피가 $H(P_i) = 5$ bits 라면, 노트의 정의 $\\text{Perplexity} = 2^{H(P_i)}$ 에 따른 perplexity(유효 이웃 수)는?",
+      "question": "어떤 점 $i$의 조건부 분포 엔트로피가 $H(P_i) = 5$ bits 이고 $\\text{Perplexity} = 2^{H(P_i)}$ 로 정의될 때, perplexity(유효 이웃 수)는?",
       "choices": [
         "① 5",
         "② 10",
@@ -374,7 +374,7 @@ export const FINAL_SETS = {
       "topic": "UMAP σ_i 결정 조건",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "UMAP에서 local bandwidth $\\sigma_i$는 어떤 조건으로 자동 결정되는가? (노트 식 기준)",
+      "question": "UMAP에서 local bandwidth $\\sigma_i$는 어떤 조건으로 자동 결정되는가?",
       "choices": [
         "① 가장 가까운 이웃까지의 거리 $\\rho_i$와 같게 $\\sigma_i = \\rho_i$ 로 고정해 둔다",
         "② t-SNE에서처럼 $\\text{perplexity} = 2^{H}$ 를 만족하도록 $\\sigma_i$ 값을 정한다",
@@ -567,7 +567,7 @@ export const FINAL_SETS = {
       "topic": "GMM 정의와 파라미터",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "GMM $p(x)=\\sum_k \\pi_k N(x \\mid \\mu_k, \\Sigma_k)$의 세 파라미터와 mixing coefficient $\\pi_k$의 제약으로 옳은 것은?",
+      "question": "GMM $p(x)=\\sum_k \\pi_k N(x \\mid \\mu_k, \\Sigma_k)$의 파라미터와 mixing coefficient $\\pi_k$의 제약으로 옳은 것은?",
       "choices": [
         "① 파라미터는 $\\pi_k, \\mu_k, \\Sigma_k$ 세 개이며 $0 \\le \\pi_k \\le 1$ 이고 $\\sum_k \\pi_k = 1$ 을 만족한다",
         "② 파라미터는 $\\pi_k, \\mu_k, \\Sigma_k$ 세 개이나 $\\pi_k$는 음수도 허용되는 임의의 실수면 된다",
@@ -871,7 +871,7 @@ export const FINAL_SETS = {
       "topic": "Bias의 역할",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "교수님이 강조한 바이어스(bias)의 중요성으로 가장 적절한 것은?",
+      "question": "신경망에서 바이어스(bias) 항이 필요한 이유로 가장 적절한 것은?",
       "choices": [
         "① 바이어스가 없으면 결정 경계가 항상 원점$(0,0)$을 지나야 해 정확한 분류 선을 못 그리는 경우가 생긴다",
         "② 바이어스는 모든 학습 상황에서 경사 하강의 학습 속도를 항상 정확히 두 배로 높여 준다",
@@ -1004,19 +1004,19 @@ export const FINAL_SETS = {
       "id": "MLF9Q20",
       "set": 203,
       "week": 9,
-      "topic": "Q&A — 밀도 값과 stride",
+      "topic": "확률밀도 값 p(x)>1 가능 · 정규화",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "교수님 Q&A 내용으로 옳은 것은?",
+      "question": "확률밀도함수(probability density function) $p(x)$의 값에 대한 설명으로 옳은 것은?",
       "choices": [
-        "① 밀도 함수 값 $p(x)$는 어떤 경우에도 1을 넘을 수 없도록 제한된다",
-        "② 박스를 변의 길이만큼(예: 1일 때 1씩) 이동시키면 KNN 분류기와 완전히 동일해진다",
-        "③ $p(x)$는 순간 값으로 1을 넘을 수 있고(적분만 1이면 됨), stride=변 길이면 히스토그램과 같다",
-        "④ stride는 작을수록 계산할 영역이 줄어 학습·추정 시간이 함께 단축된다"
+        "① $p(x)$는 확률이므로 모든 지점에서 항상 $0 \\le p(x) \\le 1$ 범위만 가진다",
+        "② $p(x)$는 특정 지점에서 1보다 클 수 있으며, 전체 구간에 대한 적분이 1이면 된다",
+        "③ $p(x)$를 전체 구간에 대해 적분하면 1이 아니라 데이터 개수 $N$이 된다",
+        "④ $p(x)$의 최댓값은 데이터가 가장 밀집된 지점에서 항상 정확히 1이 된다"
       ],
-      "answer": 2,
-      "brief": "$p(x)>1$ 가능(적분만 1이면 됨), stride=변 길이면 히스토그램·작으면 해상도↑시간↑.",
-      "detailed": "Q2: 밀도 값 자체는 1을 초과 가능하며 전체 공간 적분이 1이면 된다(예: 폭 0.1 영역에 확률 0.5면 밀도≈5, 면적=0.5). Q1: stride는 하이퍼파라미터로 변의 길이(예 1)만큼 1씩 이동하면 히스토그램과 동일하고, 0.5·0.1처럼 촘촘히 하면 해상도·정확도는 오르지만 계산 시간이 늘어난다.",
+      "answer": 1,
+      "brief": "밀도 값 $p(x)$는 1을 넘을 수 있다. 제약은 '값'이 아니라 '전체 적분 $\\int p(x)\\,dx = 1$'이다.",
+      "detailed": "확률밀도(density)와 확률(probability)은 다르다. 밀도 값 자체는 1을 초과할 수 있고(예: 폭 $0.1$ 구간에 확률 $0.5$가 몰리면 밀도 $\\approx 5$), 단 하나의 제약은 전체 정의역에 대한 적분이 1이라는 것이다($\\int p(x)\\,dx = 1$). ①은 밀도를 확률(0~1)로 착각한 대표적 오개념, ③은 적분이 1임을 데이터 개수 $N$으로 착각, ④는 최댓값이 1로 고정된다는 근거 없는 주장이다.",
       "source": "밀도추정 PDF; 9주차 § 13"
     },
     {
@@ -1045,7 +1045,7 @@ export const FINAL_SETS = {
       "topic": "잠재변수 z와 marginalization",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "GMM의 잠재변수 $z$(길이 $K$의 one-hot 벡터)에 대한 설명으로 옳은 것은?",
+      "question": "GMM에서 각 데이터 생성에 관여하는 변수 $z$의 성질로 옳은 것은?",
       "choices": [
         "① $z$는 관측되지 않는 잠재변수로 $z_k=1$이면 $k$컴포넌트가 선택되고, marginalize하면 GMM $p(x)$가 복원된다",
         "② $z$는 직접 관측되는 변수이며 그 선택 확률이 $p(z_k=1)=\\mu_k$ 로 평균 벡터에 의해 정의된다",
@@ -1064,7 +1064,7 @@ export const FINAL_SETS = {
       "topic": "클러스터링의 본질",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "같은 데이터셋에 대해 클러스터링 결과가 달라질 수 있는 이유로 노트가 강조한 것은?",
+      "question": "같은 데이터셋에 대해 클러스터링 결과가 달라질 수 있는 이유로 옳은 것은?",
       "choices": [
         "① 데이터 개수가 실행할 때마다 달라져 군집 수가 자동으로 변하기 때문",
         "② 유사도 정의·알고리즘 선택·데이터에 대한 가정(모양·스케일·밀도)에 따라 달라지기 때문",
@@ -1273,7 +1273,7 @@ export const FINAL_SETS = {
       "topic": "UMAP 분리도에 대한 교수님 통찰",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "MNIST에서 UMAP이 t-SNE보다 클래스를 더 극명하게 분리한다는 점에 대한 노트의 교수님 통찰로 옳은 것은?",
+      "question": "MNIST에서 UMAP이 t-SNE보다 클래스를 더 극명하게 분리하는 현상에 대한 해석으로 가장 적절한 것은?",
       "choices": [
         "① 극명한 분리가 실제 데이터 변동인지 인위적 분리인지 구분하기 어려워 무조건 좋지는 않으나, 시각화엔 유용하다",
         "② 분리가 극명할수록 분류 성능도 비례해 좋아지므로 항상 더 우수한 모델임이 보증된다",
@@ -1330,7 +1330,7 @@ export const FINAL_SETS = {
       "topic": "목적 함수·대칭화·분포 교차 매칭",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "t-SNE와 UMAP의 구성요소를 짝지은 것 중 노트와 일치하는 것은?",
+      "question": "t-SNE와 UMAP의 구성요소를 짝지은 것으로 옳은 것은?",
       "choices": [
         "① t-SNE: 그래프 weight·Cross-Entropy / UMAP: 가우시안 $P$·KL Divergence",
         "② 대칭화가 t-SNE는 fuzzy-set union, UMAP은 $\\frac{p+p}{2N}$ 평균으로 서로 반대다",
@@ -1713,7 +1713,7 @@ export const FINAL_SETS = {
       "topic": "공분산 행렬 계산",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "1차원 데이터 점이 $x = 1, 3, 5$ ($N=3$) 일 때, 노트의 정의 $S = \\frac{1}{N}\\sum(x-\\bar{x})(x-\\bar{x})^T$ 에 따른 분산 $S$ 값은?",
+      "question": "1차원 데이터 점이 $x = 1, 3, 5$ ($N=3$) 이고 분산을 $S = \\frac{1}{N}\\sum(x-\\bar{x})(x-\\bar{x})^T$ 로 정의할 때, $S$ 값은?",
       "choices": [
         "① $2$",
         "② $4$",
@@ -1732,7 +1732,7 @@ export const FINAL_SETS = {
       "topic": "매니폴드 가정의 근거",
       "type": "multiple_choice",
       "difficulty": "easy",
-      "question": "노트에서 고차원 실세계 데이터가 '모든 방향으로 자유롭게 변동하지 않는다'고 보는 근거로 직접 제시되지 않은 것은?",
+      "question": "고차원 실세계 데이터가 '모든 방향으로 자유롭게 변동하지 않는다'고 보는 매니폴드 가정의 근거(숨은 구조)로 보기 어려운 것은?",
       "choices": [
         "① 물리 법칙(physical laws)에 따른 변수 간 제약",
         "② 의미론적 관계(semantic relationships)에 따른 제약",
@@ -1751,7 +1751,7 @@ export const FINAL_SETS = {
       "topic": "Non-metric MDS의 동기",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "노트에 따르면 Classical MDS 대신 Non-Metric MDS를 쓰는 이유와 그 대가(trade-off)로 옳은 것은?",
+      "question": "Classical MDS 대신 Non-Metric MDS를 쓰는 이유와 그 대가(trade-off)로 옳은 것은?",
       "choices": [
         "① 비선형 dissimilarity로 복잡 구조를 잡지만 Classical보다 훨씬 느리다",
         "② Classical은 비선형이라 느리고 Non-metric은 선형이라 빠르다",
@@ -1770,7 +1770,7 @@ export const FINAL_SETS = {
       "topic": "선형/비선형·입력 종합 분류",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "PCA·Classical MDS·t-SNE·UMAP을 '선형/비선형'과 '입력'으로 분류할 때 노트와 일치하는 것은?",
+      "question": "PCA·Classical MDS·t-SNE·UMAP을 '선형/비선형'과 '입력'으로 분류한 것으로 옳은 것은?",
       "choices": [
         "① PCA·MDS는 비선형이고 t-SNE·UMAP은 선형으로 분류된다",
         "② PCA·MDS는 선형, t-SNE·UMAP은 비선형이고 거리행렬 입력은 MDS뿐이다",
@@ -1865,7 +1865,7 @@ export const FINAL_SETS = {
       "topic": "퍼셉트론 가중치 갱신 (계산형)",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "퍼셉트론 초기 $w=[w_0,w_1,w_2]=[0,1,0.5]$, $\\eta=0.2$, step function. 데이터 B: $x_1=2$, $x_2=-2$($x_0=1$), 정답 $y=-1$. $w^T x = 0+1(2)+0.5(-2)=1 > 0$ 이라 $\\hat{y}=+1$로 오분류되었다. 갱신 후 $[w_0, w_1, w_2]$는?",
+      "question": "퍼셉트론 초기 $w=[w_0,w_1,w_2]=[0,1,0.5]$, $\\eta=0.2$, step function. 데이터 B: $x_1=2$, $x_2=-2$($x_0=1$), 정답 $y=-1$. $w^T x = 0+1(2)+0.5(-2)=1 > 0$ 이라 $\\hat{y}=+1$로 오분류되었다. 델타 규칙 $\\Delta w_j = \\eta(y-\\hat{y})x_j$ 로 갱신한 후 $[w_0, w_1, w_2]$는?",
       "choices": [
         "① $[0.2, 1.4, 0.1]$",
         "② $[-0.2, 0.6, 0.9]$",
@@ -1884,7 +1884,7 @@ export const FINAL_SETS = {
       "topic": "BCE 페널티 비교 (계산형)",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "정답 $y=1$일 때 BCE의 페널티 비교로 옳은 것은? (노트 표 기준)",
+      "question": "정답 $y=1$일 때 $\\text{BCE}=-\\ln\\hat{y}$, $\\text{MSE}=(1-\\hat{y})^2$ 의 페널티 비교로 옳은 것은?",
       "choices": [
         "① $\\hat{y}=0.9$(정답에 가까울 때)일 때 BCE 페널티가 가장 크다",
         "② $\\hat{y}=0.1$일 때 BCE와 MSE 페널티가 동일하게 $0.81$로 같다",
@@ -2191,7 +2191,7 @@ export const FINAL_SETS = {
       "topic": "BCE vs MSE 페널티 (계산형)",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "[계산형] 정답 $y = 1$인데 예측 $\\hat{y} = 0.1$(강하게 틀린 확신)일 때, 노트 표에 따른 MSE와 BCE 값은?",
+      "question": "[계산형] 정답 $y = 1$, 예측 $\\hat{y} = 0.1$ 일 때 $\\text{MSE}=(1-\\hat{y})^2$ 와 $\\text{BCE}=-\\ln\\hat{y}$ 값은?",
       "choices": [
         "① MSE $2.302$, BCE $0.81$",
         "② MSE $0.01$, BCE $0.105$",
