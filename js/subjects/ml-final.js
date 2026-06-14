@@ -624,7 +624,7 @@ export const FINAL_SETS = {
       "topic": "K-Means 한계 → GMM",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "노트가 제시한 K-Means의 두 가지 한계로 옳게 묶인 것은?",
+      "question": "K-Means를 더 유연한 GMM으로 확장하게 만든, K-Means 자체의 두 가지 본질적 한계로 옳게 묶인 것은?",
       "choices": [
         "① 학습에 클래스 라벨이 반드시 필요하다는 점 + 매 반복의 계산이 지나치게 느리다는 점",
         "② 항상 확률적 소프트 할당만 한다는 점 + 성분마다 공분산을 자유롭게 가진다는 점",
