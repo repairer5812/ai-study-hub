@@ -177,7 +177,7 @@
       ],
       "answer": 2,
       "brief": "$K$ 고정, $V$ 가변 → 데이터 밀도에 따라 영역이 자동으로 크기를 조절(적응적).",
-      "detailed": "슬라이드: \"Instead of fixing the volume V and counting the number of data points K inside, as in kernel density estimation, we fix K (the number of nearest data points) and let the volume V change depending on the data.\" 데이터 밀집 지역에서는 $K$개 채우는 데 작은 영역만 필요하고, 희소 지역에서는 큰 영역이 필요하므로 자연스럽게 위치마다 다른 \"실효 대역폭\"을 사용하게 된다.",
+      "detailed": "슬라이드: \"Instead of fixing the volume V and counting the number of data points K inside, as in kernel density estimation, we fix K (the number of nearest data points) and let the volume V change depending on the data.\" 데이터 밀집 지역에서는 $K$개 채우는 데 작은 영역만 필요하고, 희소 지역에서는 큰 영역이 필요하므로 자연스럽게 위치마다 다른 \"실효 대역폭(Effective Bandwidth)\"을 사용하게 된다.",
       "source": "Density PDF p.21; 9주차 § 6"
     },
     {
@@ -206,7 +206,7 @@
       "topic": "분류기로의 확장",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "KNN 밀도 추정 원리에 Bayes 정리를 적용해 새로운 점 $x$의 클래스 사후확률 $p(C_c \\mid x)$를 구하면, 이 값은 어떻게 표현되는가?",
+      "question": "KNN 밀도 추정 원리에 Bayes 정리를 적용해 새로운 점 $x$의 클래스 사후확률(Posterior Probability) $p(C_c \\mid x)$를 구하면, 이 값은 어떻게 표현되는가?",
       "choices": [
         "① 클래스 $C_c$에 속한 전체 데이터 수를 전체 데이터 수로 나눈 값과 같다",
         "② 새 점 $x$로부터 해당 클래스 평균까지의 유클리드 거리의 역수에 비례한다",
@@ -320,7 +320,7 @@
       "topic": "확률 변수의 처리",
       "type": "multiple_choice",
       "difficulty": "medium",
-      "question": "결합 확률 $p(x, z)$에서 잠재 변수 $z$를 처리해 관측 데이터의 분포 $p(x)$를 얻는 절차를 부르는 명칭으로 가장 적절한 것은?",
+      "question": "결합 확률(Joint Probability) $p(x, z)$에서 잠재 변수 $z$를 처리해 관측 데이터의 분포 $p(x)$를 얻는 절차를 부르는 명칭으로 가장 적절한 것은?",
       "choices": [
         "① 평균을 0, 분산을 1로 만드는 전처리 작업인 표준화(Standardization)",
         "② 값을 일정 범위로 스케일링하는 절차인 정규화(Normalization)",
@@ -341,8 +341,8 @@
       "difficulty": "hard",
       "question": "GMM 파라미터를 일반적인 MLE(Maximum Likelihood Estimation)로 직접 풀려고 할 때 나타나는 \"수학적 복잡성\" 문제에 대한 설명으로 가장 정확한 것은?",
       "choices": [
-        "① 로그를 씌우면 지수항이 풀려 닫힌 해를 손쉽게 구할 수 있다",
-        "② 로그 안에 컴포넌트 합이 있어 미분식이 비선형이 되어 닫힌 해가 없다",
+        "① 로그를 씌우면 지수항이 풀려 닫힌 해(Closed-form Solution)를 손쉽게 구할 수 있다",
+        "② 로그 안에 컴포넌트 합이 있어 미분식이 비선형이 되어 닫힌 해(Closed-form Solution)가 없다",
         "③ 로그 함수의 정의역 문제로 음수 입력에서 미분이 불가능해진다",
         "④ 수치 오버플로가 발생해 컴퓨터로는 어떤 계산도 수행할 수 없다"
       ],
@@ -358,7 +358,7 @@
       "topic": "최적화의 두 번째 난점",
       "type": "multiple_choice",
       "difficulty": "hard",
-      "question": "GMM에 MLE를 적용할 때, 하나의 가우시안 컴포넌트가 단일 데이터 포인트에 collapse하며 우도가 발산하는 두 번째 문제를 부르는 명칭으로 가장 적절한 것은?",
+      "question": "GMM에 MLE를 적용할 때, 하나의 가우시안 컴포넌트가 단일 데이터 포인트에 collapse하며 우도(Likelihood)가 발산하는 두 번째 문제를 부르는 명칭으로 가장 적절한 것은?",
       "choices": [
         "① 회귀에서 입력 변수들이 강한 상관을 보이는 다중공선성(Multicollinearity)",
         "② 추정량의 기댓값이 참값과 다른 불편 추정량(Unbiased Estimator) 문제",
