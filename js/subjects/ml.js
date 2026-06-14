@@ -31,6 +31,7 @@ export const META = {
     { slug: "11주차_차원축소_PCA_ICA", title: "11주차 — 차원축소·PCA·ICA", week: 11 },
     { slug: "12주차_매니폴드_MDS_tSNE_UMAP", title: "12주차 — 매니폴드·MDS·t-SNE·UMAP", week: 12 },
     { slug: "13주차_신경망_퍼셉트론_Adaline_NN", title: "13주차 — 신경망·Perceptron·Adaline·NN", week: 13 },
+    { slug: "BRI516_MLP_다층퍼셉트론_역전파", title: "[BRI516 참고] MLP·역전파·비선형 활성화", week: null },
   ],
   weeklyExams: [
     { week: 9, slug: "9주차_밀도추정_시험", title: "9주차 시험 — 밀도 추정 (객관식 20)", count: 20 },
