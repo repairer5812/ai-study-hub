@@ -62,8 +62,8 @@ function showTbaToast() {
 
 function renderExamSection() {
   const modeKey = `ai-study:${subjectId}:mode`;
-  let mode = localStorage.getItem(modeKey) || "batch";
-  const modeBtns = document.querySelectorAll(".mode-btn");
+  let mode = localStorage.getItem(modeKey) || "instant";
+  const modeBtns = document.querySelectorAll("#mode-selector .mode-btn");
   modeBtns.forEach(btn => {
     btn.classList.toggle("active", btn.dataset.mode === mode);
     btn.addEventListener("click", () => {
@@ -128,17 +128,34 @@ function renderWeeklySection() {
   const grid = document.getElementById("weekly-grid");
   if (!grid) return;
 
-  grid.innerHTML = meta.weeklyExams.map(w => {
-    const best = getWeeklyBest(w.week, subjectId);
-    const bestHtml = best
-      ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
-      : `<span class="set-best unplayed">미응시</span>`;
-    return `
-      <a class="set-card" href="exam.html?s=${subjectId}&kind=weekly&w=${w.week}&mode=batch" aria-label="${w.title} 시작">
-        <div class="set-num">WEEK ${w.week}</div>
-        <div class="set-title">${w.title}</div>
-        <div class="muted small">객관식 ${w.count || 20}문제</div>
-        <div class="set-meta">${bestHtml}</div>
-      </a>`;
-  }).join("");
+  // 주차별 풀이 모드: 정기고사와 별도 키로 격리, 기본값 instant(1문제씩 즉시 채점)
+  const modeKey = `ai-study:${subjectId}:weekly-mode`;
+  let mode = localStorage.getItem(modeKey) || "instant";
+  const modeBtns = document.querySelectorAll("#weekly-mode-selector .mode-btn");
+  modeBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.mode === mode);
+    btn.addEventListener("click", () => {
+      mode = btn.dataset.mode;
+      localStorage.setItem(modeKey, mode);
+      modeBtns.forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+      renderWeeklyCards();
+    });
+  });
+  renderWeeklyCards();
+
+  function renderWeeklyCards() {
+    grid.innerHTML = meta.weeklyExams.map(w => {
+      const best = getWeeklyBest(w.week, subjectId);
+      const bestHtml = best
+        ? `<span class="set-best">${best.score}점</span><span class="muted small">${formatTime(best.durationSec)}</span>`
+        : `<span class="set-best unplayed">미응시</span>`;
+      return `
+        <a class="set-card" href="exam.html?s=${subjectId}&kind=weekly&w=${w.week}&mode=${mode}" aria-label="${w.title} 시작">
+          <div class="set-num">WEEK ${w.week}</div>
+          <div class="set-title">${w.title}</div>
+          <div class="muted small">객관식 ${w.count || 20}문제</div>
+          <div class="set-meta">${bestHtml}</div>
+        </a>`;
+    }).join("");
+  }
 }

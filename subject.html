@@ -47,7 +47,12 @@
     <h2 class="h2" style="margin:8px 0 14px;">📅 주차별 확인문제</h2>
     <div class="muted small" style="margin-bottom:14px;">주차 단위 객관식 확인문제. <strong>점수·랭킹은 정기고사와 별도로 기록</strong>됩니다.</div>
 
-    <div class="set-grid" id="weekly-grid">
+    <div class="mode-selector" id="weekly-mode-selector" role="tablist" aria-label="주차별 풀이 모드 선택">
+      <button class="mode-btn active" data-mode="instant" role="tab"><span class="mode-label-instant">1문제씩 즉시 채점</span></button>
+      <button class="mode-btn" data-mode="batch" role="tab"><span class="mode-label-batch">한번에 채점</span></button>
+    </div>
+
+    <div class="set-grid" id="weekly-grid" style="margin-top:16px;">
       <!-- 동적 렌더 -->
     </div>
 
@@ -61,8 +66,8 @@
     <div class="muted small" style="margin-bottom:14px;">한 세트 전체를 풀고 점수를 기록합니다. 랭킹은 세트별로 집계됩니다.</div>
 
     <div class="mode-selector" id="mode-selector" role="tablist" aria-label="풀이 모드 선택">
-      <button class="mode-btn" data-mode="instant" role="tab"><span class="mode-label-instant">1문제씩 즉시 채점</span></button>
-      <button class="mode-btn active" data-mode="batch" role="tab"><span class="mode-label-batch">30문제 일괄 채점</span></button>
+      <button class="mode-btn active" data-mode="instant" role="tab"><span class="mode-label-instant">1문제씩 즉시 채점</span></button>
+      <button class="mode-btn" data-mode="batch" role="tab"><span class="mode-label-batch">30문제 일괄 채점</span></button>
     </div>
 
     <div class="set-grid" id="set-grid" style="margin-top:16px;">
