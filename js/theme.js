@@ -35,3 +35,10 @@ if (document.readyState === "loading") {
 
 // 전역 노출 (스크립트 태그에서 직접 호출 가능)
 window.__theme = { toggleTheme, applyTheme };
+
+// PWA: 서비스워커 등록 (홈 화면 추가 / 오프라인 셸)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}

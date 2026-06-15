@@ -648,7 +648,11 @@ details.explain-toggle[open] summary::before { transform: rotate(90deg); }
   .h1 { font-size: 24px; }
   .question-body { padding: 20px 18px; }
   .question-body .q-text { font-size: 16px; }
-  .exam-bar { padding: 12px 14px; gap: 8px; }
+  .exam-bar { padding: 12px 14px; gap: 8px; flex-wrap: nowrap; }
+  .exam-bar .set-info { font-size: 13px; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+  .exam-bar .qno { font-size: 12px; white-space: nowrap; }
+  .exam-bar .timer { font-size: 13px; padding: 5px 9px; }
+  .exam-bar .btn-sm { padding: 6px 10px; font-size: 13px; }
   .result-hero .score-big { font-size: 48px; }
   .set-grid { gap: 12px; margin: 24px auto; }
   .set-grid > .set-card { flex: 0 0 160px; }
