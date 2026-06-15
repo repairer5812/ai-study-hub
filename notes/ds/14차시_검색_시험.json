@@ -1,0 +1,393 @@
+{
+  "subject": "ds",
+  "week": 14,
+  "title": "14차시 시험 — 검색 알고리즘 (객관식 20)",
+  "set_meta": {
+    "id": 14,
+    "title": "Week 14",
+    "label": "Searching",
+    "desc": "선형 검색·이진 검색·해싱(해시함수/충돌/오버플로우 해결)·이진 탐색 트리·AVL 트리·2-3트리/B-트리/B+트리, 시간복잡도와 구조 규칙"
+  },
+  "questions": [
+    {
+      "id": "DSW14Q1",
+      "set": 14,
+      "week": 14,
+      "topic": "선형 검색 성능",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "정렬되지 않은 N개의 데이터에서 선형 검색(순차 검색)을 수행할 때 평균 비교 횟수와 시간 복잡도로 옳은 것은?",
+      "choices": [
+        "① 평균 N/2회, O(N)",
+        "② 평균 log₂N회, O(log N)",
+        "③ 평균 1회, O(1)",
+        "④ 평균 N²회, O(N²)"
+      ],
+      "answer": 0,
+      "brief": "선형 = 평균 N/2, O(N).",
+      "detailed": "선형 검색은 처음부터 끝까지 키와 비교한다. 최선은 1회, 최악은 N회(맨 끝 또는 없음)이고 평균은 N/2회다. 최고차항 기준 시간 복잡도는 O(N)이다.",
+      "source": "14차시 §1 선형 검색"
+    },
+    {
+      "id": "DSW14Q2",
+      "set": 14,
+      "week": 14,
+      "topic": "이진 검색 전제 조건",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "이진 검색(Binary Search)을 적용하기 위해 데이터가 반드시 갖추어야 하는 조건은?",
+      "choices": [
+        "① 데이터가 정렬되어 있어야 한다",
+        "② 데이터 개수가 2의 거듭제곱이어야 한다",
+        "③ 데이터가 연결 리스트로 저장되어야 한다",
+        "④ 데이터에 중복 값이 없어야 한다"
+      ],
+      "answer": 0,
+      "brief": "이진 검색 = 정렬 필수.",
+      "detailed": "이진 검색은 가운데 값과 비교해 큰 쪽/작은 쪽 절반만 다시 탐색하는 방식이라, 데이터가 정렬되어 있어야만 절반을 버릴 수 있다. 개수가 2의 거듭제곱일 필요나 중복 금지 조건은 없다.",
+      "source": "14차시 §2 이진 검색"
+    },
+    {
+      "id": "DSW14Q3",
+      "set": 14,
+      "week": 14,
+      "topic": "이진 검색 동작",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "이진 검색에서 가운데 값(list[mid])이 찾는 키(key)보다 작을 때, 다음 탐색을 위한 경계 갱신으로 옳은 것은?",
+      "choices": [
+        "① right = mid − 1 (왼쪽 절반 탐색)",
+        "② left = mid + 1 (오른쪽 절반 탐색)",
+        "③ left = 0, right = n − 1 (전체 재시작)",
+        "④ mid = mid + 1 (가운데만 한 칸 이동)"
+      ],
+      "answer": 1,
+      "brief": "mid값<key → left=mid+1.",
+      "detailed": "찾는 키가 가운데 값보다 크다는 뜻이므로 키는 오른쪽 절반에 있다. 따라서 left를 mid+1로 올려 오른쪽 절반만 탐색한다. 반대로 가운데 값이 키보다 크면 right=mid−1로 왼쪽 절반을 본다.",
+      "source": "14차시 §2-2 이진 검색 알고리즘"
+    },
+    {
+      "id": "DSW14Q4",
+      "set": 14,
+      "week": 14,
+      "topic": "이진 검색 복잡도 유도",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "이진 검색에서 비교 대상 개수가 N → N/2 → N/4 → … → 1로 줄어든다. N = 2^k로 둘 때 반복 횟수 k와 시간 복잡도로 옳은 것은?",
+      "choices": [
+        "① k = N, O(N)",
+        "② k = log₂N, O(log N)",
+        "③ k = N/2, O(N)",
+        "④ k = 2^N, O(2^N)"
+      ],
+      "answer": 1,
+      "brief": "N=2^k → k=log₂N → O(log N).",
+      "detailed": "대상이 1이 될 때까지 매 반복마다 절반으로 줄어든다. N=2^k에서 양변에 밑이 2인 로그를 취하면 log₂N=k이므로 반복은 log₂N번, 시간 복잡도는 O(log N)이다.",
+      "source": "14차시 §2-3 이진 검색 성능"
+    },
+    {
+      "id": "DSW14Q5",
+      "set": 14,
+      "week": 14,
+      "topic": "해싱 개념",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "해싱(Hashing)이 선형 검색·이진 검색과 구별되는 가장 핵심적인 특징은?",
+      "choices": [
+        "① 데이터를 반드시 정렬한 뒤에만 사용할 수 있다",
+        "② 키 값을 연산해 비교 없이 데이터 위치를 바로 찾는다",
+        "③ 매 단계 탐색 범위를 절반으로 줄여 나간다",
+        "④ 데이터를 연결 리스트로만 저장할 수 있다"
+      ],
+      "answer": 1,
+      "brief": "해싱 = 비교 없이 바로 접근.",
+      "detailed": "해싱은 키 값을 해시함수로 연산해 저장 위치를 직접 계산하므로, 선형(평균 N/2 비교)·이진(log N 비교)과 달리 비교 없이 바로 접근한다. 그래서 검색 방법 중 가장 빠르다고 본다.",
+      "source": "14차시 §3-1 해싱 개념"
+    },
+    {
+      "id": "DSW14Q6",
+      "set": 14,
+      "week": 14,
+      "topic": "해싱 충돌 정의",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "해싱에서 '충돌(collision)'을 가장 정확하게 정의한 것은?",
+      "choices": [
+        "① 해시 테이블의 모든 버킷이 가득 찬 상태",
+        "② 서로 다른 두 키가 같은 해시 주소로 사상되는 경우",
+        "③ 해시함수의 계산 결과가 음수가 되는 경우",
+        "④ 저장 항목 수가 버킷 수보다 적은 경우"
+      ],
+      "answer": 1,
+      "brief": "충돌 = 다른 키가 같은 주소.",
+      "detailed": "충돌은 서로 다른 두 탐색키 k1, k2가 같은 해시 주소를 갖는 경우, 즉 h(k1)=h(k2)인 상황이다. 충돌이 버킷의 슬롯 수를 넘어 발생하면 오버플로우가 되고, 이를 해결하는 방법이 따로 필요하다.",
+      "source": "14차시 §3-2 해싱 용어"
+    },
+    {
+      "id": "DSW14Q7",
+      "set": 14,
+      "week": 14,
+      "topic": "적재밀도",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "해시 테이블의 버킷이 M개이고 저장된 항목이 n개일 때 적재밀도(loading density)를 옳게 나타낸 것은?",
+      "choices": [
+        "① M / n",
+        "② n × M",
+        "③ n / M",
+        "④ n − M"
+      ],
+      "answer": 2,
+      "brief": "적재밀도 = n / M.",
+      "detailed": "적재밀도는 '저장된 항목의 개수 ÷ 해시 테이블 버킷의 개수'로 정의되며 n/M이다. 값이 클수록 테이블이 꽉 차 충돌·오버플로우 가능성이 높아진다.",
+      "source": "14차시 §3-2 해싱 용어"
+    },
+    {
+      "id": "DSW14Q8",
+      "set": 14,
+      "week": 14,
+      "topic": "제산 함수",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "제산 함수 h(k) = k mod M을 해시함수로 쓸 때, 값이 고르게 분포하도록 해시 테이블 크기 M을 어떻게 정하는 것이 권장되는가?",
+      "choices": [
+        "① 2의 거듭제곱으로 정한다",
+        "② 소수(prime number)로 정한다",
+        "③ 데이터 개수와 똑같이 정한다",
+        "④ 항상 짝수로 정한다"
+      ],
+      "answer": 1,
+      "brief": "제산 함수 M = 소수.",
+      "detailed": "제산 함수 h(k)=k mod M에서 테이블 크기 M을 소수로 선택하면 나머지가 고르게 분포해 충돌이 줄어든다. 그래서 좋은 해시함수의 조건(고른 분포)을 만족하기 위해 M을 소수로 잡는다.",
+      "source": "14차시 §3-4 해시함수의 종류"
+    },
+    {
+      "id": "DSW14Q9",
+      "set": 14,
+      "week": 14,
+      "topic": "오버플로우 해결 종류",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "다음 중 해싱의 오버플로우(overflow) 해결 방법이 아닌 것은?",
+      "choices": [
+        "① Linear Probing",
+        "② Double Hashing",
+        "③ Chaining",
+        "④ Quick Partitioning"
+      ],
+      "answer": 3,
+      "brief": "오버플로우 해결 = 선형·이차 조사, 이중 해싱, 체이닝.",
+      "detailed": "오버플로우 해결 방법은 Linear Probing, Quadratic Probing, Double Hashing, Chaining이다. Quick Partitioning은 존재하지 않는 용어(퀵 정렬의 분할과 혼동)로 오버플로우 해결과 무관하다.",
+      "source": "14차시 §3-5 오버플로우 해결"
+    },
+    {
+      "id": "DSW14Q10",
+      "set": 14,
+      "week": 14,
+      "topic": "Linear Probing 계산",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "해시함수 h(k) = k mod 7과 선형 조사법(Linear Probing)을 쓴다. 이미 버킷 1, 2가 채워진 상태에서 키 9(9 mod 7 = 2)를 삽입하면 최종 저장되는 버킷 번호는?",
+      "choices": [
+        "① 버킷 2",
+        "② 버킷 3",
+        "③ 버킷 6",
+        "④ 버킷 0"
+      ],
+      "answer": 1,
+      "brief": "2 충돌 → (9+1) mod 7 = 3.",
+      "detailed": "9 mod 7 = 2인데 버킷 2가 차 있어 충돌이다. 선형 조사법은 h(k)+1부터 빈 곳을 찾으므로 (9+1) mod 7 = 3을 조사한다. 버킷 3이 비어 있으면 거기에 저장되어 최종 버킷 번호는 3이다.",
+      "source": "14차시 §3-5 Linear Probing"
+    },
+    {
+      "id": "DSW14Q11",
+      "set": 14,
+      "week": 14,
+      "topic": "조사 위치 비교",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "이차 조사법(Quadratic Probing)의 조사 위치를 (h(k) + inc×inc) mod M, inc=0,1,2,…로 둘 때, h(k)를 기준으로 조사되는 위치 순서로 옳은 것은?",
+      "choices": [
+        "① h(k), h(k)+1, h(k)+2, h(k)+3, …",
+        "② h(k), h(k)+1, h(k)+4, h(k)+9, …",
+        "③ h(k), h(k)+2, h(k)+4, h(k)+6, …",
+        "④ h(k), h(k)+step, h(k)+2×step, …"
+      ],
+      "answer": 1,
+      "brief": "이차 조사 = +1², +2², +3² (1,4,9).",
+      "detailed": "이차 조사법은 증분을 제곱으로 키운다. inc=0,1,2,3이면 증분이 0,1,4,9이므로 조사 위치는 h(k), h(k)+1, h(k)+4, h(k)+9, …이다. ①은 선형 조사, ④는 이중 해싱의 형태다.",
+      "source": "14차시 §3-5 Quadratic Probing"
+    },
+    {
+      "id": "DSW14Q12",
+      "set": 14,
+      "week": 14,
+      "topic": "Chaining",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "오버플로우 해결 방법 중 체이닝(Chaining)에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 충돌 시 다음 빈 버킷을 한 칸씩 조사해 저장한다",
+        "② 각 버킷에 연결 리스트를 두어 충돌 항목을 노드로 매단다",
+        "③ 별개의 두 번째 해시함수로 보폭을 정해 이동한다",
+        "④ 충돌이 나면 테이블 크기를 즉시 두 배로 늘린다"
+      ],
+      "answer": 1,
+      "brief": "체이닝 = 버킷마다 연결 리스트.",
+      "detailed": "체이닝은 각 버킷에 삽입·삭제가 쉬운 연결 리스트를 할당해 충돌 항목을 노드로 매단다. 버킷에 고정된 슬롯이 없고 버킷 내부는 연결 리스트를 순차 탐색한다. ①은 선형 조사, ③은 이중 해싱이다.",
+      "source": "14차시 §3-5 Chaining"
+    },
+    {
+      "id": "DSW14Q13",
+      "set": 14,
+      "week": 14,
+      "topic": "BST 정의",
+      "type": "multiple_choice",
+      "difficulty": "basic",
+      "question": "이진 탐색 트리(BST)의 키 배치 규칙으로 옳은 것은?",
+      "choices": [
+        "① 왼쪽 서브트리 < 루트 노드 < 오른쪽 서브트리",
+        "② key(루트)가 항상 왼쪽·오른쪽 자식보다 작다",
+        "③ 모든 노드의 왼쪽·오른쪽 높이차가 1 이하다",
+        "④ 부모가 자식보다 항상 큰 완전 이진 트리다"
+      ],
+      "answer": 0,
+      "brief": "BST: 좌 ≤ 루트 ≤ 우.",
+      "detailed": "이진 탐색 트리는 왼쪽 서브트리 키가 루트보다 작고, 오른쪽 서브트리 키가 루트보다 크다(key(좌)≤key(루트)≤key(우)). ③은 AVL 트리, ④는 힙의 설명이다.",
+      "source": "14차시 §4-1 이진 탐색 트리"
+    },
+    {
+      "id": "DSW14Q14",
+      "set": 14,
+      "week": 14,
+      "topic": "BST 중위 순회",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "이진 탐색 트리를 중위 순회(inorder traversal)한 결과로 얻어지는 것은?",
+      "choices": [
+        "① 내림차순으로 정렬된 값",
+        "② 오름차순으로 정렬된 값",
+        "③ 트리에 삽입한 순서 그대로의 값",
+        "④ 단말 노드부터 루트까지의 값"
+      ],
+      "answer": 1,
+      "brief": "BST 중위 순회 = 오름차순.",
+      "detailed": "이진 탐색 트리는 왼쪽<루트<오른쪽 규칙을 따르므로, 왼쪽-루트-오른쪽 순으로 방문하는 중위 순회를 하면 값이 오름차순으로 정렬되어 나온다.",
+      "source": "14차시 §4-1 이진 탐색 트리"
+    },
+    {
+      "id": "DSW14Q15",
+      "set": 14,
+      "week": 14,
+      "topic": "BST 삽입 위치",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "이진 탐색 트리에 새 노드를 삽입할 때, 새 노드가 들어갈 위치를 결정하는 방법으로 옳은 것은?",
+      "choices": [
+        "① 항상 루트를 새 노드로 교체한다",
+        "② 먼저 탐색을 수행해 탐색이 실패한 자리에 삽입한다",
+        "③ 가장 깊은 단말 노드의 왼쪽에 무조건 붙인다",
+        "④ 트리를 중위 순회해 한가운데에 삽입한다"
+      ],
+      "answer": 1,
+      "brief": "삽입 = 탐색 실패한 자리.",
+      "detailed": "BST 삽입은 먼저 그 키를 탐색하며 내려가다 NULL(빈 자리)에 도달하면, 바로 그 탐색 실패 위치가 새 노드를 다는 자리다. 이미 같은 키가 있으면 삽입하지 않는다.",
+      "source": "14차시 §4-3 노드 삽입"
+    },
+    {
+      "id": "DSW14Q16",
+      "set": 14,
+      "week": 14,
+      "topic": "BST 삭제 CASE",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "이진 탐색 트리에서 두 개의 서브트리를 모두 가진 노드를 삭제할 때(CASE 3)의 처리로 옳은 것은?",
+      "choices": [
+        "① 부모와의 연결만 끊고 그대로 둔다",
+        "② 하나뿐인 서브트리를 부모 노드에 곧바로 붙인다",
+        "③ 가장 비슷한 값을 가진 노드를 그 자리로 끌어올린다",
+        "④ 트리 전체를 처음부터 다시 만든다"
+      ],
+      "answer": 2,
+      "brief": "CASE 3 = 가장 비슷한 값 끌어오기.",
+      "detailed": "서브트리를 둘 다 가진 노드를 지우면 빈 자리에 삭제 노드와 가장 비슷한 값(왼쪽 최대 또는 오른쪽 최소)을 가져와 채워 BST 정렬 성질을 유지한다. ①은 CASE 1(단말), ②는 CASE 2(서브트리 1개)다.",
+      "source": "14차시 §4-4 노드 삭제"
+    },
+    {
+      "id": "DSW14Q17",
+      "set": 14,
+      "week": 14,
+      "topic": "BST 최악 성능",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "이진 탐색 트리가 한쪽으로 치우친 경사 이진 트리(skewed tree)로 만들어졌을 때, 검색의 시간 복잡도로 옳은 것은?",
+      "choices": [
+        "① O(1)",
+        "② O(log N)",
+        "③ O(N)",
+        "④ O(N²)"
+      ],
+      "answer": 2,
+      "brief": "경사 트리 h=N → O(N), 순차 탐색과 동일.",
+      "detailed": "경사 이진 트리는 높이 h=N이 되어 검색이 트리 높이에 비례하는 O(N)이 된다. 이는 순차(선형) 탐색과 같은 복잡도다. 균형이 맞으면 h=log₂N으로 O(log N)이다.",
+      "source": "14차시 §4-5 BST 성능 분석"
+    },
+    {
+      "id": "DSW14Q18",
+      "set": 14,
+      "week": 14,
+      "topic": "AVL 균형 인자",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "AVL 트리에서 균형 인자 BF(T) = h_L − h_R로 정의할 때, 균형이 유지되는 모든 노드의 BF 값 범위로 옳은 것은?",
+      "choices": [
+        "① −1, 0, +1 중 하나",
+        "② 0 또는 1 중 하나",
+        "③ −2, 0, +2 중 하나",
+        "④ 임의의 정수 모두 허용"
+      ],
+      "answer": 0,
+      "brief": "AVL BF ∈ {−1, 0, +1}.",
+      "detailed": "AVL 트리는 모든 노드에서 왼쪽·오른쪽 높이차가 1 이하이므로 BF(T)=h_L−h_R이 −1, 0, +1 중 하나다. BF가 +2 또는 −2가 되면 균형이 깨진 것이므로 회전으로 다시 맞춰야 한다.",
+      "source": "14차시 §5-2 균형 인자"
+    },
+    {
+      "id": "DSW14Q19",
+      "set": 14,
+      "week": 14,
+      "topic": "AVL 회전 종류",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "AVL 트리에서 불균형(BF ±2)을 일으킨 노드 A에 대해, 새 노드가 A의 '오른쪽 자식의 오른쪽 서브트리'에 삽입되어 발생한 불균형을 바로잡는 회전은?",
+      "choices": [
+        "① LL 회전",
+        "② RR 회전",
+        "③ LR 회전",
+        "④ RL 회전"
+      ],
+      "answer": 1,
+      "brief": "오른쪽-오른쪽 삽입 = RR 회전.",
+      "detailed": "삽입 위치가 A의 오른쪽(R)의 오른쪽(R) 서브트리이므로 RR 유형이며, 왼쪽 회전 한 번으로 바로잡는다. 왼쪽-왼쪽은 LL, 왼쪽-오른쪽은 LR, 오른쪽-왼쪽은 RL이다.",
+      "source": "14차시 §5-3 AVL 회전"
+    },
+    {
+      "id": "DSW14Q20",
+      "set": 14,
+      "week": 14,
+      "topic": "B+트리 특징",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "B+트리가 B-트리의 단점(전체 데이터 순회 시 모든 노드 방문)을 개선하기 위해 채택한 구조로 옳은 것은?",
+      "choices": [
+        "① 모든 노드에 데이터를 중복 저장해 어디서든 읽게 한다",
+        "② 데이터를 leaf에만 두고 leaf끼리 연결 리스트로 잇는다",
+        "③ 트리의 높이를 항상 1로 고정한다",
+        "④ 내부 노드에만 데이터를 저장하고 leaf는 비운다"
+      ],
+      "answer": 1,
+      "brief": "B+트리 = leaf에만 데이터 + leaf 연결 리스트.",
+      "detailed": "B+트리는 데이터를 오직 leaf 노드에만 저장하고 내부 노드에는 자식 포인터만 둔다. 또 leaf 노드끼리 Linked list로 연결해 전체·범위 순회를 효율적으로 만든다. 이것이 B-트리 대비 핵심 개선점이다.",
+      "source": "14차시 §6-5 B+트리"
+    }
+  ]
+}
