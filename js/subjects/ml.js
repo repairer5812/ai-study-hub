@@ -42,6 +42,7 @@ export const META = {
   ],
 };
 
-// 정기고사: 기말 세트(106·109~113)는 FINAL_SETS에서, 중간 세트(1~5)는 questions.js에서 로드
+// 정기고사: 기말 세트(201~204·106)는 FINAL_SETS에서, 중간 세트(1~5)는 questions.js에서 로드
 export function getSetQuestions(setId) { return FINAL_SETS[setId] || mlGetSet(setId); }
-export function getAllQuestions()        { return ML_ALL; }
+// 전체 문제 = 중간 5세트(ML_ALL) + 기말 전세트(FINAL_SETS). 오답노트(전 세트)·전체복습이 기말 문제도 포함하도록 둘을 합친다.
+export function getAllQuestions()        { return [...ML_ALL, ...Object.values(FINAL_SETS).flat()]; }
