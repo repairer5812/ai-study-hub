@@ -1,5 +1,6 @@
 // work.js — 작업형·서술형 예상문제 1문제씩 풀이 + LLM 첨삭 채점
 import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js";
+import { renderViz } from "./viz.js";
 
 const GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade";
 const ANS_KEY = "ai-study:ds:work:answers";
@@ -81,6 +82,20 @@ function verdictColor(v) {
   return { "정답": "#16a34a", "부분정답": "#d97706", "오답": "#dc2626" }[v] || "#6b7280";
 }
 
+function vizBlock(p) {
+  if (p.viz) {
+    const svg = renderViz(p.viz);
+    if (svg) {
+      const label = p.viz.type === "graph" ? "그래프" : "정답 트리";
+      return `<div class="muted small" style="margin-top:12px;">🌳 ${label}</div><div style="margin-top:6px; padding:12px; background:var(--c-border-soft); border-radius:10px; overflow-x:auto;">${svg}</div>`;
+    }
+  }
+  if (p.diagram) {
+    return `<div class="muted small" style="margin-top:12px;">🌳 정답 트리</div><pre style="margin-top:4px; padding:12px 14px; background:var(--c-border-soft); border-radius:8px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:13px; line-height:1.5;">${esc(p.diagram)}</pre>`;
+  }
+  return "";
+}
+
 function renderResult(p, d) {
   if (d.error) {
     el.result.innerHTML = `<div style="border:1px solid #dc262644; border-radius:12px; padding:14px 16px; background:var(--c-surface); color:#dc2626;">⚠️ ${esc(d.error)}</div>`;
@@ -115,7 +130,7 @@ function renderResult(p, d) {
       <details style="margin-top:14px;" open>
         <summary style="cursor:pointer; font-weight:600;">📖 모범답안 / 해설</summary>
         <div style="margin-top:8px; line-height:1.7;">${esc(d.modelAnswer || p.modelAnswer || "")}</div>
-        ${p.diagram ? `<div class="muted small" style="margin-top:10px;">🌳 정답 트리</div><pre style="margin-top:4px; padding:12px 14px; background:var(--c-border-soft); border-radius:8px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:13px; line-height:1.5;">${esc(p.diagram)}</pre>` : ""}
+        ${vizBlock(p)}
         ${p.explain ? `<div class="muted small" style="margin-top:8px; line-height:1.6;">💡 ${esc(p.explain)}</div>` : ""}
       </details>
     </div>`;
@@ -169,7 +184,7 @@ function showModel() {
     <div style="border:1px dashed var(--c-border-soft); border-radius:12px; padding:16px 18px; background:var(--c-surface);">
       <strong>📖 모범답안</strong>
       <div style="margin-top:8px; line-height:1.7;">${esc(p.modelAnswer || "")}</div>
-      ${p.diagram ? `<div class="muted small" style="margin-top:10px;">🌳 정답 트리</div><pre style="margin-top:4px; padding:12px 14px; background:var(--c-border-soft); border-radius:8px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:13px; line-height:1.5;">${esc(p.diagram)}</pre>` : ""}
+      ${vizBlock(p)}
       ${p.explain ? `<div class="muted small" style="margin-top:10px; line-height:1.6;">💡 ${esc(p.explain)}</div>` : ""}
     </div>`;
   if (window.renderMath) window.renderMath(el.result);

@@ -25,6 +25,7 @@ export const WORK_PROBLEMS = [
   // ─────────────────────────────────────────── 작업형(추적·작도) ───────────────────────────────────────────
   {
     id: "DS_W01", type: "work", week: 9, topic: "트리 순회", difficulty: "core",
+    viz: { type: "tree", root: { v: 21, l: { v: 12, l: { v: 7, r: { v: 10 } }, r: { v: 14 } }, r: { v: 33, l: { v: 25, r: { v: 28 } }, r: { v: 36, r: { v: 39 } } } } },
     flag: "9차시 ⭐ 기말 1번 확정 (전위·중위·후위)",
     question: "데이터 (21, 12, 33, 14, 25, 36, 7, 28, 39, 10)을 순서대로 삽입해 이진 탐색 트리(BST)를 만든 뒤, 전위(Preorder)·중위(Inorder)·후위(Postorder) 순회 결과를 각각 적으시오.",
     inputHint: "세 줄로: 전위: …  중위: …  후위: …  (값은 쉼표로 구분)",
@@ -49,6 +50,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W02", type: "work", week: 9, topic: "BST 노드 삭제", difficulty: "hard",
+    viz: { type: "tree", root: { v: 25, l: { v: 12, l: { v: 7, r: { v: 10 } }, r: { v: 14 } }, r: { v: 33, l: { v: 28 }, r: { v: 36, r: { v: 39 } } } } },
     flag: "9차시 ⭐ BST 삭제 3 Case (출제확률 매우 높음)",
     question: "데이터 (21, 12, 33, 14, 25, 36, 7, 28, 39, 10)으로 만든 BST에서 루트 21을 삭제하고, 그 자리를 '직후 후속자(오른쪽 서브트리의 최솟값)'로 대체한 뒤, 결과 트리를 전위 순회로 적으시오.",
     inputHint: "전위 순회 결과를 쉼표로 구분해 적으시오.",
@@ -68,6 +70,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W03", type: "work", week: 10, topic: "최대 힙 구성", difficulty: "hard",
+    viz: { type: "tree", root: { v: 39, l: { v: 36, l: { v: 28, l: { v: 12 }, r: { v: 25 } }, r: { v: 14, l: { v: 10 } } }, r: { v: 33, l: { v: 21 }, r: { v: 7 } } } },
     flag: "10차시 ⭐ 교수님 '연습문제 그대로 출제'",
     question: "데이터 (21, 12, 33, 14, 25, 36, 7, 28, 39, 10)을 순서대로 삽입해 최대 힙(Max Heap)을 만들고, 완성된 배열 [1]~[10]을 적으시오. (1-인덱스, 삽입할 때마다 마지막 빈자리에 넣고 부모와 비교해 Up-heap)",
     inputHint: "배열 10칸을 [1]부터 순서대로 쉼표로 구분.",
@@ -88,6 +91,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W04", type: "work", week: 10, topic: "힙 루트 삭제", difficulty: "hard",
+    viz: { type: "tree", root: { v: 36, l: { v: 28, l: { v: 25, l: { v: 12 }, r: { v: 10 } }, r: { v: 14 } }, r: { v: 33, l: { v: 21 }, r: { v: 7 } } } },
     flag: "10차시 힙 삭제(Down-heap)",
     question: "최대 힙 [39, 36, 33, 28, 14, 21, 7, 12, 25, 10]에서 루트를 한 번 삭제(최댓값 추출)하고 재구성한 결과 배열 [1]~[9]를 적으시오. (마지막 노드를 루트로 올린 뒤 큰 자식과 Down-heap)",
     inputHint: "배열 9칸을 [1]부터 쉼표로 구분.",
@@ -107,6 +111,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W05", type: "work", week: 14, topic: "AVL 최종 트리", difficulty: "core",
+    viz: { type: "tree", root: { v: 4, l: { v: 2, l: { v: 1 }, r: { v: 3 } }, r: { v: 6, l: { v: 5 }, r: { v: 7 } } } },
     flag: "14차시 AVL 균형 유지",
     question: "빈 AVL 트리에 1, 2, 3, 4, 5, 6, 7을 순서대로 삽입한다. 삽입 중 필요한 회전을 모두 수행한 뒤, 완성된 트리를 레벨 순서(위→아래, 왼→오)로 적으시오.",
     inputHint: "최종 트리의 노드를 레벨 순서로 쉼표 구분해 적으시오. (예: 4,2,6,…)",
@@ -124,6 +129,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W05B", type: "essay", week: 14, topic: "AVL 회전 상황 판단", difficulty: "core",
+    viz: { type: "tree", root: { v: 20, l: { v: 10 }, r: { v: 30 } } },
     flag: "14차시 AVL 회전(LL/RR/LR/RL) — 상황 판단",
     question: "빈 AVL 트리에 30, 20, 10을 순서대로 삽입한다. (1) 삽입 도중 회전이 필요한 시점이 있는가? (2) 있다면 어떤 종류의 회전이며, 회전 후 트리의 루트는 무엇이 되는가? 이유와 함께 설명하시오.",
     inputHint: "회전 필요 여부 / 회전 종류 / 회전 후 루트를 적고, 왜 그런지 한두 문장으로.",
@@ -141,6 +147,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W06", type: "work", week: 11, topic: "DFS 탐색", difficulty: "core",
+    viz: { type: "graph", directed: false, nodes: [{ id: 1, x: 150, y: 34 }, { id: 2, x: 84, y: 108 }, { id: 3, x: 216, y: 108 }, { id: 4, x: 44, y: 184 }, { id: 5, x: 128, y: 184 }, { id: 6, x: 212, y: 184 }], edges: [{ a: 1, b: 2 }, { a: 1, b: 3 }, { a: 2, b: 4 }, { a: 2, b: 5 }, { a: 3, b: 6 }, { a: 5, b: 6 }] },
     flag: "11·12차시 ⭐ 출제확정 · '작은 번호부터' 함정",
     question: "정점 1~6, 간선 {(1,2),(1,3),(2,4),(2,5),(3,6),(5,6)} 인 무방향 그래프를 정점 1에서 깊이 우선 탐색(DFS)한다. 인접 정점은 번호가 작은 것부터 방문할 때, 방문 순서를 적으시오.",
     inputHint: "방문 순서를 쉼표로 구분.",
@@ -151,6 +158,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W07", type: "work", week: 11, topic: "BFS 탐색", difficulty: "core",
+    viz: { type: "graph", directed: false, nodes: [{ id: 1, x: 150, y: 34 }, { id: 2, x: 84, y: 108 }, { id: 3, x: 216, y: 108 }, { id: 4, x: 44, y: 184 }, { id: 5, x: 128, y: 184 }, { id: 6, x: 212, y: 184 }], edges: [{ a: 1, b: 2 }, { a: 1, b: 3 }, { a: 2, b: 4 }, { a: 2, b: 5 }, { a: 3, b: 6 }, { a: 5, b: 6 }] },
     flag: "11차시 ⭐ DFS=스택 / BFS=큐",
     question: "정점 1~6, 간선 {(1,2),(1,3),(2,4),(2,5),(3,6),(5,6)} 인 무방향 그래프를 정점 1에서 너비 우선 탐색(BFS)한다. 인접 정점은 번호가 작은 것부터 큐에 넣을 때, 방문 순서를 적으시오.",
     inputHint: "방문 순서를 쉼표로 구분.",
@@ -161,6 +169,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W08", type: "work", week: 12, topic: "Kruskal·Prim", difficulty: "hard",
+    viz: { type: "graph", directed: false, nodes: [{ id: "A", x: 70, y: 64 }, { id: "B", x: 232, y: 64 }, { id: "C", x: 70, y: 188 }, { id: "D", x: 232, y: 188 }], edges: [{ a: "A", b: "B", w: 1 }, { a: "B", b: "C", w: 2 }, { a: "A", b: "C", w: 3 }, { a: "C", b: "D", w: 4 }, { a: "B", b: "D", w: 5 }] },
     flag: "12차시 ⭐ [출제 확정!] Kruskal vs Prim 손풀이",
     question: "무방향 가중치 그래프의 간선: A-B(1), B-C(2), A-C(3), C-D(4), B-D(5). (1) Kruskal과 (2) Prim(시작 정점 A)으로 최소 신장 트리를 만들 때 선택되는 간선을 순서대로 적으시오.",
     inputHint: "Kruskal: A-B, …  Prim: A-B, …  (선택 순서대로)",
@@ -174,6 +183,7 @@ export const WORK_PROBLEMS = [
   },
   {
     id: "DS_W09", type: "work", week: 12, topic: "Dijkstra", difficulty: "hard",
+    viz: { type: "graph", directed: true, nodes: [{ id: "A", x: 56, y: 120 }, { id: "B", x: 168, y: 48 }, { id: "C", x: 168, y: 192 }, { id: "D", x: 280, y: 120 }], edges: [{ a: "A", b: "B", w: 4 }, { a: "A", b: "C", w: 1 }, { a: "C", b: "B", w: 2 }, { a: "C", b: "D", w: 5 }, { a: "B", b: "D", w: 1 }] },
     flag: "12차시 ⭐ [출제 확정!] Dijkstra 거리 갱신(Relaxation)",
     question: "방향 가중치 그래프의 간선: A→B(4), A→C(1), C→B(2), C→D(5), B→D(1). 출발 정점 A로 Dijkstra를 수행할 때 (1) 정점이 확정되는 순서와 (2) 각 정점의 최종 최단거리(A,B,C,D 순)를 적으시오.",
     inputHint: "확정순서: A, …  최단거리(A,B,C,D): 0, …",
