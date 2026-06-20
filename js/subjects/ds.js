@@ -3353,7 +3353,7 @@ export const set7 = [
     topic: "연습문제 BST 후위 탐색",
     type: "multiple_choice",
     difficulty: "hard",
-    question: "같은 데이터로 만든 BST의 후위(Postorder, L-R-V) 탐색 결과는?",
+    question: "데이터 (21, 12, 33, 14, 25, 36, 7, 28, 39, 10)를 순서대로 삽입해 만든 BST의 후위(Postorder, L-R-V) 탐색 결과는?",
     choices: [
       "10, 7, 14, 12, 28, 25, 39, 36, 33, 21",
       "7, 10, 12, 14, 21, 25, 28, 33, 36, 39",
@@ -3926,7 +3926,7 @@ export const set8 = [
     topic: "연습문제 BST 후위 탐색",
     type: "multiple_choice",
     difficulty: "hard",
-    question: "같은 데이터로 만든 BST의 후위(Postorder, L-R-V) 탐색 결과는?",
+    question: "데이터 (21, 12, 33, 14, 25, 36, 7, 28, 39, 10)를 순서대로 삽입해 만든 BST의 후위(Postorder, L-R-V) 탐색 결과는?",
     choices: [
       "10, 7, 14, 12, 28, 25, 39, 36, 33, 21",
       "7, 10, 12, 14, 21, 25, 28, 33, 36, 39",
