@@ -24,6 +24,12 @@ document.getElementById("link-review").href = `review.html?s=${subjectId}`;
 document.getElementById("link-wrong").href = `exam.html?s=${subjectId}&mode=wrong&all=1&review=1`;
 document.getElementById("link-ranking").href = `result.html?s=${subjectId}&view=ranking`;
 
+// 작업형·서술형 예상문제 (LLM 첨삭) — 현재 ds(자료구조)만 제공
+if (subjectId === "ds") {
+  const ws = document.getElementById("work-section");
+  if (ws) ws.style.display = "";
+}
+
 // ── 정기고사 섹션 표시 여부 ────────────────────────────
 const hasRegularExam = meta.hasExam && meta.sets && meta.sets.length;
 const hasWeeklyExam = Array.isArray(meta.weeklyExams) && meta.weeklyExams.length > 0;

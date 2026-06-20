@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="bento">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="SW AI 융합정보대학원 61기 최경찬">
+<meta name="description" content="AI Study Hub 작업형·서술형 예상문제 LLM 첨삭">
+<meta name="theme-color" content="#234E70">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<title>예상문제 첨삭 · AI Study Hub</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/theme-bento.css">
+<link rel="stylesheet" href="css/theme-dark.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+</head>
+<body>
+<div class="page">
+
+<header class="exam-bar">
+  <div class="set-info">📝 기말 예상문제</div>
+  <div class="qno" id="qno">1 / 15</div>
+  <div class="spacer"></div>
+  <select id="jump" class="btn btn-ghost btn-sm" style="max-width:42vw;" aria-label="문제 이동"></select>
+  <button id="theme-toggle" class="btn-icon" aria-label="테마 전환" onclick="window.__theme.toggleTheme()">☾</button>
+  <button class="btn btn-ghost btn-sm" id="exit-btn">나가기</button>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+<main class="question-area" id="question-area">
+  <div class="q-meta">
+    <div class="q-tags">
+      <span class="tag" id="tag-type">유형</span>
+      <span class="tag" id="tag-week">Week —</span>
+      <span class="tag tag-topic" id="tag-flag" style="display:none;"></span>
+    </div>
+  </div>
+
+  <article class="question-body">
+    <div class="q-num" id="q-num">Q 1</div>
+    <div class="q-text" id="q-text">문제 로딩 중…</div>
+    <div class="muted small" id="q-hint" style="margin:6px 0 10px; white-space:pre-line;"></div>
+    <textarea id="answer-input" rows="7"
+      style="width:100%; min-height:130px; padding:12px 14px; font-family:inherit; font-size:15px; line-height:1.7; border:1px solid var(--c-border-soft); border-radius:10px; background:var(--c-surface); color:var(--c-text); resize:vertical;"
+      placeholder="풀이 과정을 직접 써보세요. (작업형은 순서를 쉼표로, 서술형은 문장으로)"></textarea>
+    <div style="display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="grade-btn">🤖 채점받기</button>
+      <button class="btn btn-secondary btn-sm" id="model-btn">모범답안 보기</button>
+      <span class="muted small" id="grade-note"></span>
+    </div>
+  </article>
+
+  <div id="result-area" style="margin-top:18px;"></div>
+</main>
+
+<nav class="exam-nav">
+  <button class="btn btn-secondary" id="prev-btn">← 이전</button>
+  <div class="nav-center"><span class="muted small" id="nav-status"></span></div>
+  <button class="btn btn-primary" id="next-btn">다음 →</button>
+</nav>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script type="module" src="js/theme.js"></script>
+<script type="module">
+  window.renderMath = (el) => {
+    if (typeof renderMathInElement !== "undefined") {
+      renderMathInElement(el || document.getElementById("question-area"), {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+        ],
+        throwOnError: false,
+      });
+    }
+  };
+</script>
+<script type="module" src="js/work.js"></script>
+</body>
+</html>
