@@ -1,0 +1,393 @@
+{
+  "subject": "nlp",
+  "week": 92,
+  "title": "자연어처리 종합 모의고사 2 — 6~9장",
+  "set_meta": {
+    "id": 92,
+    "title": "종합 2",
+    "label": "종합 모의고사 2",
+    "desc": "6~9장 혼합 · 객관식 20문항"
+  },
+  "questions": [
+    {
+      "id": "NLPM2Q1",
+      "set": 92,
+      "week": 92,
+      "topic": "Top-k 샘플링",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Top-k 샘플링에서 k=1로 설정하면 어떤 디코딩과 동일해지는가?",
+      "choices": [
+        "① Nucleus(Top-p) 샘플링",
+        "② Greedy 디코딩",
+        "③ Temperature 샘플링(τ=1)",
+        "④ Beam search"
+      ],
+      "answer": 1,
+      "brief": "Top-k에서 k=1 = Greedy.",
+      "detailed": "Top-k는 상위 k개 토큰에서 샘플링한다. k=1이면 항상 최고 확률 토큰 하나만 고르므로 Greedy 디코딩과 동일해진다.",
+      "source": "6장 LLMs § Top-k Sampling"
+    },
+    {
+      "id": "NLPM2Q2",
+      "set": 92,
+      "week": 92,
+      "topic": "Nucleus 샘플링",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Nucleus(Top-p) 샘플링에서 'p'가 의미하는 것은?",
+      "choices": [
+        "① 고려할 토큰의 고정 개수",
+        "② 후보 토큰들의 누적 확률 질량 임계값",
+        "③ 온도 값",
+        "④ 빔(beam)의 개수"
+      ],
+      "answer": 1,
+      "brief": "p = 누적 확률 질량 임계값.",
+      "detailed": "Top-p는 누적 확률이 p(보통 0.9)가 되는 최소 토큰 집합에서 샘플링한다. p는 개수가 아니라 확률 질량 기준이므로 분포 모양에 따라 후보 수가 자동 조절된다.",
+      "source": "6장 LLMs § Nucleus Sampling"
+    },
+    {
+      "id": "NLPM2Q3",
+      "set": 92,
+      "week": 92,
+      "topic": "LoRA rank",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LoRA에서 분해 ΔW ≈ BA의 rank r에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① r은 d보다 훨씬 커야 한다",
+        "② r ≪ d 인 작은 값으로, 학습 파라미터 수를 d²에서 2dr로 줄인다",
+        "③ r은 어휘 크기와 같다",
+        "④ r은 항상 1로 고정된다"
+      ],
+      "answer": 1,
+      "brief": "r≪d → 파라미터 d²에서 2dr로 감소.",
+      "detailed": "LoRA는 ΔW(d×d=d² 파라미터)를 B(d×r)와 A(r×d)로 분해한다. r≪d인 작은 rank를 쓰므로 학습 파라미터가 2dr로 크게 줄어든다.",
+      "source": "6장 LLMs § LoRA"
+    },
+    {
+      "id": "NLPM2Q4",
+      "set": 92,
+      "week": 92,
+      "topic": "자기지도학습",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "BERT의 MLM이 자기지도학습인 이유로 옳은 것은?",
+      "choices": [
+        "① 사람이 마스킹 위치의 정답을 일일이 라벨링한다",
+        "② 입력의 일부를 가리고 나머지 문맥으로 가린 부분을 예측하므로 정답이 데이터 자체에서 나온다",
+        "③ 보상 모델로 학습한다",
+        "④ 두 모델이 서로를 감독한다"
+      ],
+      "answer": 1,
+      "brief": "입력 일부를 가리고 나머지로 예측 → 라벨 불필요.",
+      "detailed": "MLM은 15% 토큰을 마스킹하고 주변 문맥으로 원래 단어를 예측한다. 정답이 원문 자체에서 생성되므로 사람 라벨이 필요 없는 자기지도학습이다.",
+      "source": "6장 LLMs § Self-Supervised Learning"
+    },
+    {
+      "id": "NLPM2Q5",
+      "set": 92,
+      "week": 92,
+      "topic": "Emergent Ability",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Emergent Ability를 실험적으로 'emergent'라고 판단하는 기준으로 옳은 것은?",
+      "choices": [
+        "① 모든 규모에서 성능이 일정할 때",
+        "② 특정 규모까지 무작위 수준이다가 그 이후 무작위보다 한참 위로 성능이 급상승할 때",
+        "③ 모델이 작을수록 성능이 좋을 때",
+        "④ 학습 손실이 증가할 때"
+      ],
+      "answer": 1,
+      "brief": "임계 규모 전 무작위 → 이후 급상승.",
+      "detailed": "few-shot ICL에서 특정 규모까지 무작위 수준 성능이다가 그 이후 무작위보다 한참 위로 급상승하면 emergent로 간주한다. 작은 모델 성능으로는 예측할 수 없다.",
+      "source": "6장 LLMs § Emergent Ability"
+    },
+    {
+      "id": "NLPM2Q6",
+      "set": 92,
+      "week": 92,
+      "topic": "Extractive vs Abstractive",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "답을 자기 말로 합성(재구성·요약)하는 QA 방식과 적합한 모델은?",
+      "choices": [
+        "① Extractive QA — 인코더(BERT)",
+        "② Abstractive QA — 생성형 LM(GPT)",
+        "③ Closed-domain QA — TF-IDF",
+        "④ Open-book QA — 검색기만"
+      ],
+      "answer": 1,
+      "brief": "Abstractive=자기 말로 합성, 생성형 LM 필요.",
+      "detailed": "Abstractive QA는 답을 자기 말로 합성(재구성·요약)하므로 생성형 LM(GPT)이 필요하다. Extractive QA는 context의 span을 그대로 추출해 인코더(BERT)로 가능하다.",
+      "source": "7장 RAG § QA 분류"
+    },
+    {
+      "id": "NLPM2Q7",
+      "set": 92,
+      "week": 92,
+      "topic": "파라미터 지식 갱신",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LM의 파라미터 지식을 갱신/유지하는 방법으로 옳은 것은?",
+      "choices": [
+        "① 프롬프트를 바꾸기만 하면 즉시 갱신된다",
+        "② 재학습 또는 파인튜닝이 필요하다",
+        "③ 검색 인덱스만 갱신하면 된다",
+        "④ 토크나이저를 바꾸면 된다"
+      ],
+      "answer": 1,
+      "brief": "파라미터 지식 갱신 = 재학습/파인튜닝.",
+      "detailed": "파라미터 지식은 모델 가중치에 저장되므로 갱신/유지하려면 새 데이터로 재학습하거나 파인튜닝해야 한다. 이것이 비파라미터(검색) 지식의 '갱신 용이' 장점과 대비된다.",
+      "source": "7장 RAG § LM as Knowledge Base"
+    },
+    {
+      "id": "NLPM2Q8",
+      "set": 92,
+      "week": 92,
+      "topic": "FFN 메모리",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Transformer의 FFN을 key-value 메모리로 볼 때, value 벡터가 대응하는 것은?",
+      "choices": [
+        "① 입력 시퀀스에 대한 패턴 탐지",
+        "② 출력 어휘에 대한 분포",
+        "③ 위치 인코딩",
+        "④ 어텐션 가중치"
+      ],
+      "answer": 1,
+      "brief": "key=입력 패턴 탐지, value=출력 어휘 분포.",
+      "detailed": "FFN을 key-value 메모리로 보면 key 벡터는 입력 시퀀스에 대한 패턴 탐지기, value 벡터는 출력 어휘에 대한 분포에 대응한다. FFN은 전체 파라미터의 약 2/3를 차지한다.",
+      "source": "7장 RAG § FFN = Neural Memories"
+    },
+    {
+      "id": "NLPM2Q9",
+      "set": 92,
+      "week": 92,
+      "topic": "Cross-encoder",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Cross-encoder가 대규모 코퍼스 검색에 부적합한 이유는?",
+      "choices": [
+        "① 의미를 이해하지 못해서",
+        "② 모든 쿼리-문서 쌍을 매번 함께 계산해야 해 확장성이 없어서",
+        "③ 문서 벡터를 사전계산하기 때문에",
+        "④ 희소 벡터만 쓰기 때문에"
+      ],
+      "answer": 1,
+      "brief": "쌍을 매번 동시 계산 → 대규모 확장 불가.",
+      "detailed": "Cross-encoder는 쿼리-문서 쌍을 함께 처리해 상호작용을 잘 포착하지만, 모든 쌍을 매번 계산해야 하므로 대규모 코퍼스에 확장할 수 없다. 작은 집합의 정밀 재랭킹에 쓴다.",
+      "source": "7장 RAG § Cross-encoder"
+    },
+    {
+      "id": "NLPM2Q10",
+      "set": 92,
+      "week": 92,
+      "topic": "RAG-Token",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "RAG-Token 모델의 특징으로 옳은 것은?",
+      "choices": [
+        "① 전체 시퀀스를 하나의 문서로만 생성한다",
+        "② 토큰마다 다른 검색 문서를 쓸 수 있고 각 토큰마다 마진화한다",
+        "③ 검색을 사용하지 않는다",
+        "④ 시퀀스 수준에서만 마진화한다"
+      ],
+      "answer": 1,
+      "brief": "토큰마다 다른 문서 사용, 토큰 단위 마진화.",
+      "detailed": "RAG-Token은 토큰마다 다른 검색 문서를 쓸 수 있고, 마진화를 시퀀스가 아니라 각 토큰마다 수행한다. RAG-Sequence는 같은 문서 하나로 전체 시퀀스를 생성한다.",
+      "source": "7장 RAG § RAG-Token"
+    },
+    {
+      "id": "NLPM2Q11",
+      "set": 92,
+      "week": 92,
+      "topic": "연역 추론",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "다음 중 연역적 추론의 예로 가장 적절한 것은?",
+      "choices": [
+        "① 관찰을 모아 일반 규칙을 추정",
+        "② 일반 원리에서 구체적 결론 도출('모든 인간은 죽는다 → 소크라테스는 죽는다')",
+        "③ 세계 상식으로 결과 예측('공을 떨어뜨리면 떨어진다')",
+        "④ 두 단어의 유사도 계산"
+      ],
+      "answer": 1,
+      "brief": "일반 원리 → 구체적 결론 = 연역.",
+      "detailed": "연역적 추론은 일반 원리/전제에서 구체적 결론을 도출한다('모든 인간은 죽는다' + '소크라테스는 인간' → '소크라테스는 죽는다').",
+      "source": "8장 Reasoning § 추론 개요"
+    },
+    {
+      "id": "NLPM2Q12",
+      "set": 92,
+      "week": 92,
+      "topic": "Self-consistency",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Self-consistency CoT가 최종 답을 정하는 방식은?",
+      "choices": [
+        "① 가장 긴 추론을 선택",
+        "② 여러 경로의 답 중 다수결(majority voting)",
+        "③ 보상 모델 점수 최대",
+        "④ 가장 먼저 생성된 답"
+      ],
+      "answer": 1,
+      "brief": "여러 경로 → 다수결.",
+      "detailed": "Self-consistency는 temperature 샘플링으로 여러 추론 경로를 만든 뒤 답들의 다수결(majority voting)로 최종 답을 정한다. 여러 경로가 같은 답에 모이면 신뢰가 높다는 직관이다.",
+      "source": "8장 Reasoning § Self-consistency"
+    },
+    {
+      "id": "NLPM2Q13",
+      "set": 92,
+      "week": 92,
+      "topic": "GRPO",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "GRPO가 PPO 대비 제거한 구성요소는?",
+      "choices": [
+        "① 보상 모델",
+        "② critic 모델",
+        "③ 정책 모델",
+        "④ 토크나이저"
+      ],
+      "answer": 1,
+      "brief": "GRPO는 critic 모델을 제거.",
+      "detailed": "GRPO는 PPO의 critic 모델을 제거하고, 질문마다 출력 그룹을 샘플링해 그룹 내 상대 보상으로 advantage를 추정한다. 보상·정책 모델은 그대로 쓴다.",
+      "source": "8장 Reasoning § GRPO"
+    },
+    {
+      "id": "NLPM2Q14",
+      "set": 92,
+      "week": 92,
+      "topic": "Instruction Tuning",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Instruction Tuning의 목표로 가장 적절한 것은?",
+      "choices": [
+        "① 단일 태스크에만 특화시키는 것",
+        "② 지시문으로 파인튜닝해 미지의 광범위한 태스크에 zero-shot 일반화하게 하는 것",
+        "③ few-shot 예시를 항상 요구하게 만드는 것",
+        "④ 검색 능력을 부여하는 것"
+      ],
+      "answer": 1,
+      "brief": "지시문 파인튜닝 → zero-shot 교차 태스크 일반화.",
+      "detailed": "Instruction Tuning은 다양한 태스크를 지시문 형태로 파인튜닝해 모델이 미지의 태스크에도 zero-shot으로 일반화하게 한다. 태스크별 파인튜닝(일반화 안 됨)·ICL(예시 필요)과 대비된다.",
+      "source": "8장 Reasoning § Instruction Tuning"
+    },
+    {
+      "id": "NLPM2Q15",
+      "set": 92,
+      "week": 92,
+      "topic": "보상 모델",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "RLHF 보상 모델에서 '높은 보상'이 의미하는 것은?",
+      "choices": [
+        "① 응답이 더 길다",
+        "② 사람이 더 선호하는 응답이다",
+        "③ 생성 속도가 빠르다",
+        "④ 토큰 수가 적다"
+      ],
+      "answer": 1,
+      "brief": "높은 보상 = 사람이 더 선호.",
+      "detailed": "보상 모델은 인간 피드백으로 응답 품질을 점수화하며, 높은 보상은 사람이 더 선호하는 응답을 뜻한다. 이를 최대화하도록 정책(LLM)을 학습한다.",
+      "source": "8장 Reasoning § RLHF"
+    },
+    {
+      "id": "NLPM2Q16",
+      "set": 92,
+      "week": 92,
+      "topic": "Bradley-Terry",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "보상 모델 학습의 Bradley-Terry 목적이 직접 학습하는 것은?",
+      "choices": [
+        "① 응답 길이 분포",
+        "② 선호(winning) 응답이 비선호(losing)보다 높은 보상을 받도록 하는 순서 관계",
+        "③ 다음 토큰 확률",
+        "④ 문서 검색 순위"
+      ],
+      "answer": 1,
+      "brief": "winning > losing 보상의 순서 관계.",
+      "detailed": "Bradley-Terry 쌍대비교 목적은 선호 응답의 보상이 비선호 응답보다 높도록 학습한다. 보상 모델은 마지막 토큰 표현에 linear layer를 붙여 스칼라 보상을 낸다.",
+      "source": "9장 Agents § Reward Model Training"
+    },
+    {
+      "id": "NLPM2Q17",
+      "set": 92,
+      "week": 92,
+      "topic": "KL 정규화",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "정규화된 보상 최적화에서 KL 패널티의 목적은?",
+      "choices": [
+        "① 보상을 무한정 키우기 위해",
+        "② 정책이 초기 SFT 모델에서 너무 멀어지지 않게 해 reward hacking·지식 상실을 막기 위해",
+        "③ 학습 속도를 늦추기 위해",
+        "④ 검색 정확도를 높이기 위해"
+      ],
+      "answer": 1,
+      "brief": "초기 SFT 이탈 억제 → reward hacking/지식 상실 방지.",
+      "detailed": "KL 패널티는 정책이 초기 SFT 체크포인트에서 과도하게 벗어나지 않게 제약한다. 이는 보상만 순진하게 최대화할 때 생기는 reward hacking, mode collapse, 사전학습 지식 상실을 막는다.",
+      "source": "9장 Agents § Regularized Reward Optimization"
+    },
+    {
+      "id": "NLPM2Q18",
+      "set": 92,
+      "week": 92,
+      "topic": "LLaVA",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "LLaVA에서 학습하는 projection matrix W의 역할은?",
+      "choices": [
+        "① 텍스트 토큰을 이미지 픽셀로 변환",
+        "② 이미지 표현 Z_v를 텍스트 임베딩 공간 H_v로 변환",
+        "③ 어휘를 축소",
+        "④ 보상을 계산"
+      ],
+      "answer": 1,
+      "brief": "W: 이미지 표현 → 텍스트 임베딩 변환.",
+      "detailed": "LLaVA는 projection matrix W를 학습해 비전 인코더(CLIP)의 이미지 표현 Z_v를 텍스트 임베딩 H_v로 변환하고, 이 시각 토큰을 텍스트 토큰과 concat해 LLM 입력으로 쓴다.",
+      "source": "9장 Agents § LLaVA Architecture"
+    },
+    {
+      "id": "NLPM2Q19",
+      "set": 92,
+      "week": 92,
+      "topic": "도구 사용과 규모",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "도구 사용 능력과 모델 규모의 관계로 옳은 것은?",
+      "choices": [
+        "① 큰 모델일수록 도구를 더 적절히 사용하는 법을 학습한다",
+        "② 작은 모델이 항상 더 잘한다",
+        "③ 규모와 무관하다",
+        "④ 규모가 커지면 도구 사용이 불가능해진다"
+      ],
+      "answer": 0,
+      "brief": "큰 모델일수록 도구 사용을 잘 학습.",
+      "detailed": "강의 관찰에 따르면 위키 검색·계산기·QA 등에서 큰 모델일수록 도구를 적절히 사용하는 법을 더 효과적으로 학습한다.",
+      "source": "9장 Agents § Tool Usage vs Model Scale"
+    },
+    {
+      "id": "NLPM2Q20",
+      "set": 92,
+      "week": 92,
+      "topic": "Reward Hacking",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "'실제 바람직한 행동 없이 보상모델의 결함을 악용해 높은 보상만 얻는' 현상은?",
+      "choices": [
+        "① Mode collapse",
+        "② Reward hacking",
+        "③ Exposure bias",
+        "④ Vanishing gradient"
+      ],
+      "answer": 1,
+      "brief": "Reward hacking = 보상모델 결함 악용.",
+      "detailed": "Reward hacking은 LLM이 실제 바람직한 행동 없이 보상모델의 결함을 악용해 높은 보상만 획득하는 현상이다. Mode collapse(좁은 분포 수렴)와 함께 보상 과최적화의 대표 부작용이다.",
+      "source": "9장 Agents § Issues with Naïve Optimization"
+    }
+  ]
+}

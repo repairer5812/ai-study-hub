@@ -1,0 +1,393 @@
+{
+  "subject": "nlp",
+  "week": 93,
+  "title": "자연어처리 종합 모의고사 3 — 6~9장",
+  "set_meta": {
+    "id": 93,
+    "title": "종합 3",
+    "label": "종합 모의고사 3",
+    "desc": "6~9장 혼합 · 객관식 20문항"
+  },
+  "questions": [
+    {
+      "id": "NLPM3Q1",
+      "set": 93,
+      "week": 93,
+      "topic": "Temperature",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Temperature 샘플링에서 온도 τ를 크게 높이면 분포는 어떻게 되는가?",
+      "choices": [
+        "① 한 토큰에 집중되어 결정적이 된다",
+        "② 더 평평해져 다양·탐색적 생성이 된다",
+        "③ 변화가 없다",
+        "④ 항상 [EOS]만 생성된다"
+      ],
+      "answer": 1,
+      "brief": "τ↑ → 분포 평평 → 다양성↑.",
+      "detailed": "Temperature는 분포를 재조정한다. τ가 크면 분포가 평평해져 다양·탐색적 생성이 되고, τ→0이면 한 토큰에 집중되어 Greedy에 수렴한다.",
+      "source": "6장 LLMs § Temperature Sampling"
+    },
+    {
+      "id": "NLPM3Q2",
+      "set": 93,
+      "week": 93,
+      "topic": "PEFT 공통 원리",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "LoRA·Prompt Tuning·Prefix-Tuning이 공유하는 PEFT 공통 원리는?",
+      "choices": [
+        "① 모델 전체를 처음부터 학습",
+        "② 대형 사전학습 모델은 freeze하고 소수의 추가 파라미터만 학습",
+        "③ 어휘를 확장",
+        "④ 검색을 추가"
+      ],
+      "answer": 1,
+      "brief": "대형 모델 freeze + 소수 파라미터만 학습.",
+      "detailed": "PEFT 계열(LoRA, Prompt/Prefix Tuning)의 공통 원리는 대형 사전학습 모델을 freeze한 채 소수의 추가 파라미터만 학습해 비용을 줄이는 것이다.",
+      "source": "6장 LLMs § PEFT"
+    },
+    {
+      "id": "NLPM3Q3",
+      "set": 93,
+      "week": 93,
+      "topic": "디코딩 실무",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "같은 입력에 대해 다양한 응답이 필요할 때 권장되는 디코딩은?",
+      "choices": [
+        "① Greedy 디코딩",
+        "② 샘플링 기반(Top-p 등, temperature와 병용 가능)",
+        "③ argmax 고정",
+        "④ k=1 Top-k"
+      ],
+      "answer": 1,
+      "brief": "다양성 필요 → 샘플링(Top-p, temperature).",
+      "detailed": "단순·효율·결정성이 중요하면 Greedy를, 같은 입력에 여러(다양한) 응답이 필요하면 샘플링 기반을 쓴다. 보통 Top-p가 Top-k보다 낫고 temperature와 함께 쓸 수 있다.",
+      "source": "6장 LLMs § 디코딩 실무 고려"
+    },
+    {
+      "id": "NLPM3Q4",
+      "set": 93,
+      "week": 93,
+      "topic": "ICL 핵심",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "In-Context Learning의 가장 중요한 특징은?",
+      "choices": [
+        "① 예시마다 가중치를 업데이트한다",
+        "② 프롬프트 예시로 추론하되 파라미터 업데이트가 전혀 없다",
+        "③ 반드시 검색기를 쓴다",
+        "④ 보상 모델이 필요하다"
+      ],
+      "answer": 1,
+      "brief": "ICL = 예시로 추론, 파라미터 무업데이트.",
+      "detailed": "ICL은 프롬프트 내 입력-출력 예시로 새 입력의 출력을 추론하며, 핵심은 모델 파라미터를 전혀 업데이트하지 않는다는 점이다.",
+      "source": "6장 LLMs § In-Context Learning"
+    },
+    {
+      "id": "NLPM3Q5",
+      "set": 93,
+      "week": 93,
+      "topic": "Scaling 3요소",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Scaling Laws에서 사전학습 LLM 성능을 결정하는 3대 요소가 아닌 것은?",
+      "choices": [
+        "① 모델 크기(파라미터 수)",
+        "② 데이터셋 크기(토큰 수)",
+        "③ 컴퓨트(FLOPs)",
+        "④ 디코딩 온도(temperature)"
+      ],
+      "answer": 3,
+      "brief": "3요소 = 모델·데이터·컴퓨트(온도 아님).",
+      "detailed": "Scaling Laws의 3대 요소는 모델 크기(N), 데이터셋 크기(D), 컴퓨트(C)다. 디코딩 온도는 추론 시 생성 설정으로 사전학습 성능 scaling 요소가 아니다.",
+      "source": "6장 LLMs § Scaling Laws"
+    },
+    {
+      "id": "NLPM3Q6",
+      "set": 93,
+      "week": 93,
+      "topic": "비파라미터 지식",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "비파라미터 지식(검색 기반)의 장점으로 옳은 것은?",
+      "choices": [
+        "① 모델 크기를 키우지 않고 정보를 추가할 수 있다",
+        "② 추론이 항상 더 빠르다",
+        "③ 해석 가능성이 떨어진다",
+        "④ 갱신이 더 어렵다"
+      ],
+      "answer": 0,
+      "brief": "모델 크기 안 키우고 정보 추가(+갱신 용이·해석성↑).",
+      "detailed": "비파라미터 지식은 모델 크기를 키우지 않고 정보를 추가하고, 지식 갱신이 용이하며, 해석 가능성을 높인다. 검색 단계가 추가되므로 '항상 더 빠르다'는 장점이 아니다.",
+      "source": "7장 RAG § Non-parametric Knowledge"
+    },
+    {
+      "id": "NLPM3Q7",
+      "set": 93,
+      "week": 93,
+      "topic": "IDF",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "TF-IDF에서 모든 문서에 흔히 등장하는 단어(예: good)의 IDF 값은?",
+      "choices": [
+        "① 매우 크다",
+        "② 0에 가깝다",
+        "③ 음의 무한대",
+        "④ 항상 1이다"
+      ],
+      "answer": 1,
+      "brief": "흔한 단어(DF 큼) → IDF≈0.",
+      "detailed": "IDF=log(N/df)이므로 거의 모든 문서에 등장하는 단어는 df가 N에 가까워 IDF가 0에 가깝다. 즉 변별력이 없어 가중치가 낮아진다(예: good의 idf≈0).",
+      "source": "7장 RAG § IDF"
+    },
+    {
+      "id": "NLPM3Q8",
+      "set": 93,
+      "week": 93,
+      "topic": "Precision",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "정보 검색에서 Precision(정밀도)의 정의로 옳은 것은?",
+      "choices": [
+        "① 전체 관련 문서 중 반환된 관련 문서의 비율",
+        "② 반환한 문서 중 관련 문서의 비율",
+        "③ 관련 문서 검색 지점들의 precision 평균",
+        "④ 상위 k개의 재현율"
+      ],
+      "answer": 1,
+      "brief": "Precision = |R|/|T| (반환 중 관련 비율).",
+      "detailed": "Precision은 반환한 문서 중 관련 문서의 비율(|R|/|T|)이다. ①은 Recall(|R|/|U|), ③은 Average Precision의 정의다.",
+      "source": "7장 RAG § Evaluation"
+    },
+    {
+      "id": "NLPM3Q9",
+      "set": 93,
+      "week": 93,
+      "topic": "REALM",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "REALM의 핵심 기여로 옳은 것은?",
+      "choices": [
+        "① 디코더-only LLM을 처음 제안",
+        "② RAG를 인코더 사전학습(BERT 스타일)에 처음 통합, 검색 내용을 조건으로 MLM loss로 사전학습",
+        "③ 강화학습 보상 모델을 처음 제안",
+        "④ BPE 토크나이저를 제안"
+      ],
+      "answer": 1,
+      "brief": "REALM = RAG를 인코더 사전학습(MLM)에 통합.",
+      "detailed": "REALM은 RAG를 인코더 사전학습(BERT 스타일)에 처음 통합한 연구로, 검색된 내용을 조건으로 한 MLM loss로 knowledge-augmented encoder를 사전학습한다.",
+      "source": "7장 RAG § RAG in Pretraining"
+    },
+    {
+      "id": "NLPM3Q10",
+      "set": 93,
+      "week": 93,
+      "topic": "RAG-Sequence",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "RAG-Sequence 모델의 마진화 방식으로 옳은 것은?",
+      "choices": [
+        "① 토큰마다 다른 문서로 토큰 단위 마진화",
+        "② 같은 문서 하나로 전체 시퀀스를 생성하고 시퀀스 수준에서 top-K 근사로 마진화",
+        "③ 마진화를 하지 않는다",
+        "④ 어휘 전체에 대해 마진화"
+      ],
+      "answer": 1,
+      "brief": "Sequence = 문서 1개·시퀀스 수준 top-K 마진화.",
+      "detailed": "RAG-Sequence는 같은 검색 문서 하나로 전체 시퀀스를 생성하고, 문서를 단일 잠재변수로 보아 시퀀스 수준에서 top-K 근사로 마진화한다. 토큰 단위 마진화는 RAG-Token이다.",
+      "source": "7장 RAG § RAG-Sequence"
+    },
+    {
+      "id": "NLPM3Q11",
+      "set": 93,
+      "week": 93,
+      "topic": "Zero-shot CoT",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "예시 없이 추론을 유발하는 Zero-shot CoT의 대표 트리거 문구는?",
+      "choices": [
+        "① 'Answer without reasoning'",
+        "② \"Let's think step by step\"",
+        "③ 'Translate to French'",
+        "④ 'Summarize briefly'"
+      ],
+      "answer": 1,
+      "brief": "\"Let's think step by step\".",
+      "detailed": "Zero-shot CoT는 답 앞에 'Let's think step by step'을 붙여 예시 없이도 단계별 추론을 유발한다.",
+      "source": "8장 Reasoning § Zero-shot CoT"
+    },
+    {
+      "id": "NLPM3Q12",
+      "set": 93,
+      "week": 93,
+      "topic": "PPO clipping",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PPO의 clipped surrogate objective의 목적은?",
+      "choices": [
+        "① 보상 모델을 제거하기 위해",
+        "② 정책 업데이트가 너무 커지지 않게 해 학습 안정성을 유지하기 위해",
+        "③ 검색 정확도를 높이기 위해",
+        "④ 토큰화를 빠르게 하기 위해"
+      ],
+      "answer": 1,
+      "brief": "clipping = 과도한 정책 업데이트 방지(안정성).",
+      "detailed": "PPO는 clipped surrogate objective로 정책 업데이트가 한 번에 너무 커지지 않게 제한해 학습 안정성을 높인다. 또한 GAE(critic)로 advantage 분산을 줄인다.",
+      "source": "8장 Reasoning § PPO"
+    },
+    {
+      "id": "NLPM3Q13",
+      "set": 93,
+      "week": 93,
+      "topic": "RLVR 정의",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RLVR에서 보상은 무엇을 기준으로 주어지는가?",
+      "choices": [
+        "① 응답 길이",
+        "② 생성 응답이 검증 가능하게 정답인지 여부(binary)",
+        "③ 사람의 절대 점수",
+        "④ 검색 문서 수"
+      ],
+      "answer": 1,
+      "brief": "검증 가능한 정답 여부(이진 보상).",
+      "detailed": "RLVR은 생성 응답이 자동 검증기로 검증 가능하게 정답일 때 보상을 준다(보통 binary). 사람이 전체 정답을 작성할 필요 없이 채점만 하면 되어 확장성이 높다.",
+      "source": "8장 Reasoning § RLVR"
+    },
+    {
+      "id": "NLPM3Q14",
+      "set": 93,
+      "week": 93,
+      "topic": "정렬 필요성",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "사전학습 모델이 정렬되지 않은 이유 중 '목적 불일치(objective mismatch)'에 해당하는 것은?",
+      "choices": [
+        "① 인터넷 텍스트에 편향이 있어서",
+        "② 사전학습 목표가 '다음 단어 예측'일 뿐 인간 의도·가치 이해와 무관해서",
+        "③ 과잉일반화 때문에",
+        "④ 토크나이저 한계 때문에"
+      ],
+      "answer": 1,
+      "brief": "다음 단어 예측 ≠ 인간 의도 이해.",
+      "detailed": "목적 불일치는 사전학습 목표가 다음 단어 예측일 뿐 인간 의도·가치 이해와 무관하다는 것이다. 학습 데이터 편향, 과잉일반화는 별도의 비정렬 원인이다.",
+      "source": "8장 Reasoning § Alignment Post-training"
+    },
+    {
+      "id": "NLPM3Q15",
+      "set": 93,
+      "week": 93,
+      "topic": "Instruction Tuning vs Pretraining",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Instruction Tuning과 Pretraining의 '지도(supervision)' 차이로 옳은 것은?",
+      "choices": [
+        "① 둘 다 자기지도학습이다",
+        "② Pretraining은 자기지도(라벨 없음), Instruction Tuning은 지도학습(사람 라벨 응답)이다",
+        "③ Pretraining만 사람 라벨이 필요하다",
+        "④ Instruction Tuning은 라벨이 필요 없다"
+      ],
+      "answer": 1,
+      "brief": "Pretraining=자기지도, Instruction Tuning=지도학습.",
+      "detailed": "둘 다 멀티태스크 학습이지만 지도 방식이 다르다. Pretraining은 자기지도(raw 데이터, 라벨 없음)이고, Instruction Tuning은 사람이 라벨링한 응답으로 학습하는 지도학습이다.",
+      "source": "8장 Reasoning § Instruction Tuning vs Pretraining"
+    },
+    {
+      "id": "NLPM3Q16",
+      "set": 93,
+      "week": 93,
+      "topic": "언어 에이전트",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "언어 에이전트의 정의로 가장 적절한 것은?",
+      "choices": [
+        "① 이미지를 분류하는 CNN 시스템",
+        "② 자연어를 인터페이스로 사용자와 상호작용하며 현실 세계 작업을 실행하는 시스템",
+        "③ 검색 인덱스를 구축하는 도구",
+        "④ 토크나이저의 일종"
+      ],
+      "answer": 1,
+      "brief": "자연어 인터페이스로 현실 작업 실행 시스템.",
+      "detailed": "언어 에이전트는 자연어를 인터페이스로 사용자와 상호작용하며 현실 세계 작업을 실행하는 시스템으로, LLM의 NLU·NLG·추론 능력을 기반으로 한다(예: 가상 비서, 코드 에이전트).",
+      "source": "9장 Agents § Language Agents"
+    },
+    {
+      "id": "NLPM3Q17",
+      "set": 93,
+      "week": 93,
+      "topic": "멀티모달 입력",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "멀티모달 LLM에서 상대적으로 더 흔한 능력은?",
+      "choices": [
+        "① 멀티모달 출력 생성(텍스트→이미지 등)",
+        "② 멀티모달 입력 처리(이미지·음성 이해 등)",
+        "③ 둘 다 불가능",
+        "④ 텍스트 출력 금지"
+      ],
+      "answer": 1,
+      "brief": "입력 처리가 출력 생성보다 흔함.",
+      "detailed": "멀티모달 LLM은 입력 처리(이미지 이해, 음성 전사 등)가 흔하고, 출력 생성(텍스트→이미지, 설명→음악 등)은 상대적으로 덜 흔하다.",
+      "source": "9장 Agents § Multimodal LLMs"
+    },
+    {
+      "id": "NLPM3Q18",
+      "set": 93,
+      "week": 93,
+      "topic": "InCoder",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "InCoder의 causal masking 학습에서 샘플링된 코드 span은 어떻게 처리되는가?",
+      "choices": [
+        "① 완전히 삭제된다",
+        "② 문서 끝으로 이동되고 원래 위치는 mask 토큰으로 표시되어, 양방향 문맥 기반 삽입 생성을 학습한다",
+        "③ 무작위로 섞인다",
+        "④ 그대로 둔 채 다음 토큰만 예측한다"
+      ],
+      "answer": 1,
+      "brief": "span을 끝으로 이동 + mask 표시 → 삽입 생성 학습.",
+      "detailed": "InCoder는 코드 span을 샘플링해 문서 끝으로 옮기고 원래 위치를 special mask 토큰으로 표시한 뒤, 모델이 전체를 생성하도록 학습한다. 이로써 양방향 문맥을 조건으로 한 삽입(insertion) 생성을 익혀 코드 편집이 가능해진다.",
+      "source": "9장 Agents § InCoder Causal Masking"
+    },
+    {
+      "id": "NLPM3Q19",
+      "set": 93,
+      "week": 93,
+      "topic": "Mode collapse",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "보상 과최적화로 '고보상의 좁은 출력 분포로 수렴해 다양성을 잃는' 현상은?",
+      "choices": [
+        "① Reward hacking",
+        "② Mode collapse",
+        "③ Teacher forcing",
+        "④ Exposure bias"
+      ],
+      "answer": 1,
+      "brief": "Mode collapse = 좁은 분포 수렴, 다양성 상실.",
+      "detailed": "Mode collapse는 LLM이 고보상의 좁은 출력 분포로 수렴해 다양성과 일반화를 잃는 현상이다. reward hacking, 사전학습 지식 상실과 함께 보상 과최적화의 부작용이다.",
+      "source": "9장 Agents § Issues with Naïve Optimization"
+    },
+    {
+      "id": "NLPM3Q20",
+      "set": 93,
+      "week": 93,
+      "topic": "Toolformer 필터링",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Toolformer가 유용한 API 호출을 가려내는 self-supervised 기준은?",
+      "choices": [
+        "① 호출이 가장 짧은가",
+        "② API 호출이 이후 토큰 생성의 loss를 줄였는가(줄이면 유지, 아니면 필터링)",
+        "③ 사람이 모두 검수했는가",
+        "④ 호출 횟수가 많은가"
+      ],
+      "answer": 1,
+      "brief": "loss를 줄인 호출만 유지, 나머지 필터링.",
+      "detailed": "유익한 API 호출은 보통 이후 토큰 생성의 loss를 줄인다. Toolformer는 이 기준으로 유용성을 판단해, loss를 줄이지 못하는 호출은 학습 데이터에서 필터링한다.",
+      "source": "9장 Agents § Filtering API Calls"
+    }
+  ]
+}

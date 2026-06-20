@@ -1,0 +1,393 @@
+{
+  "subject": "nlp",
+  "week": 91,
+  "title": "자연어처리 종합 모의고사 1 — 6~9장",
+  "set_meta": {
+    "id": 91,
+    "title": "종합 1",
+    "label": "종합 모의고사 1",
+    "desc": "6~9장 혼합 · 객관식 20문항"
+  },
+  "questions": [
+    {
+      "id": "NLPM1Q1",
+      "set": 91,
+      "week": 91,
+      "topic": "Decoder 사전학습",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "현대 LLM의 주류인 decoder 아키텍처의 표준 사전학습 목적함수는?",
+      "choices": [
+        "① 마스킹된 단어 복원(MLM)",
+        "② 다음 토큰 예측(표준 언어모델링, cross-entropy)",
+        "③ 두 문장의 인접 여부 판별(NSP)",
+        "④ 보상 최대화(RL)"
+      ],
+      "answer": 1,
+      "brief": "Decoder = 다음 토큰 예측(표준 LM 목적).",
+      "detailed": "Decoder(GPT 계열)는 이전 토큰들로 다음 토큰을 예측하는 표준 언어모델링(cross-entropy) 목적으로 사전학습한다. MLM·NSP는 인코더(BERT)의 목적이다.",
+      "source": "6장 LLMs § Decoder Pretraining"
+    },
+    {
+      "id": "NLPM1Q2",
+      "set": 91,
+      "week": 91,
+      "topic": "LLM 정의",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "강의에서 제시한 LLM의 일반적 정의에 포함되지 않는 것은?",
+      "choices": [
+        "① Transformer-decoder 구조(또는 변형)로 텍스트 생성",
+        "② 방대하고 다양한 일반 도메인 코퍼스로 사전학습",
+        "③ 최소 수십억(billions) 파라미터",
+        "④ 반드시 검색기(retriever)를 내장"
+      ],
+      "answer": 3,
+      "brief": "검색기 내장은 LLM 정의 요건이 아니다.",
+      "detailed": "LLM의 일반 정의는 Transformer-decoder 기반 텍스트 생성, 방대한 일반 코퍼스 사전학습, 최소 수십억 파라미터, 범용 NLP 해결사다. 검색기 내장은 RAG의 선택적 구성일 뿐 정의 요건이 아니다.",
+      "source": "6장 LLMs § LLM 정의"
+    },
+    {
+      "id": "NLPM1Q3",
+      "set": 91,
+      "week": 91,
+      "topic": "In-Context Learning",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "In-Context Learning이 처음 본격적으로 연구된 모델은?",
+      "choices": [
+        "① BERT",
+        "② GPT-3",
+        "③ T5",
+        "④ ELECTRA"
+      ],
+      "answer": 1,
+      "brief": "ICL은 GPT-3 논문에서 처음 연구.",
+      "detailed": "ICL은 프롬프트 내 few-shot 예시로 새 입력을 추론하는 능력으로, GPT-3 논문에서 처음 본격 연구되었으며 파라미터 업데이트가 없다.",
+      "source": "6장 LLMs § In-Context Learning"
+    },
+    {
+      "id": "NLPM1Q4",
+      "set": 91,
+      "week": 91,
+      "topic": "Emergent vs Scaling Law",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Emergent Ability와 Scaling Law의 관계를 가장 잘 설명한 것은?",
+      "choices": [
+        "① Scaling Law는 불연속적 점프를, Emergent Ability는 매끄러운 power-law를 말한다",
+        "② Scaling Law는 손실이 규모와 매끄러운 power-law 관계임을, Emergent Ability는 특정 임계 규모를 넘을 때 능력이 갑자기 발현됨을 말한다",
+        "③ 둘은 같은 현상의 다른 이름이다",
+        "④ 둘 다 모델 규모와 무관하다"
+      ],
+      "answer": 1,
+      "brief": "Scaling Law=매끄러운 power-law, Emergent=임계치 급발현.",
+      "detailed": "Scaling Law는 cross-entropy 손실이 모델·데이터·컴퓨트와 매끄러운 power-law 관계임을 말한다. Emergent Ability는 특정 임계 규모를 넘을 때 능력이 갑자기 나타나는(작은 모델로 예측 불가) 현상이다.",
+      "source": "6장 LLMs § Scaling·Emergent"
+    },
+    {
+      "id": "NLPM1Q5",
+      "set": 91,
+      "week": 91,
+      "topic": "PEFT 비용",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "PEFT가 필요한 근본 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 전체 파라미터 파인튜닝은 연산·메모리·저장 비용이 매우 크기 때문",
+        "② 사전학습 데이터가 부족하기 때문",
+        "③ 디코딩이 느리기 때문",
+        "④ 토크나이저가 없기 때문"
+      ],
+      "answer": 0,
+      "brief": "전체 파인튜닝의 막대한 비용 → 소수만 학습.",
+      "detailed": "수십억~수천억 파라미터를 전부 업데이트하면 연산·메모리·저장 비용이 막대하다. PEFT는 대형 모델을 freeze하고 소수 파라미터만 학습해 이 비용을 줄인다.",
+      "source": "6장 LLMs § PEFT"
+    },
+    {
+      "id": "NLPM1Q6",
+      "set": 91,
+      "week": 91,
+      "topic": "Open/Closed-book QA",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "외부 지식 소스를 검색해 답하는 QA 방식은?",
+      "choices": [
+        "① Closed-book QA",
+        "② Open-book QA",
+        "③ Extractive QA",
+        "④ Closed-domain QA"
+      ],
+      "answer": 1,
+      "brief": "Open-book = 외부 소스 검색해 답함.",
+      "detailed": "Closed-book QA는 외부 정보 없이 파라미터 지식(기억)만으로 답한다. Open-book QA는 신뢰할 만한 외부 소스를 검색(retrieval)해 답한다(사람이 책을 찾아보는 것과 유사).",
+      "source": "7장 RAG § QA 분류"
+    },
+    {
+      "id": "NLPM1Q7",
+      "set": 91,
+      "week": 91,
+      "topic": "LM as Knowledge Base",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LM을 지식베이스로 볼 때, 진짜 KB(지식 그래프) 대비 LM의 단점으로 옳은 것은?",
+      "choices": [
+        "① 자연어 쿼리를 처리하지 못한다",
+        "② 틀리거나 구식 정보를 낼 수 있고 해석/투명성이 부족하다",
+        "③ 미지의 쿼리에 일반화하지 못한다",
+        "④ 구축에 막대한 인력이 필요하다"
+      ],
+      "answer": 1,
+      "brief": "LM은 부정확·구식 가능 + 해석 부족이 단점.",
+      "detailed": "LM은 자연어 쿼리 처리·미지 쿼리 일반화가 장점이지만, 틀리거나 구식 정보를 낼 수 있고 해석/투명성이 부족하다. ①③은 오히려 LM의 장점, ④는 진짜 KB의 단점이다.",
+      "source": "7장 RAG § LM as Knowledge Base"
+    },
+    {
+      "id": "NLPM1Q8",
+      "set": 91,
+      "week": 91,
+      "topic": "환각 원인",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "'2023년 이전 학습 모델이 iPhone 15 기능을 날조한다'는 환각의 직접 원인은?",
+      "choices": [
+        "① 과잉일반화",
+        "② 제한된 지식(knowledge cutoff 이후 정보 부재)",
+        "③ 상식 결여",
+        "④ 토큰화 오류"
+      ],
+      "answer": 1,
+      "brief": "학습 시점 이후 정보 부재 = 제한된 지식.",
+      "detailed": "모델은 유한한 데이터(특정 cutoff까지)로 학습하므로, 학습 시점 이후의 사실(iPhone 15)은 알 수 없어 그럴듯한 오답을 만든다. 이것이 '제한된 지식'에 의한 환각이다.",
+      "source": "7장 RAG § Hallucination Examples"
+    },
+    {
+      "id": "NLPM1Q9",
+      "set": 91,
+      "week": 91,
+      "topic": "Dense Retrieval",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Bi-encoder가 대규모 검색에 쓰이는 이유와 직접 관련된 특성은?",
+      "choices": [
+        "① 쿼리-문서를 함께 처리한다",
+        "② 문서 임베딩을 미리 계산(precompute)해 저장할 수 있다",
+        "③ 관련도를 모델이 직접 스칼라로 출력한다",
+        "④ 어휘 크기 차원의 희소 벡터를 쓴다"
+      ],
+      "answer": 1,
+      "brief": "문서 임베딩 사전계산 가능 → 대규모 효율.",
+      "detailed": "Bi-encoder는 쿼리·문서를 독립 인코딩하므로 문서 임베딩을 미리 계산해 인덱스로 저장해 둘 수 있다. 쿼리가 오면 쿼리만 인코딩해 빠르게 유사도를 비교하므로 대규모에 적합하다.",
+      "source": "7장 RAG § Bi-encoder"
+    },
+    {
+      "id": "NLPM1Q10",
+      "set": 91,
+      "week": 91,
+      "topic": "RAG 학습",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "텍스트 생성을 위한 RAG(Lewis et al.)에서 학습되는 구성요소로 옳은 것은?",
+      "choices": [
+        "① 생성기만 학습하고 검색기는 고정한다",
+        "② 검색기(인코더 LM)와 생성기(LLM)를 모두 학습한다",
+        "③ 검색기만 학습한다",
+        "④ 둘 다 학습하지 않고 규칙 기반으로 동작한다"
+      ],
+      "answer": 1,
+      "brief": "검색기 + 생성기 모두 학습.",
+      "detailed": "RAG(텍스트 생성)는 검색 문서를 잠재변수 z로 다루며, 검색기(인코더-only LM)와 생성기(LLM)를 모두 학습한다. RAG-Sequence/RAG-Token 두 변형이 있다.",
+      "source": "7장 RAG § RAG for Text Generation"
+    },
+    {
+      "id": "NLPM1Q11",
+      "set": 91,
+      "week": 91,
+      "topic": "귀납 추론",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "'태양이 매일 동쪽에서 떴다 → 내일도 동쪽에서 뜰 것이다'는 어떤 추론인가?",
+      "choices": [
+        "① 연역적(Deductive)",
+        "② 귀납적(Inductive)",
+        "③ 수학적(Mathematical)",
+        "④ 상식(Commonsense)"
+      ],
+      "answer": 1,
+      "brief": "구체적 관찰 → 일반화 = 귀납.",
+      "detailed": "귀납적 추론은 구체적 관찰들로부터 일반적 규칙을 도출한다. 연역은 일반 원리에서 구체적 결론을 이끈다.",
+      "source": "8장 Reasoning § 추론 개요"
+    },
+    {
+      "id": "NLPM1Q12",
+      "set": 91,
+      "week": 91,
+      "topic": "CoT 효과",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "CoT 프롬프팅의 효과에 대한 강의 발견으로 옳은 것은?",
+      "choices": [
+        "① 모델 크기와 무관하게 동일한 이득을 준다",
+        "② 큰 모델에서 특히 효과적이고 작은 모델에선 이득이 적다",
+        "③ 작은 모델에서만 효과적이다",
+        "④ 생성 길이를 줄여준다"
+      ],
+      "answer": 1,
+      "brief": "CoT는 큰 모델에서 특히 효과적.",
+      "detailed": "CoT는 큰 모델에서 특히 효과적이며 작은 모델에선 이득이 적은 emergent 성격을 띤다. 단계별 추론을 유도해 복잡한 문제 성능을 높인다.",
+      "source": "8장 Reasoning § CoT 성능"
+    },
+    {
+      "id": "NLPM1Q13",
+      "set": 91,
+      "week": 91,
+      "topic": "Test-time Scaling",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "다음 중 test-time(추론 시점) scaling 방법이 아닌 것은?",
+      "choices": [
+        "① Long CoT(더 긴 추론 사슬)",
+        "② Self-consistency(다수결)",
+        "③ Beam/Tree Search",
+        "④ 사전학습 데이터셋 확대"
+      ],
+      "answer": 3,
+      "brief": "사전학습 데이터 확대는 train-time이지 test-time이 아니다.",
+      "detailed": "Test-time scaling은 추론 시점 연산을 늘리는 것(Long CoT, Self-consistency, Beam/Tree Search, Iterative Refinement)이다. 사전학습 데이터셋 확대는 학습 시점(train-time) 스케일링이다.",
+      "source": "8장 Reasoning § Test-time Scaling"
+    },
+    {
+      "id": "NLPM1Q14",
+      "set": 91,
+      "week": 91,
+      "topic": "왜 RL",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RLVR/RLHF에서 강화학습을 쓰는 이유로 옳은 것은?",
+      "choices": [
+        "① 충분한 지도(정답) 데이터가 이미 있기 때문",
+        "② 지도 데이터가 없고(또는 보상만 있고), 보상에 이끌려 새 생성을 탐색하게 하기 위해",
+        "③ 토큰화를 자동화하기 위해",
+        "④ 검색 인덱스를 만들기 위해"
+      ],
+      "answer": 1,
+      "brief": "지도 데이터 없음 + 보상 기반 탐색 유도.",
+      "detailed": "RL을 쓰는 이유는 지도(정답) 데이터가 없고(RLHF는 보상 모델만 있음), 보상에 이끌려 모델이 새 생성 가능성을 탐색하도록 장려하기 위해서다. 정책 경사법으로 기대 보상을 최대화한다.",
+      "source": "8장 Reasoning § Optimization with RL"
+    },
+    {
+      "id": "NLPM1Q15",
+      "set": 91,
+      "week": 91,
+      "topic": "HHH",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "정렬 기준 중 'Harmless'에 가장 부합하는 행동은?",
+      "choices": [
+        "① 가능한 한 긴 답을 생성한다",
+        "② 공격적·차별적·편향적 출력을 회피한다",
+        "③ 항상 확신에 찬 어조를 유지한다",
+        "④ 외부 검색을 항상 수행한다"
+      ],
+      "answer": 1,
+      "brief": "Harmless = 유해·차별·편향 출력 회피.",
+      "detailed": "HHH의 Harmless는 공격적·차별적·편향적 출력을 회피하는 것이다. Helpful은 요청을 효율적으로 수행, Honest는 정확한 정보 제공·불확실성 표현이다.",
+      "source": "8장 Reasoning § Alignment HHH"
+    },
+    {
+      "id": "NLPM1Q16",
+      "set": 91,
+      "week": 91,
+      "topic": "선호 데이터",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RLHF 선호 데이터를 쌍대비교로 구성하는 근본 이유는?",
+      "choices": [
+        "① 절대 점수가 항상 음수이기 때문",
+        "② 사람은 절대 점수 부여에 비일관적이고 상대 비교를 더 잘하기 때문",
+        "③ 쌍대비교가 라벨을 더 많이 요구하기 때문",
+        "④ 모델이 절대 점수를 출력하지 못하기 때문"
+      ],
+      "answer": 1,
+      "brief": "절대점수 비일관 → 상대비교가 신뢰적.",
+      "detailed": "평가자마다 절대 점수(1~10)는 매우 비일관적이다. 사람은 '둘 중 어느 것이 더 나은가'라는 상대 비교를 더 잘하므로 (prompt, 선호, 비선호) 쌍으로 데이터를 만든다.",
+      "source": "9장 Agents § Preference Data"
+    },
+    {
+      "id": "NLPM1Q17",
+      "set": 91,
+      "week": 91,
+      "topic": "멀티모달 융합",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "각 모달리티를 따로 처리한 뒤 표현을 나중에 결합하는 융합 방식은?",
+      "choices": [
+        "① Early fusion",
+        "② Late fusion",
+        "③ Cross fusion",
+        "④ Token fusion"
+      ],
+      "answer": 1,
+      "brief": "Late fusion = 표현을 나중에 결합.",
+      "detailed": "Late fusion은 각 모달을 따로 처리한 뒤 표현(representation)을 나중에 결합한다. Early fusion은 처리 전에 raw 입력을 먼저 결합한다.",
+      "source": "9장 Agents § Multimodal Architecture"
+    },
+    {
+      "id": "NLPM1Q18",
+      "set": 91,
+      "week": 91,
+      "topic": "Toolformer",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Toolformer가 고려하는 외부 도구로 보기 어려운 것은?",
+      "choices": [
+        "① 계산기(Calculator)",
+        "② 위키피디아 검색",
+        "③ 기계번역",
+        "④ 이미지 생성기"
+      ],
+      "answer": 3,
+      "brief": "Toolformer 도구: QA·계산기·번역·위키 검색.",
+      "detailed": "Toolformer가 고려하는 도구는 QA 시스템, 계산기, 기계번역, 위키피디아 검색이다. 이미지 생성기는 강의에서 제시한 Toolformer 도구 목록에 포함되지 않는다.",
+      "source": "9장 Agents § Types of Tools"
+    },
+    {
+      "id": "NLPM1Q19",
+      "set": 91,
+      "week": 91,
+      "topic": "Code Infilling",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "코드 어시스턴트에 infilling(중간 채우기) 능력이 필요한 이유로 옳은 것은?",
+      "choices": [
+        "① 코드는 항상 한 번에 좌→우로 완성되기 때문",
+        "② 코드는 반복적으로 편집·수정되므로 좌→우 생성과 함께 중간 편집 능력이 필요하기 때문",
+        "③ 코드에는 문맥이 없기 때문",
+        "④ 코드가 자연어와 완전히 동일하기 때문"
+      ],
+      "answer": 1,
+      "brief": "코드는 반복 편집됨 → 중간 채우기 필요.",
+      "detailed": "코드는 좌→우 한 번에 쓰이지 않고 반복적으로 편집·수정되므로, 좌→우 생성뿐 아니라 마스킹된 중간을 채우는 편집(infilling) 능력이 필요하다(예: InCoder).",
+      "source": "9장 Agents § Code Infilling"
+    },
+    {
+      "id": "NLPM1Q20",
+      "set": 91,
+      "week": 91,
+      "topic": "SWE-Bench",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "SWE-Bench가 측정하려는 능력으로 가장 적절한 것은?",
+      "choices": [
+        "① 객관식 문제 풀이 능력",
+        "② 실제 GitHub 이슈를 해결하는 패치를 생성하고 테스트를 통과하는 소프트웨어 엔지니어링 능력",
+        "③ 이미지 캡셔닝 능력",
+        "④ 번역 품질"
+      ],
+      "answer": 1,
+      "brief": "이슈→패치 생성→실제 테스트 통과(SWE 능력).",
+      "detailed": "SWE-Bench는 실제 GitHub 이슈와 코드베이스 스냅샷을 주고 모델이 패치를 생성하면 실제 테스트로 평가한다. 단순 코드 생성이 아니라 실제 소프트웨어 엔지니어링 능력을 측정한다.",
+      "source": "9장 Agents § SWE-Bench"
+    }
+  ]
+}

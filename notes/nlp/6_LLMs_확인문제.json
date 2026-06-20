@@ -1,0 +1,298 @@
+{
+  "subject": "nlp",
+  "week": 6,
+  "title": "자연어처리 6장 — LLMs & In-Context Learning",
+  "set_meta": {
+    "id": 6,
+    "title": "Week 6",
+    "label": "LLMs & In-Context Learning",
+    "desc": "사전학습 · PEFT/LoRA · 디코딩 · ICL · Scaling"
+  },
+  "questions": [
+    {
+      "id": "NLPW6Q1",
+      "set": 6,
+      "week": 6,
+      "topic": "사전학습 동기",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "사전학습(pretraining)이 등장하기 전, 각 downstream 태스크마다 scratch부터 학습하는 방식의 문제점으로 가장 거리가 먼 것은?",
+      "choices": [
+        "① 데이터 부족 — 라벨링된 데이터셋 확보 비용이 크다",
+        "② 빈약한 일반화 — 특정 태스크에만 맞춰져 미지의 데이터/태스크에 약하다",
+        "③ 노이즈·무작위성에 민감해 가짜 상관관계를 학습하기 쉽다",
+        "④ 웹 텍스트가 부족해 사전학습용 코퍼스를 구하기 어렵다"
+      ],
+      "answer": 3,
+      "brief": "오히려 웹에는 풍부한 텍스트가 있어 사전학습이 가능해진 것이다.",
+      "detailed": "scratch 학습의 문제는 데이터 부족, 빈약한 일반화, 노이즈/무작위성 민감(spurious correlation)이다. 반대로 웹에는 언어적 특징과 세계 지식이 풍부한 텍스트가 무한정 존재하며, 이 '얻기 쉬운 데이터'로 먼저 학습하는 것이 사전학습의 핵심 동기다. 따라서 ④는 사실과 반대다.",
+      "source": "6장 LLMs § 사전학습 동기"
+    },
+    {
+      "id": "NLPW6Q2",
+      "set": 6,
+      "week": 6,
+      "topic": "자기지도학습",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "사전학습이 '자기지도학습(self-supervised learning)'인 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 사람이 모든 입력에 정답 라벨을 달아주기 때문",
+        "② 입력의 일부를 가리고 나머지로 가린 부분을 복원/예측하므로 사람 라벨이 필요 없기 때문",
+        "③ 강화학습 보상 신호로 학습하기 때문",
+        "④ 여러 모델이 서로를 감독하기 때문"
+      ],
+      "answer": 1,
+      "brief": "입력 일부를 가리고 나머지로 복원 → 사람 라벨 불필요.",
+      "detailed": "자기지도학습은 입력의 일부를 가린(mask/corrupt) 뒤 나머지로 그 부분을 복원/예측하게 한다. 정답이 데이터 자체에서 생성되므로 사람의 라벨링이 필요 없다(No Human Supervision Needed). 이것이 곧 멀티태스크 학습이기도 해서 문법·세계지식·감성·번역·수학 등을 암묵적으로 학습한다.",
+      "source": "6장 LLMs § Self-Supervised Learning"
+    },
+    {
+      "id": "NLPW6Q3",
+      "set": 6,
+      "week": 6,
+      "topic": "Encoder vs Decoder",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Transformer Encoder(BERT)와 Decoder(GPT)의 self-attention 차이로 옳은 것은?",
+      "choices": [
+        "① Encoder는 단방향, Decoder는 양방향 self-attention을 쓴다",
+        "② Encoder는 양방향(bidirectional), Decoder는 단방향(unidirectional/causal) self-attention을 쓴다",
+        "③ 둘 다 양방향이지만 Decoder만 위치 인코딩을 쓴다",
+        "④ 둘 다 단방향이며 차이는 층 수뿐이다"
+      ],
+      "answer": 1,
+      "brief": "Encoder=양방향(NLU), Decoder=단방향(NLG).",
+      "detailed": "Encoder(BERT)는 양방향 self-attention으로 앞뒤 문맥을 모두 보아 NLU(이해)에 적합하다. Decoder(GPT)는 단방향(causal) self-attention으로 이전 토큰만 보며 다음 토큰을 예측해 NLG(생성)에 적합하다. 현대 LLM은 대부분 decoder-only다.",
+      "source": "6장 LLMs § Transformer 아키텍처"
+    },
+    {
+      "id": "NLPW6Q4",
+      "set": 6,
+      "week": 6,
+      "topic": "BERT 사전학습",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "BERT의 사전학습 목표 두 가지로 올바른 짝은?",
+      "choices": [
+        "① 다음 토큰 예측(Next Token Prediction)과 번역(Translation)",
+        "② Masked Language Modeling(MLM)과 Next Sentence Prediction(NSP)",
+        "③ 강화학습(RLHF)과 Instruction Tuning",
+        "④ TF-IDF 가중과 PMI 계산"
+      ],
+      "answer": 1,
+      "brief": "BERT = MLM(15% 마스킹 예측) + NSP(인접 문장 판별).",
+      "detailed": "BERT는 양방향 인코더로, 15% 단어를 마스킹하고 양방향 문맥으로 예측하는 MLM과, 두 문장이 실제 인접 문장인지 판별하는 NSP로 사전학습된다. 다음 토큰 예측은 GPT 계열(decoder)의 목표다.",
+      "source": "6장 LLMs § BERT"
+    },
+    {
+      "id": "NLPW6Q5",
+      "set": 6,
+      "week": 6,
+      "topic": "PEFT 동기",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "파라미터 효율적 파인튜닝(PEFT)이 추구하는 핵심 목표는?",
+      "choices": [
+        "① 사전학습을 처음부터 다시 수행하는 것",
+        "② 전체 파라미터를 모두 업데이트해 성능을 극대화하는 것",
+        "③ 대형 모델은 freeze하고 소수의 파라미터만 학습해 비용을 줄이는 것",
+        "④ 모델 크기를 키워 emergent ability를 유도하는 것"
+      ],
+      "answer": 2,
+      "brief": "대형 모델 freeze + 소수 파라미터만 학습.",
+      "detailed": "전체 파인튜닝은 막대한 연산·메모리 비용이 든다. PEFT는 사전학습 가중치를 freeze하고 소수의 추가 파라미터만 학습한다. 대표 기법으로 Prompt Tuning, Prefix-Tuning, LoRA가 있다.",
+      "source": "6장 LLMs § PEFT"
+    },
+    {
+      "id": "NLPW6Q6",
+      "set": 6,
+      "week": 6,
+      "topic": "LoRA",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LoRA(Low-Rank Adaptation)의 핵심 가정과 방법으로 옳은 것은?",
+      "choices": [
+        "① 가중치 업데이트가 full-rank라고 보고 ΔW를 그대로 학습한다",
+        "② 가중치 업데이트가 low-rank라고 보고 ΔW ≈ BA(r≪d)로 저차원 분해해 A·B만 학습한다",
+        "③ 입력 임베딩만 학습하고 어텐션은 건드리지 않는다",
+        "④ 모델의 모든 층을 제거하고 새 층으로 교체한다"
+      ],
+      "answer": 1,
+      "brief": "ΔW ≈ BA, r≪d로 분해해 소수 파라미터만 학습.",
+      "detailed": "LoRA는 파라미터 업데이트가 low-rank라고 가정(overparameterization + 경험적 관찰)하고, ΔW ≈ BA로 저차원 분해한다(B∈R^{d×r}, A∈R^{r×d}, r≪d). 사전학습 가중치는 freeze하고 작은 A·B만 학습해 d² 대신 2dr 파라미터만 쓴다.",
+      "source": "6장 LLMs § LoRA"
+    },
+    {
+      "id": "NLPW6Q7",
+      "set": 6,
+      "week": 6,
+      "topic": "Prompt Tuning",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Prompt Tuning에서 'soft prompt'의 의미로 가장 적절한 것은?",
+      "choices": [
+        "① 사람이 수작업으로 고른 자연어 프롬프트",
+        "② 학습 가능한 파라미터로 취급되는 프롬프트 토큰 임베딩(LM은 freeze)",
+        "③ 온도(temperature)를 낮춘 디코딩 설정",
+        "④ 검색된 외부 문서를 붙인 프롬프트"
+      ],
+      "answer": 1,
+      "brief": "soft prompt = 학습 가능한 프롬프트 토큰 임베딩.",
+      "detailed": "Prompt Tuning은 프롬프트를 수동 설계하는 대신 프롬프트 토큰을 학습 가능한 파라미터(soft prompts)로 취급한다. LM 본체는 freeze하고 소수의 프롬프트 임베딩만 최적화하는 PEFT의 일종이다.",
+      "source": "6장 LLMs § Prompt Tuning"
+    },
+    {
+      "id": "NLPW6Q8",
+      "set": 6,
+      "week": 6,
+      "topic": "Greedy 디코딩",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Greedy 디코딩의 특성으로 옳지 않은 것은?",
+      "choices": [
+        "① 매 스텝 최고 확률 토큰을 선택한다",
+        "② 같은 입력에 항상 같은 출력을 내는 결정적(deterministic) 방식이다",
+        "③ 전역 최적 시퀀스를 항상 보장한다",
+        "④ 같은 입력에 대해 다양한 출력을 만들지 못한다"
+      ],
+      "answer": 2,
+      "brief": "Greedy는 전역 최적을 보장하지 못한다(국소적 선택).",
+      "detailed": "Greedy는 매 스텝 최고 확률 토큰을 고르는 단순·결정적·효율적 방식이지만, 매 스텝 국소 최적만 택하므로 전역 최적 시퀀스를 보장하지 못하고 다양성도 없다. ③이 틀린 설명이다.",
+      "source": "6장 LLMs § 디코딩"
+    },
+    {
+      "id": "NLPW6Q9",
+      "set": 6,
+      "week": 6,
+      "topic": "Top-p vs Top-k",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Nucleus(Top-p) 샘플링이 Top-k 샘플링보다 일반적으로 유리한 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 항상 가장 높은 확률 토큰 하나만 선택하기 때문",
+        "② 고정된 k개가 아니라 누적 확률 질량(p) 기준이라 분포 모양에 맞게 후보 수가 자동 조절되기 때문",
+        "③ 온도(temperature)를 항상 0으로 만들기 때문",
+        "④ 어휘 전체를 항상 고려하기 때문"
+      ],
+      "answer": 1,
+      "brief": "Top-p는 확률 질량 기준 → 분포 모양에 적응.",
+      "detailed": "Top-k는 분포 모양을 무시하고 항상 k개를 본다. 뾰족한 분포('Joe' 뒤)엔 너무 많고, 평평한 분포('spacecraft' 뒤)엔 너무 적다. Top-p는 누적 확률 p가 되는 최소 집합에서 샘플링하므로 분포가 뾰족하면 후보가 적게, 평평하면 많게 자동 조절된다.",
+      "source": "6장 LLMs § Nucleus Sampling"
+    },
+    {
+      "id": "NLPW6Q10",
+      "set": 6,
+      "week": 6,
+      "topic": "Temperature",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Temperature 샘플링에서 온도 τ → 0 으로 보낼 때의 동작은?",
+      "choices": [
+        "① 균등 분포에 가까워져 완전한 무작위 생성이 된다",
+        "② Greedy 디코딩에 수렴한다",
+        "③ Top-p 샘플링과 동일해진다",
+        "④ 어떤 토큰도 생성하지 못한다"
+      ],
+      "answer": 1,
+      "brief": "τ→0 이면 분포가 뾰족해져 Greedy에 수렴.",
+      "detailed": "Temperature는 분포를 재조정하는데, τ가 높으면 평평(다양·탐색적), τ→0이면 분포가 한 토큰에 집중되어 Greedy 디코딩에 수렴한다. 반대로 τ가 크면 더 무작위에 가까워진다.",
+      "source": "6장 LLMs § Temperature Sampling"
+    },
+    {
+      "id": "NLPW6Q11",
+      "set": 6,
+      "week": 6,
+      "topic": "In-Context Learning",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "In-Context Learning(ICL)에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 프롬프트 내 예시로 새 입력을 추론하며, 모델 파라미터를 업데이트하지 않는다",
+        "② 예시마다 경사하강법으로 가중치를 업데이트한다",
+        "③ 반드시 fine-tuning을 동반해야 작동한다",
+        "④ 검색된 외부 문서를 학습 데이터로 추가하는 기법이다"
+      ],
+      "answer": 0,
+      "brief": "ICL = 프롬프트 예시로 추론, 파라미터 업데이트 없음.",
+      "detailed": "ICL은 few-shot 학습의 한 형태로, 프롬프트에 입력-출력 예시 몇 개를 주면 모델이 그 예시로부터 새 입력의 출력을 추론한다. 핵심은 파라미터 업데이트가 전혀 없다는 점이며 GPT-3 논문에서 처음 연구되었다.",
+      "source": "6장 LLMs § In-Context Learning"
+    },
+    {
+      "id": "NLPW6Q12",
+      "set": 6,
+      "week": 6,
+      "topic": "Emergent Ability",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "창발적 능력(Emergent Ability)의 특징으로 가장 적절한 것은?",
+      "choices": [
+        "① 모델 크기에 비례해 항상 선형적으로 능력이 증가한다",
+        "② 작은 모델의 성능을 외삽하면 정확히 예측할 수 있다",
+        "③ 모델 규모가 특정 임계치를 넘어야 비로소 나타나며 작은 모델로는 예측이 어렵다",
+        "④ 명시적으로 해당 능력을 학습시켜야만 나타난다"
+      ],
+      "answer": 2,
+      "brief": "규모 임계치 초과 시 갑자기 발현, 작은 모델로 예측 불가.",
+      "detailed": "Emergent Ability는 명시적으로 학습하지 않았는데 모델 용량이 특정 임계치(threshold)를 넘으면 갑자기 나타나는 능력이다. 특정 규모까지는 무작위 수준이다가 그 이후 급상승하므로 작은 모델의 성능으로는 예측할 수 없다.",
+      "source": "6장 LLMs § Emergent Ability"
+    },
+    {
+      "id": "NLPW6Q13",
+      "set": 6,
+      "week": 6,
+      "topic": "Scaling Laws",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "LLM의 Scaling Laws가 말하는 '성능을 결정하는 3대 요소'로 올바른 것은?",
+      "choices": [
+        "① 어휘 크기, 토크나이저 종류, 배치 크기",
+        "② 모델 크기(파라미터), 데이터셋 크기, 컴퓨트(FLOPs)",
+        "③ 학습률, 드롭아웃 비율, 옵티마이저",
+        "④ 프롬프트 길이, 온도, top-p 값"
+      ],
+      "answer": 1,
+      "brief": "모델 크기·데이터·컴퓨트의 power-law 관계.",
+      "detailed": "Scaling Laws에 따르면 사전학습 LLM의 성능(cross-entropy 손실)은 주로 모델 크기(N), 데이터셋 크기(D), 컴퓨트(C) 세 요소가 결정하며, 다른 둘에 병목이 없을 때 각각과 거듭제곱(power-law) 관계를 갖는다.",
+      "source": "6장 LLMs § Scaling Laws"
+    },
+    {
+      "id": "NLPW6Q14",
+      "set": 6,
+      "week": 6,
+      "topic": "BERT vs GPT (NLU)",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "초기에 BERT가 GPT-1보다 NLU 태스크에서 우세했던 이유와, 현대 LLM이 이를 상쇄한 방식으로 옳은 것은?",
+      "choices": [
+        "① BERT가 더 작아서 우세했고, LLM은 더 작아져서 상쇄했다",
+        "② BERT의 양방향 문맥이 풍부한 이해를 주었고, 현대 LLM은 거대한 모델 크기와 막대한 사전학습 데이터로 단방향의 한계를 상쇄했다",
+        "③ BERT가 강화학습을 써서 우세했고, LLM은 그것을 제거해 상쇄했다",
+        "④ BERT가 검색을 써서 우세했고, LLM은 검색을 제거해 상쇄했다"
+      ],
+      "answer": 1,
+      "brief": "BERT=양방향 문맥 우위, LLM=규모+데이터로 단방향 한계 상쇄.",
+      "detailed": "BERT는 양방향 문맥으로 앞뒤를 모두 보아 풍부한 이해를 만들어 NLU에서 GPT-1을 능가했다. 그러나 현대 LLM은 거대한 모델 크기 + 막대한 사전학습 데이터로 단방향 처리의 한계를 상쇄해 NLU에서도 인코더에 필적/우월하다('Can ChatGPT Understand Too?').",
+      "source": "6장 LLMs § BERT vs GPT"
+    },
+    {
+      "id": "NLPW6Q15",
+      "set": 6,
+      "week": 6,
+      "topic": "디코딩 실무 선택",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "디코딩 전략의 실무 선택 가이드로 가장 적절한 것은?",
+      "choices": [
+        "① 다양성이 필요 없고 단순·효율이 중요하면 Greedy, 같은 입력에 여러 응답이 필요하면 샘플링 기반(Top-p 등)을 쓴다",
+        "② 항상 Top-k만 사용하는 것이 최선이다",
+        "③ 생성 품질과 무관하게 온도는 항상 1로 고정한다",
+        "④ 샘플링은 비결정적이라 절대 사용하지 않는다"
+      ],
+      "answer": 0,
+      "brief": "단순·효율→Greedy, 다양성→샘플링(Top-p, temperature).",
+      "detailed": "단순·효율이 중요하고 다양성이 필요 없으면 Greedy를 쓴다. 같은 입력에 여러 응답이 필요하면 샘플링 기반을 쓰며, 보통 Top-p가 Top-k보다 낫고 temperature와 함께 쓰기도 한다.",
+      "source": "6장 LLMs § 디코딩 실무 고려"
+    }
+  ]
+}

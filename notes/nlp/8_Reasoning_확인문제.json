@@ -1,0 +1,298 @@
+{
+  "subject": "nlp",
+  "week": 8,
+  "title": "자연어처리 8장 — Reasoning & Post-training",
+  "set_meta": {
+    "id": 8,
+    "title": "Week 8",
+    "label": "Reasoning & Post-training",
+    "desc": "CoT · Test-time Scaling · RLVR · PPO/GRPO · Alignment"
+  },
+  "questions": [
+    {
+      "id": "NLPW8Q1",
+      "set": 8,
+      "week": 8,
+      "topic": "추론 유형",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "'모든 인간은 죽는다 + 소크라테스는 인간이다 → 소크라테스는 죽는다'는 어떤 추론 유형인가?",
+      "choices": [
+        "① 귀납적(Inductive) 추론",
+        "② 연역적(Deductive) 추론",
+        "③ 상식(Commonsense) 추론",
+        "④ 유추(Analogy) 추론"
+      ],
+      "answer": 1,
+      "brief": "일반 원리 → 구체적 결론 = 연역.",
+      "detailed": "연역적 추론은 일반 원리/전제에서 구체적 결론을 도출한다. 귀납은 구체적 관찰에서 일반화('매일 동쪽에서 해가 떴다 → 내일도'), 상식은 세계 지식 기반('공을 떨어뜨리면 떨어진다')이다.",
+      "source": "8장 Reasoning § 추론 개요"
+    },
+    {
+      "id": "NLPW8Q2",
+      "set": 8,
+      "week": 8,
+      "topic": "Chain-of-Thought",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Chain-of-Thought(CoT) 프롬프팅의 핵심과 효과 특성으로 옳은 것은?",
+      "choices": [
+        "① 답을 즉시 출력하게 하며 작은 모델에서 특히 효과적이다",
+        "② 복잡한 문제를 단계별 추론으로 분해하게 하며, 큰 모델에서 특히 효과적이다",
+        "③ 검색 문서를 붙이는 기법이다",
+        "④ 파라미터를 업데이트하는 학습 기법이다"
+      ],
+      "answer": 1,
+      "brief": "CoT=단계별 추론 분해, 큰 모델에서 효과적.",
+      "detailed": "CoT는 복잡한 문제를 단계별 추론 과정으로 분해하도록 유도한다(답을 바로 내지 않고 사고 과정을 설명). 큰 모델에서 특히 효과적이며 작은 모델에선 이득이 적은 emergent 성격을 띤다.",
+      "source": "8장 Reasoning § CoT"
+    },
+    {
+      "id": "NLPW8Q3",
+      "set": 8,
+      "week": 8,
+      "topic": "Zero-shot CoT",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Zero-shot CoT를 유발하는 가장 잘 알려진 방법은?",
+      "choices": [
+        "① 프롬프트에 여러 예시를 넣는다",
+        "② 답 앞에 'Let's think step by step'을 붙인다",
+        "③ 온도를 0으로 설정한다",
+        "④ 검색 결과를 추가한다"
+      ],
+      "answer": 1,
+      "brief": "'Let's think step by step' 한 줄로 추론 트리거.",
+      "detailed": "Zero-shot CoT는 예시 없이도 답 앞에 'Let's think step by step'만 붙이면 단계별 추론이 트리거되는 방법이다. 예시를 제공하는 것은 few-shot CoT다.",
+      "source": "8장 Reasoning § Zero-shot CoT"
+    },
+    {
+      "id": "NLPW8Q4",
+      "set": 8,
+      "week": 8,
+      "topic": "Self-consistency",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Self-consistency CoT의 핵심 절차로 옳은 것은?",
+      "choices": [
+        "① 하나의 추론 경로만 greedy로 생성한다",
+        "② temperature 샘플링으로 여러 추론 경로를 생성한 뒤 다수결(majority voting)로 최종 답을 고른다",
+        "③ 외부 검증기로 각 단계를 채점한다",
+        "④ 보상 모델을 학습한다"
+      ],
+      "answer": 1,
+      "brief": "여러 경로 샘플링 후 다수결.",
+      "detailed": "Self-consistency는 여러 다른 사고 경로가 같은 답에 도달하면 신뢰가 높아진다는 직관에 기반한다. temperature 샘플링으로 여러 추론 경로를 생성한 뒤 다수결로 최종 답을 선택한다.",
+      "source": "8장 Reasoning § Self-consistency"
+    },
+    {
+      "id": "NLPW8Q5",
+      "set": 8,
+      "week": 8,
+      "topic": "Test-time Scaling",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Test-time(추론 시점) Scaling의 정의로 옳은 것은?",
+      "choices": [
+        "① 학습 데이터 양을 늘리는 것",
+        "② 추론 시점에 쓰는 연산을 늘려(토큰을 더 생성) 답 품질을 높이는 것",
+        "③ 모델 파라미터 수를 줄이는 것",
+        "④ 배치 크기를 키우는 것"
+      ],
+      "answer": 1,
+      "brief": "추론 시점 연산↑(토큰 더 생성)로 품질↑.",
+      "detailed": "Test-time Scaling은 추론(inference) 시점에 쓰는 연산을 늘려 더 높은 품질의 답을 얻는 것이다. Long CoT, Self-consistency, Beam/Tree Search, Iterative Refinement 등이 해당하며 o1·DeepSeek-R1이 대표적이다.",
+      "source": "8장 Reasoning § Test-time Scaling"
+    },
+    {
+      "id": "NLPW8Q6",
+      "set": 8,
+      "week": 8,
+      "topic": "Tree Search",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Beam/Tree Search 기반 test-time scaling의 특징으로 옳은 것은?",
+      "choices": [
+        "① 단일 경로만 생성하고 절대 되돌아가지 않는다",
+        "② 여러 추론 경로를 동시에 탐색하고 막다른 길에서 backtrack, 나쁜 가지를 prune한다",
+        "③ 파라미터를 업데이트한다",
+        "④ 검색 코퍼스를 새로 구축한다"
+      ],
+      "answer": 1,
+      "brief": "여러 경로 동시 탐색 + backtrack + prune.",
+      "detailed": "Beam/Tree Search는 여러 추론 경로를 동시에 탐색하고, 막다른 길에 부딪히면 backtrack하며, 나쁜 가지를 prune한다. 탐색을 통해 더 나은 추론 경로를 찾는 test-time scaling 방법이다.",
+      "source": "8장 Reasoning § Test-time Scaling"
+    },
+    {
+      "id": "NLPW8Q7",
+      "set": 8,
+      "week": 8,
+      "topic": "RLVR",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RLVR(Reinforcement Learning with Verifiable Rewards)의 정의로 옳은 것은?",
+      "choices": [
+        "① 사람이 작성한 전체 정답을 모방하게 하는 지도학습",
+        "② 생성 응답이 검증 가능하게 정답일 때 보상을 주어 정책 모델(LLM)을 RL로 파인튜닝하는 것",
+        "③ 검색 문서를 붙이는 기법",
+        "④ 토크나이저 학습법"
+      ],
+      "answer": 1,
+      "brief": "검증 가능한 정답에 보상 → 정책 RL 파인튜닝.",
+      "detailed": "RLVR은 생성 응답이 검증 가능하게(verifiably) 정답일 때 보상을 주는 강화학습으로 정책 모델(LLM)을 파인튜닝한다. OpenAI o1·DeepSeek-R1의 주요 post-training 레시피다.",
+      "source": "8장 Reasoning § RLVR"
+    },
+    {
+      "id": "NLPW8Q8",
+      "set": 8,
+      "week": 8,
+      "topic": "RLVR 장점",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "RLVR이 지도학습(SFT) 대비 갖는 장점으로 보기 어려운 것은?",
+      "choices": [
+        "① 자동 검증기만 있으면 되어 데이터 확장성이 높다",
+        "② 정답을 직접 최적화해 모델이 자기만의 효율적 추론 경로를 발견한다",
+        "③ 모델 자신의 생성으로 학습해 추론 분포와 일치한다",
+        "④ 사람이 모든 추론 단계를 라벨링해야 하므로 비용이 더 든다"
+      ],
+      "answer": 3,
+      "brief": "라벨링 비용↑는 지도학습의 단점이지 RLVR 장점이 아니다.",
+      "detailed": "RLVR의 장점은 데이터 확장성(자동 검증기), 모방 대신 정답 직접 최적화, 모델 자신의 생성으로 학습해 분포 일치다. ④는 오히려 지도학습의 단점으로, RLVR은 전체 정답 라벨링이 필요 없다.",
+      "source": "8장 Reasoning § Why RLVR"
+    },
+    {
+      "id": "NLPW8Q9",
+      "set": 8,
+      "week": 8,
+      "topic": "정책 경사",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "가장 단순한 정책 경사(policy gradient) 방법으로, RLVR/RLHF 설명에서 기본형으로 제시되는 것은?",
+      "choices": [
+        "① REINFORCE",
+        "② K-means",
+        "③ TF-IDF",
+        "④ Adam"
+      ],
+      "answer": 0,
+      "brief": "REINFORCE = 가장 단순한 정책 경사법.",
+      "detailed": "정책 경사법은 기대 보상이 커지는 방향으로 정책(LLM) 파라미터를 조정한다. REINFORCE가 가장 단순한 형태이고, PPO·GRPO는 이를 안정화·개선한 발전형이다. Adam은 옵티마이저다.",
+      "source": "8장 Reasoning § Optimization with RL"
+    },
+    {
+      "id": "NLPW8Q10",
+      "set": 8,
+      "week": 8,
+      "topic": "PPO",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "PPO(Proximal Policy Optimization)의 특징으로 옳은 것은?",
+      "choices": [
+        "① critic 없이 그룹 내 상대 보상만 사용한다",
+        "② clipped surrogate objective로 업데이트를 안정화하고, GAE를 위해 critic 모델을 사용한다",
+        "③ 보상 없이 지도학습만 수행한다",
+        "④ 검색 기반 생성 기법이다"
+      ],
+      "answer": 1,
+      "brief": "PPO = clipping + critic(GAE).",
+      "detailed": "PPO는 clipped surrogate objective로 정책 업데이트가 과도해지지 않게 안정화하고, GAE(Generalized Advantage Estimation)를 위해 별도 critic 모델을 둬 advantage 분산을 줄인다. critic 제거는 GRPO의 특징이다.",
+      "source": "8장 Reasoning § PPO"
+    },
+    {
+      "id": "NLPW8Q11",
+      "set": 8,
+      "week": 8,
+      "topic": "GRPO",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "GRPO(Group Relative Policy Optimization)가 PPO와 다른 핵심은?",
+      "choices": [
+        "① clipping을 처음 도입한 점",
+        "② critic 모델을 제거하고, 질문마다 출력 그룹을 샘플링해 그룹 내 상대 보상으로 advantage를 추정하는 점",
+        "③ 보상 모델을 쓰지 않는 점",
+        "④ 지도학습으로 전환한 점"
+      ],
+      "answer": 1,
+      "brief": "GRPO = critic 제거 + 그룹 상대 보상으로 advantage 추정.",
+      "detailed": "GRPO는 PPO의 변형으로 critic 모델을 제거한다. 각 질문에 대해 출력 그룹을 샘플링하고 그룹 내 비교(상대) 보상으로 advantage를 추정한다. DeepSeek 계열에서 사용되어 유명하다.",
+      "source": "8장 Reasoning § GRPO"
+    },
+    {
+      "id": "NLPW8Q12",
+      "set": 8,
+      "week": 8,
+      "topic": "Alignment HHH",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "LLM 정렬의 'HHH' 기준에 해당하지 않는 것은?",
+      "choices": [
+        "① Helpful (요청 작업을 효율적으로 수행)",
+        "② Honest (정확한 정보 제공·불확실성 표현)",
+        "③ Harmless (공격적·차별적 출력 회피)",
+        "④ Heavy (가능한 한 긴 답변 생성)"
+      ],
+      "answer": 3,
+      "brief": "HHH = Helpful, Honest, Harmless.",
+      "detailed": "정렬의 HHH 기준은 Helpful(유용)·Honest(정직)·Harmless(무해)다. 'Heavy(긴 답변)'는 HHH와 무관하며 오히려 장황함은 바람직하지 않다.",
+      "source": "8장 Reasoning § Alignment"
+    },
+    {
+      "id": "NLPW8Q13",
+      "set": 8,
+      "week": 8,
+      "topic": "Instruction Tuning",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Instruction Tuning과 사전학습(Pretraining)의 비교로 옳은 것은?",
+      "choices": [
+        "① 둘 다 자기지도학습이다",
+        "② Instruction Tuning은 지도학습(사람 라벨 응답)·태스크가 명시적(자연어 지시)이고, Pretraining은 자기지도·태스크가 암묵적(다음 토큰 예측)이다",
+        "③ Instruction Tuning은 태스크가 암묵적이다",
+        "④ Pretraining은 사람 라벨이 필요하다"
+      ],
+      "answer": 1,
+      "brief": "Instruction Tuning=지도·명시적, Pretraining=자기지도·암묵적.",
+      "detailed": "둘 다 멀티태스크 학습이지만, 사전학습은 자기지도(라벨 없음)이고 태스크가 암묵적(다음 토큰 예측)이다. Instruction Tuning은 지도학습(사람 라벨 응답)이고 태스크가 명시적(자연어 지시문)이며 zero-shot 일반화를 목표로 한다.",
+      "source": "8장 Reasoning § Instruction Tuning vs Pretraining"
+    },
+    {
+      "id": "NLPW8Q14",
+      "set": 8,
+      "week": 8,
+      "topic": "Instruction Tuning 규모",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Instruction Tuning과 모델 크기의 관계에 대한 FLAN의 발견으로 옳은 것은?",
+      "choices": [
+        "① 모든 크기의 모델에서 동일하게 일반화를 향상시킨다",
+        "② 작은 모델(<8B)의 일반화는 오히려 해칠 수 있고, 큰 모델에서는 일반화를 크게 향상시킨다",
+        "③ 큰 모델에서만 성능이 나빠진다",
+        "④ 클러스터 수와 일반화는 무관하다"
+      ],
+      "answer": 1,
+      "brief": "작은 모델엔 해로울 수 있고 큰 모델엔 크게 도움.",
+      "detailed": "FLAN의 발견: Instruction Tuning은 작은 모델(<8B)의 일반화를 오히려 해칠 수 있으나 큰 모델에서는 일반화를 크게 향상시킨다. 또한 튜닝에 쓴 태스크 클러스터가 많을수록 미지 클러스터로의 일반화가 좋아진다.",
+      "source": "8장 Reasoning § FLAN"
+    },
+    {
+      "id": "NLPW8Q15",
+      "set": 8,
+      "week": 8,
+      "topic": "RLHF 파이프라인",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "RLHF의 3단계 파이프라인 순서로 올바른 것은?",
+      "choices": [
+        "① 보상모델 학습 → 인간 피드백 수집 → 정책 최적화",
+        "② 인간 피드백(응답 순위) 수집 → 보상모델 학습 → 정책 최적화(RL)",
+        "③ 정책 최적화 → 인간 피드백 수집 → 보상모델 학습",
+        "④ 보상모델 학습 → 정책 최적화 → 인간 피드백 수집"
+      ],
+      "answer": 1,
+      "brief": "피드백 수집 → 보상모델 학습 → 정책 최적화.",
+      "detailed": "RLHF는 ① 같은 프롬프트에 여러 응답을 생성해 사람이 순위를 매기는 인간 피드백 수집, ② 그 데이터로 보상 모델 학습(높은 보상=더 선호), ③ RL로 보상 최대화하는 정책 최적화 순서로 진행된다.",
+      "source": "8장 Reasoning § RLHF"
+    }
+  ]
+}

@@ -3,15 +3,17 @@ import * as mlModule from "./ml.js";
 import * as dlModule from "./dl.js";
 import * as dsModule from "./ds.js";
 import * as secModule from "./sec.js";
+import * as nlpModule from "./nlp.js";
 
 const REGISTRY = {
   ml:  mlModule,
   dl:  dlModule,
   ds:  dsModule,
   sec: secModule,
+  nlp: nlpModule,
 };
 
-export const SUBJECT_LIST = ["ml", "dl", "ds", "sec"];
+export const SUBJECT_LIST = ["ml", "dl", "ds", "nlp", "sec"];
 
 export function getSubjectMeta(id) {
   const mod = REGISTRY[id];

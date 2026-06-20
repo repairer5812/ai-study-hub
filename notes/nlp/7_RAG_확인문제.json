@@ -1,0 +1,298 @@
+{
+  "subject": "nlp",
+  "week": 7,
+  "title": "자연어처리 7장 — Retrieval-Augmented Generation (RAG)",
+  "set_meta": {
+    "id": 7,
+    "title": "Week 7",
+    "label": "RAG",
+    "desc": "QA 분류 · 지식 · 환각 · 검색(TF-IDF/Dense) · RAG 모델"
+  },
+  "questions": [
+    {
+      "id": "NLPW7Q1",
+      "set": 7,
+      "week": 7,
+      "topic": "QA 분류",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "주어진 context에서 텍스트 span을 그대로 추출해 답하는 QA 방식은?",
+      "choices": [
+        "① Abstractive QA",
+        "② Extractive QA",
+        "③ Closed-book QA",
+        "④ Open-domain QA"
+      ],
+      "answer": 1,
+      "brief": "Extractive=context의 span 추출(이해 태스크, BERT로 가능).",
+      "detailed": "Extractive QA는 주어진 context에서 답에 해당하는 텍스트 span을 그대로 추출하는 독해(reading comprehension) 태스크로 인코더(BERT)로 가능하다. Abstractive QA는 답을 자기 말로 합성해 생성형 LM(GPT)이 필요하다.",
+      "source": "7장 RAG § QA 분류"
+    },
+    {
+      "id": "NLPW7Q2",
+      "set": 7,
+      "week": 7,
+      "topic": "Parametric Knowledge",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "'Parametric knowledge(파라미터 지식)'에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 외부 검색을 통해서만 접근 가능한 지식",
+        "② 모델 파라미터 내부에 저장되어 자연어 프롬프트로 접근하는 지식",
+        "③ 사람이 수작업으로 구축한 지식 그래프",
+        "④ 매 추론마다 새로 학습되는 지식"
+      ],
+      "answer": 1,
+      "brief": "파라미터 내부 저장 + 자연어 프롬프트로 접근.",
+      "detailed": "Parametric knowledge는 LLM이 사전학습 데이터로부터 파라미터 내부에 저장한 지식으로 자연어 프롬프트로 접근한다(closed-book QA가 이에 의존). 갱신은 재학습/파인튜닝이 필요하고, 틀리거나 구식일 수 있으며 해석이 어렵다.",
+      "source": "7장 RAG § Parametric Knowledge"
+    },
+    {
+      "id": "NLPW7Q3",
+      "set": 7,
+      "week": 7,
+      "topic": "FFN as Memory",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Transformer에서 사실 지식이 주로 저장된다고 보는 모듈과 그 관점으로 옳은 것은?",
+      "choices": [
+        "① Self-attention을 key-value 메모리로 보는 관점",
+        "② FFN(2층 네트워크)을 key-value 메모리로 보는 관점이며, FFN은 전체 파라미터의 약 2/3를 차지한다",
+        "③ LayerNorm이 지식을 저장한다",
+        "④ 위치 인코딩이 지식을 저장한다"
+      ],
+      "answer": 1,
+      "brief": "FFN을 key-value 메모리로 해석, 파라미터의 약 2/3.",
+      "detailed": "FFN은 2층 네트워크 ReLU(xW1)W2로, 전체 파라미터의 약 2/3를 차지한다. 이를 key-value 메모리로 보면 key 벡터는 입력 패턴 탐지기, value 벡터는 출력 어휘 분포에 대응한다. 이 관점이 지식 편집(knowledge editing) 연구의 기반이다.",
+      "source": "7장 RAG § FFN = Neural Memories"
+    },
+    {
+      "id": "NLPW7Q4",
+      "set": 7,
+      "week": 7,
+      "topic": "Hallucination",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "LLM의 환각(hallucination)에 대한 정의로 가장 적절한 것은?",
+      "choices": [
+        "① 모델이 답변을 거부하는 현상",
+        "② 사실과 다르거나 날조된 정보를 그럴듯하고 설득력 있게 생성하는 현상",
+        "③ 같은 질문에 매번 다른 형식으로 답하는 현상",
+        "④ 입력이 너무 길어 잘리는 현상"
+      ],
+      "answer": 1,
+      "brief": "그럴듯하지만 사실과 다르거나 날조된 생성.",
+      "detailed": "환각은 LM이 사실과 다르거나 오해를 부르거나 날조된 정보를 그럴듯하고 설득력 있게 생성하는 현상이다. 원인은 제한된 지식(knowledge cutoff), 과잉일반화, 상식 결여 등이며 현대 LLM에서도 여전한 문제다.",
+      "source": "7장 RAG § Hallucination"
+    },
+    {
+      "id": "NLPW7Q5",
+      "set": 7,
+      "week": 7,
+      "topic": "Non-parametric Knowledge",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "비파라미터 지식(non-parametric knowledge)의 장점으로 보기 어려운 것은?",
+      "choices": [
+        "① 모델 크기를 키우지 않고 정보를 추가할 수 있다",
+        "② 지식베이스의 갱신·수정이 용이하다",
+        "③ 모델의 해석 가능성을 높인다",
+        "④ 추론 속도가 항상 파라미터 지식보다 빠르다"
+      ],
+      "answer": 3,
+      "brief": "검색 단계가 추가되어 속도 이점은 장점에 해당하지 않는다.",
+      "detailed": "비파라미터 지식은 외부에서 검색·접근하는 지식으로, 모델 크기를 안 키우고 정보 추가, 갱신 용이, 해석 가능성 향상이 장점이다. 검색 과정이 추가되므로 '항상 더 빠르다'는 장점이 아니다.",
+      "source": "7장 RAG § Non-parametric Knowledge"
+    },
+    {
+      "id": "NLPW7Q6",
+      "set": 7,
+      "week": 7,
+      "topic": "Sparse vs Dense",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Sparse retrieval(TF-IDF)과 Dense retrieval의 비교로 옳은 것은?",
+      "choices": [
+        "① Sparse는 의미를 이해하고, Dense는 단어 겹침만 본다",
+        "② Sparse는 단순·해석 가능하나 의미 이해가 부족하고, Dense는 의미·문맥을 포착하나 비용이 크고 해석이 어렵다",
+        "③ 둘 다 신경망 임베딩 기반이다",
+        "④ Dense는 항상 어휘 크기 차원의 희소 벡터를 쓴다"
+      ],
+      "answer": 1,
+      "brief": "Sparse=단순·해석/의미부족, Dense=의미·문맥/비용·해석난.",
+      "detailed": "Sparse retrieval(TF-IDF, BM25)은 희소 벡터로 단순·해석 가능하지만 단어의 정확한 겹침에 의존해 의미 이해가 부족하다. Dense retrieval(BERT 기반)은 밀집 임베딩으로 의미·문맥 유사도를 포착하나 계산 비용이 크고 해석이 어렵다.",
+      "source": "7장 RAG § Sparse vs Dense"
+    },
+    {
+      "id": "NLPW7Q7",
+      "set": 7,
+      "week": 7,
+      "topic": "TF-IDF",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "TF-IDF에서 IDF(역문서빈도)의 역할로 옳은 것은?",
+      "choices": [
+        "① 모든 문서에 흔히 등장하는 단어에 높은 가중치를 준다",
+        "② 적은 수의 문서에만 등장하는 변별력 있는 단어를 강조한다(DF가 낮을수록 높음)",
+        "③ 문서 길이를 정규화한다",
+        "④ 단어의 품사를 구분한다"
+      ],
+      "answer": 1,
+      "brief": "IDF=log(N/df), DF 낮은(변별력 큰) 단어 강조.",
+      "detailed": "IDF는 전체 문서 수 N을 문서빈도 DF로 나눠 로그를 취한다(log(N/df)). DF가 낮은(소수 문서에만 등장하는) 변별력 있는 단어에 높은 가중치를 준다. 모든 문서에 흔한 단어(good 등)는 IDF가 0에 가깝다.",
+      "source": "7장 RAG § TF-IDF"
+    },
+    {
+      "id": "NLPW7Q8",
+      "set": 7,
+      "week": 7,
+      "topic": "Bi-encoder",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "대규모 검색에 Bi-encoder가 적합한 핵심 이유는?",
+      "choices": [
+        "① 쿼리-문서 쌍을 함께 처리해 상호작용을 정밀하게 포착하기 때문",
+        "② 문서 벡터를 미리 계산(precompute)해 둘 수 있어 대규모에서 효율적이기 때문",
+        "③ 항상 Cross-encoder보다 정확하기 때문",
+        "④ 어휘 전체를 매번 다시 인코딩하기 때문"
+      ],
+      "answer": 1,
+      "brief": "Bi-encoder는 문서 벡터 사전계산 가능 → 대규모 효율적.",
+      "detailed": "Bi-encoder는 쿼리와 문서를 독립적으로 인코딩해 코사인 유사도를 쓴다. 문서 벡터를 미리 계산해 둘 수 있어 대규모 검색에 적합하다(상호작용 포착은 약함). Cross-encoder는 상호작용을 잘 포착하나 대규모에 확장 불가해 정밀 재랭킹에 쓴다.",
+      "source": "7장 RAG § Bi/Cross-encoder"
+    },
+    {
+      "id": "NLPW7Q9",
+      "set": 7,
+      "week": 7,
+      "topic": "Cross-encoder",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "Cross-encoder의 특성으로 옳은 것은?",
+      "choices": [
+        "① 쿼리·문서를 독립 인코딩해 벡터를 사전계산한다",
+        "② 쿼리-문서 쌍을 함께 처리해 상호작용을 포착하지만 대규모 코퍼스에 확장하기 어렵다",
+        "③ 의미를 전혀 보지 못한다",
+        "④ TF-IDF 기반의 희소 검색이다"
+      ],
+      "answer": 1,
+      "brief": "Cross-encoder=쌍 동시처리(상호작용 강), 대규모 확장 불가.",
+      "detailed": "Cross-encoder는 쿼리-문서 쌍을 함께 입력해 모델이 관련도를 직접 출력하므로 intricate한 상호작용을 포착한다. 다만 모든 쌍을 매번 계산해야 해 대규모에 확장 불가하며 작은 집합의 재랭킹에 적합하다.",
+      "source": "7장 RAG § Bi/Cross-encoder"
+    },
+    {
+      "id": "NLPW7Q10",
+      "set": 7,
+      "week": 7,
+      "topic": "검색 평가",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "정보 검색 평가에서 Recall(재현율)의 정의로 옳은 것은?",
+      "choices": [
+        "① 반환한 문서 중 관련 문서의 비율",
+        "② 전체 관련 문서 중 반환된 관련 문서의 비율",
+        "③ 관련 문서가 검색되는 지점들의 precision 평균",
+        "④ 상위 1개 문서의 정확도"
+      ],
+      "answer": 1,
+      "brief": "Recall = |R|/|U| (전체 관련 중 반환된 비율).",
+      "detailed": "Precision은 반환 문서 중 관련 비율(|R|/|T|), Recall은 전체 관련 문서 중 반환된 비율(|R|/|U|)이다. ③은 Average Precision(AP)의 정의다.",
+      "source": "7장 RAG § Evaluation"
+    },
+    {
+      "id": "NLPW7Q11",
+      "set": 7,
+      "week": 7,
+      "topic": "Average Precision",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "Average Precision(AP)에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① 반환 문서 중 관련 비율을 한 번 계산한 값",
+        "② 랭킹 리스트에서 관련 문서가 검색되는 각 지점의 Precision 값을 평균한 것",
+        "③ 전체 관련 문서 수를 반환 문서 수로 나눈 값",
+        "④ 상위 k개의 recall 합"
+      ],
+      "answer": 1,
+      "brief": "AP = 관련 문서 검색 지점들의 Precision 평균.",
+      "detailed": "AP는 랭킹된 리스트에서 관련 문서가 검색되는 지점들의 Precision@k 값을 평균한 것이다. 관련 문서를 상위에 잘 랭크할수록 AP가 높아져, 단순 Precision/Recall보다 순위 품질을 잘 반영한다.",
+      "source": "7장 RAG § Average Precision"
+    },
+    {
+      "id": "NLPW7Q12",
+      "set": 7,
+      "week": 7,
+      "topic": "RAG vs Direct Prompting",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "RAG가 Direct Prompting과 다른 핵심 동작은?",
+      "choices": [
+        "① 파라미터 지식만으로 답을 생성한다",
+        "② 검색기가 반환한 관련 패시지를 질문 앞에 붙여(prepend) 생성한다",
+        "③ 모델을 매번 재학습한다",
+        "④ 온도를 0으로 고정한다"
+      ],
+      "answer": 1,
+      "brief": "RAG = 검색 패시지를 prepend해 근거 기반 생성.",
+      "detailed": "Direct Prompting은 LM의 파라미터 지식만으로 답한다. RAG는 검색된 관련 패시지를 질문 앞에 붙여 생성해, 모델이 검색 근거에 기반하게 만들어 사실성을 높이고 환각을 완화한다.",
+      "source": "7장 RAG § RAG vs Direct Prompting"
+    },
+    {
+      "id": "NLPW7Q13",
+      "set": 7,
+      "week": 7,
+      "topic": "RAG-Sequence vs Token",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "question": "RAG-Sequence 모델과 RAG-Token 모델의 차이로 옳은 것은?",
+      "choices": [
+        "① Sequence는 토큰마다 다른 문서를 쓰고, Token은 하나의 문서로 전체를 생성한다",
+        "② Sequence는 같은 문서 하나로 전체 시퀀스를 생성(시퀀스 단위 마진화)하고, Token은 토큰마다 다른 문서를 쓸 수 있다(토큰 단위 마진화)",
+        "③ 둘 다 검색을 사용하지 않는다",
+        "④ 둘의 차이는 어휘 크기뿐이다"
+      ],
+      "answer": 1,
+      "brief": "Sequence=문서1개·시퀀스단위, Token=문서가변·토큰단위 마진화.",
+      "detailed": "두 모델 모두 검색 문서를 잠재변수 z로 본다. RAG-Sequence는 같은 문서 하나로 전체 시퀀스를 생성하고 시퀀스 수준에서 top-K 근사로 마진화한다. RAG-Token은 토큰마다 다른 문서를 쓸 수 있고 각 토큰마다 마진화한다.",
+      "source": "7장 RAG § RAG-Sequence/Token"
+    },
+    {
+      "id": "NLPW7Q14",
+      "set": 7,
+      "week": 7,
+      "topic": "REALM",
+      "type": "multiple_choice",
+      "difficulty": "medium",
+      "question": "REALM에 대한 설명으로 옳은 것은?",
+      "choices": [
+        "① RAG를 디코더 강화학습에 처음 도입한 연구",
+        "② RAG를 인코더 사전학습(BERT 스타일)에 처음 통합해, 검색 내용을 조건으로 MLM loss로 사전학습한 연구",
+        "③ TF-IDF를 대체한 토크나이저",
+        "④ 강화학습 보상 모델"
+      ],
+      "answer": 1,
+      "brief": "REALM=RAG를 인코더 사전학습(MLM)에 통합.",
+      "detailed": "REALM은 RAG를 인코더 사전학습(BERT 스타일)에 처음 통합한 연구로, 검색된 내용을 조건으로 한 MLM loss로 'knowledge-augmented encoder'를 사전학습한다.",
+      "source": "7장 RAG § RAG in Pretraining"
+    },
+    {
+      "id": "NLPW7Q15",
+      "set": 7,
+      "week": 7,
+      "topic": "Dense Retrieval 인코더",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "question": "Dense retrieval에서 검색용 인코더로 보통 작은 텍스트 인코더(BERT)를 쓰는 이유로 가장 적절한 것은?",
+      "choices": [
+        "① 검색은 생성 태스크여서 큰 디코더가 필수이기 때문",
+        "② 검색은 NLU(이해) 태스크이고 인코더-only 모델이 LLM보다 효율적이기 때문",
+        "③ BERT만 임베딩을 만들 수 있기 때문",
+        "④ 작은 모델이 항상 더 정확하기 때문"
+      ],
+      "answer": 1,
+      "brief": "검색=NLU 태스크, 인코더가 LLM보다 효율적.",
+      "detailed": "검색은 쿼리-문서 관련도를 판단하는 NLU(이해) 태스크이고, 인코더-only 모델이 거대한 LLM보다 효율적이므로 작은 텍스트 인코더(BERT)를 검색기로 쓴다.",
+      "source": "7장 RAG § Dense Retrieval"
+    }
+  ]
+}
