@@ -88,12 +88,16 @@ function renderResult(p, d) {
   }
   let detail = "";
   if (d.mode === "exact" && Array.isArray(d.parts)) {
+    const partIcon = (pt) => pt.ok ? "✅" : (pt.issue && (pt.issue.type === "extra" || pt.issue.type === "missing") ? "⚠️" : "❌");
+    const partMsg = (pt) => {
+      if (pt.ok) return "정답";
+      const i = pt.issue || {};
+      if (i.type === "extra") return `<span class="muted">— 정답 ${pt.total}개는 맞췄지만 뒤에 불필요한 항목 ${i.count}개가 더 있어요</span>`;
+      if (i.type === "missing") return `<span class="muted">— 항목 ${i.count}개 부족 (${pt.matched}/${pt.total}개 맞음)</span>`;
+      return `<span class="muted">— ${(i.at ?? pt.matched) + 1}번째 항목이 틀림 (정답 ${esc(i.correct ?? "?")}, ${pt.matched}/${pt.total} 일치)</span>`;
+    };
     detail = `<ul style="margin:6px 0 0; padding-left:4px; list-style:none; display:flex; flex-direction:column; gap:4px;">` +
-      d.parts.map((pt) =>
-        `<li>${pt.ok ? "✅" : "❌"} <strong>${esc(pt.label)}</strong> ${pt.ok
-          ? "정답"
-          : `<span class="muted">— ${pt.firstError + 1}번째 항목부터 어긋남 (${pt.matched}/${pt.total} 일치)</span>`}</li>`
-      ).join("") + `</ul>`;
+      d.parts.map((pt) => `<li>${partIcon(pt)} <strong>${esc(pt.label)}</strong> ${partMsg(pt)}</li>`).join("") + `</ul>`;
   } else if (Array.isArray(d.rubricHits) && d.rubricHits.length) {
     detail = `<ul style="margin:6px 0 0; padding-left:4px; list-style:none; display:flex; flex-direction:column; gap:4px;">` +
       d.rubricHits.map((h) => `<li>${h.hit ? "✅" : "⬜"} ${esc(h.point)}</li>`).join("") + `</ul>`;
@@ -125,7 +129,7 @@ async function gradeNow() {
 
   el.gradeBtn.disabled = true;
   el.gradeBtn.textContent = "⏳ 채점 중… (5~20초)";
-  el.gradeNote.textContent = "로컬 LLM(qwen)으로 채점 중";
+  el.gradeNote.textContent = "AI가 풀이를 살펴보는 중…";
 
   const payload = {
     gradeMode: p.gradeMode, type: p.type, question: p.question,
