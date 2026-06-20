@@ -106,9 +106,9 @@ function renderResult(p, d) {
         <span style="font-size:24px; font-weight:800;">${Number(d.score) || 0}<span class="muted" style="font-size:13px; font-weight:600;">/100</span></span>
       </div>
       ${detail}
-      ${d.good ? `<div style="margin-top:12px;"><strong>💚 잘한 점</strong><div style="margin-top:3px; line-height:1.6;">${esc(d.good)}</div></div>` : ""}
-      ${d.fix ? `<div style="margin-top:10px;"><strong>🔧 보완할 점</strong><div style="margin-top:3px; line-height:1.6;">${esc(d.fix)}</div></div>` : ""}
-      <details style="margin-top:14px;" ${d.verdict === "정답" ? "" : "open"}>
+      ${d.good ? `<div style="margin-top:12px;"><strong>💚 잘한 점</strong><div style="margin-top:3px; line-height:1.75; white-space:pre-line;">${esc(d.good)}</div></div>` : ""}
+      ${d.fix ? `<div style="margin-top:12px;"><strong>🔧 보완할 점 · 자세한 풀이</strong><div style="margin-top:3px; line-height:1.75; white-space:pre-line;">${esc(d.fix)}</div></div>` : ""}
+      <details style="margin-top:14px;" open>
         <summary style="cursor:pointer; font-weight:600;">📖 모범답안 / 해설</summary>
         <div style="margin-top:8px; line-height:1.7;">${esc(d.modelAnswer || p.modelAnswer || "")}</div>
         ${p.explain ? `<div class="muted small" style="margin-top:8px; line-height:1.6;">💡 ${esc(p.explain)}</div>` : ""}
