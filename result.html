@@ -216,7 +216,7 @@
       b.className = "mode-btn" + (id === initialSet ? " active" : "");
       b.style.flex = "0 0 auto";   // 텍스트 폭만큼 (세로 줄바꿈 방지)
       const prefix = hasGroups ? (s.exam === "final" ? "기말 " : "중간 ") : "";
-      const short = (s.label || "").includes("종합") ? "종합" : String(s.title || `SET ${id}`).replace("SET ", "");
+      const short = (s.label || "").includes("종합평가") ? "종합평가" : (s.label || "").includes("종합") ? "종합" : String(s.title || `SET ${id}`).replace("SET ", "");
       b.textContent = prefix + short;
       b.addEventListener("click", () => {
         switcher.querySelectorAll(".mode-btn").forEach(x => x.classList.remove("active"));
