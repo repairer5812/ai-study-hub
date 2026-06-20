@@ -115,6 +115,7 @@ function renderResult(p, d) {
       <details style="margin-top:14px;" open>
         <summary style="cursor:pointer; font-weight:600;">📖 모범답안 / 해설</summary>
         <div style="margin-top:8px; line-height:1.7;">${esc(d.modelAnswer || p.modelAnswer || "")}</div>
+        ${p.diagram ? `<div class="muted small" style="margin-top:10px;">🌳 정답 트리</div><pre style="margin-top:4px; padding:12px 14px; background:var(--c-border-soft); border-radius:8px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:13px; line-height:1.5;">${esc(p.diagram)}</pre>` : ""}
         ${p.explain ? `<div class="muted small" style="margin-top:8px; line-height:1.6;">💡 ${esc(p.explain)}</div>` : ""}
       </details>
     </div>`;
@@ -168,6 +169,7 @@ function showModel() {
     <div style="border:1px dashed var(--c-border-soft); border-radius:12px; padding:16px 18px; background:var(--c-surface);">
       <strong>📖 모범답안</strong>
       <div style="margin-top:8px; line-height:1.7;">${esc(p.modelAnswer || "")}</div>
+      ${p.diagram ? `<div class="muted small" style="margin-top:10px;">🌳 정답 트리</div><pre style="margin-top:4px; padding:12px 14px; background:var(--c-border-soft); border-radius:8px; overflow-x:auto; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:13px; line-height:1.5;">${esc(p.diagram)}</pre>` : ""}
       ${p.explain ? `<div class="muted small" style="margin-top:10px; line-height:1.6;">💡 ${esc(p.explain)}</div>` : ""}
     </div>`;
   if (window.renderMath) window.renderMath(el.result);
