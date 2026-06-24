@@ -8,9 +8,9 @@
   --c-heading: #F2F5F9;
   --c-text: #9AA4B0;
 
-  --c-accent: #6FB5A5;
-  --c-accent-strong: #A8D8CC;
-  --c-accent-soft: rgba(111, 181, 165, 0.14);
+  --c-accent: #8b1538;
+  --c-accent-strong: #b91c52;
+  --c-accent-soft: rgba(139, 21, 56, 0.14);
 
   --c-radius: 16px;
   --c-radius-sm: 10px;
@@ -23,7 +23,7 @@
 }
 
 [data-theme="dark"] body {
-  background: radial-gradient(ellipse at top right, rgba(111, 181, 165, 0.06) 0%, transparent 50%), var(--c-bg);
+  background: radial-gradient(ellipse at top right, rgba(139, 21, 56, 0.06) 0%, transparent 50%), var(--c-bg);
 }
 
 [data-theme="dark"] .app-header {

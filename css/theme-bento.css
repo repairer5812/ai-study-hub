@@ -1,16 +1,16 @@
 /* ═══ Bento 테마 (라이트) ═══ */
 [data-theme="bento"] {
-  --c-bg: #F2F3F5;
+  --c-bg: oklch(0.985 0.004 250);
   --c-surface: #FFFFFF;
   --c-surface-2: #F2F3F5;
   --c-surface-3: #E6E8EC;
 
-  --c-heading: #234E70;
-  --c-text: #5A6A7A;
+  --c-heading: oklch(0.23 0.022 265);
+  --c-text: oklch(0.40 0.02 265);
 
-  --c-accent: #6FB5A5;
-  --c-accent-strong: #3A8576;
-  --c-accent-soft: rgba(111, 181, 165, 0.15);
+  --c-accent: #8b1538;
+  --c-accent-strong: #6f1029;
+  --c-accent-soft: rgba(139, 21, 56, 0.13);
 
   --c-radius: 20px;
   --c-radius-sm: 12px;
