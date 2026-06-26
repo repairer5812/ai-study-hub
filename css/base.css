@@ -30,6 +30,7 @@ ul, ol { list-style: none; }
 
 /* ── 레이아웃 컨테이너 ── */
 .container {
+  width: 100%;
   max-width: 1080px;
   margin: 0 auto;
   padding: 24px 20px;
@@ -153,24 +154,27 @@ ul, ol { list-style: none; }
 /* ── 홈 화면 ── */
 .hero { text-align: center; padding: 56px 20px 40px; }
 .hero .hero-title {
-  font-size: 38px;
-  font-weight: 900;
+  font-size: 36px;
+  font-weight: 800;
   color: var(--c-heading);
-  letter-spacing: -1px;
+  letter-spacing: -0.02em;
   margin-bottom: 12px;
   line-height: 1.2;
+  text-wrap: balance;
+  word-break: keep-all;
 }
 .hero .hero-sub { font-size: 17px; color: var(--c-text); opacity: 0.8; }
 .hero .hero-badge {
   display: inline-block;
   margin-bottom: 16px;
-  padding: 6px 14px;
-  border-radius: 999px;
+  padding: 5px 12px;
+  border-radius: 8px;
   background: var(--c-accent-soft);
   color: var(--c-accent-strong);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .set-grid {
