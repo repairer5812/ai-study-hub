@@ -1,0 +1,20 @@
+# Normalize all text files to LF in the repository.
+# Git auto-detects text vs binary; checkouts use LF on all platforms.
+* text=auto eol=lf
+
+# Binary assets — never normalize or convert line endings.
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.otf  binary
+*.eot  binary
+*.zip  binary
+*.mp4  binary
+*.webm binary
