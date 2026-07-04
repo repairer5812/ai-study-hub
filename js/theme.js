@@ -3,8 +3,9 @@ const THEME_KEY = "ml-exam-theme";
 
 export function initTheme() {
   const saved = localStorage.getItem(THEME_KEY);
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const initial = saved || (prefersDark ? "dark" : "bento");
+  // 기본값은 항상 라이트(bento). OS 다크 설정을 따라가지 않는다.
+  // 사용자가 토글로 다크를 고르면 저장되어 다음 방문에도 유지된다.
+  const initial = saved || "bento";
   applyTheme(initial);
 }
 
