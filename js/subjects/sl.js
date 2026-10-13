@@ -27,6 +27,15 @@ export const META = {
     exams: [
       { set: "midterm-1", title: "중간고사 모의시험 1회", minutes: 75, points: 100 },
     ],
+    // 다른 곳에 있는 복습 자료. 시험 준비 목록 끝에 붙는다.
+    links: [
+      {
+        name: "Preliminaries 복습노트",
+        desc: "Topic 1의 확률, 선형대수, projection, 미분을 복습 순서대로 다시 묶은 노트입니다. 손으로 푸는 문제가 있습니다.",
+        meta: "노트",
+        url: "https://repairer5812.github.io/공부/stat-learning/preliminaries/",
+      },
+    ],
   },
 };
 

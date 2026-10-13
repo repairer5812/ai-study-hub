@@ -38,6 +38,7 @@ if (meta.prep) {
     href: `practice.html?s=${subjectId}`, name: "주제별 문제",
     desc: "약한 가지만 골라 풉니다. 형식별로 걸러 볼 수 있습니다.",
   });
+  (meta.prep.links || []).forEach((l) => rows.push({ href: l.url, name: l.name, desc: l.desc, meta: l.meta }));
   document.getElementById("prep-list").innerHTML = rows.map((r) => `
     <li><a href="${r.href}">
       <strong>${r.name}</strong>
