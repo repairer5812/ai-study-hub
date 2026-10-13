@@ -1,8 +1,9 @@
 // AI Study Hub · 서비스워커 (홈 화면 추가 / 오프라인 셸)
-const CACHE = 'ai-study-hub-v1';
+const CACHE = 'ai-study-hub-v2';
 const ASSETS = [
   './', './index.html', './subject.html', './exam.html', './review.html', './result.html',
-  './css/base.css', './css/theme-bento.css', './css/theme-dark.css',
+  './map.html', './paper.html', './practice.html',
+  './css/base.css', './css/theme-bento.css', './css/theme-dark.css', './css/prep.css',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'
 ];
 

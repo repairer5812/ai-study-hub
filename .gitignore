@@ -15,3 +15,6 @@ notes/**/_predecessors.py
 notes/**/_notion_sync/
 
 _audit_report.md
+
+# 시험 준비 도구의 로컬 검사 목록(실명 등)
+tools/*.local.txt

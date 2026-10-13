@@ -129,9 +129,10 @@
   grid.innerHTML = metas.map(m => {
     const locked = !m.available;
     const examHref = m.hasExam ? `subject.html?s=${m.id}` : "#";
-    const reviewHref = m.noteIndex.length ? `review.html?s=${m.id}` : "#";
+    const hasMap = !m.noteIndex.length && m.prep && m.prep.map;
+    const reviewHref = m.noteIndex.length ? `review.html?s=${m.id}` : hasMap ? `map.html?s=${m.id}` : "#";
     const examClass = m.hasExam ? "primary" : "primary disabled";
-    const reviewClass = m.noteIndex.length ? "ghost" : "ghost disabled";
+    const reviewClass = m.noteIndex.length || hasMap ? "ghost" : "ghost disabled";
     const wipText = locked ? "자료 준비중" : (m.hasExam ? "" : "시험 준비중");
     return `
       <div class="hub-card ${locked ? "locked" : ""}" data-review="${reviewHref}" role="group" aria-label="${m.title}">
@@ -142,7 +143,7 @@
         </div>
         <div class="sub">${m.subtitle}</div>
         <div class="actions">
-          <a class="${reviewClass}" href="${reviewHref}">📖 복습</a>
+          <a class="${reviewClass}" href="${reviewHref}">${hasMap ? "🌳 개념 지도" : "📖 복습"}</a>
           <a class="${examClass}" href="${examHref}">📝 모의고사</a>
         </div>
       </div>`;

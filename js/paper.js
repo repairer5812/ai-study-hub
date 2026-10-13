@@ -1,0 +1,488 @@
+// paper.js — 종이로 푸는 모의시험. paper.html?s=sl&set=midterm-1
+// 답은 종이에 쓴다. 화면은 시험지와 시계이고, 끝난 뒤에만 채점을 돕는다.
+//   표지 → 풀이(시계) → 채점(참거짓·객관식은 답을 옮겨 자동 채점, 손으로 쓴 답은 채점 프롬프트를 복사해 LLM 으로) → 결과
+// 상태는 이 브라우저(localStorage)에만 남는다. 랭킹에는 올리지 않는다(점수가 자기 채점이라서).
+
+import {
+  subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
+  buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
+} from "./prep.js";
+
+const meta = requireMeta();
+const app = document.getElementById("app");
+const setId = params.get("set") || meta.prep.exams?.[0]?.set;
+fillCrumb(meta, "모의시험");
+
+const mapBase = `map.html?s=${subjectId}`;
+const goMap = document.getElementById("go-map");
+if (goMap) { goMap.href = mapBase; goMap.style.display = ""; }
+const num = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+const mmss = (sec) => {
+  const s = Math.max(0, Math.floor(sec));
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+};
+const span = (sec) => {
+  const s = Math.max(0, Math.round(sec));
+  const m = Math.floor(s / 60);
+  return m ? `${m}분 ${s % 60}초` : `${s}초`;
+};
+
+function pageHtml(exam, questions, parts, topicTitle) {
+  const total = questions.reduce((s, q) => s + q.points, 0);
+  const auto = questions.filter((q) => !isWritten(q));
+  const written = questions.filter(isWritten);
+  const pts = (list) => list.reduce((s, q) => s + q.points, 0);
+  const choicesOf = (q) => (q.type === "tf" ? ["T", "F"] : q.choices?.length ? q.choices : ["a", "b", "c", "d"]);
+
+  return `
+<div class="ex" data-phase="cover" data-ko="off" data-graded="false">
+  <header class="pp-head ex-cover">
+    <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
+    <h1 class="pp-title">${esc(exam.title)}</h1>
+    <p class="pp-lead">실제 시험처럼 종이에 풉니다. 화면은 시험지와 시계 역할만 하고, 끝난 뒤에 채점을 돕습니다.</p>
+    <dl class="pp-facts">
+      <div><dt>시간</dt><dd>${exam.minutes}분</dd></div>
+      <div><dt>배점</dt><dd>${total}점</dd></div>
+      <div><dt>문항</dt><dd>${questions.length}문항</dd></div>
+      <div class="pp-facts-wide"><dt>범위</dt><dd>${esc(exam.scope || "")}</dd></div>
+    </dl>
+
+    <div class="ex-cover-grid">
+      <table class="ex-plan">
+        <caption>구성</caption>
+        <thead><tr><th scope="col">파트</th><th scope="col">형식</th><th scope="col">문항</th><th scope="col">배점</th></tr></thead>
+        <tbody>${parts.map((p) => `<tr><th scope="row">${p.id}</th><td>${esc(p.ko)}</td><td class="num">${p.items.length}</td><td class="num">${pts(p.items)}</td></tr>`).join("")}</tbody>
+        <tfoot><tr><th scope="row" colspan="2">합계</th><td class="num">${questions.length}</td><td class="num">${total}</td></tr></tfoot>
+      </table>
+      <div class="ex-rules">
+        <h2>시작하기 전에</h2>
+        <ul>
+          <li>종이와 펜을 준비합니다. 답은 모두 종이에 씁니다.</li>
+          <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
+          <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
+          <li>끝나면 참거짓과 객관식은 답을 옮겨 바로 채점하고, 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
+        </ul>
+        <p class="ex-disclaimer">실제 기출이 아닙니다. 수업에서 다룬 내용과 강조된 부분을 바탕으로 만든 예상 문제이고, 실제 시험의 시간과 문항 수는 다를 수 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="pp-actions">
+      <button type="button" class="btn btn-primary btn-lg" data-ex-start>시험 시작</button>
+      <button type="button" class="btn btn-secondary" data-ex-print>시험지 인쇄</button>
+      <a class="btn btn-secondary" href="${mapBase}">개념 지도</a>
+    </div>
+    <p class="ex-resume" data-ex-resume hidden>
+      지난 결과가 남아 있습니다: <strong data-ex-resume-score></strong>
+      <button type="button" class="ex-link" data-ex-review>결과 다시 보기</button>
+    </p>
+  </header>
+
+  <div class="ex-bar" data-ex-bar hidden>
+    <div class="ex-bar-in">
+      <p class="ex-clock">
+        <span class="ex-clock-label" data-ex-clock-label>남은 시간</span>
+        <span class="ex-clock-time" data-ex-clock>${String(exam.minutes).padStart(2, "0")}:00</span>
+      </p>
+      <nav class="ex-jump" aria-label="파트 이동">${parts.map((p) => `<a href="#part-${p.id}">${p.id}</a>`).join("")}</nav>
+      <div class="ex-bar-actions">
+        <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
+        <span class="ex-end">
+          <button type="button" class="btn btn-secondary btn-sm" data-ex-end>시험 종료</button>
+          <span class="ex-end-confirm" data-ex-end-confirm hidden>
+            끝내고 채점할까요?
+            <button type="button" class="btn btn-primary btn-sm" data-ex-end-yes>종료</button>
+            <button type="button" class="ex-link" data-ex-end-no>계속 풀기</button>
+          </span>
+        </span>
+      </div>
+    </div>
+    <p class="sr-only" aria-live="polite" data-ex-announce></p>
+  </div>
+
+  <section class="ex-grade" data-ex-grade hidden aria-labelledby="ex-grade-h">
+    <h2 id="ex-grade-h">채점</h2>
+    <p class="ex-grade-time" data-ex-used></p>
+
+    <div class="ex-step">
+      <h3>1. 참거짓과 객관식 답 옮기기 <span class="ex-step-pts">${pts(auto)}점</span></h3>
+      <p class="ex-step-note">종이에 쓴 답을 그대로 눌러 옮깁니다. 비워 둔 문항은 0점으로 셉니다.</p>
+      <form class="ex-card" data-ex-card>
+        ${parts.filter((p) => p.items.some((q) => !isWritten(q))).map((p) => `
+        <fieldset class="ex-card-part">
+          <legend>Part ${p.id} <span>${esc(p.ko)}</span></legend>
+          <div class="ex-card-rows">
+            ${p.items.filter((q) => !isWritten(q)).map((q) => `
+            <div class="ex-card-row" data-card-row="${labelOf(q)}" role="radiogroup" aria-label="${labelOf(q)}번 답">
+              <span class="ex-card-no">${labelOf(q)}</span>
+              <span class="ex-card-opts">${choicesOf(q).map((c) => `<label class="ex-bubble"><input type="radio" name="ans-${labelOf(q)}" value="${c}"><span>${c}</span></label>`).join("")}</span>
+              <span class="ex-card-verdict" data-card-verdict></span>
+            </div>`).join("")}
+          </div>
+        </fieldset>`).join("")}
+        <p class="ex-card-foot">
+          <button type="submit" class="btn btn-primary">옮긴 답 채점하기</button>
+          <strong class="ex-card-score" data-ex-auto-score aria-live="polite"></strong>
+        </p>
+      </form>
+    </div>
+
+    ${written.length ? `
+    <div class="ex-step">
+      <h3>2. 손으로 쓴 답 채점하기 <span class="ex-step-pts">${pts(written)}점</span></h3>
+      <ol class="ex-how">
+        <li>답안지를 사진으로 찍습니다. 문항 번호가 보이게 찍으면 채점이 정확해집니다.</li>
+        <li>아래 버튼으로 채점 프롬프트를 복사해 ChatGPT, Claude, Gemini 같은 LLM에 붙여 넣고 사진을 함께 올립니다. 문제, 모범 답안, 채점 기준이 프롬프트에 들어 있습니다.</li>
+        <li>답변 마지막 줄의 점수를 아래 칸에 옮겨 적습니다.</li>
+      </ol>
+      <p class="ex-copy">
+        <button type="button" class="btn btn-primary" data-ex-copy="all">채점 프롬프트 복사</button>
+        <span class="ex-copy-msg" data-ex-copy-msg aria-live="polite"></span>
+      </p>
+      <details class="ex-raw">
+        <summary>복사가 안 되면 여기서 직접 선택해 복사</summary>
+        <textarea readonly rows="10" data-ex-raw aria-label="채점 프롬프트 전문"></textarea>
+      </details>
+      <form class="ex-scores" data-ex-scores novalidate>
+        ${written.map((q) => `
+        <label class="ex-score">
+          <span class="ex-score-no">${labelOf(q)}</span>
+          <input type="number" inputmode="decimal" min="0" max="${q.points}" step="0.5" name="score-${labelOf(q)}" placeholder="0">
+          <span class="ex-score-max">/ ${q.points}</span>
+        </label>`).join("")}
+        <p class="ex-card-foot">
+          <button type="submit" class="btn btn-primary">결과 보기</button>
+          <span class="ex-copy-msg" data-ex-scores-msg aria-live="polite"></span>
+        </p>
+      </form>
+    </div>` : ""}
+  </section>
+
+  <section class="ex-result" data-ex-result hidden aria-labelledby="ex-result-h" tabindex="-1">
+    <h2 id="ex-result-h">결과</h2>
+    <p class="ex-total"><span data-ex-total>0</span><span class="ex-total-max"> / ${total}</span></p>
+    <div class="ex-result-grid">
+      <table class="ex-plan">
+        <caption>파트별</caption>
+        <thead><tr><th scope="col">파트</th><th scope="col">형식</th><th scope="col">득점</th><th scope="col">배점</th></tr></thead>
+        <tbody>${parts.map((p) => `<tr data-part-row="${p.id}"><th scope="row">${p.id}</th><td>${esc(p.ko)}</td><td class="num" data-earned>0</td><td class="num">${pts(p.items)}</td></tr>`).join("")}</tbody>
+      </table>
+      <div>
+        <h3>약한 가지부터 다시 보기</h3>
+        <ol class="ex-weak" data-ex-weak></ol>
+      </div>
+    </div>
+    <p class="pp-actions">
+      <button type="button" class="btn btn-secondary" data-ex-reset>처음부터 다시 풀기</button>
+      ${meta.prep.practice ? `<a class="btn btn-secondary" href="practice.html?s=${subjectId}">주제별 문제</a>` : ""}
+    </p>
+  </section>
+
+  <article class="ex-paper" data-ex-paper lang="en">
+    <header class="ex-paper-head">
+      <p class="ex-paper-course" lang="ko">${esc(meta.title)}</p>
+      <h2>Mock Midterm Exam</h2>
+      <dl class="ex-paper-meta">
+        <div><dt>Time</dt><dd>${exam.minutes} minutes</dd></div>
+        <div><dt>Total</dt><dd>${total} points</dd></div>
+        <div><dt>Name</dt><dd class="ex-paper-blank"></dd></div>
+      </dl>
+      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write all answers on paper.</p>
+    </header>
+    ${parts.map((p) => `
+    <section class="ex-part" id="part-${p.id}">
+      <header class="ex-part-head"><h3>Part ${p.id}. ${esc(p.en)}</h3><span class="ex-pts">[${pts(p.items)} points]</span></header>
+      <p class="ex-part-guide">${esc(p.guide || "")}</p>
+      <ol class="ex-list" role="list">
+        ${p.items.map((q) => `
+        <li class="ex-q" id="q-${labelOf(q)}" data-q-item="${labelOf(q)}" data-type="${q.type}">
+          <div class="ex-q-head">
+            <span class="ex-q-no">${labelOf(q)}.</span>
+            ${q.title ? `<span class="ex-q-title">${esc(q.title)}</span>` : ""}
+            <span class="ex-pts">[${q.points} points]</span>
+          </div>
+          <div class="ex-sec ex-stem pp-md">${renderMd(q.stem)}</div>
+          <div class="ex-sec ex-ko pp-md" lang="ko">${renderMd(q.ko)}</div>
+          <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(q.solution)}</div>
+          ${q.rubric ? `<div class="ex-sec ex-rubric pp-md" lang="ko">${renderMd(q.rubric)}</div>` : ""}
+          <p class="ex-q-foot" lang="ko" data-ex-q-foot hidden>
+            <span class="ex-q-verdict" data-q-verdict></span>
+            ${isWritten(q) ? `<button type="button" class="ex-link" data-ex-copy="${labelOf(q)}">이 문항만 채점 프롬프트 복사</button>` : ""}
+            ${q.concepts[0] ? `<a class="ex-link" href="${mapBase}&n=${q.concepts[0]}">관련 개념 보기</a>` : ""}
+          </p>
+        </li>`).join("")}
+      </ol>
+    </section>`).join("")}
+  </article>
+</div>`;
+}
+
+function wire(root, exam, questions, topicTitle) {
+  const $ = (sel) => root.querySelector(sel);
+  const $$ = (sel) => Array.from(root.querySelectorAll(sel));
+  const KEY = `ai-study:${subjectId}:paper:${exam.set}`;
+  const blank = () => ({ phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {}, ko: false, total: null });
+  let state = Object.assign(blank(), store.get(KEY, {}));
+  const save = () => store.set(KEY, state);
+
+  const total = questions.reduce((s, q) => s + q.points, 0);
+  const autoQs = questions.filter((q) => !isWritten(q));
+  const writtenQs = questions.filter(isWritten);
+  const prompts = { all: gradingPrompt(meta.title, writtenQs.map((q) => promptItem(q))) };
+  writtenQs.forEach((q) => { prompts[labelOf(q)] = gradingPrompt(meta.title, [promptItem(q)]); });
+
+  const bar = $("[data-ex-bar]");
+  const grade = $("[data-ex-grade]");
+  const result = $("[data-ex-result]");
+  const cover = $(".ex-cover");
+  const clock = $("[data-ex-clock]");
+  const clockLabel = $("[data-ex-clock-label]");
+  const announce = $("[data-ex-announce]");
+  const card = $("[data-ex-card]");
+  const scoresForm = $("[data-ex-scores]");
+  const limit = exam.minutes * 60;
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* 단계 */
+  const setPhase = (phase, scroll) => {
+    state.phase = phase;
+    save(); // 단계가 바뀔 때마다 남겨야 새로 고쳐도 같은 자리에서 이어진다
+    root.setAttribute("data-phase", phase);
+    bar.hidden = phase !== "running";
+    grade.hidden = !(phase === "grading" || phase === "result");
+    result.hidden = phase !== "result";
+    $$("[data-ex-q-foot]").forEach((el) => { el.hidden = !(phase === "grading" || phase === "result"); });
+    if (!scroll) return;
+    const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ block: "start", behavior: calm ? "auto" : "smooth" });
+      if (scroll === "result") result.focus({ preventScroll: true });
+    });
+  };
+
+  /* 시계 */
+  let timer = null;
+  let said = {};
+  const tick = () => {
+    if (state.phase !== "running" || !state.startedAt) return;
+    const left = limit - (Date.now() - state.startedAt) / 1000;
+    if (left >= 0) {
+      clockLabel.textContent = "남은 시간";
+      clock.textContent = mmss(left);
+      bar.removeAttribute("data-over");
+    } else {
+      clockLabel.textContent = "시간 종료, 넘긴 시간";
+      clock.textContent = `+${mmss(-left)}`;
+      bar.setAttribute("data-over", "true");
+    }
+    [[600, "10분 남았습니다."], [300, "5분 남았습니다."], [0, "제한 시간이 끝났습니다. 실제 시험이라면 여기서 펜을 놓습니다."]].forEach(([t, msg]) => {
+      if (left <= t && !said[t]) {
+        said[t] = true;
+        if (left > t - 3) announce.textContent = msg; // 다시 열었을 때 이미 지난 구간은 알리지 않는다
+      }
+    });
+  };
+  const run = () => { clearInterval(timer); said = {}; tick(); timer = setInterval(tick, 1000); };
+
+  /* 한국어 풀이 */
+  const koBtn = $("[data-ex-ko]");
+  const paintKo = () => {
+    root.setAttribute("data-ko", state.ko ? "on" : "off");
+    koBtn.setAttribute("aria-pressed", state.ko ? "true" : "false");
+  };
+  koBtn.addEventListener("click", () => { state.ko = !state.ko; save(); paintKo(); });
+
+  /* 시작과 종료 */
+  $("[data-ex-print]").addEventListener("click", () => window.print());
+  $("[data-ex-start]").addEventListener("click", () => {
+    state = Object.assign(blank(), { ko: state.ko, startedAt: Date.now() });
+    resetForms();
+    setPhase("running", "paper");
+    paintResume();
+    run();
+  });
+  const endBtn = $("[data-ex-end]");
+  const endConfirm = $("[data-ex-end-confirm]");
+  endBtn.addEventListener("click", () => { endBtn.hidden = true; endConfirm.hidden = false; $("[data-ex-end-yes]").focus(); });
+  $("[data-ex-end-no]").addEventListener("click", () => { endConfirm.hidden = true; endBtn.hidden = false; endBtn.focus(); });
+  $("[data-ex-end-yes]").addEventListener("click", () => {
+    clearInterval(timer);
+    state.endedAt = Date.now();
+    endConfirm.hidden = true;
+    endBtn.hidden = false;
+    paintUsed();
+    setPhase("grading", "grade");
+  });
+  const paintUsed = () => {
+    const el = $("[data-ex-used]");
+    if (!state.startedAt || !state.endedAt) { el.textContent = ""; return; }
+    const used = (state.endedAt - state.startedAt) / 1000;
+    el.textContent = used <= limit
+      ? `걸린 시간 ${span(used)}. 제한 시간은 ${exam.minutes}분입니다.`
+      : `걸린 시간 ${span(used)}. 제한 시간 ${exam.minutes}분을 ${span(used - limit)} 넘겼습니다.`;
+  };
+
+  /* 답안 카드: 참거짓과 객관식 */
+  const readCard = () => {
+    const out = {};
+    autoQs.forEach((q) => {
+      const picked = card.querySelector(`input[name="ans-${labelOf(q)}"]:checked`);
+      if (picked) out[labelOf(q)] = picked.value;
+    });
+    return out;
+  };
+  const paintAuto = () => {
+    autoQs.forEach((q) => {
+      const label = labelOf(q);
+      const mine = state.answers[label];
+      const ok = mine === q.answer;
+      const verdict = !state.graded ? "" : ok ? "right" : "wrong";
+      const row = card.querySelector(`[data-card-row="${label}"]`);
+      row.setAttribute("data-verdict", verdict);
+      row.querySelector("[data-card-verdict]").textContent = !state.graded ? "" : ok ? "맞음" : `틀림, 정답 ${q.answer}`;
+      const item = root.querySelector(`[data-q-item="${label}"]`);
+      item.setAttribute("data-verdict", verdict);
+      item.querySelector("[data-q-verdict]").textContent = !state.graded ? "" : ok ? `맞음 (${q.answer})` : `틀림. 내 답 ${mine || "없음"}, 정답 ${q.answer}`;
+    });
+    const max = autoQs.reduce((s, q) => s + q.points, 0);
+    const got = autoQs.reduce((s, q) => s + (state.answers[labelOf(q)] === q.answer ? q.points : 0), 0);
+    $("[data-ex-auto-score]").textContent = state.graded ? `${got} / ${max}점` : "";
+    root.setAttribute("data-graded", state.graded ? "true" : "false");
+  };
+  card.addEventListener("submit", (e) => {
+    e.preventDefault();
+    state.answers = readCard();
+    state.graded = true;
+    save();
+    paintAuto();
+    if (!writtenQs.length) finish();
+  });
+  card.addEventListener("change", () => {
+    // 채점한 뒤 답을 고치면 판정을 지워 다시 채점해야 한다는 것을 보인다.
+    if (state.graded) { state.graded = false; state.answers = readCard(); save(); paintAuto(); }
+  });
+
+  /* 채점 프롬프트 복사 */
+  const raw = $("[data-ex-raw]");
+  if (raw) raw.value = prompts.all;
+  $$("[data-ex-copy]").forEach((btn) => {
+    const original = btn.textContent;
+    btn.addEventListener("click", async () => {
+      const key = btn.getAttribute("data-ex-copy");
+      const ok = await copyText(prompts[key]);
+      if (key === "all") {
+        $("[data-ex-copy-msg]").textContent = ok
+          ? "복사했습니다. LLM에 붙여 넣고 답안 사진을 함께 올리세요."
+          : "복사하지 못했습니다. 아래에서 직접 선택해 복사해 주세요.";
+      } else {
+        btn.textContent = ok ? "복사했습니다" : "복사하지 못했습니다";
+        setTimeout(() => { btn.textContent = original; }, 2200);
+      }
+      if (!ok) { const d = $(".ex-raw"); if (d) d.open = true; }
+    });
+  });
+
+  /* 손으로 쓴 문항의 점수 */
+  if (scoresForm) {
+    scoresForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const msg = $("[data-ex-scores-msg]");
+      const out = {};
+      for (const q of writtenQs) {
+        const input = scoresForm.querySelector(`input[name="score-${labelOf(q)}"]`);
+        const v = input.value.trim() === "" ? 0 : Number(input.value);
+        if (!Number.isFinite(v) || v < 0 || v > q.points) {
+          msg.textContent = `${labelOf(q)}번 점수는 0에서 ${q.points} 사이로 적어 주세요.`;
+          input.focus();
+          return;
+        }
+        out[labelOf(q)] = v;
+      }
+      if (!state.graded) {
+        msg.textContent = "먼저 1번에서 참거짓과 객관식 답을 채점해 주세요.";
+        card.querySelector('button[type="submit"]').focus();
+        return;
+      }
+      msg.textContent = "";
+      state.scores = out;
+      finish();
+    });
+  }
+
+  /* 결과 */
+  const earnedOf = (q) => (isWritten(q) ? state.scores[labelOf(q)] || 0 : state.answers[labelOf(q)] === q.answer ? q.points : 0);
+  const paintResult = () => {
+    const sum = questions.reduce((s, q) => s + earnedOf(q), 0);
+    state.total = sum;
+    $("[data-ex-total]").textContent = num(sum);
+    $$("[data-part-row]").forEach((row) => {
+      const part = row.getAttribute("data-part-row");
+      row.querySelector("[data-earned]").textContent = num(questions.filter((q) => q.part === part).reduce((s, q) => s + earnedOf(q), 0));
+    });
+    const topics = [...new Set(questions.map((q) => q.topic))].map((slug) => {
+      const qs = questions.filter((q) => q.topic === slug);
+      const max = qs.reduce((s, q) => s + q.points, 0);
+      const got = qs.reduce((s, q) => s + earnedOf(q), 0);
+      return { slug, title: topicTitle(slug), got, max, ratio: max ? got / max : 1 };
+    }).sort((a, b) => a.ratio - b.ratio);
+    $("[data-ex-weak]").innerHTML = topics.map((t) => `
+      <li${t.ratio < 0.6 ? ' data-weak="true"' : ""}>
+        <a href="${mapBase}&n=${t.slug}">${esc(t.title)}</a>
+        ${t.ratio < 0.6 ? '<span class="ct-sig ct-sig-emph">먼저 보기</span>' : ""}
+        <span class="ex-weak-score">${num(t.got)} / ${t.max}</span>
+      </li>`).join("");
+  };
+  const finish = () => { paintResult(); setPhase("result", "result"); paintResume(); };
+
+  /* 되돌리기와 이어 하기 */
+  const resetForms = () => { card.reset(); if (scoresForm) scoresForm.reset(); paintAuto(); };
+  $("[data-ex-reset]").addEventListener("click", () => {
+    state = Object.assign(blank(), { ko: state.ko });
+    resetForms();
+    setPhase("cover", "cover");
+    paintResume();
+  });
+  const resume = $("[data-ex-resume]");
+  const paintResume = () => {
+    const has = state.total !== null && state.phase === "cover";
+    resume.hidden = !has;
+    if (has) $("[data-ex-resume-score]").textContent = `${num(state.total)} / ${total}점`;
+  };
+  $("[data-ex-review]").addEventListener("click", () => { paintResult(); setPhase("result", "result"); paintResume(); });
+
+  /* 처음 그리기 */
+  Object.entries(state.answers).forEach(([label, value]) => {
+    const input = card.querySelector(`input[name="ans-${label}"][value="${value}"]`);
+    if (input) input.checked = true;
+  });
+  if (scoresForm) Object.entries(state.scores).forEach(([label, value]) => {
+    const input = scoresForm.querySelector(`input[name="score-${label}"]`);
+    if (input) input.value = value;
+  });
+  paintKo();
+  paintAuto();
+  paintUsed();
+  if (state.phase === "result") paintResult();
+  setPhase(state.phase);
+  paintResume();
+  if (state.phase === "running") run();
+}
+
+(async function init() {
+  try {
+    const [data] = await Promise.all([loadPrep(meta), whenMathReady()]);
+    const exam = data.exams.find((e) => e.set === setId);
+    const questions = sortQuestions(data.questions.filter((q) => q.set === setId));
+    if (!exam || !questions.length) throw new Error("모의시험 문항이 없습니다");
+    const tree = buildTree(data.concepts);
+    const topicTitle = (slug) => tree.bySlug.get(slug)?.title ?? slug;
+    const parts = exam.parts.map((p) => ({ ...p, items: questions.filter((q) => q.part === p.id) })).filter((p) => p.items.length);
+
+    document.title = `${exam.title} · ${meta.title} · AI Study Hub`;
+    app.innerHTML = pageHtml(exam, questions, parts, topicTitle);
+    typeset(app);
+    wire(app.querySelector(".ex"), exam, questions, topicTitle);
+  } catch (err) {
+    console.error(err);
+    app.innerHTML = `<div class="pp-empty"><h2>모의시험을 불러오지 못했습니다</h2><p>잠시 뒤 다시 열어 주세요. (${esc(err.message)})</p></div>`;
+  }
+})();

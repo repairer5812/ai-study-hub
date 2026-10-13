@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/theme-bento.css">
 <link rel="stylesheet" href="css/theme-dark.css">
+<link rel="stylesheet" href="css/prep.css?v=20261013">
 </head>
 <body>
 <div class="page">
@@ -41,6 +42,12 @@
 
   <section style="display:flex; gap:12px; justify-content:center; margin:16px 0 24px; flex-wrap:wrap;">
     <a class="btn btn-secondary btn-lg" id="link-review" href="#">📖 주차별 복습</a>
+  </section>
+
+  <section id="prep-section" style="display:none; margin:0 0 28px;">
+    <h2 class="h2" style="margin:8px 0 6px;">시험 준비</h2>
+    <div class="muted small" style="margin-bottom:10px;">예상 문제는 실제 기출이 아니라 수업 내용으로 만든 것입니다. 점수는 스스로 채점한 값이라 랭킹에 올리지 않습니다.</div>
+    <ul class="prep-list" id="prep-list"></ul>
   </section>
 
   <section id="work-section" style="display:none; margin:0 0 28px;">
@@ -99,7 +106,7 @@
 </div>
 
 <script type="module" src="js/theme.js?v=20260616"></script>
-<script type="module" src="js/subject.js?v=20260616"></script>
+<script type="module" src="js/subject.js?v=20261013"></script>
 
 </body>
 </html>

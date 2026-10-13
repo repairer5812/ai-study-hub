@@ -3,15 +3,18 @@ import * as mlModule from "./ml.js";
 import * as dlModule from "./dl.js";
 import * as dsModule from "./ds.js";
 import * as secModule from "./sec.js";
+import * as slModule from "./sl.js";
 
 const REGISTRY = {
   ml:  mlModule,
   dl:  dlModule,
   ds:  dsModule,
   sec: secModule,
+  sl:  slModule,
 };
 
-export const SUBJECT_LIST = ["ml", "dl", "ds", "sec"];
+// 이번 학기 과목을 앞에 둔다.
+export const SUBJECT_LIST = ["sl", "ml", "dl", "ds", "sec"];
 
 export function getSubjectMeta(id) {
   const mod = REGISTRY[id];

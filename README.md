@@ -14,6 +14,7 @@
 | 💻 딥러닝 | ✅ 1~10주차 + 예상문제·모범답안 | ✅ 중간 서술형 8세트 | ✅ 8주차 |
 | 📊 자료구조 | ✅ 1~12차시 + 기말 INDEX | 중간 4세트 · 기말 준비 중 | ✅ 9~12차시 |
 | 🔒 AI 보안기술 | 🔒 자료 수집 예정 | 🔒 | 🔒 |
+| 📈 통계적학습개론 (2026-2) | 개념 지도 55개 | 종이로 푸는 중간고사 모의시험 1회(100점) | 주제별 문제 35문항 |
 
 ## 시험 갈래 (독립 점수 트랙)
 
@@ -57,7 +58,7 @@ index.html                          ← 허브 (과목 카드 4개)
 ### 프론트엔드
 - Vanilla HTML + ES Modules (빌드 도구 없음)
 - CSS 테마: `theme-bento.css`, `theme-dark.css`
-- 과목별 모듈: `js/subjects/{ml,dl,ds,sec}.js` + `index.js` 레지스트리
+- 과목별 모듈: `js/subjects/{sl,ml,dl,ds,sec}.js` + `index.js` 레지스트리
 - 과목 추가 = 모듈 파일 하나 + 노트 폴더 + `SUBJECT_LIST` 등록
 
 ### 데이터
@@ -110,6 +111,47 @@ ai-study-hub/
 ├─ firebase-config.js
 └─ firestore.rules
 ```
+
+## 시험 준비 화면 (개념 지도, 종이로 푸는 모의시험, 주제별 문제)
+
+필기시험을 보는 과목을 위한 화면이다. 정기고사 엔진(`exam.html`)과 랭킹을 쓰지 않는다. 답을 종이에 쓰고 스스로 채점하기 때문이다.
+
+```
+map.html?s=sl                       ← 개념 지도 (한 줄기에서 가지 치는 나무)
+map.html?s=sl&n=<slug>              ← 개념 한 장 (정의, 수식, 흔한 오해, 확인 질문)
+paper.html?s=sl&set=midterm-1       ← 종이로 푸는 모의시험 (표지 → 시계 → 채점 → 결과)
+practice.html?s=sl                  ← 주제별 문제
+```
+
+- 모의시험은 화면이 시험지와 시계 역할만 한다. 끝난 뒤 참거짓과 객관식은 답을 옮기면 채점되고, 손으로 쓴 유도와 서술은 **채점 프롬프트를 복사해** 방문자가 쓰는 LLM에 답안 사진과 함께 넣는다. 프롬프트에 문제, 모범 답안, 채점 기준이 들어 있다.
+- 진도와 점수는 방문자의 브라우저(localStorage)에만 남는다. 키: `ai-study:<과목>:prep:concepts`, `ai-study:<과목>:paper:<set>`.
+- 개념의 표지는 세 가지다: 강조(수업에서 강조), 범위 밖(시험 범위 밖으로 언급), 건너뜀(슬라이드에는 있지만 수업에서 넘어감).
+- 예상 문제는 실제 기출이 아니다. 수업 내용으로 만든 것임을 화면에 적는다.
+
+### 내용을 고치는 법
+
+원본은 마크다운이고, 화면은 묶음 파일 하나를 읽는다.
+
+```
+notes/<과목>/_prep/concepts/<slug>.md          개념 노드 하나 (frontmatter: title, en, parent, order, summary, signal, related)
+notes/<과목>/_prep/questions/<set>/<이름>.md   문항 하나 (본문은 <section data-q="stem|ko|answer|rubric"> 네 구역)
+notes/<과목>/_prep/exams.json                  시험 표지(제목, 시간, 파트)
+notes/<과목>/prep.json                         화면이 읽는 묶음 (직접 고치지 않는다)
+```
+
+```bash
+node tools/build-prep.mjs sl --check   # 형식 검사만
+node tools/build-prep.mjs sl           # 검사하고 notes/sl/prep.json 을 다시 쓴다
+```
+
+묶음을 다시 만들었으면 `js/subjects/sl.js` 의 `prep.version` 을 올려야 방문자의 브라우저가 새 파일을 받는다.
+원본 폴더 이름이 밑줄로 시작하는 것은 GitHub Pages(Jekyll)가 frontmatter 있는 마크다운을 변환하거나 수식의 중괄호를 템플릿 문법으로 읽지 않게 하려는 것이다.
+
+### 과목을 더하는 법
+
+1. `js/subjects/<과목>.js` 의 `META` 에 `prep: { version, map, practice, exams: [...] }` 를 넣는다(`sl.js` 참고).
+2. `notes/<과목>/_prep/` 에 개념과 문항을 쓰고 `node tools/build-prep.mjs <과목>` 을 돌린다.
+3. 과목 화면(`subject.html`)에 "시험 준비" 묶음이 자동으로 나온다.
 
 ## 주차별 확인문제 추가 방법
 

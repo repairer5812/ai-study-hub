@@ -21,6 +21,36 @@ document.getElementById("hero-sub").textContent = meta.subtitle;
 document.title = `${meta.title} · AI Study Hub`;
 
 document.getElementById("link-review").href = `review.html?s=${subjectId}`;
+
+// 시험 준비 화면(개념 지도, 종이로 푸는 모의시험, 주제별 문제)이 있는 과목
+if (meta.prep) {
+  const rows = [];
+  if (meta.prep.map) rows.push({
+    href: `map.html?s=${subjectId}`, name: "개념 지도",
+    desc: "슬라이드 순서가 아니라 한 줄기에서 가지 치는 순서로 개념을 다시 세웁니다. 개념마다 확인 질문이 있습니다.",
+  });
+  (meta.prep.exams || []).forEach((e) => rows.push({
+    href: `paper.html?s=${subjectId}&set=${e.set}`, name: e.title,
+    desc: "실제 시험처럼 종이에 풀고, 끝나면 화면에서 채점합니다. 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 LLM으로 채점합니다.",
+    meta: `${e.minutes}분, ${e.points}점`,
+  }));
+  if (meta.prep.practice) rows.push({
+    href: `practice.html?s=${subjectId}`, name: "주제별 문제",
+    desc: "약한 가지만 골라 풉니다. 형식별로 걸러 볼 수 있습니다.",
+  });
+  document.getElementById("prep-list").innerHTML = rows.map((r) => `
+    <li><a href="${r.href}">
+      <strong>${r.name}</strong>
+      <span class="prep-desc">${r.desc}</span>
+      <span class="prep-meta">${r.meta || ""}</span>
+    </a></li>`).join("");
+  document.getElementById("prep-section").style.display = "";
+  // 주차별 복습 노트가 없는 과목은 복습 버튼을 감춘다(개념 지도가 아래 목록에 있다).
+  if (!meta.noteIndex.length) {
+    const wrap = document.getElementById("link-review").parentElement;
+    if (wrap) wrap.style.display = "none";
+  }
+}
 document.getElementById("link-wrong").href = `exam.html?s=${subjectId}&mode=wrong&all=1&review=1`;
 document.getElementById("link-ranking").href = `result.html?s=${subjectId}&view=ranking`;
 
@@ -35,7 +65,8 @@ const hasRegularExam = meta.hasExam && meta.sets && meta.sets.length;
 const hasWeeklyExam = Array.isArray(meta.weeklyExams) && meta.weeklyExams.length > 0;
 
 if (!hasRegularExam && !hasWeeklyExam) {
-  document.getElementById("no-exam-section").style.display = "block";
+  // 시험 준비 화면이 따로 있는 과목에는 "준비 중" 안내를 띄우지 않는다.
+  if (!meta.prep) document.getElementById("no-exam-section").style.display = "block";
 } else {
   if (hasRegularExam) {
     document.getElementById("exam-section").style.display = "";

@@ -1,0 +1,285 @@
+// 시험 준비 콘텐츠(개념 지도, 모의시험, 주제별 문제)를 검사하고 한 파일로 묶는다.
+//
+//   node tools/build-prep.mjs <과목 id>          검사하고 notes/<id>/prep.json 을 쓴다
+//   node tools/build-prep.mjs <과목 id> --check  검사만 한다
+//   node tools/build-prep.mjs <과목 id> --force  오류가 있어도 쓴다(화면 개발용)
+//
+// 원본(사람이 고치는 곳)
+//   notes/<id>/_prep/concepts/<slug>.md           개념 노드 하나
+//   notes/<id>/_prep/questions/<set>/<이름>.md    문항 하나 (set = midterm-1, practice ...)
+//   notes/<id>/_prep/exams.json                   시험 표지 정보(제목, 시간, 파트)
+// 결과(화면이 읽는 곳)
+//   notes/<id>/prep.json
+//
+// 이 사이트에는 빌드 단계가 없어서, 화면에서 잡히지 않는 실수를 여기서 잡는다.
+//   - 수식 안의 한글, 유도 옆 주석(&&), 금지 기호
+//   - HTML 태그와 마크다운 사이의 빈 줄, 빈칸 번호와 답의 짝, 없는 slug 참조
+//   - 실명과 발언 인용처럼 공개 사이트에 올리면 안 되는 표현
+import { readdirSync, readFileSync, writeFileSync, statSync, existsSync } from 'node:fs';
+import { join, relative, basename, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const subject = process.argv[2];
+const checkOnly = process.argv.includes('--check');
+const force = process.argv.includes('--force'); // 오류가 있어도 묶음 파일을 쓴다(화면 개발용)
+if (!subject) {
+  console.error('사용: node tools/build-prep.mjs <과목 id> [--check]');
+  process.exit(2);
+}
+const SRC = join(ROOT, 'notes', subject, '_prep');
+const OUT = join(ROOT, 'notes', subject, 'prep.json');
+
+const errors = [];
+const warns = [];
+const err = (f, m) => errors.push(`${f}: ${m}`);
+const warn = (f, m) => warns.push(`${f}: ${m}`);
+
+const walk = (dir) =>
+  !existsSync(dir)
+    ? []
+    : readdirSync(dir).flatMap((n) => {
+        const p = join(dir, n);
+        return statSync(p).isDirectory() ? walk(p) : p.endsWith('.md') ? [p] : [];
+      });
+
+function parse(file) {
+  const raw = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!m) return { data: null, body: raw };
+  const data = {};
+  for (const line of m[1].split('\n')) {
+    const kv = line.match(/^([A-Za-z_]+):\s*(.*)$/);
+    if (!kv) continue;
+    let v = kv[2].replace(/\s+#.*$/, '').trim();
+    if (/^\[.*\]$/.test(v)) v = v.slice(1, -1).split(',').map((s) => s.trim().replace(/^['"]|['"]$/g, '')).filter(Boolean);
+    else if (v === 'null' || v === '~' || v === '') v = null;
+    else if (/^-?\d+(\.\d+)?$/.test(v)) v = Number(v);
+    else v = v.replace(/^['"]|['"]$/g, '');
+    data[kv[1]] = v;
+  }
+  return { data, body: m[2].trim() };
+}
+
+/** 본문에서 수식 조각을 뽑는다. 블록은 `$$` 단독 줄 사이, 인라인은 한 줄 안의 $...$. */
+function mathOf(body) {
+  const blocks = [];
+  const prose = [];
+  const oneLine = [];
+  let open = false;
+  let buf = [];
+  body.split('\n').forEach((line, i) => {
+    const t = line.trim();
+    if (t === '$$') {
+      if (open) { blocks.push(buf.join('\n')); buf = []; }
+      open = !open;
+      return;
+    }
+    if (t.includes('$$')) oneLine.push(i + 1);
+    if (open) buf.push(line);
+    else prose.push(line);
+  });
+  const inline = [];
+  const text = prose.map((l) => l.replace(/\$([^$\n]+)\$/g, (_, x) => { inline.push(x); return ' '; })).join('\n');
+  return { blocks, inline, text, unclosed: open, oneLine };
+}
+
+const HANGUL = /[가-힣]/;
+const BANNED = [[/—/, 'em dash(—)'], [/·/, '가운뎃점(·)'], [/[「」『』]/, '낫표'], [/→/, '화살표(→)']];
+const LEAK = [
+  /교수님/, /교수가\s/, /교수는\s/, /시험에\s*(꼭\s*)?(낸다|나온다|나옵니다|내겠)/, /라고\s*(말씀|하셨)/,
+];
+// 실명, 연구실 이름, 과목 코드처럼 그 자체가 올라가면 안 되는 문자열은 이 저장소에 적지 않는다.
+// tools/leak.local.txt(커밋하지 않는 파일)에 한 줄에 하나씩 적어 두면 여기서 함께 검사한다.
+const LEAK_LOCAL = join(ROOT, 'tools', 'leak.local.txt');
+if (existsSync(LEAK_LOCAL)) {
+  readFileSync(LEAK_LOCAL, 'utf8').split(/\r?\n/).map((s) => s.trim()).filter((s) => s && !s.startsWith('#'))
+    .forEach((s) => LEAK.push(new RegExp(s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')));
+} else {
+  warn('tools/leak.local.txt', '실명 검사 목록이 없다. 일반 표현만 검사했다');
+}
+
+function checkCommon(f, body) {
+  const m = mathOf(body);
+  if (m.unclosed) err(f, '블록 수식 `$$` 의 짝이 맞지 않는다');
+  m.oneLine.forEach((n) => err(f, `${n}번째 줄: 블록 수식은 \`$$\` 만 있는 줄로 열고 닫는다`));
+  [...m.blocks, ...m.inline].forEach((x) => {
+    if (HANGUL.test(x)) err(f, `수식 안에 한글: ${x.trim().slice(0, 50)}`);
+  });
+  m.blocks.forEach((x) => {
+    if (/&&/.test(x)) err(f, `유도 옆 주석(&&)은 화면 폭을 넘는다: ${x.trim().slice(0, 40)}`);
+    x.split('\\\\').forEach((row) => {
+      if (row.replace(/\\[a-zA-Z]+|[{}_^&\s]/g, '').length > 95) warn(f, `수식 한 줄이 길다(휴대폰에서 가로 스크롤): ${row.trim().slice(0, 50)}`);
+    });
+  });
+  BANNED.forEach(([re, name]) => { if (re.test(m.text)) err(f, `금지 기호 ${name}`); });
+  LEAK.forEach((re) => { const hit = body.match(re); if (hit) err(f, `공개 사이트에 올리면 안 되는 표현: "${hit[0]}"`); });
+  const lines = body.split('\n');
+  lines.forEach((line, i) => {
+    const t = line.trim();
+    const next = (lines[i + 1] ?? '').trim();
+    if (/^<(div|section|details)\b[^>]*>$/.test(t) && next !== '' && !/^<summary/.test(next))
+      err(f, `${i + 1}번째 줄: 여는 태그 다음 줄은 비워야 마크다운이 그려진다`);
+    if (/^<\/(div|section|details)>$/.test(t) && (lines[i - 1] ?? '').trim() !== '')
+      err(f, `${i + 1}번째 줄: 닫는 태그 앞 줄은 비워야 한다`);
+    if (/^<summary>.*<\/summary>$/.test(t) && next !== '')
+      err(f, `${i + 1}번째 줄: <summary> 다음 줄은 비워야 한다`);
+  });
+}
+
+/* ---------- 개념 노드 ---------- */
+const SIGNALS = ['emph', 'out', 'skim', 'none'];
+const nodes = new Map();
+for (const file of walk(join(SRC, 'concepts'))) {
+  const f = relative(ROOT, file).replace(/\\/g, '/');
+  const { data, body } = parse(file);
+  const slug = basename(file, '.md');
+  if (!data) { err(f, 'frontmatter 가 없다'); continue; }
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) err(f, 'slug 는 영문 소문자 kebab-case');
+  for (const k of ['title', 'summary']) if (!data[k]) err(f, `frontmatter ${k} 누락`);
+  if (data.signal && !SIGNALS.includes(data.signal)) err(f, `signal 값 오류: ${data.signal}`);
+  if (typeof data.summary === 'string' && data.summary.includes('$')) err(f, 'summary 에는 수식을 넣지 않는다');
+  if (typeof data.title === 'string' && data.title.length > 34) warn(f, `제목이 길다(${data.title.length}자)`);
+  nodes.set(slug, { f, data, body });
+  checkCommon(f, body);
+}
+const roots = [...nodes].filter(([, n]) => !n.data.parent);
+if (nodes.size && roots.length !== 1) err(`notes/${subject}/_prep/concepts`, `뿌리는 하나여야 한다(지금 ${roots.length}개)`);
+const rootSlug = roots[0]?.[0];
+const branches = [...nodes].filter(([, n]) => n.data.parent === rootSlug).map(([s]) => s);
+const linkRe = new RegExp(`\\]\\(map\\.html\\?s=([a-z0-9]+)&n=([a-z0-9-]+)\\)`, 'g');
+for (const [, n] of nodes) {
+  if (n.data.parent && !nodes.has(n.data.parent)) err(n.f, `parent "${n.data.parent}" 가 없다`);
+  for (const r of n.data.related ?? []) if (!nodes.has(r)) err(n.f, `related "${r}" 가 없다`);
+  for (const m of n.body.matchAll(linkRe)) if (m[1] !== subject || !nodes.has(m[2])) err(n.f, `없는 노드로 가는 링크: ${m[2]}`);
+  if (/\]\(\/수업\//.test(n.body)) err(n.f, '노드 링크는 map.html?s=<과목>&n=<slug> 꼴로 쓴다');
+  const isLeaf = n.data.parent && n.data.parent !== rootSlug;
+  if (isLeaf) {
+    if (!/class="cal q"/.test(n.body)) warn(n.f, '확인 질문(cal q)이 없다');
+    if (/class="cal q"/.test(n.body) && !/<details class="solve">/.test(n.body)) err(n.f, '확인 질문의 답(details.solve)이 없다');
+  }
+  if ((n.body.match(/class="cal key"/g) ?? []).length > 1) warn(n.f, 'cal key 박스는 노드당 하나');
+}
+// 순환 확인
+for (const [slug] of nodes) {
+  const seen = new Set();
+  for (let s = slug; s; s = nodes.get(s)?.data.parent) {
+    if (seen.has(s)) { err(nodes.get(slug).f, '부모 관계가 순환한다'); break; }
+    seen.add(s);
+  }
+}
+
+/* ---------- 문항 ---------- */
+const PART_TYPE = { A: ['tf'], B: ['mc'], C: ['blank'], D: ['calc', 'essay'] };
+const SECTION = (name) => new RegExp(`<section data-q="${name}"[^>]*>([\\s\\S]*?)</section>`, 'g');
+const questions = [];
+const seen = new Map();
+for (const file of walk(join(SRC, 'questions'))) {
+  const f = relative(ROOT, file).replace(/\\/g, '/');
+  const { data, body } = parse(file);
+  if (!data) { err(f, 'frontmatter 가 없다'); continue; }
+  const set = basename(dirname(file));
+  for (const k of ['part', 'type', 'no', 'points', 'topic']) if (data[k] === undefined || data[k] === null) err(f, `frontmatter ${k} 누락`);
+  if (data.set && data.set !== set) err(f, `set 이 폴더와 다르다: ${data.set}`);
+  if (branches.length && !branches.includes(data.topic)) err(f, `topic "${data.topic}" 은 1단 가지가 아니다(${branches.join(', ')})`);
+  for (const c of data.concepts ?? []) if (!nodes.has(c)) err(f, `concepts "${c}" 가 없다`);
+  const key = set === 'practice' ? `practice/${data.topic}/${data.type}/${data.no}` : `${set}/${data.part}${data.no}`;
+  if (seen.has(key)) err(f, `번호 중복: ${key} (${seen.get(key)})`);
+  seen.set(key, f);
+  if (set !== 'practice') {
+    if (!PART_TYPE[data.part]?.includes(data.type)) err(f, `Part ${data.part} 에 ${data.type} 유형`);
+    if (basename(file, '.md') !== `${data.part}${data.no}`) warn(f, `파일 이름이 번호(${data.part}${data.no})와 다르다`);
+  }
+
+  const sec = {};
+  for (const name of ['stem', 'ko', 'answer', 'rubric']) {
+    const all = [...body.matchAll(SECTION(name))];
+    if (all.length > 1) err(f, `구역 ${name} 이 두 번 나온다`);
+    sec[name] = all[0]?.[1].trim() ?? '';
+  }
+  if (/<section/.test(body.replace(/<section data-q="[a-z]+"[^>]*>|<\/section>/g, ''))) err(f, '구역 안에 <section> 중첩');
+  const written = ['blank', 'calc', 'essay'].includes(data.type);
+  for (const name of ['stem', 'ko', 'answer']) if (!sec[name]) err(f, `구역 ${name} 이 없다`);
+  if (written && !sec.rubric) err(f, '손으로 쓰는 문항에는 rubric 구역이 필요하다');
+  if (!written && sec.rubric) warn(f, '참거짓과 객관식에는 rubric 이 필요 없다');
+  checkCommon(f, body);
+
+  const stemText = mathOf(sec.stem).text;
+  if (HANGUL.test(stemText)) err(f, 'stem(문제)은 영어로 쓴다');
+  if (data.type === 'tf') {
+    if (!['T', 'F'].includes(data.answer)) err(f, 'tf 의 answer 는 T 또는 F');
+    if (data.answer === 'T' && /^\s*\*\*거짓/.test(sec.answer)) err(f, 'answer 값(T)과 해설(거짓)이 어긋난다');
+    if (data.answer === 'F' && /^\s*\*\*참/.test(sec.answer)) err(f, 'answer 값(F)과 해설(참)이 어긋난다');
+    if (sec.answer && !/^\s*\*\*(참|거짓)\.\*\*/.test(sec.answer)) warn(f, 'answer 는 "**참.**" 또는 "**거짓.**" 으로 시작');
+  }
+  let choices = null;
+  if (data.type === 'mc') {
+    choices = [...sec.stem.matchAll(/^\s*[-*]\s*\(([a-e])\)/gm)].map((m) => m[1]);
+    if (choices.join('') !== 'abcd') err(f, `보기는 (a)~(d) 네 개여야 한다(지금 ${choices.join('') || '없음'})`);
+    if (!choices.includes(String(data.answer))) err(f, `mc 의 answer "${data.answer}" 가 보기에 없다`);
+    if (sec.answer && !new RegExp(`^\\s*\\*\\*\\(${data.answer}\\)`).test(sec.answer)) warn(f, `answer 해설은 "**(${data.answer}).**" 로 시작`);
+  }
+  if (written && data.answer) err(f, '손으로 쓰는 문항에는 frontmatter answer 를 쓰지 않는다');
+  if (data.type === 'blank') {
+    const nums = [...new Set([...sec.stem.matchAll(/\\blank\{(\d+)\}/g)].map((m) => Number(m[1])))].sort((a, b) => a - b);
+    if (!nums.length) err(f, '빈칸(\\blank{n})이 없다');
+    nums.forEach((n, i) => { if (n !== i + 1) err(f, `빈칸 번호가 1부터 이어지지 않는다: ${nums.join(',')}`); });
+    for (const n of nums) {
+      if (!new RegExp(`^\\s*-\\s*\\(${n}\\)`, 'm').test(sec.answer)) err(f, `answer 에 (${n}) 의 답이 없다`);
+      if (!new RegExp(`\\(${n}\\)`).test(sec.rubric)) err(f, `rubric 에 (${n}) 의 배점이 없다`);
+    }
+    if (nums.length < 4 || nums.length > 9) warn(f, `빈칸 수 ${nums.length}개(권장 5~8)`);
+    if (/\\blank/.test(sec.answer)) err(f, 'answer 에 빈칸이 남아 있다');
+  }
+  if (!written && /\\blank/.test(sec.stem)) err(f, '빈칸은 blank 유형에서만 쓴다');
+
+  questions.push({
+    id: `${set}/${basename(file, '.md')}`,
+    set, part: data.part, type: data.type, no: data.no, points: data.points,
+    topic: data.topic, concepts: data.concepts ?? [], answer: data.answer ?? null, title: data.title ?? null,
+    choices, stem: sec.stem, ko: sec.ko, solution: sec.answer, rubric: sec.rubric,
+  });
+}
+
+/* ---------- 시험 표지 ---------- */
+const examsFile = join(SRC, 'exams.json');
+const exams = existsSync(examsFile) ? JSON.parse(readFileSync(examsFile, 'utf8')) : [];
+for (const e of exams) {
+  const qs = questions.filter((q) => q.set === e.set);
+  const total = qs.reduce((s, q) => s + q.points, 0);
+  const by = (p) => qs.filter((q) => q.part === p);
+  console.log(`[${subject}] ${e.set}: ${qs.length}문항, ${total}점  (A ${by('A').length} / B ${by('B').length} / C ${by('C').length} / D ${by('D').length})`);
+  const tf = by('A').filter((q) => q.answer === 'T').length;
+  console.log(`  참거짓: 참 ${tf}, 거짓 ${by('A').length - tf}   객관식 정답: ${['a', 'b', 'c', 'd'].map((x) => `${x} ${by('B').filter((q) => q.answer === x).length}`).join(', ')}`);
+  const topics = {};
+  qs.forEach((q) => { topics[q.topic] = (topics[q.topic] ?? 0) + q.points; });
+  console.log('  주제별 배점: ' + Object.entries(topics).map(([k, v]) => `${k} ${v}`).join(', '));
+  if (e.points && total !== e.points) warn(`exams.json ${e.set}`, `배점 합 ${total}점이 표지의 ${e.points}점과 다르다`);
+}
+console.log(`[${subject}] 개념 ${nodes.size}개(가지 ${branches.length}), 문항 ${questions.length}개(연습 ${questions.filter((q) => q.set === 'practice').length})`);
+
+warns.forEach((w) => console.log('  경고  ' + w));
+errors.forEach((e) => console.log('  오류  ' + e));
+console.log(`\n오류 ${errors.length}건, 경고 ${warns.length}건`);
+if (errors.length && !force) process.exit(1);
+
+if (!checkOnly) {
+  const bundle = {
+    subject,
+    concepts: [...nodes].map(([slug, n]) => ({
+      slug,
+      title: n.data.title,
+      en: n.data.en ?? null,
+      parent: n.data.parent ?? null,
+      order: n.data.order ?? 0,
+      summary: n.data.summary,
+      signal: n.data.signal ?? 'none',
+      related: n.data.related ?? [],
+      body: n.body,
+    })),
+    exams,
+    questions,
+  };
+  writeFileSync(OUT, JSON.stringify(bundle), 'utf8');
+  console.log(`쓴 파일: ${relative(ROOT, OUT).replace(/\\/g, '/')} (${(JSON.stringify(bundle).length / 1024).toFixed(0)} KB)`);
+}
