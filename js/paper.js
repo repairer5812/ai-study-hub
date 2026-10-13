@@ -42,8 +42,6 @@ function pageHtml(exam, questions, parts, topicTitle) {
     <p class="pp-lead">실제 시험처럼 종이에 풉니다. 화면은 시험지와 시계 역할만 하고, 끝난 뒤에 채점을 돕습니다.</p>
     <dl class="pp-facts">
       <div><dt>시간</dt><dd>${exam.minutes}분</dd></div>
-      <div><dt>배점</dt><dd>${total}점</dd></div>
-      <div><dt>문항</dt><dd>${questions.length}문항</dd></div>
       <div class="pp-facts-wide"><dt>범위</dt><dd>${esc(exam.scope || "")}</dd></div>
     </dl>
 
@@ -179,9 +177,9 @@ function pageHtml(exam, questions, parts, topicTitle) {
 
   <article class="ex-paper" data-ex-paper lang="en">
     <header class="ex-paper-head">
-      <p class="ex-paper-course" lang="ko">${esc(meta.title)}</p>
       <h2>Mock Midterm Exam</h2>
       <dl class="ex-paper-meta">
+        <div><dt>Course</dt><dd lang="ko">${esc(meta.title)}</dd></div>
         <div><dt>Time</dt><dd>${exam.minutes} minutes</dd></div>
         <div><dt>Total</dt><dd>${total} points</dd></div>
         <div><dt>Name</dt><dd class="ex-paper-blank"></dd></div>

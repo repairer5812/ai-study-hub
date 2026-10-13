@@ -3,6 +3,11 @@
    주제별 문제(practice.html). body.prep 아래에서만 적용된다.
    색은 base 테마 토큰(--c-*)에서 받아 오고, 여기서만 필요한 것은 --p-* 로 두 테마 모두 정의한다.
    ═══════════════════════════════════════════════════════ */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap");
+
+/* 포커스 고리: base 의 --c-accent 는 dark 표면에서 거의 안 보여서 두 테마 모두 읽히는 토큰을 쓴다 */
+.prep :focus-visible { outline-color: var(--p-accent-ink); }
+.prep h1[tabindex="-1"]:focus { outline: none; }
 
 .prep {
   --p-ink: var(--c-heading);
@@ -193,11 +198,13 @@
 .ct-link[data-path] { color: var(--p-ink); font-weight: 700; }
 .ct-link[aria-current="page"] { background: var(--p-accent-tint); color: var(--p-accent-ink); font-weight: 700; }
 .ct-title { min-width: 0; word-break: keep-all; }
+.ct-link > .ct-sig { flex: none; margin-left: auto; }
+.ct-link > .ct-sig ~ .ct-count { margin-left: 0; }
 .ct-count { margin-left: auto; font-family: var(--p-mono); font-size: 11.5px; font-weight: 500; color: var(--p-muted); }
 
 /* 확인 표시: 안 본 개념은 빈 고리, 확인한 개념은 채운 원과 체크 */
 .ct-mark {
-  flex: none; align-self: center; width: 12px; height: 12px;
+  flex: none; align-self: flex-start; margin-top: 4.5px; width: 12px; height: 12px;
   border: 1.5px solid var(--p-line-strong); border-radius: 50%; background: var(--p-surface);
 }
 [data-done="true"] > a > .ct-mark { border-color: var(--p-ink); background: var(--p-ink) var(--p-check) center / 100% no-repeat; }
@@ -254,6 +261,7 @@
 .cs-path ol { display: flex; flex-wrap: wrap; font-size: 13.5px; font-weight: 600; }
 .cs-path li { color: var(--p-muted); }
 .cs-path li::after { content: "/"; margin: 0 8px; color: var(--p-line-strong); }
+.cs-path li:last-child::after { content: none; }
 .cs-path a { color: var(--p-muted); }
 .cs-path a:hover { color: var(--p-accent-ink); }
 
@@ -369,8 +377,7 @@
   box-shadow: var(--c-shadow); color: var(--p-ink);
 }
 .ex-paper-head { padding-bottom: clamp(14px, 2.4vw, 22px); }
-.ex-paper-course { font-size: 14px; font-weight: 700; color: var(--p-ink-2); }
-.ex-paper-head h2 { margin-top: 3px; font-size: clamp(24px, 3.2vw, 32px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; color: var(--p-ink); }
+.ex-paper-head h2 { font-size: clamp(24px, 3.2vw, 32px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; color: var(--p-ink); }
 .ex-paper-meta { display: flex; flex-wrap: wrap; gap: 8px 32px; margin-top: 16px; font-size: 14.5px; }
 .ex-paper-meta > div { display: flex; align-items: baseline; gap: 8px; }
 .ex-paper-meta dt { font-weight: 600; color: var(--p-muted); }
@@ -451,7 +458,7 @@
 }
 .ex-bubble:hover span { border-color: var(--p-ink); color: var(--p-ink); }
 .ex-bubble input:checked + span { background: var(--p-ink); border-color: var(--p-ink); color: var(--p-on-ink); }
-.ex-bubble input:focus-visible + span { outline: 2px solid var(--c-accent); outline-offset: 2px; }
+.ex-bubble input:focus-visible + span { outline: 2px solid var(--p-accent-ink); outline-offset: 2px; }
 .ex-card-verdict { font-size: 13.5px; font-weight: 700; white-space: nowrap; }
 .ex-card-row[data-verdict="right"] .ex-card-verdict { color: var(--p-ok); }
 .ex-card-row[data-verdict="wrong"] .ex-card-verdict { color: var(--p-accent-ink); }
@@ -482,7 +489,7 @@
   caret-color: var(--p-accent);
 }
 .ex-score input::placeholder { color: var(--p-muted); }
-.ex-score input:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 1px; }
+.ex-score input:focus-visible { outline: 2px solid var(--p-accent-ink); outline-offset: 1px; }
 .ex-score-max { font-family: var(--p-mono); font-size: 13.5px; color: var(--p-muted); }
 
 /* ───────── 결과 ───────── */
@@ -502,6 +509,7 @@
 .pr-filter { display: flex; flex-wrap: wrap; gap: 6px; }
 .pr-jump { display: flex; flex-wrap: wrap; gap: 5px 20px; margin-top: 16px; font-size: 14.5px; font-weight: 700; }
 .pr-jump a { color: var(--p-ink-2); white-space: nowrap; }
+.pr-jump a[hidden] { display: none; }
 .pr-jump a:hover { color: var(--p-accent-ink); }
 .pr-topic { scroll-margin-top: var(--p-top); }
 .pr-topic[hidden] { display: none; }

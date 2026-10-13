@@ -108,7 +108,12 @@ const mapBase = `map.html?s=${subjectId}`;
       const type = btn.getAttribute("data-pr-type");
       filter.querySelectorAll("[data-pr-type]").forEach((b) => b.setAttribute("aria-pressed", b === btn ? "true" : "false"));
       root.querySelectorAll(".pr-q").forEach((li) => { li.hidden = type !== "all" && li.getAttribute("data-type") !== type; });
-      root.querySelectorAll(".pr-topic").forEach((sec) => { sec.hidden = !sec.querySelector(".pr-q:not([hidden])"); });
+      root.querySelectorAll(".pr-topic").forEach((sec) => {
+        const shown = sec.querySelectorAll(".pr-q:not([hidden])").length;
+        sec.hidden = !shown;
+        const jump = root.querySelector(`.pr-jump a[href="#${sec.id}"]`);
+        if (jump) { jump.hidden = !shown; jump.querySelector(".pp-count").textContent = shown; }
+      });
     });
 
     const ko = root.querySelector("[data-pr-ko]");

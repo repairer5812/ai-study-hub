@@ -73,8 +73,9 @@ function overviewHtml(tree) {
         </p>
       </div>
       ${root.children.map((b) => {
+        const narrow = window.matchMedia("(max-width: 980px)").matches;
         const slugs = subtree(b).map((n) => n.slug);
-        return `<details class="ctb" open data-node="${b.slug}">
+        return `<details class="ctb" ${narrow ? "" : "open"} data-node="${b.slug}">
           <summary>
             <span class="ctb-chev" aria-hidden="true"></span>
             <span class="ctb-title">${esc(b.title)}</span>
@@ -127,7 +128,7 @@ function nodeHtml(tree, node) {
       </details>
 
       <header class="cs-head">
-        <h1>${esc(node.title)}</h1>
+        <h1 tabindex="-1">${esc(node.title)}</h1>
         ${node.en ? `<p class="cs-en" lang="en">${esc(node.en)}</p>` : ""}
         <p class="cs-summary">${esc(node.summary)}</p>
         ${SIGNAL[node.signal] ? `<p class="cs-signal">${sigChip(node.signal)} ${SIGNAL[node.signal].line}</p>` : ""}
@@ -196,7 +197,11 @@ function render(tree, slug, { scroll = true } = {}) {
   typeset(app);
   if (node) { state.last = node.slug; store.set(KEY, state); }
   paintProgress(tree);
-  if (scroll) window.scrollTo({ top: 0 });
+  if (scroll) {
+    window.scrollTo({ top: 0 });
+    const h1 = node && app.querySelector("h1[tabindex]");
+    if (h1) h1.focus({ preventScroll: true });
+  }
 }
 
 const sameMap = (a) => {
