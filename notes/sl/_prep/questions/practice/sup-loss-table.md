@@ -84,3 +84,26 @@ squared loss의 risk가 9.5에서 0.75로 가장 크게 바뀌었습니다(약 1
 - (c) 5점: 다시 계산한 값 zero-one $3/4$ (1점), squared $3/4$ (1점), absolute $3/4$ (1점). 가장 크게 바뀐 것이 squared loss의 risk라는 답(1점). 바뀌지 않은 것이 zero-one loss의 risk라는 답(1점). 바뀐 정도를 차이(8.75와 1.25)로 비교하든 비율로 비교하든 정답.
 
 </section>
+
+<section data-q="checks">
+
+@ (a) empirical risk
+- 0.5 | zero-one loss의 합 3이 맞다(평균만 썼어도 값이 맞으면 체크한다)
+- 0.5 | 거기에 더해 4로 나눈 평균 $3/4$ 을 썼다
+- 0.5 | squared loss의 합 38이 맞다(평균만 썼어도 값이 맞으면 체크한다)
+- 0.5 | 거기에 더해 4로 나눈 평균 $38/4 = 9.5$ 를 썼다
+- 0.5 | absolute loss의 합 8이 맞다(평균만 썼어도 값이 맞으면 체크한다)
+- 0.5 | 거기에 더해 4로 나눈 평균 $8/4 = 2$ 를 썼다
+
+@ (b) 넷째 표본의 비율
+- 1 | squared loss에서 $36/38$ 이 맞다($18/19$, 약 $0.947$, 약 95%도 된다)
+- 1 | absolute loss에서 $6/8$ 이 맞다($3/4$, $0.75$, 75%도 된다)
+
+@ (c) 레이블을 고친 뒤
+- 1 | 다시 계산한 zero-one loss의 risk $3/4$ 이 맞다
+- 1 | 다시 계산한 squared loss의 risk $3/4$ 이 맞다
+- 1 | 다시 계산한 absolute loss의 risk $3/4$ 이 맞다
+- 1 | 가장 크게 바뀐 것이 squared loss의 risk라고 썼다(차이로 비교하든 비율로 비교하든 된다)
+- 1 | 바뀌지 않은 것이 zero-one loss의 risk라고 썼다
+
+</section>

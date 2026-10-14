@@ -11,7 +11,7 @@
 export const META = {
   id: "sl",
   title: "통계적학습개론",
-  subtitle: "개념 지도, 종이로 푸는 중간고사 모의시험, 주제별 문제",
+  subtitle: "개념 지도, 중간고사 모의시험 2회분, 주제별 문제",
   emoji: "📈",
   color: "#8b1538",
   available: true,
@@ -21,11 +21,12 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261014c",
+    version: "20261014d",
     map: true,
     practice: true,
     exams: [
       { set: "midterm-1", title: "중간고사 모의시험 1회", minutes: 75, points: 100 },
+      { set: "midterm-2", title: "중간고사 모의시험 2회", minutes: 75, points: 100 },
     ],
     // 다른 곳에 있는 복습 자료. 시험 준비 목록 끝에 붙는다.
     links: [

@@ -85,3 +85,22 @@ $$
 - (c) 3점: 일반형 로그우도 $n\log\theta + (\sum_i x_i - n)\log(1-\theta)$ (1점), 미분해 0으로 둔 식(1점), 답 $\hat{\theta}_{\text{MLE}} = n / \sum_i x_i = 1/\bar{x}$ (1점). $n / \sum_i x_i$ 까지만 쓰고 $1/\bar{x}$ 로 바꾸지 않았어도 답 점수 인정. 유도 없이 $1/\bar{x}$ 만 쓰면 1점.
 
 </section>
+
+<section data-q="checks">
+
+@ (a) 우도
+- 1 | $\theta$ 의 지수 4가 맞다(곱을 정리하지 않았으면 $\theta$ 가 모두 네 번 곱해져 있다)
+- 1 | $(1-\theta)$ 의 지수 8이 맞다(곱을 정리하지 않았으면 $(1-\theta)$ 의 지수를 모두 더해 8이다)
+- 1 | 곱을 정리해 $\theta^{4}(1-\theta)^{8}$ 으로 썼다
+
+@ (b) 추정값
+- 1 | 로그우도 $4\log\theta + 8\log(1-\theta)$ 를 썼다(로그 없이 우도를 직접 미분해 옳게 풀었으면 이 항목도 체크한다)
+- 2 | 미분해 0으로 둔 식 $\frac{4}{\theta} - \frac{8}{1-\theta} = 0$ 을 썼다(둘째 항의 부호를 더하기로 쓰면 안 된다. 우도를 직접 미분해 0으로 둔 식도 된다)
+- 1 | 답 $1/3$ 을 얻었다
+
+@ (c) 일반형
+- 1 | 일반형 로그우도 $n\log\theta + (\sum_i x_i - n)\log(1-\theta)$ 를 썼다
+- 1 | 미분해 0으로 둔 식 $\frac{n}{\theta} - \frac{\sum_{i} x_i - n}{1-\theta} = 0$ 을 썼다
+- 1 | 답 $\hat{\theta}_{\text{MLE}} = n / \sum_i x_i = 1/\bar{x}$ 를 얻었다($n / \sum_i x_i$ 까지만 써도 된다)
+
+</section>

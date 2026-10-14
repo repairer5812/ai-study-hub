@@ -72,3 +72,23 @@ $-\frac{1}{8} \le -\frac{1}{2}$ 은 거짓입니다. 좌변이 우변보다 크�
 - (c) 2점: local minimum이 global minimum이라는 보장(1점), 그래서 gradient descent가 찾은 기울기 0인 점이 최적해라는 연결(1점). "나쁜 local minimum에 갇히지 않는다"는 표현도 연결 점수로 인정.
 
 </section>
+
+<section data-q="checks">
+
+@ (a) 절댓값 함수
+- 1 | 좌변을 $\lvert t x + (1 - t) y \rvert$ 로 썼다
+- 1 | 그것이 $\lvert t x \rvert + \lvert (1 - t) y \rvert$ 이하임을 보였다
+- 1 | 그 부등식의 이름 triangle inequality 또는 삼각부등식을 썼다
+- 1 | $t$ 와 $1 - t$ 가 0 이상이라 $t\lvert x \rvert + (1 - t)\lvert y \rvert$ 가 된다는 것을 썼다
+
+@ (b) 반례
+- 1 | 구체적인 $x$, $y$, $t$ 의 값을 들었다. 모범 답안($x = -1$, $y = 0$, $t = \frac{1}{2}$)과 달라도 된다. 든 값이 반례가 아니면 (b)에서는 이 항목만 체크한다
+- 1 | 든 값으로 좌변 $f(t x + (1 - t) y)$ 의 값을 옳게 썼다(모범 답안의 값이면 $-\frac{1}{8}$ 이다)
+- 1 | 든 값으로 우변 $t f(x) + (1 - t) f(y)$ 의 값을 옳게 썼다(모범 답안의 값이면 $-\frac{1}{2}$ 이다)
+- 1 | 좌변이 우변보다 커서 정의가 깨진다는 결론을 썼다
+
+@ (c) local minimum
+- 1 | local minimum이 global minimum이라는 보장을 썼다
+- 1 | 그래서 gradient descent가 찾은 기울기 0인 점이 최적해라는 연결을 썼다("나쁜 local minimum에 갇히지 않는다"는 표현도 된다)
+
+</section>

@@ -85,3 +85,24 @@ $$
 유도 없이 (b)의 최종 꼴만 옳게 쓰면 (b)는 2점.
 
 </section>
+
+<section data-q="checks">
+
+@ (a) 두 분포
+- 1 | 노이즈가 라플라스라고 썼다("Laplacian", "double exponential"도 된다)
+- 1 | prior가 라플라스라고 썼다("Laplacian", "double exponential"도 된다)
+
+@ (b) MAP의 목적함수
+- 1 | 조건부 밀도 $\frac{1}{2b}\exp(-\lvert\mathbf{w}^T\mathbf{x}_i - y_i\rvert / b)$ 를 썼다(절댓값 안의 순서가 반대여도 된다. 제곱을 쓰면 안 된다)
+- 1 | posterior를 우도와 prior의 곱 $P(D \mid \mathbf{w})\, P(\mathbf{w})$ 으로 바꿔 썼다(표본별 곱 $\prod_i P(y_i \mid \mathbf{x}_i ; \mathbf{w})\, P(\mathbf{w})$ 로 써도 된다)
+- 1 | 로그를 취해 로그우도의 합과 로그 prior의 합으로 썼다
+- 0.5 | 우도 쪽에서 나온 항 $-\lvert\mathbf{w}^T\mathbf{x}_i - y_i\rvert / b$ 가 맞다
+- 0.5 | prior 쪽에서 나온 항 $-\mathbf{w}^T\mathbf{w} / (2\tau^2)$ 가 맞다
+- 1 | $\mathbf{w}$ 와 무관한 상수를 버리고 부호를 뒤집어 $\arg\min$ 으로 바꿔 썼다(유도 없이 최종 꼴만 옳게 썼으면 (b)에서는 이 항목과 아래 항목만 체크한다)
+- 1 | 최종 꼴을 절댓값 손실의 합 또는 평균에 $\mathbf{w}^T\mathbf{w}$ (또는 $\lVert\mathbf{w}\rVert_2^2$)의 양의 상수배를 더한 것으로 썼다($\frac{1}{b}\sum_i \lvert\cdot\rvert + \frac{\mathbf{w}^T\mathbf{w}}{2\tau^2}$ 에서 멈춰도 된다. $\lambda$ 의 값은 구하지 않아도 된다)
+
+@ (c) 두 가정의 몫
+- 1 | 손실 항은 노이즈 가정에서 나온다고 썼다
+- 1 | 벌점 항은 prior에서 나온다고 썼다
+
+</section>

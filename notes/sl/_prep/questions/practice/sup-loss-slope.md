@@ -49,3 +49,26 @@ absolute loss의 기울기는 크기가 늘 1이고 부호만 알려 줍니다. 
 - 결론 2점: 큰 residual 하나가 학습을 좌우하는 쪽은 squared loss이고 absolute loss는 이상치에 덜 민감하다. 두 손실을 반대로 답하면 이 항목은 0점이고 요점 하나와 요점 둘도 각각 1점까지만 준다.
 
 </section>
+
+<section data-q="checks">
+
+@ squared loss의 미분
+- 1 | residual에 비례하는 꼴로 썼다($2r$, 계수 2가 빠진 $r$ 모두 된다)
+- 1 | 계수 2까지 맞는 $2r$ 를 썼다($2(h(\mathbf{x}) - y)$ 나 매개변수로 미분해 거기에 $h$ 의 미분을 곱한 꼴도 된다)
+
+@ absolute loss의 미분
+- 1 | 크기가 1인 꼴로 썼다($\text{sign}(r)$, 부호 구분 없는 1 모두 된다)
+- 1 | 부호 구분까지 맞는 $\text{sign}(r)$ 를 썼다("$r > 0$ 이면 $+1$, $r < 0$ 이면 $-1$", "$\pm 1$", $r / \lvert r \rvert$, 매개변수로 미분해 부호에 $h$ 의 미분을 곱한 꼴도 된다)
+
+@ 요점 하나
+- 1 | squared loss는 기울기의 크기가 residual의 크기에 비례해 커진다는 것을 썼다(residual이 큰 표본일수록 모형을 더 세게 끌어당긴다는 뜻이면 된다)
+- 1 | squared loss 쪽의 위 요점을 썼고 결론에서 두 손실을 반대로 답하지 않았다
+
+@ 요점 둘
+- 1 | absolute loss는 기울기의 크기가 residual의 크기와 무관하게 일정하다는 것을 썼다(방향 또는 부호만 알려 준다는 뜻이면 된다)
+- 1 | absolute loss 쪽의 위 요점을 썼고 결론에서 두 손실을 반대로 답하지 않았다
+
+@ 결론
+- 2 | 큰 residual 하나가 학습을 좌우하는 쪽은 squared loss이고 absolute loss는 이상치에 덜 민감하다고 썼다
+
+</section>

@@ -1,6 +1,8 @@
 // paper.js — 종이로 푸는 모의시험. paper.html?s=sl&set=midterm-1
 // 답은 종이에 쓴다. 화면은 시험지와 시계이고, 끝난 뒤에만 채점을 돕는다.
 // 빈칸 유도만은 빈칸을 눌러 다섯 보기 가운데 고를 수도 있다(js/blanks.js). 고른 답은 끝난 뒤 자동으로 채점해 점수 칸에 넣는다.
+// 채점된 뒤에는 틀린 빈칸만 다시 풀 수 있다. 다시 푼 결과는 점수에 넣지 않는다.
+// 계산과 서술은 모범 답안 아래의 체크리스트로 스스로 채점할 수도 있다(js/checks.js). 체크한 점수의 합이 점수 칸에 들어간다.
 //   표지 → 풀이(시계) → 채점(참거짓·객관식은 답을 옮겨 자동 채점, 손으로 쓴 답은 채점 프롬프트를 복사해 LLM 으로) → 결과
 // 상태는 이 브라우저(localStorage)에만 남는다. 랭킹에는 올리지 않는다(점수가 자기 채점이라서).
 
@@ -8,7 +10,8 @@ import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
 } from "./prep.js";
-import { attachBlanks, hasBlankChoices } from "./blanks.js";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js";
+import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -35,6 +38,8 @@ function pageHtml(exam, questions, parts, topicTitle) {
   const written = questions.filter(isWritten);
   const pts = (list) => list.reduce((s, q) => s + q.points, 0);
   const choicesOf = (q) => (q.type === "tf" ? ["T", "F"] : q.choices?.length ? q.choices : ["a", "b", "c", "d"]);
+  const pickable = questions.some(hasBlankChoices);
+  const checked = questions.filter(hasChecks);
 
   return `
 <div class="ex" data-phase="cover" data-ko="off" data-graded="false">
@@ -59,6 +64,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <ul>
           <li>종이와 펜을 준비합니다. 답은 종이에 씁니다.</li>
           <li>빈칸 유도는 종이에 쓰는 대신 빈칸을 눌러 보기 다섯 개 가운데 고를 수도 있습니다. 고른 답은 끝난 뒤 자동으로 채점됩니다.</li>
+          ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
           <li>끝나면 참거짓과 객관식은 답을 옮겨 바로 채점하고, 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
@@ -87,6 +93,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <nav class="ex-jump" aria-label="파트 이동">${parts.map((p) => `<a href="#part-${p.id}">${p.id}</a>`).join("")}</nav>
       <div class="ex-bar-actions">
         <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
+        ${pickable ? '<button type="button" class="ex-chip" data-ex-recall aria-pressed="false" title="빈칸을 눌러도 보기를 바로 보이지 않습니다">보기 늦게 보기</button>' : ""}
         <span class="ex-end">
           <button type="button" class="btn btn-secondary btn-sm" data-ex-end>시험 종료</button>
           <span class="ex-end-confirm" data-ex-end-confirm hidden>
@@ -141,10 +148,11 @@ function pageHtml(exam, questions, parts, topicTitle) {
       </p>
       <details class="ex-raw">
         <summary>복사가 안 되면 여기서 직접 선택해 복사</summary>
-        <textarea readonly rows="10" data-ex-raw aria-label="채점 프롬프트 전문"></textarea>
+        <textarea readonly rows="10" name="grading-prompt" data-ex-raw aria-label="채점 프롬프트 전문"></textarea>
       </details>
+      ${checked.length ? `<p class="ex-step-note">LLM 없이 스스로 채점할 수도 있습니다. ${checked.map((q) => `<a class="ex-link" href="#q-${labelOf(q)}">${labelOf(q)}</a>`).join(", ")}번은 시험지의 모범 답안 아래에 체크리스트가 있고, 내 답안에 있는 항목을 체크하면 아래 칸이 체크한 점수의 합으로 바뀝니다.</p>` : ""}
       <p class="ex-step-note" data-ex-blank-note hidden>빈칸을 화면에서 고른 문항은 맞은 빈칸의 배점을 아래 칸에 넣어 두었습니다. 종이에 쓴 답으로 채점했다면 그 점수로 고쳐 적으세요.</p>
-      <form class="ex-scores" data-ex-scores novalidate>
+      <form class="ex-scores" id="ex-scores" data-ex-scores novalidate>
         ${written.map((q) => `
         <label class="ex-score">
           <span class="ex-score-no">${labelOf(q)}</span>
@@ -173,6 +181,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <ol class="ex-weak" data-ex-weak></ol>
       </div>
     </div>
+    <p class="ex-miss" data-ex-miss hidden></p>
     <p class="pp-actions">
       <button type="button" class="btn btn-secondary" data-ex-reset>처음부터 다시 풀기</button>
       ${meta.prep.practice ? `<a class="btn btn-secondary" href="practice.html?s=${subjectId}">주제별 문제</a>` : ""}
@@ -222,9 +231,20 @@ function wire(root, exam, questions, topicTitle) {
   const $ = (sel) => root.querySelector(sel);
   const $$ = (sel) => Array.from(root.querySelectorAll(sel));
   const KEY = `ai-study:${subjectId}:paper:${exam.set}`;
-  const blank = () => ({ phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {}, blanks: {}, ko: false, total: null });
+  // blanks: 처음 고른 빈칸의 답(점수에 들어간다). retry: 틀린 빈칸을 다시 푼 기록(점수에 들어가지 않는다).
+  // checks: 체크리스트에서 체크한 항목. draft: 점수 칸에 적혀 있는 값(결과 보기를 누르기 전에도 남긴다).
+  const blank = () => ({
+    phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {},
+    blanks: {}, retry: {}, checks: {}, draft: {}, ko: false, total: null,
+  });
   let state = Object.assign(blank(), store.get(KEY, {}));
+  ["answers", "scores", "blanks", "retry", "checks", "draft"].forEach((k) => {
+    if (!state[k] || typeof state[k] !== "object") state[k] = {};
+  });
   const save = () => store.set(KEY, state);
+  const RECALL_KEY = `ai-study:${subjectId}:prep:recall`;
+  let recall = store.get(RECALL_KEY, false) === true;
+  let setRecall = () => {};
 
   const total = questions.reduce((s, q) => s + q.points, 0);
   const autoQs = questions.filter((q) => !isWritten(q));
@@ -245,13 +265,21 @@ function wire(root, exam, questions, topicTitle) {
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* 빈칸 유도: 빈칸을 눌러 보기에서 고르기 */
+  const blankQs = questions.filter(hasBlankChoices);
   const blankCtrl = new Map();
-  questions.filter(hasBlankChoices).forEach((q) => {
+  blankQs.forEach((q) => {
     const label = labelOf(q);
     state.blanks[label] = state.blanks[label] || {};
     blankCtrl.set(label, attachBlanks(root.querySelector(`[data-q-item="${label}"]`), q, {
       picks: state.blanks[label],
+      retry: state.retry[label] || null,
       onChange: () => save(),
+      // 다시 푼 기록은 처음 고른 답(state.blanks)과 따로 남긴다. 점수는 건드리지 않는다.
+      onRetry: (r) => { if (r) state.retry[label] = r; else delete state.retry[label]; save(); },
+      recall,
+      onRecall: (on) => setRecall(on),
+      concepts: q.concepts.map((slug) => ({ href: `${mapBase}&n=${slug}`, title: topicTitle(slug) })),
+      retryNote: "다시 푼 결과는 점수에 넣지 않습니다. 처음 고른 답의 점수가 남습니다.",
     }));
   });
   // 단계가 바뀌거나 새로 시작할 때: 답 묶음을 다시 잇고, 채점 단계면 맞고 틀림을 보이고 점수 칸을 채운다.
@@ -260,7 +288,7 @@ function wire(root, exam, questions, topicTitle) {
     let filled = false;
     blankCtrl.forEach((ctrl, label) => {
       state.blanks[label] = state.blanks[label] || {};
-      ctrl.setPicks(state.blanks[label]);
+      ctrl.setPicks(state.blanks[label], state.retry[label] || null);
       ctrl.setGraded(done);
       const s = ctrl.score();
       const verdict = root.querySelector(`[data-q-item="${label}"] [data-q-verdict]`);
@@ -274,6 +302,34 @@ function wire(root, exam, questions, topicTitle) {
     if (note) note.hidden = !filled;
   };
 
+  /* 계산과 서술: 모범 답안 아래의 체크리스트로 스스로 채점하기 */
+  const checkCtrl = new Map();
+  questions.filter(hasChecks).forEach((q) => {
+    const label = labelOf(q);
+    state.checks[label] = state.checks[label] || {};
+    const item = root.querySelector(`[data-q-item="${label}"]`);
+    checkCtrl.set(label, attachChecks(item.querySelector(".ex-solution"), q, {
+      marks: state.checks[label],
+      noteHtml: `체크한 점수의 합이 ${label} 점수 칸에 들어갑니다. 점수 칸에서 직접 고칠 수도 있습니다. <a class="ex-link" href="#ex-scores">점수 칸으로 가기</a>`,
+      onChange: (s) => {
+        const got = Math.min(s.got, q.points);
+        const input = scoresForm?.querySelector(`input[name="score-${label}"]`);
+        if (input) input.value = got;
+        state.draft[label] = String(got);
+        // 결과를 본 뒤에 체크를 고치면 결과의 합계도 함께 고친다.
+        if (state.phase === "result") { state.scores[label] = got; paintResult(); }
+        save();
+      },
+    }));
+  });
+  // 새로 시작하면 체크 묶음도 새 상태에 다시 잇는다.
+  const syncChecks = () => {
+    checkCtrl.forEach((ctrl, label) => {
+      state.checks[label] = state.checks[label] || {};
+      ctrl.setMarks(state.checks[label]);
+    });
+  };
+
   /* 단계 */
   const setPhase = (phase, scroll) => {
     state.phase = phase;
@@ -284,6 +340,7 @@ function wire(root, exam, questions, topicTitle) {
     result.hidden = phase !== "result";
     $$("[data-ex-q-foot]").forEach((el) => { el.hidden = !(phase === "grading" || phase === "result"); });
     syncBlanks();
+    syncChecks();
     if (!scroll) return;
     const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
     requestAnimationFrame(() => {
@@ -323,6 +380,21 @@ function wire(root, exam, questions, topicTitle) {
     koBtn.setAttribute("aria-pressed", state.ko ? "true" : "false");
   };
   koBtn.addEventListener("click", () => { state.ko = !state.ko; save(); paintKo(); });
+
+  /* 보기 늦게 보기: 빈칸을 눌러도 보기를 바로 보이지 않는다. 주제별 문제와 같은 설정을 쓴다. */
+  const recallBtn = $("[data-ex-recall]");
+  const paintRecall = () => { if (recallBtn) recallBtn.setAttribute("aria-pressed", recall ? "true" : "false"); };
+  // 위쪽 띠의 단추와 보기 상자 안의 단추(채점 뒤 다시 풀 때)가 같은 값을 쓴다.
+  setRecall = (on) => {
+    recall = !!on;
+    store.set(RECALL_KEY, recall);
+    blankCtrl.forEach((ctrl) => ctrl.setRecall?.(recall)); // 예전 blanks.js 가 캐시에 남아 있어도 죽지 않게
+    paintRecall();
+  };
+  if (recallBtn) recallBtn.addEventListener("click", () => {
+    setRecall(!recall);
+    paintRecall();
+  });
 
   /* 시작과 종료 */
   $("[data-ex-print]").addEventListener("click", () => window.print());
@@ -416,6 +488,13 @@ function wire(root, exam, questions, topicTitle) {
 
   /* 손으로 쓴 문항의 점수 */
   if (scoresForm) {
+    // 적어 둔 점수는 결과 보기를 누르기 전에도 남긴다(새로 고쳐도 체크리스트의 합계와 어긋나지 않게).
+    scoresForm.addEventListener("input", (e) => {
+      const input = e.target.closest('input[name^="score-"]');
+      if (!input) return;
+      state.draft[input.name.slice("score-".length)] = input.value;
+      save();
+    });
     scoresForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const msg = $("[data-ex-scores-msg]");
@@ -463,6 +542,16 @@ function wire(root, exam, questions, topicTitle) {
         ${t.ratio < 0.6 ? '<span class="ct-sig ct-sig-emph">먼저 보기</span>' : ""}
         <span class="ex-weak-score">${num(t.got)} / ${t.max}</span>
       </li>`).join("");
+    // 화면에서 고른 빈칸 가운데 틀리거나 비운 것이 있는 문항으로 바로 간다(거기서 틀린 빈칸만 다시 풀 수 있다).
+    const missed = blankQs
+      .map((q) => ({ label: labelOf(q), s: scoreBlanks(q, state.blanks[labelOf(q)] || {}) }))
+      .filter(({ s }) => s.picked > 0 && s.right < s.total);
+    const miss = $("[data-ex-miss]");
+    miss.hidden = !missed.length;
+    miss.innerHTML = !missed.length ? "" : `
+      <strong>빈칸이 틀린 문항</strong>
+      <span>${missed.map(({ label, s }) => `<a class="ex-link" href="#q-${label}">${label}번 ${s.total - s.right}개</a>`).join(", ")}</span>
+      <span>문항으로 가면 틀린 빈칸만 다시 풀 수 있습니다.</span>`;
   };
   const finish = () => { paintResult(); setPhase("result", "result"); paintResume(); };
 
@@ -487,11 +576,14 @@ function wire(root, exam, questions, topicTitle) {
     const input = card.querySelector(`input[name="ans-${label}"][value="${value}"]`);
     if (input) input.checked = true;
   });
-  if (scoresForm) Object.entries(state.scores).forEach(([label, value]) => {
+  if (scoresForm) writtenQs.forEach((q) => {
+    const label = labelOf(q);
+    const value = state.draft[label] ?? state.scores[label]; // 적다 만 값이 있으면 그것부터
     const input = scoresForm.querySelector(`input[name="score-${label}"]`);
-    if (input) input.value = value;
+    if (input && value !== undefined && value !== null) input.value = value;
   });
   paintKo();
+  paintRecall();
   paintAuto();
   paintUsed();
   if (state.phase === "result") paintResult();

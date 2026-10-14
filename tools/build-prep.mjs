@@ -15,6 +15,11 @@
 //   = $정답$
 //   - $틀린 보기$      (네 줄)
 // 보기는 수식 하나($...$)로 쓰고, 낱말은 $\text{...}$ 로 쓴다. 보기의 순서는 여기서 섞어 고정한다.
+//
+// 계산과 서술(type: calc, essay) 문항에는 <section data-q="checks"> 구역을 둘 수 있다. 화면에서 스스로
+// 채점하는 체크리스트다. 묶음의 머리줄과 항목을 다음처럼 쓴다. 항목 점수의 합은 문항 배점과 같아야 한다.
+//   @ 묶음 라벨
+//   - 점수 | 답안에 있으면 체크할 문장      (점수는 0.5 단위의 양수, 수식은 $...$)
 // 결과(화면이 읽는 곳)
 //   notes/<id>/prep.json
 //
@@ -226,11 +231,37 @@ function parseOptions(f, src, nums, points, id) {
   return out;
 }
 
+/* ---------- 스스로 채점하는 체크리스트 ---------- */
+// 묶음(@ 라벨) 아래에 항목(- 점수 | 문장)을 둔다. 화면은 체크한 항목의 점수를 더해 보여 준다.
+function parseChecks(f, src, points) {
+  const out = [];
+  let cur = null;
+  for (const raw of src.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const head = line.match(/^@\s+(\S.*)$/);
+    if (head) { cur = { label: head[1].trim(), items: [] }; out.push(cur); continue; }
+    const item = line.match(/^-\s+(\d+(?:\.\d+)?)\s*\|\s*(\S.*)$/);
+    if (!item || !cur) { err(f, `체크리스트(checks) 구역에서 읽지 못한 줄: ${line.slice(0, 50)}`); continue; }
+    const pts = Number(item[1]);
+    if (!(pts > 0) || !Number.isInteger(pts * 2)) err(f, `체크리스트 항목의 점수는 0.5 단위의 양수여야 한다: ${line.slice(0, 40)}`);
+    if ((item[2].match(/\$/g) ?? []).length % 2) err(f, `체크리스트 항목에서 수식 기호 $ 의 짝이 맞지 않는다: ${item[2].slice(0, 40)}`);
+    cur.items.push({ points: pts, text: item[2].trim() });
+  }
+  if (!out.length) err(f, '체크리스트(checks)에 묶음(@ 라벨)이 없다');
+  for (const g of out) if (!g.items.length) err(f, `체크리스트 묶음 "${g.label}" 에 항목이 없다`);
+  const sum = out.reduce((a, g) => a + g.items.reduce((b, it) => b + it.points, 0), 0);
+  if (out.length && sum !== points) err(f, `체크리스트 항목 점수의 합 ${sum}점이 문항 배점 ${points}점과 다르다`);
+  return out;
+}
+
 /* ---------- 문항 ---------- */
 const PART_TYPE = { A: ['tf'], B: ['mc'], C: ['blank'], D: ['calc', 'essay'] };
 const SECTION = (name) => new RegExp(`<section data-q="${name}"[^>]*>([\\s\\S]*?)</section>`, 'g');
 const questions = [];
 const seen = new Map();
+let selfGradedCount = 0;
+let noChecks = 0;
 for (const file of walk(join(SRC, 'questions'))) {
   const f = relative(ROOT, file).replace(/\\/g, '/');
   const { data, body } = parse(file);
@@ -249,9 +280,11 @@ for (const file of walk(join(SRC, 'questions'))) {
   }
 
   const sec = {};
-  for (const name of ['stem', 'ko', 'answer', 'rubric', 'options']) {
+  const has = {};
+  for (const name of ['stem', 'ko', 'answer', 'rubric', 'options', 'checks']) {
     const all = [...body.matchAll(SECTION(name))];
     if (all.length > 1) err(f, `구역 ${name} 이 두 번 나온다`);
+    has[name] = all.length > 0;
     sec[name] = all[0]?.[1].trim() ?? '';
   }
   if (/<section/.test(body.replace(/<section data-q="[a-z]+"[^>]*>|<\/section>/g, ''))) err(f, '구역 안에 <section> 중첩');
@@ -293,12 +326,18 @@ for (const file of walk(join(SRC, 'questions'))) {
     err(f, '보기(options) 구역은 blank 유형에서만 쓴다');
   }
   if (!written && /\\blank/.test(sec.stem)) err(f, '빈칸은 blank 유형에서만 쓴다');
+  let checks = null;
+  const selfGraded = data.type === 'calc' || data.type === 'essay';
+  if (has.checks && !selfGraded) err(f, '체크리스트(checks) 구역은 calc 와 essay 유형에서만 쓴다');
+  else if (has.checks) checks = parseChecks(f, sec.checks, data.points);
+  else if (selfGraded) { warn(f, '체크리스트(checks) 구역이 없다. 화면에서 스스로 채점할 수 없다'); noChecks += 1; }
+  if (selfGraded) selfGradedCount += 1;
 
   questions.push({
     id: `${set}/${basename(file, '.md')}`,
     set, part: data.part, type: data.type, no: data.no, points: data.points,
     topic: data.topic, concepts: data.concepts ?? [], answer: data.answer ?? null, title: data.title ?? null,
-    choices, blanks, stem: sec.stem, ko: sec.ko, solution: sec.answer, rubric: sec.rubric,
+    choices, blanks, checks, stem: sec.stem, ko: sec.ko, solution: sec.answer, rubric: sec.rubric,
   });
 }
 
@@ -319,6 +358,7 @@ for (const e of exams) {
 }
 console.log(`[${subject}] 개념 ${nodes.size}개(가지 ${branches.length}), 문항 ${questions.length}개(연습 ${questions.filter((q) => q.set === 'practice').length})`);
 if (okPos.some(Boolean)) console.log(`[${subject}] 빈칸 ${okPos.reduce((a, b) => a + b, 0)}개의 보기에서 정답 자리: ${okPos.map((n, i) => `${i + 1}번째 ${n}`).join(', ')}`);
+if (selfGradedCount) console.log(`[${subject}] 계산과 서술 ${selfGradedCount}문항 가운데 체크리스트가 있는 문항 ${selfGradedCount - noChecks}개`);
 
 warns.forEach((w) => console.log('  경고  ' + w));
 errors.forEach((e) => console.log('  오류  ' + e));

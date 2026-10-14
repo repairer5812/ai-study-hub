@@ -1,12 +1,14 @@
 // practice.js — 주제별 문제. practice.html?s=sl
 // 모의시험에서 약했던 가지만 골라 푼다. 종이에 먼저 풀고 정답을 펴 본다.
 // 빈칸 유도는 빈칸을 눌러 다섯 보기 가운데 고를 수도 있고(js/blanks.js), 정답을 펴면 맞고 틀림이 보인다.
+// 틀린 빈칸만 다시 풀 수 있고, 계산과 서술은 정답을 편 안의 체크리스트로 스스로 채점한다(js/checks.js).
 
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb, store,
 } from "./prep.js";
 import { attachBlanks, hasBlankChoices } from "./blanks.js";
+import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -37,6 +39,8 @@ const mapBase = `map.html?s=${subjectId}`;
       }));
     const types = TYPE_ORDER.filter((t) => questions.some((q) => q.type === t));
     const firstExam = meta.prep.exams?.[0];
+    const pickable = questions.some(hasBlankChoices);
+    const conceptTitle = (slug) => tree.bySlug.get(slug)?.title ?? slug;
 
     document.title = `주제별 문제 · ${meta.title} · AI Study Hub`;
     app.innerHTML = `
@@ -44,7 +48,7 @@ const mapBase = `map.html?s=${subjectId}`;
   <header class="pp-head">
     <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
     <h1 class="pp-title">주제별 문제</h1>
-    <p class="pp-lead">모의시험에서 약했던 가지만 골라 풉니다. 종이에 먼저 풀고 정답을 펴 보세요. 빈칸 유도는 빈칸을 눌러 보기에서 고를 수도 있습니다.</p>
+    <p class="pp-lead">모의시험에서 약했던 가지만 골라 풉니다. 종이에 먼저 풀고 정답을 펴 보세요. 빈칸 유도는 빈칸을 눌러 보기에서 고를 수도 있습니다.${questions.some(hasChecks) ? " 계산과 서술은 정답을 편 뒤 체크리스트로 스스로 채점할 수 있습니다." : ""}</p>
     <dl class="pp-facts">
       <div><dt>문항</dt><dd>${questions.length}문항</dd></div>
       <div><dt>주제</dt><dd>${topics.length}개</dd></div>
@@ -55,7 +59,10 @@ const mapBase = `map.html?s=${subjectId}`;
         <button type="button" class="ex-chip" data-pr-type="all" aria-pressed="true">전체</button>
         ${types.map((t) => `<button type="button" class="ex-chip" data-pr-type="${t}" aria-pressed="false">${TYPE_KO[t]}</button>`).join("")}
       </div>
-      <button type="button" class="ex-chip" data-pr-ko aria-pressed="false">한국어 풀이</button>
+      <div class="pr-modes" role="group" aria-label="보기 설정">
+        <button type="button" class="ex-chip" data-pr-ko aria-pressed="false">한국어 풀이</button>
+        ${pickable ? '<button type="button" class="ex-chip" data-pr-recall aria-pressed="false" title="빈칸을 눌러도 보기를 바로 보이지 않습니다">보기 늦게 보기</button>' : ""}
+      </div>
     </div>
     <nav class="pr-jump" aria-label="주제 이동">
       ${topics.map((t) => `<a href="#${t.slug}">${esc(t.title)} <span class="pp-count">${t.items.length}</span></a>`).join("")}
@@ -104,13 +111,23 @@ const mapBase = `map.html?s=${subjectId}`;
     const byId = new Map(questions.map((q) => [q.id, q]));
 
     // 빈칸 유도: 빈칸을 눌러 보기에서 고르고, 정답을 펴면 채점한다. 고른 답은 이 브라우저에 남는다.
+    // 틀린 빈칸만 다시 푼 기록은 남기지 않는다(정답을 접으면 처음 상태로 돌아가 다시 고칠 수 있다).
     const BKEY = `ai-study:${subjectId}:practice:blanks`;
+    const RECALL_KEY = `ai-study:${subjectId}:prep:recall`;
     const allPicks = store.get(BKEY, {});
+    let recall = store.get(RECALL_KEY, false) === true;
+    const blankCtrls = [];
     root.querySelectorAll(".pr-q[data-q-id]").forEach((item) => {
       const q = byId.get(item.getAttribute("data-q-id"));
       if (!q || !hasBlankChoices(q)) return;
       allPicks[q.id] = allPicks[q.id] || {};
-      const ctrl = attachBlanks(item, q, { picks: allPicks[q.id], onChange: () => store.set(BKEY, allPicks) });
+      const ctrl = attachBlanks(item, q, {
+        picks: allPicks[q.id],
+        onChange: () => store.set(BKEY, allPicks),
+        recall,
+        concepts: q.concepts.map((slug) => ({ href: `${mapBase}&n=${slug}`, title: conceptTitle(slug) })),
+      });
+      blankCtrls.push(ctrl);
       const reveal = item.querySelector(".pr-reveal");
       const scoreEl = item.querySelector("[data-bk-score]");
       reveal.addEventListener("toggle", () => {
@@ -118,6 +135,19 @@ const mapBase = `map.html?s=${subjectId}`;
         const s = ctrl.score();
         scoreEl.hidden = !(reveal.open && s.picked);
         scoreEl.textContent = `고른 빈칸 ${s.total}개 가운데 ${s.right}개 맞음, ${s.got} / ${s.max}점`;
+      });
+    });
+
+    // 계산과 서술: 정답을 편 안에서 체크리스트로 스스로 채점한다. 체크한 항목은 이 브라우저에 남는다.
+    const CKEY = `ai-study:${subjectId}:practice:checks`;
+    const allChecks = store.get(CKEY, {});
+    root.querySelectorAll(".pr-q[data-q-id]").forEach((item) => {
+      const q = byId.get(item.getAttribute("data-q-id"));
+      if (!q || !hasChecks(q)) return;
+      allChecks[q.id] = allChecks[q.id] || {};
+      attachChecks(item.querySelector(".pr-reveal .ex-solution"), q, {
+        marks: allChecks[q.id],
+        onChange: () => store.set(CKEY, allChecks),
       });
     });
 
@@ -143,6 +173,18 @@ const mapBase = `map.html?s=${subjectId}`;
       root.setAttribute("data-ko", on ? "on" : "off");
       ko.setAttribute("aria-pressed", on ? "true" : "false");
     });
+
+    // 보기 늦게 보기: 빈칸을 눌러도 보기를 바로 보이지 않는다. 모의시험과 같은 설정을 쓴다.
+    const recallBtn = root.querySelector("[data-pr-recall]");
+    if (recallBtn) {
+      recallBtn.setAttribute("aria-pressed", recall ? "true" : "false");
+      recallBtn.addEventListener("click", () => {
+        recall = !recall;
+        store.set(RECALL_KEY, recall);
+        blankCtrls.forEach((ctrl) => ctrl.setRecall?.(recall)); // 예전 blanks.js 가 캐시에 남아 있어도 죽지 않게
+        recallBtn.setAttribute("aria-pressed", recall ? "true" : "false");
+      });
+    }
 
     root.addEventListener("click", async (e) => {
       const btn = e.target.closest("[data-pr-copy]");
