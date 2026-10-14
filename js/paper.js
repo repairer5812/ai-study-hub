@@ -1,5 +1,6 @@
 // paper.js — 종이로 푸는 모의시험. paper.html?s=sl&set=midterm-1
 // 답은 종이에 쓴다. 화면은 시험지와 시계이고, 끝난 뒤에만 채점을 돕는다.
+// 빈칸 유도만은 빈칸을 눌러 다섯 보기 가운데 고를 수도 있다(js/blanks.js). 고른 답은 끝난 뒤 자동으로 채점해 점수 칸에 넣는다.
 //   표지 → 풀이(시계) → 채점(참거짓·객관식은 답을 옮겨 자동 채점, 손으로 쓴 답은 채점 프롬프트를 복사해 LLM 으로) → 결과
 // 상태는 이 브라우저(localStorage)에만 남는다. 랭킹에는 올리지 않는다(점수가 자기 채점이라서).
 
@@ -7,6 +8,7 @@ import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
 } from "./prep.js";
+import { attachBlanks, hasBlankChoices } from "./blanks.js";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -55,7 +57,8 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <div class="ex-rules">
         <h2>시작하기 전에</h2>
         <ul>
-          <li>종이와 펜을 준비합니다. 답은 모두 종이에 씁니다.</li>
+          <li>종이와 펜을 준비합니다. 답은 종이에 씁니다.</li>
+          <li>빈칸 유도는 종이에 쓰는 대신 빈칸을 눌러 보기 다섯 개 가운데 고를 수도 있습니다. 고른 답은 끝난 뒤 자동으로 채점됩니다.</li>
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
           <li>끝나면 참거짓과 객관식은 답을 옮겨 바로 채점하고, 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
@@ -140,6 +143,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <summary>복사가 안 되면 여기서 직접 선택해 복사</summary>
         <textarea readonly rows="10" data-ex-raw aria-label="채점 프롬프트 전문"></textarea>
       </details>
+      <p class="ex-step-note" data-ex-blank-note hidden>빈칸을 화면에서 고른 문항은 맞은 빈칸의 배점을 아래 칸에 넣어 두었습니다. 종이에 쓴 답으로 채점했다면 그 점수로 고쳐 적으세요.</p>
       <form class="ex-scores" data-ex-scores novalidate>
         ${written.map((q) => `
         <label class="ex-score">
@@ -184,7 +188,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <div><dt>Total</dt><dd>${total} points</dd></div>
         <div><dt>Name</dt><dd class="ex-paper-blank"></dd></div>
       </dl>
-      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write all answers on paper.</p>
+      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write your answers on paper. In Part C you may instead click a blank and choose from five options.</p>
     </header>
     ${parts.map((p) => `
     <section class="ex-part" id="part-${p.id}">
@@ -218,7 +222,7 @@ function wire(root, exam, questions, topicTitle) {
   const $ = (sel) => root.querySelector(sel);
   const $$ = (sel) => Array.from(root.querySelectorAll(sel));
   const KEY = `ai-study:${subjectId}:paper:${exam.set}`;
-  const blank = () => ({ phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {}, ko: false, total: null });
+  const blank = () => ({ phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {}, blanks: {}, ko: false, total: null });
   let state = Object.assign(blank(), store.get(KEY, {}));
   const save = () => store.set(KEY, state);
 
@@ -240,6 +244,36 @@ function wire(root, exam, questions, topicTitle) {
   const limit = exam.minutes * 60;
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* 빈칸 유도: 빈칸을 눌러 보기에서 고르기 */
+  const blankCtrl = new Map();
+  questions.filter(hasBlankChoices).forEach((q) => {
+    const label = labelOf(q);
+    state.blanks[label] = state.blanks[label] || {};
+    blankCtrl.set(label, attachBlanks(root.querySelector(`[data-q-item="${label}"]`), q, {
+      picks: state.blanks[label],
+      onChange: () => save(),
+    }));
+  });
+  // 단계가 바뀌거나 새로 시작할 때: 답 묶음을 다시 잇고, 채점 단계면 맞고 틀림을 보이고 점수 칸을 채운다.
+  const syncBlanks = () => {
+    const done = state.phase === "grading" || state.phase === "result";
+    let filled = false;
+    blankCtrl.forEach((ctrl, label) => {
+      state.blanks[label] = state.blanks[label] || {};
+      ctrl.setPicks(state.blanks[label]);
+      ctrl.setGraded(done);
+      const s = ctrl.score();
+      const verdict = root.querySelector(`[data-q-item="${label}"] [data-q-verdict]`);
+      if (verdict) verdict.textContent = done && s.picked ? `화면에서 고른 빈칸 ${s.total}개 가운데 ${s.right}개 맞음, ${s.got} / ${s.max}점` : "";
+      if (!done || !s.picked || !scoresForm) return;
+      filled = true;
+      const input = scoresForm.querySelector(`input[name="score-${label}"]`);
+      if (input && input.value.trim() === "") input.value = s.got;
+    });
+    const note = $("[data-ex-blank-note]");
+    if (note) note.hidden = !filled;
+  };
+
   /* 단계 */
   const setPhase = (phase, scroll) => {
     state.phase = phase;
@@ -249,6 +283,7 @@ function wire(root, exam, questions, topicTitle) {
     grade.hidden = !(phase === "grading" || phase === "result");
     result.hidden = phase !== "result";
     $$("[data-ex-q-foot]").forEach((el) => { el.hidden = !(phase === "grading" || phase === "result"); });
+    syncBlanks();
     if (!scroll) return;
     const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
     requestAnimationFrame(() => {

@@ -74,3 +74,42 @@ $D$ 는 i.i.d. 표본이고 $\boldsymbol{\theta}$ 는 지도학습 모형의 매
 - (5) 3점: $-\sum_{i=1}^{n} \log P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$. 빼기 부호가 빠지면 2점. 조건부가 아닌 $P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$ 를 그대로 쓰면 0점. 합 기호가 빠지면 1점.
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $\displaystyle\prod_{i=1}^{n} P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $\displaystyle\sum_{i=1}^{n} P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $\displaystyle\prod_{i=1}^{n} P(y_i ; \boldsymbol{\theta})$
+- $P(\mathbf{x}_1, y_1 ; \boldsymbol{\theta})^{n}$
+- $\displaystyle\prod_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+
+(2) 2
+= $-\displaystyle\sum_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $\displaystyle\sum_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $-\log \displaystyle\sum_{i=1}^{n} P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $-\displaystyle\prod_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $-\displaystyle\sum_{i=1}^{n} P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+
+(3) 3
+= $P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})\, P(\mathbf{x}_i ; \boldsymbol{\theta})$
+- $P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta}) + P(\mathbf{x}_i ; \boldsymbol{\theta})$
+- $P(y_i ; \boldsymbol{\theta})\, P(\mathbf{x}_i ; \boldsymbol{\theta})$
+- $P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$
+- $\dfrac{P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})}{P(\mathbf{x}_i ; \boldsymbol{\theta})}$
+
+(4) 2
+= $P(\mathbf{x}_i)$
+- $P(\mathbf{x}_i ; \boldsymbol{\theta})$
+- $P(y_i)$
+- $1$
+- $P(\mathbf{x}_i \mid y_i)$
+
+(5) 3
+= $-\displaystyle\sum_{i=1}^{n} \log P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$
+- $\displaystyle\sum_{i=1}^{n} \log P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$
+- $-\displaystyle\sum_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$
+- $-\displaystyle\sum_{i=1}^{n} P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$
+- $-\log P(y_i \mid \mathbf{x}_i ; \boldsymbol{\theta})$
+
+</section>

@@ -79,3 +79,56 @@ The update is repeated until convergence, for example until the gradient is clos
 - (7) 2점: $\lVert g(\mathbf{w}_t) \rVert_2$. 아래 첨자 2가 없는 $\lVert g(\mathbf{w}_t) \rVert$ 도 정답. 노름의 제곱 $\lVert g(\mathbf{w}_t)\rVert_2^2$ 도 정답. 갱신한 뒤의 점에서 잰 $\lVert g(\mathbf{w}_{t+1}) \rVert_2$ 와 gradient를 다른 기호로 쓴 $\lVert \nabla \ell(\mathbf{w}_t) \rVert_2$ 도 정답. 노름 없이 $g(\mathbf{w}_t)$ 만 쓰면 1점(벡터를 수와 견줄 수 없다). 손실의 변화나 위치의 변화를 쓴 답은 정지 기준으로는 맞지만 "gradient가 영벡터에 가깝다"는 문장과 맞지 않으므로 1점.
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $g(\mathbf{w}_t)^T \mathbf{s}$
+- $g(\mathbf{w}_t)$
+- $\mathbf{s}^T \mathbf{s}$
+- $-g(\mathbf{w}_t)^T \mathbf{s}$
+- $\alpha\, g(\mathbf{w}_t)^T \mathbf{s}$
+
+(2) 1
+= $\text{small}$
+- $\text{large}$
+- $\text{orthogonal to the gradient}$
+- $\text{a unit vector}$
+- $\text{parallel to } \mathbf{w}_t$
+
+(3) 2
+= $-\alpha\, g(\mathbf{w}_t)$
+- $\alpha\, g(\mathbf{w}_t)$
+- $-g(\mathbf{w}_t)$
+- $-\alpha\, \mathbf{w}_t$
+- $-\dfrac{g(\mathbf{w}_t)}{\alpha}$
+
+(4) 2
+= $-\alpha\, g(\mathbf{w}_t)^T g(\mathbf{w}_t)$
+- $\alpha\, g(\mathbf{w}_t)^T g(\mathbf{w}_t)$
+- $-\alpha\, g(\mathbf{w}_t)$
+- $-\alpha^2\, g(\mathbf{w}_t)^T g(\mathbf{w}_t)$
+- $-g(\mathbf{w}_t)^T \mathbf{w}_t$
+
+(5) 1
+= $0$
+- $1$
+- $\alpha$
+- $\epsilon$
+- $\lVert \mathbf{w}_t \rVert_2^2$
+
+(6) 2
+= $\mathbf{w}_t - \alpha\, g(\mathbf{w}_t)$
+- $\mathbf{w}_t + \alpha\, g(\mathbf{w}_t)$
+- $-\alpha\, g(\mathbf{w}_t)$
+- $\alpha\, \mathbf{w}_t - g(\mathbf{w}_t)$
+- $\mathbf{w}_t - \alpha\, \ell(\mathbf{w}_t)$
+
+(7) 2
+= $\lVert g(\mathbf{w}_t) \rVert_2$
+- $g(\mathbf{w}_t)$
+- $\ell(\mathbf{w}_t)$
+- $\lVert \mathbf{w}_t \rVert_2$
+- $\alpha$
+
+</section>

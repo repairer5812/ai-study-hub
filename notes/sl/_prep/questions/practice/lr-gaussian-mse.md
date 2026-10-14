@@ -23,13 +23,13 @@ $$
 \end{aligned}
 $$
 
-The term $\blank{2}$ disappears because it does not depend on $\blank{6}$. The factor $\blank{4}$ may be replaced by $\frac{1}{n}$ because both are $\blank{7}$ constants, so the value of $\sigma^2$ does not change $\hat{\mathbf{w}}$.
+The term $\blank{2}$ disappears because the $\arg\max$ is taken over $\blank{6}$ and this term does not contain it. The factor $\blank{4}$ may be replaced by $\frac{1}{n}$ because both are $\blank{7}$ constants, so the value of $\sigma^2$ does not change $\hat{\mathbf{w}}$.
 
 </section>
 
 <section data-q="ko">
 
-다변량 선형회귀 $y = \mathbf{w}^T\mathbf{x} + \epsilon$ 에서 노이즈가 평균 0, 분산 $\sigma^2$ 인 가우시안이고 표본은 i.i.d.입니다. 빈칸을 채워 MLE가 최소화하는 목적함수를 구하세요. 같은 번호의 빈칸에는 같은 식이 들어갑니다. (6)에는 (2)가 무엇과 무관해서 사라지는지를, (7)에는 (4)와 $\frac{1}{n}$ 이 공통으로 어떤 상수인지를 한 낱말로 씁니다.
+다변량 선형회귀 $y = \mathbf{w}^T\mathbf{x} + \epsilon$ 에서 노이즈가 평균 0, 분산 $\sigma^2$ 인 가우시안이고 표본은 i.i.d.입니다. 빈칸을 채워 MLE가 최소화하는 목적함수를 구하세요. 같은 번호의 빈칸에는 같은 식이 들어갑니다. (6)에는 arg max 를 무엇에 대해 취하는지(그래서 그것이 들어 있지 않은 (2)가 사라집니다)를, (7)에는 (4)와 $\frac{1}{n}$ 이 공통으로 어떤 상수인지를 한 낱말로 씁니다.
 
 </section>
 
@@ -68,5 +68,58 @@ The term $\blank{2}$ disappears because it does not depend on $\blank{6}$. The f
 - (5) 2점: $(\mathbf{w}^T\mathbf{x}_i - y_i)^2$. $(\hat{y}_i - y_i)^2$ 나 $(y_i - \mathbf{w}^T\mathbf{x}_i)^2$ 도 정답. 절댓값이면 0점.
 - (6) 1점: $\mathbf{w}$. "the parameter", "the weights"도 정답. $\sigma^2$ 나 $\mathbf{x}_i$ 는 0점.
 - (7) 1점: positive. "양의", "양수"도 정답. "$\mathbf{w}$ 와 무관한 양의 상수"처럼 풀어 써도 정답. constant 라고만 쓰면 0점(음의 상수를 곱하면 최소점이 바뀐다).
+
+</section>
+
+<section data-q="options">
+
+(1) 2
+= $\dfrac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( -\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2} \right)$
+- $\dfrac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( -\dfrac{y_i^2}{2\sigma^2} \right)$
+- $\dfrac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( \dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2} \right)$
+- $\dfrac{1}{2\sigma} \exp\!\left( -\dfrac{|\mathbf{w}^T\mathbf{x}_i - y_i|}{\sigma} \right)$
+- $\dfrac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( -\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{\sigma} \right)$
+
+(2) 2
+= $\log \dfrac{1}{\sqrt{2\pi\sigma^2}}$
+- $\dfrac{1}{\sqrt{2\pi\sigma^2}}$
+- $\log \sqrt{2\pi\sigma^2}$
+- $\log \dfrac{1}{2\sigma^2}$
+- $\log (2\pi\sigma^2)$
+
+(3) 2
+= $\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2}$
+- $-\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2}$
+- $\dfrac{|\mathbf{w}^T\mathbf{x}_i - y_i|}{2\sigma^2}$
+- $(\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+- $\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{\sqrt{2\pi\sigma^2}}$
+
+(4) 2
+= $\dfrac{1}{2\sigma^2}$
+- $-\dfrac{1}{2\sigma^2}$
+- $-2\sigma^2$
+- $\log \dfrac{1}{\sqrt{2\pi\sigma^2}}$
+- $-\dfrac{1}{\sqrt{2\pi\sigma^2}}$
+
+(5) 2
+= $(\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+- $|\mathbf{w}^T\mathbf{x}_i - y_i|$
+- $\mathbf{w}^T\mathbf{x}_i - y_i$
+- $-(\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+- $\log (\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+
+(6) 1
+= $\mathbf{w}$
+- $\sigma^2$
+- $\mathbf{x}_i$
+- $y_i$
+- $n$
+
+(7) 1
+= $\text{positive}$
+- $\text{negative}$
+- $\text{integer}$
+- $\text{arbitrary}$
+- $\text{random}$
 
 </section>

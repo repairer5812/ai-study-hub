@@ -124,7 +124,8 @@ practice.html?s=sl                  ← 주제별 문제
 ```
 
 - 모의시험은 화면이 시험지와 시계 역할만 한다. 끝난 뒤 참거짓과 객관식은 답을 옮기면 채점되고, 손으로 쓴 유도와 서술은 **채점 프롬프트를 복사해** 방문자가 쓰는 LLM에 답안 사진과 함께 넣는다. 프롬프트에 문제, 모범 답안, 채점 기준이 들어 있다.
-- 진도와 점수는 방문자의 브라우저(localStorage)에만 남는다. 키: `ai-study:<과목>:prep:concepts`, `ai-study:<과목>:paper:<set>`.
+- 빈칸 유도는 종이에 쓰는 것이 기본이지만, **빈칸을 누르면 보기 다섯 개가 나와 화면에서 고를 수도 있다**(`js/blanks.js`). 고른 식은 빈칸 자리에 바로 채워지고, 모의시험에서는 끝난 뒤 맞은 빈칸의 배점을 점수 칸에 넣어 준다. 주제별 문제에서는 정답을 펴면 맞고 틀림이 보인다.
+- 진도와 점수는 방문자의 브라우저(localStorage)에만 남는다. 키: `ai-study:<과목>:prep:concepts`, `ai-study:<과목>:paper:<set>`, `ai-study:<과목>:practice:blanks`.
 - 개념의 표지는 세 가지다: 강조(수업에서 강조), 범위 밖(시험 범위 밖으로 언급), 건너뜀(슬라이드에는 있지만 수업에서 넘어감).
 - 예상 문제는 실제 기출이 아니다. 수업 내용으로 만든 것임을 화면에 적는다.
 
@@ -134,7 +135,7 @@ practice.html?s=sl                  ← 주제별 문제
 
 ```
 notes/<과목>/_prep/concepts/<slug>.md          개념 노드 하나 (frontmatter: title, en, parent, order, summary, signal, related)
-notes/<과목>/_prep/questions/<set>/<이름>.md   문항 하나 (본문은 <section data-q="stem|ko|answer|rubric"> 네 구역)
+notes/<과목>/_prep/questions/<set>/<이름>.md   문항 하나 (본문은 <section data-q="stem|ko|answer|rubric"> 네 구역, 빈칸 유도는 options 까지 다섯)
 notes/<과목>/_prep/exams.json                  시험 표지(제목, 시간, 파트)
 notes/<과목>/prep.json                         화면이 읽는 묶음 (직접 고치지 않는다)
 ```
@@ -143,6 +144,8 @@ notes/<과목>/prep.json                         화면이 읽는 묶음 (직접
 node tools/build-prep.mjs sl --check   # 형식 검사만
 node tools/build-prep.mjs sl           # 검사하고 notes/sl/prep.json 을 다시 쓴다
 ```
+
+빈칸 유도(type: blank) 문항에는 다섯째 구역 `<section data-q="options">` 를 둔다. 빈칸마다 머리줄 `(번호) 배점`, 정답 한 줄(`= $...$`), 틀린 보기 네 줄(`- $...$`)을 쓴다. 보기는 수식 하나로 쓰고 낱말은 `$	ext{...}$` 로 쓴다. 배점의 합은 문항 배점과 같아야 하고, 화면에 나오는 순서는 묶을 때 섞어 고정한다. 틀린 보기는 그 줄에 넣으면 정말 틀리는 것만 쓴다(값이 같은 다른 꼴은 쓰지 않는다).
 
 묶음을 다시 만들었으면 `js/subjects/sl.js` 의 `prep.version` 을 올려야 방문자의 브라우저가 새 파일을 받는다.
 원본 폴더 이름이 밑줄로 시작하는 것은 GitHub Pages(Jekyll)가 frontmatter 있는 마크다운을 변환하거나 수식의 중괄호를 템플릿 문법으로 읽지 않게 하려는 것이다.

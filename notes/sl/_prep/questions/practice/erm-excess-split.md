@@ -10,7 +10,7 @@ title: Splitting the gap to the best possible risk
 
 <section data-q="stem">
 
-Let $\mathcal{H}$ be a hypothesis class of functions from $\mathcal{X}$ to $\mathcal{Y}$, and let $R(h)$ denote the true risk. Empirical risk minimization over $\mathcal{H}$ returns
+Let $\mathcal{H}$ be a hypothesis class of functions from $\mathcal{X}$ to $\mathcal{Y}$, let $R(h)$ denote the true risk, and let $\mathcal{L}(h; D)$ denote the empirical risk of $h$ on a dataset $D$. Empirical risk minimization over $\mathcal{H}$ returns
 
 $$
 \hat{h}^*_{\mathcal{H}} = \arg\min_{h \in \mathcal{H}} \blank{1}
@@ -34,7 +34,7 @@ The left-hand side is called the $\blank{4}$ error. Part (A) is called the $\bla
 
 <section data-q="ko">
 
-$\mathcal{H}$ 는 $\mathcal{X}$ 에서 $\mathcal{Y}$ 로 가는 함수들로 이루어진 가설 집합이고 $R(h)$ 는 true risk 입니다. 빈칸을 채워 $R(\hat{h}^*_{\mathcal{H}})$ 와 $R^*$ 의 차이를 두 부분으로 나누세요. 같은 번호의 빈칸에는 같은 식이 들어갑니다. (1)에는 ERM 이 최소화하는 것을, (2)에는 $R^*$ 를 정의할 때 살펴보는 함수의 범위를 씁니다. (4), (5), (6)에는 오차의 이름을 씁니다.
+$\mathcal{H}$ 는 $\mathcal{X}$ 에서 $\mathcal{Y}$ 로 가는 함수들로 이루어진 가설 집합이고 $R(h)$ 는 true risk, $\mathcal{L}(h; D)$ 는 데이터 $D$ 에서 잰 empirical risk 입니다. 빈칸을 채워 $R(\hat{h}^*_{\mathcal{H}})$ 와 $R^*$ 의 차이를 두 부분으로 나누세요. 같은 번호의 빈칸에는 같은 식이 들어갑니다. (1)에는 ERM 이 최소화하는 것을, (2)에는 $R^*$ 를 정의할 때 살펴보는 함수의 범위를 씁니다. (4), (5), (6)에는 오차의 이름을 씁니다.
 
 </section>
 
@@ -68,5 +68,51 @@ $\mathcal{H}$ 는 $\mathcal{X}$ 에서 $\mathcal{Y}$ 로 가는 함수들로 이
 - (4) 2점: excess. generalization 이라고 쓰면 0점.
 - (5) 2점: estimation 또는 sample. 한국어로 "추정"이라 써도 정답. (5)와 (6)을 서로 바꿔 쓰면 둘 다 0점.
 - (6) 2점: approximation. 한국어로 "근사" 또는 "어림"이라 써도 정답.
+
+</section>
+
+<section data-q="options">
+
+(1) 2
+= $\mathcal{L}(h; D)$
+- $R(h)$
+- $R^*$
+- $R(h) - R^*$
+- $\mathcal{L}(h; D) - R(h)$
+
+(2) 2
+= $\text{all functions } h: \mathcal{X} \to \mathcal{Y}$
+- $\text{the hypothesis class } \mathcal{H}$
+- $\text{the training set } D$
+- $\text{all linear functions}$
+- $\text{all functions with zero empirical risk}$
+
+(3) 2
+= $R^*_{\mathcal{H}}$
+- $R^*$
+- $\mathcal{L}(\hat{h}^*_{\mathcal{H}}; D)$
+- $R(\hat{h}^*_{\mathcal{H}})$
+- $0$
+
+(4) 2
+= $\text{excess}$
+- $\text{generalization}$
+- $\text{training}$
+- $\text{empirical}$
+- $\text{irreducible}$
+
+(5) 2
+= $\text{estimation}$
+- $\text{approximation}$
+- $\text{optimization}$
+- $\text{irreducible}$
+- $\text{training}$
+
+(6) 2
+= $\text{approximation}$
+- $\text{estimation}$
+- $\text{optimization}$
+- $\text{irreducible}$
+- $\text{training}$
 
 </section>

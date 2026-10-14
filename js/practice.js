@@ -1,10 +1,12 @@
 // practice.js — 주제별 문제. practice.html?s=sl
 // 모의시험에서 약했던 가지만 골라 푼다. 종이에 먼저 풀고 정답을 펴 본다.
+// 빈칸 유도는 빈칸을 눌러 다섯 보기 가운데 고를 수도 있고(js/blanks.js), 정답을 펴면 맞고 틀림이 보인다.
 
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
-  buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb,
+  buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb, store,
 } from "./prep.js";
+import { attachBlanks, hasBlankChoices } from "./blanks.js";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -42,7 +44,7 @@ const mapBase = `map.html?s=${subjectId}`;
   <header class="pp-head">
     <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
     <h1 class="pp-title">주제별 문제</h1>
-    <p class="pp-lead">모의시험에서 약했던 가지만 골라 풉니다. 종이에 먼저 풀고 정답을 펴 보세요.</p>
+    <p class="pp-lead">모의시험에서 약했던 가지만 골라 풉니다. 종이에 먼저 풀고 정답을 펴 보세요. 빈칸 유도는 빈칸을 눌러 보기에서 고를 수도 있습니다.</p>
     <dl class="pp-facts">
       <div><dt>문항</dt><dd>${questions.length}문항</dd></div>
       <div><dt>주제</dt><dd>${topics.length}개</dd></div>
@@ -68,7 +70,7 @@ const mapBase = `map.html?s=${subjectId}`;
     </header>
     <ol class="ex-list" role="list">
       ${t.items.map((q, i) => `
-      <li class="ex-q pr-q" data-type="${q.type}">
+      <li class="ex-q pr-q" data-type="${q.type}" data-q-id="${esc(q.id)}">
         <div class="ex-q-head">
           <span class="ex-q-no">${i + 1}.</span>
           ${q.title ? `<span class="ex-q-title">${esc(q.title)}</span>` : ""}
@@ -80,6 +82,7 @@ const mapBase = `map.html?s=${subjectId}`;
           <summary>정답과 해설</summary>
           <p class="pr-reveal-tools">
             ${q.answer ? `<span class="pr-key">정답 ${esc(q.answer)}</span>` : ""}
+            ${hasBlankChoices(q) ? '<span class="pr-key" data-bk-score hidden></span>' : ""}
             ${isWritten(q) ? `<button type="button" class="ex-link" data-pr-copy="${esc(q.id)}">채점 프롬프트 복사</button>` : ""}
             ${q.concepts[0] ? `<a class="ex-link" href="${mapBase}&n=${q.concepts[0]}">관련 개념 보기</a>` : ""}
           </p>
@@ -99,6 +102,24 @@ const mapBase = `map.html?s=${subjectId}`;
 
     const root = app.querySelector(".pr");
     const byId = new Map(questions.map((q) => [q.id, q]));
+
+    // 빈칸 유도: 빈칸을 눌러 보기에서 고르고, 정답을 펴면 채점한다. 고른 답은 이 브라우저에 남는다.
+    const BKEY = `ai-study:${subjectId}:practice:blanks`;
+    const allPicks = store.get(BKEY, {});
+    root.querySelectorAll(".pr-q[data-q-id]").forEach((item) => {
+      const q = byId.get(item.getAttribute("data-q-id"));
+      if (!q || !hasBlankChoices(q)) return;
+      allPicks[q.id] = allPicks[q.id] || {};
+      const ctrl = attachBlanks(item, q, { picks: allPicks[q.id], onChange: () => store.set(BKEY, allPicks) });
+      const reveal = item.querySelector(".pr-reveal");
+      const scoreEl = item.querySelector("[data-bk-score]");
+      reveal.addEventListener("toggle", () => {
+        ctrl.setGraded(reveal.open);
+        const s = ctrl.score();
+        scoreEl.hidden = !(reveal.open && s.picked);
+        scoreEl.textContent = `고른 빈칸 ${s.total}개 가운데 ${s.right}개 맞음, ${s.got} / ${s.max}점`;
+      });
+    });
 
     // 형식별로 골라 보기
     const filter = root.querySelector(".pr-filter");

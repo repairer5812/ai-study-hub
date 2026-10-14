@@ -73,3 +73,56 @@ MLE와 달라진 곳은 prior에서 온 항 하나입니다. 우도 쪽 전개�
 - (7) 2점: ridge. "릿지", "L2-regularized linear"도 정답. lasso 는 0점.
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $P(D \mid \mathbf{w})\, P(\mathbf{w})$
+- $P(D \mid \mathbf{w})$
+- $P(\mathbf{w})$
+- $P(D \mid \mathbf{w}) + P(\mathbf{w})$
+- $P(D)\, P(\mathbf{w})$
+
+(2) 1
+= $\log P(\mathbf{w})$
+- $P(\mathbf{w})$
+- $-\log P(\mathbf{w})$
+- $\log P(D)$
+- $\log P(\mathbf{w} \mid D)$
+
+(3) 2
+= $\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2}$
+- $-\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\sigma^2}$
+- $\dfrac{|\mathbf{w}^T\mathbf{x}_i - y_i|}{\sigma}$
+- $\dfrac{(\mathbf{w}^T\mathbf{x}_i - y_i)^2}{2\tau^2}$
+- $\dfrac{\mathbf{w}^T\mathbf{w}}{2\sigma^2}$
+
+(4) 2
+= $\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2}$
+- $-\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2}$
+- $\dfrac{\mathbf{w}^T\mathbf{w}}{2\sigma^2}$
+- $\dfrac{\lVert \mathbf{w} \rVert_1}{\tau}$
+- $\exp\!\left( -\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2} \right)$
+
+(5) 2
+= $(\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+- $|\mathbf{w}^T\mathbf{x}_i - y_i|$
+- $\mathbf{w}^T\mathbf{x}_i - y_i$
+- $-(\mathbf{w}^T\mathbf{x}_i - y_i)^2$
+- $\log\!\left(1 + e^{-y_i \mathbf{w}^T\mathbf{x}_i}\right)$
+
+(6) 1
+= $\lVert \mathbf{w} \rVert_2^2$
+- $\lVert \mathbf{w} \rVert_1$
+- $\lVert \mathbf{w} \rVert_2$
+- $-\lVert \mathbf{w} \rVert_2^2$
+- $\dfrac{1}{\lVert \mathbf{w} \rVert_2^2}$
+
+(7) 2
+= $\text{ridge}$
+- $\text{lasso}$
+- $\text{logistic}$
+- $\text{polynomial}$
+- $\text{ordinary least squares}$
+
+</section>

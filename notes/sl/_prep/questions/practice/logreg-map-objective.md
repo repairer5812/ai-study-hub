@@ -71,3 +71,56 @@ MLE의 목적함수와 견주면 우도에서 나온 $\ell(\mathbf{w})$ 는 꼴�
 - (7) 2점: random variable. "확률변수"도 정답. "a variable with a distribution"처럼 같은 뜻이면 인정. parameter 라고만 쓰면 0점.
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $P(D \mid \mathbf{w})\, P(\mathbf{w})$
+- $P(D \mid \mathbf{w})$
+- $P(\mathbf{w})$
+- $P(D \mid \mathbf{w}) + P(\mathbf{w})$
+- $P(D)\, P(\mathbf{w})$
+
+(2) 2
+= $\log P(\mathbf{w})$
+- $P(\mathbf{w})$
+- $-\log P(\mathbf{w})$
+- $\log P(D)$
+- $\log P(\mathbf{w} \mid D)$
+
+(3) 2
+= $\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2}$
+- $-\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2}$
+- $\dfrac{\lVert \mathbf{w} \rVert_1}{\tau}$
+- $2\tau^2\, \mathbf{w}^T\mathbf{w}$
+- $\exp\!\left( -\dfrac{\mathbf{w}^T\mathbf{w}}{2\tau^2} \right)$
+
+(4) 1
+= $\mathbf{w}^T\mathbf{w}$
+- $\lVert \mathbf{w} \rVert_1$
+- $\lVert \mathbf{w} \rVert_2$
+- $-\mathbf{w}^T\mathbf{w}$
+- $\mathbf{w}$
+
+(5) 2
+= $P(D)$
+- $P(\mathbf{w})$
+- $P(D \mid \mathbf{w})$
+- $P(\mathbf{w} \mid D)$
+- $\displaystyle\prod_{i=1}^{n} P(\mathbf{x}_i)$
+
+(6) 1
+= $\text{Gaussian}$
+- $\text{Laplace}$
+- $\text{Bernoulli}$
+- $\text{uniform}$
+- $\text{Poisson}$
+
+(7) 2
+= $\text{random variable}$
+- $\text{fixed unknown constant}$
+- $\text{hyperparameter}$
+- $\text{data point}$
+- $\text{loss function}$
+
+</section>

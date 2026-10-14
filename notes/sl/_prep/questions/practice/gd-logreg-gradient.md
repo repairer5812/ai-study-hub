@@ -102,3 +102,49 @@ gradient는 "예측 확률에서 정답을 뺀 값"에 입력을 곱한 것입�
 - (6) 2점: $\frac{1}{n}\sum_{i=1}^{n} (\hat{y}_i - y_i)\, \mathbf{x}_i$. $\hat{y}_i$ 를 풀어 쓴 꼴도 정답. $\frac{1}{n}$ 이 빠지면 1점. $\mathbf{x}_i$ 가 빠지면 0점. (5)를 반대 부호로 답하고 여기서도 같은 부호를 썼으면 1점.
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $\dfrac{1}{1 + e^{z_i}}$
+- $\dfrac{1}{1 + e^{-z_i}}$
+- $1 + e^{z_i}$
+- $e^{-z_i}$
+- $\dfrac{-e^{z_i}}{1 + e^{z_i}}$
+
+(2) 2
+= $\log(1 + e^{z_i})$
+- $\log(1 + e^{-z_i})$
+- $1 + e^{z_i}$
+- $\log(e^{z_i})$
+- $-\log(1 + e^{z_i})$
+
+(3) 2
+= $y_i z_i$
+- $-y_i z_i$
+- $z_i$
+- $y_i$
+- $(1 - y_i)\, z_i$
+
+(4) 2
+= $\dfrac{e^{z_i}}{1 + e^{z_i}}$
+- $\dfrac{1}{1 + e^{z_i}}$
+- $e^{z_i}$
+- $\log(1 + e^{z_i})$
+- $z_i$
+
+(5) 2
+= $\hat{y}_i - y_i$
+- $y_i - \hat{y}_i$
+- $\hat{y}_i + y_i$
+- $\hat{y}_i\, y_i$
+- $1 - \hat{y}_i - y_i$
+
+(6) 2
+= $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} (\hat{y}_i - y_i)\, \mathbf{x}_i$
+- $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} (y_i - \hat{y}_i)\, \mathbf{x}_i$
+- $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} (\hat{y}_i - y_i)$
+- $\displaystyle\sum_{i=1}^{n} (\hat{y}_i - y_i)\, \mathbf{x}_i$
+- $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} (\hat{y}_i - y_i)\, \mathbf{w}$
+
+</section>

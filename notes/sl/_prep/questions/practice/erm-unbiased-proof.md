@@ -23,7 +23,7 @@ $$
 \end{aligned}
 $$
 
-The second equality uses the $\blank{4}$ of expectation. The fourth equality holds because every pair $(\mathbf{x}_i, y_i)$ is drawn from $\blank{5}$. Since the expectation of $\mathcal{L}(h; D)$ equals $\blank{3}$ itself, the empirical risk is called an $\blank{6}$ estimate of the true risk.
+The second equality uses the $\blank{4}$ of expectation. The fourth equality holds because every pair $(\mathbf{x}_i, y_i)$ is drawn from $\blank{5}$. Since the expectation of $\mathcal{L}(h; D)$ equals $\blank{3}$ itself, the empirical risk is called a(n) $\blank{6}$ estimate of the true risk.
 
 </section>
 
@@ -66,5 +66,51 @@ $h$ 가 고정이라는 조건도 필요합니다. 같은 $D$ 로 $h$ 를 고르
 - (4) 2점: linearity. 한국어로 "선형성"이라 써도 정답. "기댓값은 합과 상수배를 밖으로 꺼낼 수 있다"처럼 내용을 풀어 써도 정답. independence(독립)라고 쓰면 0점.
 - (5) 2점: 같은 분포에서 나왔다는 뜻이면 정답. "the same distribution", "$P_{XY}$", "identically distributed" 모두 인정. "i.i.d."라고만 써도 2점. independent(독립)만 쓰면 1점.
 - (6) 2점: unbiased. "불편"도 정답. consistent 나 approximate 는 0점.
+
+</section>
+
+<section data-q="options">
+
+(1) 2
+= $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} \ell(y_i, h(\mathbf{x}_i))$
+- $\displaystyle\sum_{i=1}^{n} \ell(y_i, h(\mathbf{x}_i))$
+- $\ell(y_i, h(\mathbf{x}_i))$
+- $\dfrac{1}{n} \displaystyle\sum_{i=1}^{n} h(\mathbf{x}_i)$
+- $\dfrac{1}{n} \displaystyle\prod_{i=1}^{n} \ell(y_i, h(\mathbf{x}_i))$
+
+(2) 2
+= $\mathbb{E}\big[\ell(y_i, h(\mathbf{x}_i))\big]$
+- $\ell(y_i, h(\mathbf{x}_i))$
+- $\mathbb{E}\big[h(\mathbf{x}_i)\big]$
+- $\mathbb{E}\big[\mathcal{L}(h; D)\big]$
+- $\log \ell(y_i, h(\mathbf{x}_i))$
+
+(3) 2
+= $R(h)$
+- $\mathcal{L}(h; D)$
+- $0$
+- $R^*$
+- $n\, R(h)$
+
+(4) 2
+= $\text{linearity}$
+- $\text{independence}$
+- $\text{monotonicity}$
+- $\text{convexity}$
+- $\text{symmetry}$
+
+(5) 2
+= $\text{the same distribution } P_{XY}$
+- $\text{a different distribution for each } i$
+- $\text{the hypothesis class } \mathcal{H}$
+- $\text{a Gaussian distribution}$
+- $\text{the empirical distribution of } D$
+
+(6) 2
+= $\text{unbiased}$
+- $\text{biased}$
+- $\text{consistent}$
+- $\text{approximate}$
+- $\text{maximum likelihood}$
 
 </section>

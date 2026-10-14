@@ -79,3 +79,63 @@ On the decision boundary the two classes are equally likely, so $p(x) = \blank{8
 - (8) 2점: $0.5$ 또는 $\frac{1}{2}$. 1이라고 쓰면 0점(1은 경계 위에서의 odds다).
 
 </section>
+
+<section data-q="options">
+
+(1) 2
+= $\dfrac{1}{1 + e^{w_1 x + w_0}}$
+- $\dfrac{1}{1 + e^{-(w_1 x + w_0)}}$
+- $1 + e^{w_1 x + w_0}$
+- $\dfrac{-e^{w_1 x + w_0}}{1 + e^{w_1 x + w_0}}$
+- $e^{-(w_1 x + w_0)}$
+
+(2) 2
+= $e^{w_1 x + w_0}$
+- $e^{-(w_1 x + w_0)}$
+- $w_1 x + w_0$
+- $1 + e^{w_1 x + w_0}$
+- $\dfrac{1}{1 + e^{w_1 x + w_0}}$
+
+(3) 2
+= $w_1 x + w_0$
+- $-(w_1 x + w_0)$
+- $e^{w_1 x + w_0}$
+- $\log(w_1 x + w_0)$
+- $w_1 x$
+
+(4) 1
+= $\text{odds}$
+- $\text{logit}$
+- $\text{likelihood}$
+- $\text{prior}$
+- $\text{risk}$
+
+(5) 1
+= $\text{logit}$
+- $\text{odds}$
+- $\text{log-likelihood}$
+- $\text{entropy}$
+- $\text{sigmoid}$
+
+(6) 1
+= $1$
+- $0$
+- $0.5$
+- $e$
+- $2$
+
+(7) 1
+= $0$
+- $1$
+- $0.5$
+- $-1$
+- $e$
+
+(8) 2
+= $0.5$
+- $0$
+- $1$
+- $e^{-1}$
+- $0.25$
+
+</section>

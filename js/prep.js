@@ -47,6 +47,15 @@ export function renderMd(md) {
   return html.replace(/<table>/g, '<div class="pp-table"><table>').replace(/<\/table>/g, "</table></div>");
 }
 
+/** 빈칸 상자. 누를 수 있게 class 와 data-blank 를 단다(js/blanks.js 가 이 표시를 읽는다). */
+const blankBox = (cls, body) => `\\htmlClass{pp-blank ${cls}}{\\htmlData{blank=#1}{\\boxed{${body}}}}`;
+const BLANK_MACROS = {
+  "\\blank": blankBox("", "\\,\\text{(#1)}\\hspace{2.8em}"),              // 빈 빈칸: 번호만 든 상자
+  "\\blankfill": blankBox("pp-blank-filled", "{\\scriptstyle\\text{(#1)}}\\;#2"),              // 고른 답을 채운 상자
+  "\\blankok": blankBox("pp-blank-filled pp-blank-ok", "{\\scriptstyle\\text{(#1)}}\\;#2"),    // 채점 뒤: 맞음
+  "\\blankno": blankBox("pp-blank-filled pp-blank-no", "{\\scriptstyle\\text{(#1)}}\\;#2"),    // 채점 뒤: 틀림
+};
+
 /** el 안의 $...$, $$...$$ 를 그린다. \blank{n} 은 모의시험의 n번 빈칸(번호 붙은 상자). */
 export function typeset(el) {
   if (!window.renderMathInElement) return;
@@ -55,7 +64,9 @@ export function typeset(el) {
       { left: "$$", right: "$$", display: true },
       { left: "$", right: "$", display: false },
     ],
-    macros: { "\\blank": "\\boxed{\\,\\text{(#1)}\\hspace{2.8em}}" },
+    macros: { ...BLANK_MACROS },
+    // 빈칸 상자에 붙이는 class 와 data 속성만 허용한다.
+    trust: (ctx) => ctx.command === "\\htmlClass" || ctx.command === "\\htmlData",
     throwOnError: false,
     strict: false,
   });

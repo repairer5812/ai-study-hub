@@ -8,6 +8,13 @@
 //   notes/<id>/_prep/concepts/<slug>.md           개념 노드 하나
 //   notes/<id>/_prep/questions/<set>/<이름>.md    문항 하나 (set = midterm-1, practice ...)
 //   notes/<id>/_prep/exams.json                   시험 표지 정보(제목, 시간, 파트)
+//
+// 빈칸 유도(type: blank) 문항에는 <section data-q="options"> 구역을 둔다. 화면에서 빈칸을 누르면
+// 다섯 보기 가운데 고를 수 있게 하는 자료다. 빈칸마다 다음 여섯 줄을 쓴다.
+//   (번호) 배점
+//   = $정답$
+//   - $틀린 보기$      (네 줄)
+// 보기는 수식 하나($...$)로 쓰고, 낱말은 $\text{...}$ 로 쓴다. 보기의 순서는 여기서 섞어 고정한다.
 // 결과(화면이 읽는 곳)
 //   notes/<id>/prep.json
 //
@@ -169,6 +176,56 @@ for (const [slug] of nodes) {
   }
 }
 
+/* ---------- 빈칸의 보기 ---------- */
+// 문항 id 와 빈칸 번호로 씨앗을 만들어 섞는다. 다시 묶어도 순서가 바뀌지 않아야 방문자가 고른 답이 유지된다.
+function seeded(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  let a = h >>> 0;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const okPos = [0, 0, 0, 0, 0];
+function parseOptions(f, src, nums, points, id) {
+  if (!src) { err(f, '보기(options) 구역이 없다'); return null; }
+  const out = [];
+  let cur = null;
+  for (const raw of src.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const head = line.match(/^\((\d+)\)\s+(\d+(?:\.\d+)?)$/);
+    if (head) { cur = { n: Number(head[1]), points: Number(head[2]), options: [] }; out.push(cur); continue; }
+    const opt = line.match(/^([=-])\s+\$([^$]+)\$$/);
+    if (!opt || !cur) { err(f, `보기 구역에서 읽지 못한 줄: ${line.slice(0, 50)}`); continue; }
+    if (HANGUL.test(opt[2])) err(f, `보기에 한글: ${opt[2].slice(0, 40)}`);
+    if (/\\blank/.test(opt[2])) err(f, '보기에 빈칸이 들어 있다');
+    cur.options.push({ tex: opt[2].trim(), ok: opt[1] === '=' });
+  }
+  const got = out.map((b) => b.n);
+  if (got.join(',') !== nums.join(',')) err(f, `보기의 빈칸 번호(${got.join(',')})가 문제의 빈칸(${nums.join(',')})과 다르다`);
+  const sum = out.reduce((a, b) => a + b.points, 0);
+  if (sum !== points) err(f, `보기의 배점 합 ${sum}점이 문항 배점 ${points}점과 다르다`);
+  for (const b of out) {
+    if (b.options.length !== 5) err(f, `빈칸 (${b.n}) 의 보기는 다섯 개여야 한다(지금 ${b.options.length}개)`);
+    if (b.options.filter((o) => o.ok).length !== 1) err(f, `빈칸 (${b.n}) 의 정답(=)은 하나여야 한다`);
+    const norm = b.options.map((o) => o.tex.replace(/\s+/g, ''));
+    if (new Set(norm).size !== norm.length) err(f, `빈칸 (${b.n}) 에 같은 보기가 두 번 있다`);
+    const rnd = seeded(`${id}/${b.n}`);
+    for (let i = b.options.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [b.options[i], b.options[j]] = [b.options[j], b.options[i]];
+    }
+    const at = b.options.findIndex((o) => o.ok);
+    if (at >= 0 && at < 5) okPos[at] += 1;
+  }
+  return out;
+}
+
 /* ---------- 문항 ---------- */
 const PART_TYPE = { A: ['tf'], B: ['mc'], C: ['blank'], D: ['calc', 'essay'] };
 const SECTION = (name) => new RegExp(`<section data-q="${name}"[^>]*>([\\s\\S]*?)</section>`, 'g');
@@ -192,7 +249,7 @@ for (const file of walk(join(SRC, 'questions'))) {
   }
 
   const sec = {};
-  for (const name of ['stem', 'ko', 'answer', 'rubric']) {
+  for (const name of ['stem', 'ko', 'answer', 'rubric', 'options']) {
     const all = [...body.matchAll(SECTION(name))];
     if (all.length > 1) err(f, `구역 ${name} 이 두 번 나온다`);
     sec[name] = all[0]?.[1].trim() ?? '';
@@ -220,6 +277,7 @@ for (const file of walk(join(SRC, 'questions'))) {
     if (sec.answer && !new RegExp(`^\\s*\\*\\*\\(${data.answer}\\)`).test(sec.answer)) warn(f, `answer 해설은 "**(${data.answer}).**" 로 시작`);
   }
   if (written && data.answer) err(f, '손으로 쓰는 문항에는 frontmatter answer 를 쓰지 않는다');
+  let blanks = null;
   if (data.type === 'blank') {
     const nums = [...new Set([...sec.stem.matchAll(/\\blank\{(\d+)\}/g)].map((m) => Number(m[1])))].sort((a, b) => a - b);
     if (!nums.length) err(f, '빈칸(\\blank{n})이 없다');
@@ -230,6 +288,9 @@ for (const file of walk(join(SRC, 'questions'))) {
     }
     if (nums.length < 4 || nums.length > 9) warn(f, `빈칸 수 ${nums.length}개(권장 5~8)`);
     if (/\\blank/.test(sec.answer)) err(f, 'answer 에 빈칸이 남아 있다');
+    blanks = parseOptions(f, sec.options, nums, data.points, `${set}/${basename(file, '.md')}`);
+  } else if (sec.options) {
+    err(f, '보기(options) 구역은 blank 유형에서만 쓴다');
   }
   if (!written && /\\blank/.test(sec.stem)) err(f, '빈칸은 blank 유형에서만 쓴다');
 
@@ -237,7 +298,7 @@ for (const file of walk(join(SRC, 'questions'))) {
     id: `${set}/${basename(file, '.md')}`,
     set, part: data.part, type: data.type, no: data.no, points: data.points,
     topic: data.topic, concepts: data.concepts ?? [], answer: data.answer ?? null, title: data.title ?? null,
-    choices, stem: sec.stem, ko: sec.ko, solution: sec.answer, rubric: sec.rubric,
+    choices, blanks, stem: sec.stem, ko: sec.ko, solution: sec.answer, rubric: sec.rubric,
   });
 }
 
@@ -257,6 +318,7 @@ for (const e of exams) {
   if (e.points && total !== e.points) warn(`exams.json ${e.set}`, `배점 합 ${total}점이 표지의 ${e.points}점과 다르다`);
 }
 console.log(`[${subject}] 개념 ${nodes.size}개(가지 ${branches.length}), 문항 ${questions.length}개(연습 ${questions.filter((q) => q.set === 'practice').length})`);
+if (okPos.some(Boolean)) console.log(`[${subject}] 빈칸 ${okPos.reduce((a, b) => a + b, 0)}개의 보기에서 정답 자리: ${okPos.map((n, i) => `${i + 1}번째 ${n}`).join(', ')}`);
 
 warns.forEach((w) => console.log('  경고  ' + w));
 errors.forEach((e) => console.log('  오류  ' + e));
