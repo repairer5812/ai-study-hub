@@ -2,11 +2,19 @@
 title: 동전과 Beta prior
 en: Beta prior for a coin
 parent: mle-map
-order: 70
+order: 100
 summary: 앞면 확률에 Beta 분포를 prior로 두면 MAP 추정값이 가상의 횟수를 더한 식과 같아집니다. 가상의 횟수가 prior의 다른 표현이었음을 보여 주는 결과입니다.
 signal: skim
 related: []
 ---
+
+<div class="cal extra">
+
+**Beta prior의 상세 전개는 수업에서 넘어간 부분입니다.**
+
+[MLE와 MAP의 차이](map.html?s=sl&n=mle-vs-map), [prior를 더하는 원리](map.html?s=sl&n=map-posterior), Gaussian과 Laplace prior의 벌점을 먼저 복습합니다. Beta 상세 전개를 넘어갔다는 안내를 모든 Bayesian 개념의 제외로 넓히지 않습니다.
+
+</div>
 
 ## 정의와 수식
 

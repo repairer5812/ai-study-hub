@@ -6,7 +6,7 @@
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb, store,
-} from "./prep.js";
+} from "./prep.js?v=20261018g";
 import { attachBlanks, hasBlankChoices } from "./blanks.js";
 import { attachChecks, hasChecks } from "./checks.js";
 

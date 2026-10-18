@@ -6,7 +6,7 @@
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, pathTo, subtree, SIGNAL, sigChip, store, fillCrumb,
-} from "./prep.js";
+} from "./prep.js?v=20261018g";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -43,8 +43,8 @@ function branchHtml(node, tree, { current, open, onPath }) {
 function overviewHtml(tree) {
   const root = tree.root;
   const nodes = tree.order.filter((n) => n !== root);
-  const first = nodes[0];
   const emph = nodes.filter((n) => n.signal === "emph").length;
+  const homework = nodes.filter((n) => n.signal === "hw").length;
   return `
   <header class="pp-head">
     <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
@@ -53,10 +53,12 @@ function overviewHtml(tree) {
     <dl class="pp-facts">
       <div><dt>개념</dt><dd>${nodes.length}개, 가지 ${root.children.length}개</dd></div>
       <div><dt>수업에서 강조</dt><dd>${emph}개</dd></div>
+      <div><dt>과제 핵심</dt><dd>${homework}개</dd></div>
       <div><dt>확인한 개념</dt><dd><span class="pp-num" data-done-count data-total="${nodes.length}">0 / ${nodes.length}</span></dd></div>
     </dl>
     <div class="pp-actions">
-      ${first ? `<a class="btn btn-primary" href="${hrefOf(first.slug, tree)}" data-nav="${first.slug}">뿌리부터 시작</a>` : ""}
+      <a class="btn btn-primary" href="#course-route">핵심 복습 순서</a>
+      <a class="btn btn-secondary" href="#map-tree-h">나무에서 개념 찾기</a>
       <a class="btn btn-secondary" data-resume hidden href="#">이어서 보기: <span data-resume-name></span></a>
       ${firstExam ? `<a class="btn btn-secondary" href="paper.html?s=${subjectId}&set=${firstExam.set}">모의시험</a>` : ""}
     </div>
@@ -68,6 +70,7 @@ function overviewHtml(tree) {
         <h2 id="map-tree-h">${esc(root.title)}</h2>
         <p class="map-legend">
           <span><span class="ct-sig ct-sig-emph">강조</span> 수업에서 강조된 개념</span>
+          <span><span class="ct-sig ct-sig-hw">과제</span> 이번 학기 과제의 핵심 개념</span>
           <span><span class="ct-sig ct-sig-out">범위 밖</span> 시험 범위 밖으로 언급된 개념</span>
           <span><span class="ct-sig ct-sig-skim">건너뜀</span> 슬라이드에는 있지만 수업에서 넘어간 개념</span>
         </p>
@@ -89,7 +92,7 @@ function overviewHtml(tree) {
         </details>`;
       }).join("")}
     </section>
-    <article class="map-root pp-md" aria-label="줄기">${renderMd(root.body)}</article>
+    <article id="course-route" class="map-root pp-md" aria-label="핵심 복습 순서와 줄기">${renderMd(root.body)}</article>
   </div>`;
 }
 
@@ -105,7 +108,7 @@ function nodeHtml(tree, node) {
   const rows = (list) => `<ul class="cs-rows">${list.map((c) => `
     <li data-node="${c.slug}"><a href="${hrefOf(c.slug, tree)}" data-nav="${c.slug}">
       <span class="ct-mark" aria-hidden="true"></span>
-      <strong>${esc(c.title)}</strong>
+      <strong>${esc(c.title)} ${sigChip(c.signal)}</strong>
       <span class="cs-row-sum">${esc(c.summary)}</span>
     </a></li>`).join("")}</ul>`;
   const treeNav = branchHtml(tree.root, tree, ctx);

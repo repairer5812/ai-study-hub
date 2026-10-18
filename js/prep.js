@@ -3,7 +3,7 @@
 //   - 마크다운을 marked 로 그리고 수식은 KaTeX 로 그린다(review.js 와 같은 방식).
 //   - 개념 나무를 만들고, 다른 LLM 에 붙여 넣을 채점 프롬프트를 조립한다.
 
-import { getSubjectMeta } from "./subjects/index.js?v=20261018f";
+import { getSubjectMeta } from "./subjects/index.js?v=20261018g";
 
 export const params = new URLSearchParams(location.search);
 export const subjectId = params.get("s") || "sl";
@@ -117,6 +117,7 @@ export function subtree(node) {
 
 export const SIGNAL = {
   emph: { chip: "강조", cls: "ct-sig-emph", line: "수업에서 강조된 개념입니다. 유도나 비교를 직접 써 볼 수 있어야 합니다." },
+  hw: { chip: "과제", cls: "ct-sig-hw", line: "이번 학기 과제의 핵심 개념입니다. 해당 과제에서 요구한 계산이나 코드를 직접 확인하세요." },
   out: { chip: "범위 밖", cls: "ct-sig-out", line: "수업에서 시험 범위 밖으로 언급된 내용입니다. 흐름을 이해하는 용도로만 읽으세요." },
   skim: { chip: "건너뜀", cls: "ct-sig-skim", line: "슬라이드에는 있지만 수업에서는 다루지 않고 넘어간 내용입니다. 범위에서 빠졌다는 뜻은 아니니 결론만은 알아 두세요." },
 };

@@ -19,11 +19,12 @@ summary: 데이터가 어떤 분포에서 나왔다고 가정하고 그 가정 �
 1. [우도](map.html?s=sl&n=likelihood)를 정의합니다. 같은 식을 데이터가 아니라 매개변수의 함수로 읽습니다.
 2. 우도에 로그를 취하고 부호를 뒤집어 [음의 로그우도](map.html?s=sl&n=mle-nll)를 만듭니다. i.i.d. 가정으로 곱이 합이 됩니다.
 3. 가장 작은 예인 [동전 던지기](map.html?s=sl&n=mle-coin-toss)에서 네 걸음을 끝까지 밟습니다.
-4. 같은 순서로 [가우시안, 라플라스, 지수분포의 매개변수](map.html?s=sl&n=mle-distribution-parameters)를 구합니다.
+4. [과제 1의 분포별 매개변수](map.html?s=sl&n=mle-distribution-parameters)를 구합니다. Gaussian 평균과 분산, Laplace 위치와 척도, Exponential rate가 대상입니다.
 5. 입력과 레이블이 함께 있는 지도학습으로 옮깁니다. [조건부 우도](map.html?s=sl&n=conditional-likelihood)만 남기고 입력의 분포는 버립니다.
 6. 매개변수에 대한 사전 믿음을 prior로 곱해 [MAP](map.html?s=sl&n=map-posterior)를 만듭니다. 음의 로그우도에 항 하나가 더해집니다.
-7. 표본이 적을 때 MLE가 극단으로 가는 것을 [가상의 횟수](map.html?s=sl&n=coin-pseudo-counts)로 누그러뜨립니다. 그것이 [Beta prior](map.html?s=sl&n=map-coin-beta)를 두는 일과 같음을 봅니다.
-8. 두 방법 뒤에 있는 관점인 [빈도주의와 베이지안](map.html?s=sl&n=frequentist-vs-bayesian)을 구분하고 [MLE와 MAP](map.html?s=sl&n=mle-vs-map)를 나란히 놓습니다.
+7. 표본이 적을 때 prior가 하는 일은 [가상의 횟수](map.html?s=sl&n=coin-pseudo-counts)로 직관을 잡습니다.
+8. [빈도주의와 베이지안](map.html?s=sl&n=frequentist-vs-bayesian)을 구분하고 [MLE와 MAP](map.html?s=sl&n=mle-vs-map)를 비교합니다.
+9. [Beta prior의 상세 전개](map.html?s=sl&n=map-coin-beta)는 수업에서 넘어간 참고 내용으로 뒤에 둡니다.
 
 <div class="cal key">
 

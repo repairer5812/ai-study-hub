@@ -177,6 +177,7 @@
   border: 1px solid; border-radius: 5px; white-space: nowrap; letter-spacing: 0;
 }
 .ct-sig-emph { color: var(--p-accent-ink); background: var(--p-accent-tint); border-color: var(--p-accent-line); }
+.ct-sig-hw { color: var(--p-accent-ink); background: var(--p-panel); border-color: var(--p-accent-line); }
 .ct-sig-out { color: var(--p-muted); background: transparent; border-color: var(--p-line-strong); }
 .ct-sig-skim { color: var(--p-ink-2); background: var(--p-panel); border-color: var(--p-line-strong); border-style: dashed; }
 

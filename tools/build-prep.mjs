@@ -140,7 +140,7 @@ function checkCommon(f, body) {
 }
 
 /* ---------- 개념 노드 ---------- */
-const SIGNALS = ['emph', 'out', 'skim', 'none'];
+const SIGNALS = ['emph', 'hw', 'out', 'skim', 'none'];
 const nodes = new Map();
 for (const file of walk(join(SRC, 'concepts'))) {
   const f = relative(ROOT, file).replace(/\\/g, '/');

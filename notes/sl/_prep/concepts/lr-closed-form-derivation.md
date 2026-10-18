@@ -2,11 +2,19 @@
 title: 닫힌 해의 행렬 미분 전개
 en: Matrix derivation of the closed form
 parent: linear-regression
-order: 55
-summary: 제곱 손실의 행렬 미분에서 normal equation까지 이어지는 과제 복습입니다. 시험 범위 밖 표시는 유지하며, 가로 미분과 세로 gradient의 모양도 함께 확인합니다.
+order: 140
+summary: 다변량 제곱 손실을 행렬로 미분하는 전개입니다. 시험 제외 안내는 이 전개에 적용됩니다. 과제 2에서 쓰는 닫힌 해의 식과 코드까지 제외하는 뜻은 아닙니다.
 signal: out
 related: []
 ---
+
+<div class="cal extra">
+
+**이 페이지의 시험 제외 표시는 행렬 미분 전개에 한정합니다.**
+
+과제 2에 필요한 닫힌 해의 형태, 특성 행렬의 모양, NumPy 코드는 [다항회귀](map.html?s=sl&n=polynomial-regression)에서 먼저 복습합니다. 아래 전개는 결과가 어디서 왔는지 확인하는 참고 자료입니다.
+
+</div>
 
 ## 왜 필요한가
 
@@ -30,7 +38,7 @@ $$
 
 ## 과제 복습: 제곱 손실의 미분
 
-이 노드의 기존 시험 범위 밖 표시는 유지합니다. 다음 전개는 과제에서 다룬 계산을 복습하기 위한 것이며, 시험 범위가 바뀌었다는 뜻은 아닙니다.
+다음은 결과를 확인하기 위한 참고 전개입니다. 시험 제외 안내는 이 행렬 미분 과정에 적용됩니다. 과제 2의 닫힌 해 사용과 코드는 별도로 복습합니다.
 
 $\mathbf{X}\in\mathbb R^{n\times d}$, $\mathbf y\in\mathbb R^{n\times1}$, $\mathbf w\in\mathbb R^{d\times1}$ 로 두고, 분산 $\sigma^2>0$ 은 알고 있다고 가정합니다. 입력은 고정합니다. 가우시안 오차의 음의 로그우도는 다음과 같습니다.
 

@@ -3,10 +3,18 @@ title: "다항 회귀: 입력을 비선형으로 바꾼다"
 en: Polynomial regression
 parent: linear-regression
 order: 70
-summary: 입력을 거듭제곱들의 벡터로 바꾼 뒤 선형회귀를 그대로 씁니다. 입력에는 곡선이어도 계수에는 선형이라 같은 해가 나옵니다. 항의 수를 늘릴수록 과적합이 생기므로 validation으로 고릅니다.
-signal: none
+summary: 과제 2의 다항회귀를 복습합니다. 특성 행렬과 닫힌 해를 코드로 옮기고, K와 차수의 차이 및 학습 오차와 validation 오차를 확인합니다.
+signal: hw
 related: [generalization, complexity-tradeoff]
 ---
+
+<div class="cal key">
+
+**과제 2에서 확인할 것**
+
+특성 행렬을 만들고 닫힌 해를 코드로 옮깁니다. K는 항의 개수이고 차수는 K-1입니다. 서로 다른 K에서 학습 오차와 validation 오차를 비교합니다. 행렬 미분 전개를 제외한다는 안내가 닫힌 해 사용과 코드까지 제외하는 것은 아닙니다. 모의시험 D2와 연결됩니다.
+
+</div>
 
 ## 왜 필요한가
 
@@ -51,13 +59,38 @@ $$
 \hat{\mathbf{w}} = (\boldsymbol{\Phi}^T\boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^T\mathbf{y}
 $$
 
-**$K$ 를 키우면 생기는 일.** $K$ 가 커지면 곡선이 학습 점들에 더 가까이 붙습니다. 서로 다른 $x$ 가 $n$ 개일 때 $K = n$ 이면 모든 점을 지나는 다항식이 정해져 학습 오차가 0이 됩니다. 그 곡선은 점과 점 사이에서 크게 출렁입니다. 학습 점에서는 맞지만 새 입력에서는 크게 틀립니다.
+**$K$ 를 키우면 생기는 일.** $K$ 가 커지면 곡선이 학습 점들에 더 가까이 붙습니다. 서로 다른 $x$ 가 $n$ 개일 때 $K = n$ 이면 모든 점을 지나는 다항식이 정해져 학습 오차가 0이 됩니다. 잡음까지 맞추면 점 사이에서 곡선이 크게 출렁이고 새 입력에서 오차가 커질 수 있습니다. 보간 자체가 좋은 일반화를 보장하지는 않습니다.
 
-$K$ 가 작으면 반대로 곡선이 뻣뻣해서 데이터의 모양을 따라가지 못합니다. $K$ 는 [가설 집합의 크기](map.html?s=sl&n=complexity-tradeoff)를 정하는 손잡이입니다. 키우면 approximation error가 줄고 estimation error가 늡니다.
+$K$ 가 작으면 반대로 곡선이 뻣뻣해서 데이터의 모양을 따라가지 못합니다. $K$ 는 [가설 집합의 크기](map.html?s=sl&n=complexity-tradeoff)를 정하는 손잡이입니다. 키우면 가능한 최적 approximation error는 커지지 않지만, 유한한 표본에서는 estimation error가 커질 수 있습니다.
 
 **$K$ 는 validation으로 고릅니다.** $K$ 는 MLE가 정해 주는 값이 아닙니다. 항이 $K + 1$ 개인 모형은 마지막 계수를 0으로 두면 항이 $K$ 개인 모형이 됩니다. 그래서 학습 손실은 $K$ 를 키울수록 줄거나 그대로입니다. 학습 손실로 고르면 언제나 가장 큰 $K$ 가 뽑힙니다. $K$ 를 바꿔 가며 학습한 뒤 학습에 쓰지 않은 validation 데이터의 손실이 가장 작은 $K$ 를 고릅니다.
 
 다항식은 변환의 한 예입니다. $\boldsymbol{\phi}$ 자리에 다른 비선형 변환을 넣어도 $\mathbf{w}$ 에 선형이기만 하면 같은 방법이 통합니다.
+
+## 과제 2의 식을 코드로 옮기기
+
+입력 x와 레이블 y는 모양이 $(n,1)$ 인 NumPy 배열로 둡니다. 아래 코드는 과제에서 요구한 행렬 연산을 확인하는 구현입니다. $\boldsymbol\Phi$ 의 열들이 독립이어서 $\boldsymbol\Phi^T\boldsymbol\Phi$ 의 역행렬이 존재한다고 가정합니다.
+
+```python
+import numpy as np
+
+def fit_poly(x, y, K):
+    phi = np.zeros((len(x), K))
+    for k in range(K):
+        phi[:, [k]] = x ** k
+    phi_T = np.transpose(phi)
+    gram = np.matmul(phi_T, phi)
+    return np.matmul(np.matmul(np.linalg.inv(gram), phi_T), y)
+```
+
+| 배열 | 모양 | 뜻 |
+|---|---|---|
+| phi | $(n,K)$ | 표본을 행으로, 다항 특성을 열로 쌓음 |
+| phi_T | $(K,n)$ | 특성 행렬의 전치 |
+| gram | $(K,K)$ | 역행렬을 구하는 대상 |
+| 반환한 w | $(K,1)$ | 항별 계수 |
+
+과제에서 비교하는 K=2, 3, 5, 10은 각각 1, 2, 4, 9차 다항식입니다. 같은 학습 자료에서 학습 오차가 줄었다는 사실만으로 K를 고르지 않습니다. validation 오차와 곡선이 잡음을 따라 출렁이는지도 확인합니다. 이 코드는 닫힌 해의 사용을 복습하는 것이며 행렬 미분 전개를 다시 요구하는 것은 아닙니다.
 
 ## 흔한 오해
 

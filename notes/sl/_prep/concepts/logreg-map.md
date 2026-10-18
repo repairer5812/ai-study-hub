@@ -4,9 +4,17 @@ en: MAP objective with a Gaussian prior
 parent: logistic-regression
 order: 70
 summary: 가우시안 prior를 두고 MAP로 풀면 MLE의 목적함수는 그대로이고 끝에 계수 제곱의 벌점 하나가 붙습니다. 매개변수 앞의 세미콜론이 막대로 바뀌는 이유도 여기서 정리합니다.
-signal: none
+signal: emph
 related: [map-posterior, ridge-map-gaussian-prior]
 ---
+
+<div class="cal extra">
+
+**MLE에서 MAP까지 전개합니다**
+
+출제 예고가 있는 Logistic 전개에는 Gaussian prior를 더하는 MAP도 포함됩니다. -1/+1 레이블의 통합 확률, 음의 로그우도, 양의 L2 벌점이 연결돼야 합니다. 모의시험 C3에서 함께 확인합니다. prior 분산의 특정 숫자보다 평균 0인 Gaussian 가정과 벌점의 모양을 먼저 확인합니다.
+
+</div>
 
 ## 왜 필요한가
 
@@ -113,7 +121,7 @@ $\sum_i \log(1+e^{-y_i\mathbf{w}^T\mathbf{x}_i})$ 는 그대로입니다. 달라
 
 <div class="cal q">
 
-가우시안 prior $P(\mathbf{w}) \propto \exp\!\left(-\frac{\mathbf{w}^T\mathbf{w}}{2\tau^2}\right)$ 에서 $-\log P(\mathbf{w})$ 를 직접 쓰고 MLE의 목적함수에 어떤 항이 더해지는지 적어 보세요. 그다음 $\mathbf{w} = (3, -4)^T$, $\tau^2 = 5$ 일 때 더해지는 항의 값을 구하고 $\tau^2$ 을 $\frac{1}{2}$ 로 줄이면 $\lambda$ 와 그 값이 어떻게 되는지 계산해 보세요.
+레이블이 -1/+1인 Logistic 모형에서 시작합니다. i.i.d. 표본의 우도를 쓰고, 음의 로그를 취해 MLE 목적함수를 만드세요. 이어 평균이 0인 Gaussian prior를 곱해 MAP 목적함수를 쓰세요. 데이터 손실과 벌점은 각각 어느 가정에서 나왔습니까?
 
 </div>
 
@@ -121,13 +129,19 @@ $\sum_i \log(1+e^{-y_i\mathbf{w}^T\mathbf{x}_i})$ 는 그대로입니다. 달라
 <summary>답 보기</summary>
 
 $$
--\log P(\mathbf{w}) = \frac{\mathbf{w}^T\mathbf{w}}{2\tau^2} + \text{const}
+\begin{aligned}
+P(y_i\mid\mathbf x_i;\mathbf w)&=\frac{1}{1+e^{-y_i\mathbf w^T\mathbf x_i}},\\
+P(D;\mathbf w)&=\prod_{i=1}^n P(y_i\mid\mathbf x_i;\mathbf w),\\
+J_{\mathrm{MLE}}(\mathbf w)&=\sum_{i=1}^n\log(1+e^{-y_i\mathbf w^T\mathbf x_i}).
+\end{aligned}
 $$
 
-더해지는 항은 $\lambda\mathbf{w}^T\mathbf{w}$ 이고 $\lambda = \frac{1}{2\tau^2}$ 입니다.
+여기서는 입력을 고정했고, 편향은 가중치에 흡수했습니다. 평균 0인 Gaussian prior를 곱하고 음의 로그를 취하면
 
-$\mathbf{w}^T\mathbf{w} = 3^2 + (-4)^2 = 25$ 입니다. $\tau^2 = 5$ 이면 $\lambda = 0.1$ 이고 항의 값은 $2.5$ 입니다. $\tau^2 = \frac{1}{2}$ 이면 $\lambda = 1$ 이고 항의 값은 $25$ 입니다.
+$$
+J_{\mathrm{MAP}}(\mathbf w)=J_{\mathrm{MLE}}(\mathbf w)+\lambda\mathbf w^T\mathbf w
+$$
 
-prior를 좁히자 같은 $\mathbf{w}$ 가 받는 벌점이 열 배가 됐습니다. 큰 $\mathbf{w}$ 를 고르기가 그만큼 어려워집니다.
+가 됩니다. $\lambda>0$ 이고 prior의 분산으로 정해집니다. 데이터 손실은 Logistic 관측모형에서, L2 벌점은 Gaussian prior에서 나옵니다. prior만 바꾸면 데이터 손실은 바뀌지 않습니다.
 
 </details>

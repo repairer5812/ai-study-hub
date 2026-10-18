@@ -4,9 +4,17 @@ en: One formula with labels +1 and -1
 parent: logistic-regression
 order: 50
 summary: 음의 클래스를 0이 아니라 -1이라고 부르면 두 클래스의 확률이 식 하나로 묶입니다. MLE 유도가 이 한 줄에서 출발합니다.
-signal: none
+signal: emph
 related: []
 ---
+
+<div class="cal key">
+
+**Logistic 유도의 출발점**
+
+수업 전개에서는 레이블을 -1/+1로 둡니다. 두 클래스의 확률을 한 식으로 묶은 뒤 MLE와 MAP까지 이어 갑니다. Topic 4 뒤쪽 gradient 설명의 0/1 레이블과 섞지 않습니다.
+
+</div>
 
 ## 왜 필요한가
 

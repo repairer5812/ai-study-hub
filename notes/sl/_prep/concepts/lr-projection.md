@@ -2,11 +2,19 @@
 title: MLE를 orthogonal projection으로 읽기
 en: Least squares as orthogonal projection
 parent: linear-regression
-order: 60
+order: 150
 summary: 닫힌 해로 만든 예측은 레이블 벡터를 입력 행렬의 열들이 만드는 부분공간에 수직으로 내린 것입니다. 미분으로 얻은 해를 기하로 다시 읽는 해석입니다.
-signal: skim
+signal: none
 related: []
 ---
+
+<div class="cal extra">
+
+**기하적 해석을 위한 참고 페이지입니다.**
+
+과제 2의 코드와 수업에서 강조한 유도를 먼저 복습한 뒤 읽습니다. 이 참고 배치는 복습 순서를 정한 것이며, 별도의 시험 제외 안내로 해석하지 않습니다.
+
+</div>
 
 ## 정의와 수식
 

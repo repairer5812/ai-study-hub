@@ -3,10 +3,18 @@ title: 분포의 매개변수를 MLE로 구하기
 en: MLE for distribution parameters
 parent: mle-map
 order: 40
-summary: 가우시안, 라플라스, 지수분포의 매개변수를 같은 네 걸음으로 구합니다. 가우시안의 평균은 표본평균, 라플라스의 위치는 중앙값이 되며 이 차이가 뒤에서 MSE와 MAE의 차이로 이어집니다.
-signal: emph
+summary: 과제 1의 세 분포를 복습합니다. Gaussian 평균과 분산, Laplace 위치와 척도, Exponential rate를 우도에서 직접 구하고 각 매개변수의 의미를 구분합니다.
+signal: hw
 related: [lr-gaussian-noise-mse, lr-laplace-noise-mae]
 ---
+
+<div class="cal extra">
+
+**과제 1에서 확인할 것**
+
+세 분포의 밀도를 넣고 우도, 로그우도, 미분, 추정값 순서로 직접 씁니다. Gaussian 분산의 분모 n, Laplace 척도의 부호, Exponential의 rate와 평균을 구분합니다. 짝수 개 표본에서는 Laplace 위치의 최적값이 구간일 수 있습니다. 모의시험 D1과 연결됩니다.
+
+</div>
 
 ## 왜 필요한가
 

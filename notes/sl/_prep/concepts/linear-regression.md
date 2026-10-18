@@ -14,18 +14,13 @@ summary: 실수 레이블을 입력의 선형 함수로 맞추는 모형입니�
 
 ## 이 가지의 흐름
 
-1. [모형과 가정](map.html?s=sl&n=lr-model-assumption)을 적습니다. $y = w_1 x + w_0 + \epsilon$ 에서 직선은 $y$ 의 평균이고 관측값은 그 둘레에 퍼집니다.
-2. 노이즈를 가우시안으로 두고 MLE를 전개하면 [MSE](map.html?s=sl&n=lr-gaussian-noise-mse)가 나옵니다.
-3. 노이즈를 라플라스로 바꾸면 같은 다섯 줄에서 [MAE](map.html?s=sl&n=lr-laplace-noise-mae)가 나옵니다. 새로 쓰는 것은 밀도를 넣는 한 줄입니다.
-4. MSE를 미분해 0으로 두면 [단변량의 닫힌 해](map.html?s=sl&n=lr-closed-form-univariate) $\hat{w}_0$, $\hat{w}_1$ 이 나옵니다.
-5. 입력을 벡터로 넓히면 [normal equation과 닫힌 해](map.html?s=sl&n=lr-multivariate-normal-equation)가 됩니다. 역행렬이 있어야 쓸 수 있어서 실제로는 반복법으로 풉니다.
-6. [닫힌 해의 행렬 미분 전개](map.html?s=sl&n=lr-closed-form-derivation)와 [projection으로 읽는 해석](map.html?s=sl&n=lr-projection)은 참고용으로 따로 두었습니다.
-7. 입력을 비선형으로 바꾸면 [다항 회귀](map.html?s=sl&n=polynomial-regression)가 됩니다. 항을 늘릴수록 과적합이 생깁니다.
-8. 구한 계수가 우연이 아닌지 [가설 검정](map.html?s=sl&n=coefficient-inference)으로 확인합니다.
-9. 계수가 0 근처에 있다는 가우시안 prior를 더해 MAP로 풀면 [ridge](map.html?s=sl&n=ridge-map-gaussian-prior)가 나옵니다.
-10. prior를 라플라스로 바꾸면 [lasso](map.html?s=sl&n=lasso-map-laplace-prior)가 나옵니다. 바뀌는 것은 prior 쪽 두 줄입니다.
-11. [ridge와 lasso의 차이](map.html?s=sl&n=ridge-vs-lasso)는 계수가 정확히 0이 되느냐에 있습니다.
-12. 손실은 노이즈가 정하고 벌점은 prior가 정합니다. [두 가정의 조합](map.html?s=sl&n=noise-prior-combination)을 한 표로 봅니다.
+1. [모형과 가정](map.html?s=sl&n=lr-model-assumption)을 적고, Gaussian 노이즈에서 [MSE](map.html?s=sl&n=lr-gaussian-noise-mse)가 나오는 과정을 씁니다.
+2. 노이즈를 Laplace로 바꿔 [MAE](map.html?s=sl&n=lr-laplace-noise-mae)를 얻습니다. 분포를 넣는 줄과 최종 손실이 함께 바뀝니다.
+3. [단변량 닫힌 해](map.html?s=sl&n=lr-closed-form-univariate)와 [다변량 닫힌 해](map.html?s=sl&n=lr-multivariate-normal-equation)의 형태와 사용 조건을 확인합니다.
+4. [과제 2의 다항회귀](map.html?s=sl&n=polynomial-regression)에서 특성 행렬, 코드, 차수, 과적합을 복습합니다.
+5. 추정한 계수가 통계적으로 의미 있는지 [가설검정](map.html?s=sl&n=coefficient-inference)으로 확인합니다.
+6. Gaussian prior의 [Ridge](map.html?s=sl&n=ridge-map-gaussian-prior)와 Laplace prior의 [Lasso](map.html?s=sl&n=lasso-map-laplace-prior)를 유도합니다. [두 방법의 차이](map.html?s=sl&n=ridge-vs-lasso)와 [노이즈와 prior의 역할](map.html?s=sl&n=noise-prior-combination)을 구분합니다.
+7. [행렬 미분 전개](map.html?s=sl&n=lr-closed-form-derivation)는 시험 제외 안내가 있는 참고 자료입니다. [projection 해석](map.html?s=sl&n=lr-projection)도 복습 순서 뒤에 둡니다.
 
 <div class="cal key">
 

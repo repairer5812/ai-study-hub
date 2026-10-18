@@ -2,11 +2,19 @@
 title: 계수가 우연이 아닌지 확인하기
 en: Significance of the coefficients
 parent: linear-regression
-order: 90
+order: 80
 summary: 표본으로 구한 기울기가 0이 아니게 나와도 우연일 수 있습니다. 기울기가 0이라는 귀무가설을 세우고 그 가설 아래에서는 좀처럼 나올 수 없는 값이면 기각하는 것이 검정의 논리입니다.
-signal: none
+signal: emph
 related: []
 ---
+
+<div class="cal key">
+
+**계수 크기와 통계적 유의성을 구분합니다**
+
+추정 계수만 보고 영향이 확실하다고 결론 내리지 않습니다. 귀무가설 $w_1=0$ 을 세우고 0에서 떨어진 거리를 표준오차와 비교합니다. 아래 t 식을 쓰고 검정 결과를 해석할 수 있어야 합니다.
+
+</div>
 
 ## 왜 필요한가
 
