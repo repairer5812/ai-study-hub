@@ -89,7 +89,11 @@ export function attachBlanks(item, q, {
       <span>다시 볼 개념</span>
       ${concepts.map((c) => `<a class="ex-link" href="${esc(c.href)}">${esc(c.title)}</a>`).join("")}
     </p>` : ""}`;
-  stem.after(panel);
+  // 문제와 보기를 같은 행에 놓고, 넓은 화면에서는 오른쪽 보기를 따라오게 한다.
+  const layout = document.createElement("div");
+  layout.className = "bk-layout";
+  stem.before(layout);
+  layout.append(stem, panel);
   const nums = panel.querySelector(".bk-nums");
   const optsBox = panel.querySelector("[data-bk-opts]");
   const clearBtn = panel.querySelector("[data-bk-clear]");
@@ -199,7 +203,7 @@ export function attachBlanks(item, q, {
   };
 
   const paintOpts = () => {
-    // 보기가 열려 있는 동안 상자는 화면 아래쪽에 붙는다(CSS). 긴 유도에서도 누른 줄과 보기가 함께 보인다.
+    // 넓은 화면은 오른쪽, 좁은 화면은 아래에 붙여 누른 줄과 보기를 함께 보인다.
     panel.setAttribute("data-open", active === null ? "false" : "true");
     closeBtn.hidden = active === null;
     if (active === null) { optsBox.hidden = true; optsBox.innerHTML = ""; return; }
@@ -257,7 +261,10 @@ export function attachBlanks(item, q, {
     requestAnimationFrame(() => {
       const box = stem.querySelector(`[data-blank="${n}"]`);
       if (!box) return;
-      const hidden = box.getBoundingClientRect().bottom + 28 - panel.getBoundingClientRect().top;
+      const panelBox = panel.getBoundingClientRect();
+      // 오른쪽 보기는 문제를 가리지 않으므로 아래쪽 보기용 스크롤 보정을 하지 않는다.
+      if (panelBox.left >= stem.getBoundingClientRect().right) return;
+      const hidden = box.getBoundingClientRect().bottom + 28 - panelBox.top;
       if (hidden > 0) window.scrollBy({ top: hidden, behavior: calm ? "auto" : "smooth" });
     });
   };

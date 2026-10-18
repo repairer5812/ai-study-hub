@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018k";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018k";
+} from "./prep.js?v=20261018l";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018l";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -109,7 +109,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
           <span><strong>최종 보기</strong><small>시험을 종료한 뒤 정답과 해설을 한꺼번에 확인합니다.</small></span>
         </label>
       </div>
-      <p>바로 보기에서 계산·서술형은 직접 푼 뒤 ‘정답 보기’를 누르세요. 재시험은 선택한 모드로 시작합니다.</p>
+      <p>바로 보기에서 계산·서술형은 직접 푼 뒤 ‘정답 보기’를 누르세요. 진행 중에도 위쪽 모드 버튼으로 바꿀 수 있습니다.</p>
     </fieldset>
     <div class="pp-actions">
       <button type="button" class="btn btn-primary btn-lg" data-ex-start>화면에서 시험 시작</button>
@@ -122,13 +122,35 @@ function pageHtml(exam, questions, parts, topicTitle) {
     </p>
   </header>
 
+  <dialog class="ex-mode-dialog" id="ex-mode-dialog" aria-labelledby="ex-mode-dialog-h">
+    <form method="dialog" data-ex-mode-form>
+      <h2 id="ex-mode-dialog-h" data-ex-mode-title>정답 확인 모드</h2>
+      <p data-ex-mode-note>진행 중인 답과 시간은 유지됩니다.</p>
+      <fieldset class="ex-modes">
+        <legend>정답을 언제 확인할까요?</legend>
+        <div class="ex-mode-options">
+          <label class="ex-mode"><input type="radio" name="feedback-dialog" value="immediate">
+            <span><strong>정답 바로 보기</strong><small>답을 고르면 정답과 해설을 바로 확인합니다.</small></span>
+          </label>
+          <label class="ex-mode"><input type="radio" name="feedback-dialog" value="final">
+            <span><strong>최종 보기</strong><small>시험을 종료한 뒤 정답과 해설을 확인합니다.</small></span>
+          </label>
+        </div>
+      </fieldset>
+      <div class="pp-actions">
+        <button type="submit" value="apply" class="btn btn-primary" data-ex-mode-apply>적용</button>
+        <button type="submit" value="cancel" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
+
   <div class="ex-bar" data-ex-bar hidden>
     <div class="ex-bar-in">
       <p class="ex-clock">
         <span class="ex-clock-label" data-ex-clock-label>남은 시간</span>
         <span class="ex-clock-time" data-ex-clock>${String(exam.minutes).padStart(2, "0")}:00</span>
       </p>
-      <span class="ex-mode-status" data-ex-mode-status></span>
+      <button type="button" class="ex-chip ex-mode-status" data-ex-mode-status aria-haspopup="dialog" aria-controls="ex-mode-dialog"></button>
       <nav class="ex-jump" aria-label="파트 이동">${parts.map((p) => `<a href="#part-${p.id}">${p.id}</a>`).join("")}</nav>
       <div class="ex-bar-actions">
         <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
@@ -317,6 +339,11 @@ function wire(root, exam, questions, topicTitle) {
   const scoresForm = $("[data-ex-scores]");
   const limit = exam.minutes * 60;
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 시계 띠가 두 줄이 되어도 오른쪽 보기가 띠 아래에 붙게 한다.
+  new ResizeObserver(() => {
+    root.style.setProperty("--bk-top", `${Math.ceil(bar.getBoundingClientRect().height) + 20}px`);
+  }).observe(bar);
 
   /* 빈칸 유도: 빈칸을 눌러 보기에서 고르기 */
   const blankQs = questions.filter(hasBlankChoices);
@@ -509,7 +536,7 @@ function wire(root, exam, questions, topicTitle) {
     const immediate = state.phase === "running" && state.feedback === "immediate";
     const done = state.phase === "grading" || state.phase === "result";
     root.setAttribute("data-feedback", state.feedback);
-    $("[data-ex-mode-status]").textContent = state.feedback === "immediate" ? "정답 바로 보기" : "최종 보기";
+    $("[data-ex-mode-status]").textContent = state.feedback === "immediate" ? "정답 바로 보기 · 변경" : "최종 보기 · 변경";
     questions.forEach((q) => {
       const label = labelOf(q);
       const item = root.querySelector(`[data-q-item="${label}"]`);
@@ -561,10 +588,34 @@ function wire(root, exam, questions, topicTitle) {
     run();
   };
   $("[data-ex-start]").addEventListener("click", startExam);
-  $$("[data-ex-restart]").forEach((btn) => btn.addEventListener("click", () => {
-    if (!window.confirm(`선택한 답과 점수를 지우고 ${exam.minutes}분 시험을 처음부터 다시 시작할까요?`)) return;
-    startExam();
-  }));
+  const modeDialog = $("#ex-mode-dialog");
+  let modeRestarts = false;
+  const openModes = (restart) => {
+    modeRestarts = restart;
+    $("[data-ex-mode-title]").textContent = restart ? "재시험 시작" : "정답 확인 모드";
+    $("[data-ex-mode-note]").textContent = restart
+      ? "모드를 고르고 시작하면 이전 답과 점수를 지우고 처음부터 풉니다."
+      : "진행 중인 답과 시간은 유지됩니다.";
+    $("[data-ex-mode-apply]").textContent = restart ? `${exam.minutes}분 시험 시작` : "적용";
+    $$("[name=feedback-dialog]").forEach((input) => { input.checked = input.value === (restart ? "immediate" : state.feedback); });
+    modeDialog.showModal();
+  };
+  $("[data-ex-mode-status]").addEventListener("click", () => openModes(false));
+  $$("[data-ex-restart]").forEach((btn) => btn.addEventListener("click", () => openModes(true)));
+  $("[data-ex-mode-form]").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (e.submitter?.value !== "apply") { modeDialog.close(); return; }
+    state.feedback = $("[name=feedback-dialog]:checked").value;
+    $$("[name=feedback-mode]").forEach((input) => { input.checked = input.value === state.feedback; });
+    modeDialog.close();
+    if (modeRestarts) startExam();
+    else {
+      save();
+      syncBlanks();
+      paintAuto();
+      paintFeedback();
+    }
+  });
   const endBtn = $("[data-ex-end]");
   const endConfirm = $("[data-ex-end-confirm]");
   endBtn.addEventListener("click", () => { endBtn.hidden = true; endConfirm.hidden = false; $("[data-ex-end-yes]").focus(); });

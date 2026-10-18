@@ -318,7 +318,13 @@
 .ex-mode strong, .ex-mode small { display: block; }
 .ex-mode small, .ex-modes > p { color: var(--p-muted); font-size: 13px; line-height: 1.6; }
 .ex-modes > p { margin-top: 8px; }
-.ex-mode-status { font-size: 12px; color: var(--p-muted); }
+.ex-mode-status { font-size: 12px; }
+.ex-mode-dialog { width: min(560px, calc(100% - 28px)); max-height: calc(100dvh - 28px); margin: auto; padding: clamp(18px, 3vw, 28px); border: 1px solid var(--p-line-strong); border-radius: var(--p-r); color: var(--p-ink); background: var(--p-surface); overflow-y: auto; }
+.ex-mode-dialog::backdrop { background: rgba(15, 20, 30, 0.5); }
+.ex-mode-dialog h2 { font-size: 22px; }
+.ex-mode-dialog > form > p { margin-top: 8px; font-size: 14px; color: var(--p-muted); }
+.ex-mode-dialog .ex-modes { margin: 20px 0; }
+.ex-mode-dialog .ex-mode-options { grid-template-columns: minmax(0, 1fr); }
 .ex-reveal-row { margin-top: 14px; }
 .ex-reveal-row[hidden] { display: none; }
 .ex[data-phase="running"] .ck-note .ex-link { display: none; }
@@ -598,7 +604,7 @@
 .pp-md .pp-blank-ok .fbox { border-color: var(--p-ok) !important; border-width: 0.08em !important; }
 .pp-md .pp-blank-no .fbox { border-color: var(--p-accent-ink) !important; border-style: dashed !important; border-width: 0.08em !important; }
 
-.bk { margin-top: 14px; max-width: 74ch; padding-top: 12px; border-top: 1px dashed var(--p-line-strong); }
+.bk { font-size: 13.5px; margin-top: 14px; max-width: 74ch; padding-top: 12px; border-top: 1px dashed var(--p-line-strong); }
 /* 보기가 열려 있으면 화면 아래쪽에 붙는다. 문항을 벗어나면 함께 올라간다. */
 .bk[data-open="true"] {
   position: sticky; bottom: 0; z-index: 30; padding-bottom: 12px;
@@ -626,23 +632,24 @@
 
 .bk-opts { min-width: 0; margin: 0; padding: 0; border: 0; }
 .bk-opts[hidden] { display: none; }
-.bk-opts legend { padding: 0; margin-bottom: 8px; font-size: 14px; font-weight: 800; color: var(--p-ink); }
+.bk-opts legend { padding: 0; margin-bottom: 6px; font-size: 13px; font-weight: 800; color: var(--p-ink); }
 .bk-pts { margin-left: 6px; font-weight: 600; color: var(--p-muted); }
 .bk-opt { position: relative; display: block; cursor: pointer; }
 .bk-opt + .bk-opt { margin-top: 5px; }
 .bk-opt input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
 .bk-opt-in {
-  display: flex; align-items: center; gap: 11px; min-width: 0; padding: 6px 12px;
+  display: flex; align-items: center; gap: 8px; min-width: 0; padding: 4px 9px;
   border: 1px solid var(--p-line); border-radius: 8px; background: var(--p-surface); color: var(--p-ink);
   transition: background 0.16s var(--p-ease), border-color 0.16s var(--p-ease);
 }
 .bk-opt:hover .bk-opt-in { border-color: var(--p-line-strong); background: var(--p-panel); }
 .bk-opt input:checked + .bk-opt-in { border-color: var(--p-ink); background: var(--p-panel); box-shadow: inset 0 0 0 1px var(--p-ink); }
 .bk-opt input:focus-visible + .bk-opt-in { outline: 2px solid var(--p-accent-ink); outline-offset: 2px; }
-.bk-opt-mark { flex: none; font-size: 17px; line-height: 1; color: var(--p-muted); }
+.bk-opt-mark { flex: none; font-size: 14px; line-height: 1; color: var(--p-muted); }
 .bk-opt input:checked + .bk-opt-in .bk-opt-mark { color: var(--p-ink); }
+.bk-opt-body .katex { font-size: 1em; }
 .bk-opt-body { flex: 1 1 auto; min-width: 0; padding: 3px 0; overflow-x: auto; overflow-y: hidden; }
-.bk-tag { flex: none; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+.bk-tag { flex: none; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
 .bk-tag-ok { color: var(--p-ok); }
 .bk-tag-no { color: var(--p-accent-ink); }
 /* 잠긴 빈칸(채점된 뒤, 다시 푸는 빈칸은 뺀다)의 보기는 고를 수 없고 맞고 틀림만 보인다. */
@@ -716,6 +723,23 @@
   to { opacity: 1; transform: none; }
 }
 
+/* 넓은 시험지의 오른쪽 공간에 빈칸 보기를 둔다. 문제 영역 위로 겹치지 않는다. */
+@media screen and (min-width: 1100px) {
+  .prep-paper .container { max-width: 1320px; }
+  .prep-paper .ex-paper { max-width: none; }
+  .prep-paper .ex-q:not([data-type="blank"]) { max-width: 780px; }
+  .bk-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: 24px; margin-top: 10px; }
+  .bk-layout > .ex-stem { min-width: 0; margin-top: 0; }
+  .bk-layout > .bk { position: sticky; top: var(--bk-top, var(--p-top)); bottom: auto; align-self: start; display: flex; flex-direction: column; min-height: 0; max-height: calc(100dvh - var(--bk-top, var(--p-top)) - 16px); margin-top: 0; padding: 12px; border: 1px solid var(--p-line-strong); border-radius: 10px; background: var(--p-surface); box-shadow: none; }
+  .bk-layout > .bk > * { flex: none; }
+  .bk-layout > .bk .bk-scroll { flex: 0 1 auto; min-height: 0; max-height: none; margin-top: 6px; overscroll-behavior-y: contain; }
+  .bk-layout .bk-nums { gap: 4px; margin-top: 0; }
+  .bk-layout .bk-num { min-height: 30px; padding: 4px 7px; font-size: 12px; gap: 3px; }
+  .bk-layout .bk-num-state { font-size: 11px; }
+  .bk-layout .bk-foot { gap: 4px 12px; margin-top: 7px; font-size: 12px; }
+  .bk-layout .bk-foot .ex-link { font-size: 12px; }
+}
+
 /* ───────── 반응형 ───────── */
 @media (max-width: 980px) {
   .map-shell { grid-template-columns: minmax(0, 1fr); }
@@ -744,8 +768,8 @@
   .ex-paper { border-radius: var(--p-r); }
 }
 @media (max-width: 560px) {
-  /* 아래쪽에 붙는 보기 상자가 화면의 절반을 넘지 않게 한다. 보기가 더 길면 상자 안에서만 스크롤된다. */
-  .bk[data-open="true"] { display: flex; flex-direction: column; max-height: 50vh; max-height: 50dvh; padding-top: 8px; padding-bottom: 8px; }
+  /* 아래쪽에 붙는 보기 상자를 화면의 약 3분의 1로 줄인다. 보기가 더 길면 상자 안에서만 스크롤된다. */
+  .bk[data-open="true"] { display: flex; flex-direction: column; max-height: 36vh; max-height: 36dvh; padding-top: 8px; padding-bottom: 8px; }
   .bk[data-open="true"] > * { flex: none; }
   .bk[data-open="true"] .bk-scroll { flex: 0 1 auto; min-height: 0; max-height: none; margin-top: 2px; }
   .bk[data-open="true"] :is(.bk-foot, .bk-retry) { margin-top: 4px; }
@@ -788,7 +812,7 @@
   .prep .ex-print-note { display: block !important; }
   .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
   .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
-  .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
+  .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
   .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
