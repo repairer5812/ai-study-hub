@@ -12,7 +12,7 @@
         "id": "A",
         "en": "True or False",
         "ko": "참거짓",
-        "guide": "Mark each statement True or False."
+        "guide": "Select T (True) or F (False) below each statement."
       },
       {
         "id": "B",
@@ -23,8 +23,8 @@
       {
         "id": "C",
         "en": "Fill in the Blanks",
-        "ko": "빈칸 유도",
-        "guide": "Complete the derivations, keeping the given modeling assumptions and label encoding."
+        "ko": "빈칸 5지선다",
+        "guide": "Choose one of five options for each blank, keeping the given modeling assumptions and label encoding."
       },
       {
         "id": "D",

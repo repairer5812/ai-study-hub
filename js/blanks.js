@@ -49,14 +49,14 @@ function filledStem(q, show) {
  * retryNote: 다시 풀기 버튼 옆에 적을 한 줄(모의시험에서는 점수에 들어가지 않는다는 안내).
  */
 export function attachBlanks(item, q, {
-  picks = {}, retry = null, onChange = () => {}, onRetry = () => {}, recall = false, onRecall = null, concepts = [], retryNote = "",
+  picks = {}, retry = null, onChange = () => {}, onRetry = () => {}, recall = false, onRecall = null, concepts = [], retryNote = "", autoOpen = false,
 } = {}) {
   const stem = item.querySelector(".ex-stem");
   const uid = `bk${++seq}`;
   const byN = new Map(q.blanks.map((b) => [b.n, b]));
   const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const seen = new Set(); // 보기 늦게 보기에서 "보기 보기"를 누른 빈칸
-  let active = null;
+  let active = autoOpen ? q.blanks[0]?.n ?? null : null;
   let graded = false;
 
   const panel = document.createElement("div");
@@ -336,6 +336,7 @@ export function attachBlanks(item, q, {
 
   paintStem();
   paintNums();
+  paintOpts();
 
   return {
     /** 채점 상태로 바꾼다(고칠 수 없고, 맞고 틀림과 정답이 보인다). 채점을 풀면 다시 풀기 기록도 버린다. */
@@ -350,7 +351,7 @@ export function attachBlanks(item, q, {
       if (next === picks && (nextRetry || null) === retry) return;
       picks = next;
       retry = cleanRetry(nextRetry);
-      active = null;
+      active = autoOpen ? q.blanks[0]?.n ?? null : null;
       seen.clear();
       paintAll();
     },

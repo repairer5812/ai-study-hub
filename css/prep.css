@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   prep.css — 시험 준비 화면: 개념 지도(map.html), 종이로 푸는 모의시험(paper.html),
+   prep.css — 시험 준비 화면: 개념 지도(map.html), 화면에서 푸는 모의시험(paper.html),
    주제별 문제(practice.html). body.prep 아래에서만 적용된다.
    색은 base 테마 토큰(--c-*)에서 받아 오고, 여기서만 필요한 것은 --p-* 로 두 테마 모두 정의한다.
    ═══════════════════════════════════════════════════════ */
@@ -412,6 +412,24 @@
 .ex-q[data-type="mc"] .ex-stem ul { list-style: none; padding-left: 4px; }
 .ex-q[data-type="mc"] .ex-stem li + li { margin-top: 0.42em; }
 
+/* 풀이 중 문항 바로 아래에서 답을 고른다. */
+.ex-picks { border: 0; min-width: 0; margin: 14px 0 0; padding: 0; }
+.ex-picks legend { padding: 0; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--p-muted); }
+.ex-pick-options { display: grid; gap: 8px; }
+.ex-picks[data-compact="true"] .ex-pick-options { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 360px; }
+.ex-pick-option { position: relative; display: block; cursor: pointer; min-width: 0; }
+.ex-pick-option input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: pointer; }
+.ex-pick-in { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 10px 13px; border: 1.5px solid var(--p-line-strong); border-radius: 8px; background: var(--p-surface); }
+.ex-pick-mark { flex: none; font-weight: 800; color: var(--p-muted); }
+.ex-pick-body { min-width: 0; overflow-x: auto; }
+.ex-pick-body > p { margin: 0; }
+.ex-pick-option:hover .ex-pick-in { border-color: var(--p-ink); }
+.ex-pick-option input:checked + .ex-pick-in { border-color: var(--p-accent-ink); background: var(--p-accent-tint); box-shadow: inset 0 0 0 1px var(--p-accent-ink); }
+.ex-pick-option input:checked + .ex-pick-in .ex-pick-mark { color: var(--p-accent-ink); }
+.ex-pick-option input:focus-visible + .ex-pick-in { outline: 2px solid var(--p-accent-ink); outline-offset: 3px; }
+.ex-pick-option:has(input:disabled), .ex-pick-option input:disabled { cursor: default; }
+.ex-print-note { display: none; }
+
 .ex-ko, .ex-solution, .ex-rubric { padding: 13px 17px; border: 1px solid var(--p-line); border-radius: var(--p-r-sm); font-size: 15px; }
 .ex-ko { background: var(--p-panel); }
 .ex-solution { background: var(--p-key-bg); border-color: var(--p-key-line); color: var(--p-ink); }
@@ -748,6 +766,10 @@
 
 /* ───────── 인쇄: 시험지만, 밝은 종이로 ───────── */
 @media print {
+  .prep .ex-screen-note { display: none !important; }
+  .prep .ex-print-note { display: block !important; }
+  .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
+  .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
   .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }

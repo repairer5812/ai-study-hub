@@ -3,7 +3,7 @@
 // 다른 과목과 달리 정기고사 엔진(exam.html)을 쓰지 않는다. 실제 시험이 종이로 보는 필기시험이고
 // 유도를 빈칸으로 채우는 형식이라, 시험 준비 화면 세 가지를 따로 둔다.
 //   map.html       개념 지도 (한 줄기에서 가지 치는 나무)
-//   paper.html     종이로 푸는 모의시험 (끝난 뒤 화면에서 채점, 손으로 쓴 답은 채점 프롬프트를 복사해 LLM 으로)
+//   paper.html     화면에서 선택하는 모의시험 (자동 채점, 계산과 서술은 자기 채점)
 //   practice.html  주제별 문제
 // 내용은 notes/sl/_prep/ 의 마크다운이 원본이고, `node tools/build-prep.mjs sl` 이 notes/sl/prep.json 으로 묶는다.
 // 내용을 고쳐 다시 묶었으면 prep.version 을 올려야 방문자의 브라우저가 새 파일을 받는다.
@@ -21,7 +21,7 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261018g",
+    version: "20261018h",
     map: true,
     practice: true,
     exams: [

@@ -1,5 +1,5 @@
 // subject.js — 과목 랜딩 페이지 (복습/시험 분기 + 세트 그리드 + 주차별 확인문제)
-import { getSubjectMeta } from "./subjects/index.js?v=20261018g";
+import { getSubjectMeta } from "./subjects/index.js?v=20261018h";
 import { getBest, getWeeklyBest } from "./storage.js";
 
 const params = new URLSearchParams(location.search);
@@ -22,7 +22,7 @@ document.title = `${meta.title} · AI Study Hub`;
 
 document.getElementById("link-review").href = `review.html?s=${subjectId}`;
 
-// 시험 준비 화면(개념 지도, 종이로 푸는 모의시험, 주제별 문제)이 있는 과목
+// 시험 준비 화면(개념 지도, 화면에서 푸는 모의시험, 주제별 문제)이 있는 과목
 if (meta.prep) {
   const rows = [];
   if (meta.prep.map) rows.push({
@@ -31,7 +31,7 @@ if (meta.prep) {
   });
   (meta.prep.exams || []).forEach((e) => rows.push({
     href: `paper.html?s=${subjectId}&set=${e.set}`, name: e.title,
-    desc: e.desc || "실제 시험처럼 종이에 풀고, 끝나면 화면에서 채점합니다. 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 LLM으로 채점합니다.",
+    desc: e.desc || "T/F, 객관식, 빈칸은 화면에서 선택하고 종료하면 자동 채점합니다. 계산과 서술은 별도로 풀고 채점합니다.",
     meta: `${e.minutes}분, ${e.points}점`,
   }));
   if (meta.prep.practice) rows.push({

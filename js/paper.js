@@ -1,16 +1,16 @@
-// paper.js — 종이로 푸는 모의시험. paper.html?s=sl&set=midterm-1
-// 답은 종이에 쓴다. 화면은 시험지와 시계이고, 끝난 뒤에만 채점을 돕는다.
-// 빈칸 유도만은 빈칸을 눌러 다섯 보기 가운데 고를 수도 있다(js/blanks.js). 고른 답은 끝난 뒤 자동으로 채점해 점수 칸에 넣는다.
+// paper.js — 화면에서 답을 고르는 모의시험. 인쇄도 지원한다.
+// 참거짓, 객관식, 빈칸은 풀이 중에 고르고 종료 뒤 채점한다. 계산과 서술은 따로 풀이한다.
+// 빈칸도 다섯 보기 가운데 고른다(js/blanks.js). 고른 답은 종료 뒤 자동 채점해 점수 칸에 넣는다.
 // 채점된 뒤에는 틀린 빈칸만 다시 풀 수 있다. 다시 푼 결과는 점수에 넣지 않는다.
 // 계산과 서술은 모범 답안 아래의 체크리스트로 스스로 채점할 수도 있다(js/checks.js). 체크한 점수의 합이 점수 칸에 들어간다.
-//   표지 → 풀이(시계) → 채점(참거짓·객관식은 답을 옮겨 자동 채점, 손으로 쓴 답은 채점 프롬프트를 복사해 LLM 으로) → 결과
+//   표지 → 답 선택과 풀이(시계) → 자동 채점과 계산·서술 점수 확인 → 결과
 // 상태는 이 브라우저(localStorage)에만 남는다. 랭킹에는 올리지 않는다(점수가 자기 채점이라서).
 
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018g";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js";
+} from "./prep.js?v=20261018h";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018h";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -32,6 +32,31 @@ const span = (sec) => {
   return m ? `${m}분 ${s % 60}초` : `${s}초`;
 };
 
+// 원본의 객관식 보기와 수식을 그대로 사용해 문항 안에서 선택하게 한다.
+function selectableStem(q) {
+  if (!["tf", "mc"].includes(q.type)) return renderMd(q.stem);
+  const choices = q.type === "tf" ? ["T", "F"] : q.choices || ["a", "b", "c", "d"];
+  const options = new Map();
+  const prompt = q.type === "mc" ? q.stem.replace(/^- \(([a-z])\) (.+)$/gm, (line, value, body) => {
+    if (!choices.includes(value)) return line;
+    options.set(value, body);
+    return "";
+  }) : q.stem;
+  const complete = q.type === "mc" && options.size === choices.length;
+  const label = labelOf(q);
+  return `${renderMd(complete ? prompt : q.stem)}
+    <fieldset class="ex-picks" data-ex-picks="${label}"${q.type === "tf" ? ' data-compact="true"' : ""}>
+      <legend lang="ko">${label} 답 선택</legend>
+      <div class="ex-pick-options">${choices.map((value) => `
+        <label class="ex-pick-option">
+          <input type="radio" name="pick-${label}" data-ex-pick="${label}" value="${value}">
+          <span class="ex-pick-in"><span class="ex-pick-mark">${value}</span>
+            <span class="ex-pick-body">${q.type === "tf" ? (value === "T" ? "True · 참" : "False · 거짓") : complete ? renderMd(options.get(value)) : value}</span>
+          </span>
+        </label>`).join("")}</div>
+    </fieldset>`;
+}
+
 function pageHtml(exam, questions, parts, topicTitle) {
   const total = questions.reduce((s, q) => s + q.points, 0);
   const auto = questions.filter((q) => !isWritten(q));
@@ -46,7 +71,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
   <header class="pp-head ex-cover">
     <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
     <h1 class="pp-title">${esc(exam.title)}</h1>
-    <p class="pp-lead">${esc(exam.lead || "실제 시험처럼 종이에 풉니다. 화면은 시험지와 시계 역할만 하고, 끝난 뒤에 채점을 돕습니다.")}</p>
+    <p class="pp-lead">${esc(exam.lead || "화면에서 답을 고르고, 종료 뒤 채점합니다.")}</p>
     <dl class="pp-facts">
       <div><dt>시간</dt><dd>${exam.minutes}분</dd></div>
       <div class="pp-facts-wide"><dt>범위</dt><dd>${esc(exam.scope || "")}</dd></div>
@@ -62,19 +87,20 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <div class="ex-rules">
         <h2>시작하기 전에</h2>
         <ul>
-          <li>종이와 펜을 준비합니다. 답은 종이에 씁니다.</li>
-          ${pickable ? "<li>빈칸 유도는 종이에 쓰는 대신 빈칸을 눌러 보기 다섯 개 가운데 고를 수도 있습니다. 고른 답은 끝난 뒤 자동으로 채점됩니다.</li>" : ""}
+          <li>참거짓은 T/F, 객관식은 문제 아래의 보기를 눌러 답합니다.</li>
+          ${pickable ? "<li>빈칸은 5지선다입니다. 빈칸 번호마다 보기 하나를 고르면 식에 답이 채워집니다.</li>" : ""}
+          <li>계산과 서술만 종이나 별도 노트에 풉니다. 시험지 인쇄는 선택 사항입니다.</li>
           ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
-          <li>${auto.length ? "끝나면 참거짓과 객관식은 답을 옮겨 바로 채점합니다. " : "끝나면 "}손으로 쓴 유도와 서술은 모범 답안과 비교하거나 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
+          <li>화면에서 선택한 답은 종료하면 자동 채점됩니다. 계산과 서술은 모범 답안이나 체크리스트로 채점할 수 있습니다.</li>
         </ul>
         <p class="ex-disclaimer">실제 기출이 아닙니다. 수업에서 다룬 내용과 강조된 부분을 바탕으로 만든 예상 문제이고, 실제 시험의 시간과 문항 수는 다를 수 있습니다.</p>
       </div>
     </div>
 
     <div class="pp-actions">
-      <button type="button" class="btn btn-primary btn-lg" data-ex-start>시험 시작</button>
+      <button type="button" class="btn btn-primary btn-lg" data-ex-start>화면에서 시험 시작</button>
       <button type="button" class="btn btn-secondary" data-ex-print>시험지 인쇄</button>
       <a class="btn btn-secondary" href="${mapBase}">개념 지도</a>
     </div>
@@ -112,8 +138,8 @@ function pageHtml(exam, questions, parts, topicTitle) {
     <p class="ex-grade-time" data-ex-used></p>
 
     <div class="ex-step"${auto.length ? "" : " hidden"}>
-      <h3>1. 참거짓과 객관식 답 옮기기 <span class="ex-step-pts">${pts(auto)}점</span></h3>
-      <p class="ex-step-note">종이에 쓴 답을 그대로 눌러 옮깁니다. 비워 둔 문항은 0점으로 셉니다.</p>
+      <h3>1. 참거짓과 객관식 채점 결과 <span class="ex-step-pts">${pts(auto)}점</span></h3>
+      <p class="ex-step-note">풀이 중 고른 답을 자동 채점했습니다. 종이에 풀었다면 아래에 답을 입력해 다시 채점할 수 있습니다. 비워 둔 문항은 0점입니다.</p>
       <form class="ex-card" data-ex-card>
         ${parts.filter((p) => p.items.some((q) => !isWritten(q))).map((p) => `
         <fieldset class="ex-card-part">
@@ -128,7 +154,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
           </div>
         </fieldset>`).join("")}
         <p class="ex-card-foot">
-          <button type="submit" class="btn btn-primary">옮긴 답 채점하기</button>
+          <button type="submit" class="btn btn-primary">선택한 답 다시 채점</button>
           <strong class="ex-card-score" data-ex-auto-score aria-live="polite"></strong>
         </p>
       </form>
@@ -136,7 +162,8 @@ function pageHtml(exam, questions, parts, topicTitle) {
 
     ${written.length ? `
     <div class="ex-step">
-      <h3>${auto.length ? "2. " : ""}손으로 쓴 답 채점하기 <span class="ex-step-pts">${pts(written)}점</span></h3>
+      <h3>${auto.length ? "2. " : ""}빈칸 결과와 계산·서술 점수 확인 <span class="ex-step-pts">${pts(written)}점</span></h3>
+      ${pickable ? '<p class="ex-step-note">빈칸에서 선택한 답의 점수는 자동으로 입력됩니다. 계산과 서술은 아래 방법이나 문항별 체크리스트로 채점하세요.</p>' : ""}
       <ol class="ex-how">
         <li>답안지를 사진으로 찍습니다. 문항 번호가 보이게 찍으면 채점이 정확해집니다.</li>
         <li>아래 버튼으로 채점 프롬프트를 복사해 ChatGPT, Claude, Gemini 같은 LLM에 붙여 넣고 사진을 함께 올립니다. 문제, 모범 답안, 채점 기준이 프롬프트에 들어 있습니다.</li>
@@ -197,7 +224,8 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <div><dt>Total</dt><dd>${total} points</dd></div>
         <div><dt>Name</dt><dd class="ex-paper-blank"></dd></div>
       </dl>
-      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write your answers on paper.${pickable ? " In Part C you may instead click a blank and choose from five options." : ""}</p>
+      <p class="ex-paper-note ex-screen-note">Choose T/F and multiple-choice answers directly below each question.${pickable ? " In Part C, choose one of five options for each blank." : ""} Work out calculation and essay answers separately. Printing is optional.</p>
+      <p class="ex-paper-note ex-print-note">Circle the T/F and multiple-choice answers. Complete the blank formulas and show your calculations on paper.</p>
     </header>
     ${parts.map((p) => `
     <section class="ex-part" id="part-${p.id}">
@@ -211,7 +239,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
             ${q.title ? `<span class="ex-q-title">${esc(q.title)}</span>` : ""}
             <span class="ex-pts">[${q.points} points]</span>
           </div>
-          <div class="ex-sec ex-stem pp-md">${renderMd(q.stem)}</div>
+          <div class="ex-sec ex-stem pp-md">${selectableStem(q)}</div>
           <div class="ex-sec ex-ko pp-md" lang="ko">${renderMd(q.ko)}</div>
           <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(q.solution)}</div>
           ${q.rubric ? `<div class="ex-sec ex-rubric pp-md" lang="ko">${renderMd(q.rubric)}</div>` : ""}
@@ -242,7 +270,7 @@ function wire(root, exam, questions, topicTitle) {
     if (!state[k] || typeof state[k] !== "object") state[k] = {};
   });
   const save = () => store.set(KEY, state);
-  const RECALL_KEY = `ai-study:${subjectId}:prep:recall`;
+  const RECALL_KEY = `ai-study:${subjectId}:paper:${exam.set}:recall`;
   let recall = store.get(RECALL_KEY, false) === true;
   let setRecall = () => {};
 
@@ -277,6 +305,7 @@ function wire(root, exam, questions, topicTitle) {
       // 다시 푼 기록은 처음 고른 답(state.blanks)과 따로 남긴다. 점수는 건드리지 않는다.
       onRetry: (r) => { if (r) state.retry[label] = r; else delete state.retry[label]; save(); },
       recall,
+      autoOpen: true,
       onRecall: (on) => setRecall(on),
       concepts: q.concepts.map((slug) => ({ href: `${mapBase}&n=${slug}`, title: topicTitle(slug) })),
       retryNote: "다시 푼 결과는 점수에 넣지 않습니다. 처음 고른 답의 점수가 남습니다.",
@@ -341,6 +370,7 @@ function wire(root, exam, questions, topicTitle) {
     $$("[data-ex-q-foot]").forEach((el) => { el.hidden = !(phase === "grading" || phase === "result"); });
     syncBlanks();
     syncChecks();
+    syncChoices();
     if (!scroll) return;
     const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
     requestAnimationFrame(() => {
@@ -415,6 +445,8 @@ function wire(root, exam, questions, topicTitle) {
     endConfirm.hidden = true;
     endBtn.hidden = false;
     paintUsed();
+    state.graded = true;
+    paintAuto();
     setPhase("grading", "grade");
   });
   const paintUsed = () => {
@@ -427,6 +459,26 @@ function wire(root, exam, questions, topicTitle) {
   };
 
   /* 답안 카드: 참거짓과 객관식 */
+  const syncChoices = () => {
+    root.querySelectorAll("[data-ex-pick]").forEach((input) => {
+      input.checked = state.answers[input.getAttribute("data-ex-pick")] === input.value;
+      input.disabled = state.phase !== "running";
+    });
+    autoQs.forEach((q) => {
+      const label = labelOf(q);
+      card.querySelectorAll(`input[name="ans-${label}"]`).forEach((input) => {
+        input.checked = state.answers[label] === input.value;
+      });
+    });
+  };
+  root.addEventListener("change", (e) => {
+    const input = e.target.closest("[data-ex-pick]");
+    if (!input || state.phase !== "running") return;
+    state.answers[input.getAttribute("data-ex-pick")] = input.value;
+    state.graded = false;
+    save();
+    paintAuto();
+  });
   const readCard = () => {
     const out = {};
     autoQs.forEach((q) => {
@@ -452,6 +504,7 @@ function wire(root, exam, questions, topicTitle) {
     const got = autoQs.reduce((s, q) => s + (state.answers[labelOf(q)] === q.answer ? q.points : 0), 0);
     $("[data-ex-auto-score]").textContent = state.graded ? `${got} / ${max}점` : "";
     root.setAttribute("data-graded", state.graded ? "true" : "false");
+    syncChoices();
   };
   card.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -459,11 +512,15 @@ function wire(root, exam, questions, topicTitle) {
     state.graded = true;
     save();
     paintAuto();
+    if (state.phase === "result") paintResult();
     if (!writtenQs.length) finish();
   });
   card.addEventListener("change", () => {
     // 채점한 뒤 답을 고치면 판정을 지워 다시 채점해야 한다는 것을 보인다.
-    if (state.graded) { state.graded = false; state.answers = readCard(); save(); paintAuto(); }
+    state.graded = false;
+    state.answers = readCard();
+    save();
+    paintAuto();
   });
 
   /* 채점 프롬프트 복사 */
