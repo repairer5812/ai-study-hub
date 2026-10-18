@@ -21,12 +21,12 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261018c",
+    version: "20261018d",
     map: true,
     practice: true,
     exams: [
-      { set: "midterm-1", title: "1회: 필수 핵심", minutes: 60, points: 100, desc: "시간이 부족하면 이 회차부터. 수업의 출제 안내와 강조, 기출 유형을 우선한 14문항입니다." },
-      { set: "midterm-2", title: "2회: 추가 복습", minutes: 60, points: 100, desc: "1회를 마친 뒤 시간이 남으면. 과제 보완과 추가 계산 5문항입니다." },
+      { set: "midterm-1", title: "1회: 필수 핵심", minutes: 60, points: 100, desc: "시간이 부족하면 이 회차부터. 이번 교재 범위에서 출제 안내와 강조 내용을 우선한 14문항입니다." },
+      { set: "midterm-2", title: "2회: 추가 복습", minutes: 60, points: 100, desc: "1회를 마친 뒤 시간이 남으면. 교재 응용과 이번 학기 과제 1·2 복습 5문항입니다." },
     ],
     // 다른 곳에 있는 복습 자료. 시험 준비 목록 끝에 붙는다.
     links: [

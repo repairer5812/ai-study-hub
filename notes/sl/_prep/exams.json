@@ -1,12 +1,12 @@
 [
   {
     "set": "midterm-1",
-    "revision": "20261018-evidence",
+    "revision": "20261018-scope",
     "title": "중간고사 모의시험 1회: 필수 핵심",
     "minutes": 60,
     "points": 100,
-    "lead": "수업에서 확인한 출제 안내와 강조 내용, 제공된 기출 유형을 우선한 회차입니다. 시간이 부족하면 이 회차부터 푸세요.",
-    "scope": "오차 분포와 MLE 손실, Ridge/Lasso와 MAP, -1/+1 Logistic MLE·MAP, ERM, 결정경계와 최소 오분류, GD. 참거짓과 객관식을 함께 연습합니다.",
+    "lead": "이번 수업 교재의 범위 안에서 출제 안내와 강조 내용을 우선한 회차입니다. 다른 과목 기출은 문제 형식만 참고했습니다. 시간이 부족하면 이 회차부터 푸세요.",
+    "scope": "오차 분포와 MLE 손실, Ridge/Lasso와 MAP, -1/+1 Logistic MLE·MAP, ERM, 결정경계와 다항 특성, GD. 참거짓과 객관식을 함께 연습합니다.",
     "parts": [
       {
         "id": "A",
@@ -30,18 +30,18 @@
         "id": "D",
         "en": "Problems",
         "ko": "계산과 서술",
-        "guide": "Show the key reasoning and calculations. Write code on paper when asked."
+        "guide": "Show the key reasoning and calculations."
       }
     ]
   },
   {
     "set": "midterm-2",
-    "revision": "20261018-evidence",
+    "revision": "20261018-scope",
     "title": "중간고사 모의시험 2회: 추가 복습",
     "minutes": 60,
     "points": 100,
-    "lead": "필수 유형을 마친 뒤 선택해서 푸는 교재·과제 보완과 추가 계산 연습입니다.",
-    "scope": "분포 모수 추정, 다항회귀 코드, Ridge 계수와 Logistic GD/SGD. 행렬 미분은 수업의 범위 밖 안내를 유지한 과제 복습입니다.",
+    "lead": "1회를 마친 뒤 선택해서 푸는 교재 개념 응용과 이번 학기 과제 1·2 복습입니다.",
+    "scope": "과제 1의 분포 모수 추정, 과제 2의 다항회귀 코드, 계수 검정, 정규화 계수와 Logistic GD/SGD. 시험 제외 안내가 있는 행렬 미분 유도는 포함하지 않습니다.",
     "parts": [
       {
         "id": "D",
