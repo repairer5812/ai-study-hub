@@ -358,9 +358,9 @@
 .ex-link:hover { text-decoration-color: currentColor; }
 
 /* 풀이를 시작하면 표지는 제목만 남긴다. 시작 전에는 시험지를 덮어 둔다. */
-.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover > :not(.pp-back):not(.pp-title) { display: none; }
-.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover { padding-bottom: 14px; border-bottom: 0; }
-.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover .pp-title { font-size: clamp(22px, 2.8vw, 28px); }
+.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"], [data-phase="study"]) .ex-cover > :not(.pp-back):not(.pp-title) { display: none; }
+.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"], [data-phase="study"]) .ex-cover { padding-bottom: 14px; border-bottom: 0; }
+.ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"], [data-phase="study"]) .ex-cover .pp-title { font-size: clamp(22px, 2.8vw, 28px); }
 .ex[data-phase="cover"] .ex-paper, .ex[data-paused="true"] .ex-paper { display: none; }
 .ex-paused { margin: 24px auto; padding: clamp(22px, 4vw, 40px); max-width: 680px; border: 1px solid var(--p-line-strong); border-radius: var(--p-r); background: var(--p-surface); }
 .ex-paused[hidden] { display: none; }
@@ -482,6 +482,15 @@
 .ex-q-verdict { font-size: 14.5px; font-weight: 700; }
 .ex-q[data-verdict="right"] .ex-q-verdict { color: var(--p-ok); }
 .ex-q[data-verdict="wrong"] .ex-q-verdict { color: var(--p-accent-ink); }
+
+.ex-study-head { margin: 10px 0 22px; padding: 18px 20px; border: 1px solid var(--p-line); border-radius: var(--p-r); background: var(--p-panel); color: var(--p-ink-2); line-height: 1.7; }
+.ex-study-head[hidden] { display: none; }
+.ex-study-head .pp-actions { margin-top: 12px; }
+.ex[data-phase="study"] #part-D :is(.ex-solution, .ex-rubric) { display: block; }
+.ex-answer-guide { margin-top: 20px; padding: 13px 15px; border: 1px solid var(--p-line-strong); border-radius: var(--p-r-sm); background: var(--p-surface); }
+.ex-answer-guide > summary { cursor: pointer; font-size: 14px; font-weight: 700; color: var(--p-accent-ink); line-height: 1.6; }
+.ex-answer-guide > :not(summary) { margin-top: 12px; }
+.ex-answer-guide .katex-display { max-width: 100%; }
 
 /* ───────── 채점 ───────── */
 .ex-grade, .ex-result { padding-top: clamp(18px, 3vw, 30px); scroll-margin-top: 16px; }
@@ -845,13 +854,14 @@
   .prep .ex-print-note { display: block !important; }
   .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
   .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
-  .prep .ex-feedback, .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
+  .prep .ex-study-head, .prep .ex-feedback, .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-review-tools, .prep .pr-progress, .prep .pr-review-note, .prep .pr-status, .prep .pr-result, .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
   .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
   .prep .ex[data-phase] .ex-paper { display: block !important; }
   .prep, .prep .ex-paper { background: #fff !important; color: #111 !important; }
   .prep .ex-paper { max-width: none; margin: 0; padding: 0; border: 0; box-shadow: none; }
+  .prep .ex[data-phase="study"] #part-D .ex-q .ex-solution { display: block !important; }
   .prep .ex-paper * { color: #111 !important; border-color: #999 !important; }
   .prep .ex-q { break-inside: avoid; }
   .prep .ex-part-head { break-after: avoid; }

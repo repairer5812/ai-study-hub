@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018n";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018n";
+} from "./prep.js?v=20261018o";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018o";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -19,6 +19,7 @@ const setId = params.get("set") || meta.prep.exams?.[0]?.set;
 fillCrumb(meta, "모의시험");
 
 const mapBase = `map.html?s=${subjectId}`;
+const studyUrl = `paper.html?s=${subjectId}&set=${encodeURIComponent(setId)}&study=D#part-D`;
 const goMap = document.getElementById("go-map");
 if (goMap) { goMap.href = mapBase; goMap.style.display = ""; }
 const num = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
@@ -141,6 +142,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
     </fieldset>
     <div class="pp-actions">
       <button type="button" class="btn btn-primary btn-lg" data-ex-start>화면에서 시험 시작</button>
+      <a class="btn btn-secondary" href="${studyUrl}">Part D 모범 답안 공부</a>
       <button type="button" class="btn btn-secondary" data-ex-print>시험지 인쇄</button>
       <a class="btn btn-secondary" href="${mapBase}">개념 지도</a>
     </div>
@@ -149,6 +151,15 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <button type="button" class="ex-link" data-ex-review>결과 다시 보기</button>
     </p>
   </header>
+
+  <section class="ex-study-head" data-ex-study hidden>
+    <p>시험을 시작하지 않고 Part D의 풀이를 읽는 화면입니다. 각 소문항의 ‘한 단계씩 이해하기’를 펼쳐 식을 따라가세요.</p>
+    <nav class="pp-actions" aria-label="Part D 공부">
+      ${["D1", "D2", "D3"].map((label) => `<a class="btn btn-secondary btn-sm" href="#q-${label}">${label} 모범 답안</a>`).join("")}
+      <button type="button" class="ex-chip" data-ex-study-ko aria-pressed="true">한국어 문제 설명</button>
+      <a class="ex-link" href="paper.html?s=${subjectId}&set=${encodeURIComponent(exam.set)}">모의시험으로 돌아가기</a>
+    </nav>
+  </section>
 
   <dialog class="ex-mode-dialog" id="ex-mode-dialog" aria-labelledby="ex-mode-dialog-h">
     <form method="dialog" data-ex-mode-form>
@@ -207,7 +218,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
   <section class="ex-grade" data-ex-grade hidden aria-labelledby="ex-grade-h">
     <h2 id="ex-grade-h">채점</h2>
     <p class="ex-grade-time" data-ex-used></p>
-    <p class="pp-actions"><button type="button" class="btn btn-secondary" data-ex-restart>처음부터 재시험</button></p>
+    <p class="pp-actions"><button type="button" class="btn btn-secondary" data-ex-restart>처음부터 재시험</button><a class="btn btn-secondary" href="${studyUrl}">Part D 모범 답안 공부</a></p>
 
     <div class="ex-step"${auto.length ? "" : " hidden"}>
       <h3>1. 참거짓과 객관식 채점 결과 <span class="ex-step-pts">${pts(auto)}점</span></h3>
@@ -313,7 +324,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
           </div>
           <div class="ex-sec ex-stem pp-md">${selectableStem(q)}</div>
           <div class="ex-sec ex-ko pp-md" lang="ko">${renderMd(q.ko)}</div>
-          ${["calc", "essay"].includes(q.type) ? `<p class="ex-reveal-row" hidden data-ex-reveal-row><button type="button" class="btn btn-secondary btn-sm" data-ex-reveal="${labelOf(q)}" aria-expanded="false">정답 보기</button></p>` : ""}
+          ${["calc", "essay"].includes(q.type) ? `<p class="ex-reveal-row" hidden data-ex-reveal-row><button type="button" class="btn btn-secondary btn-sm" data-ex-reveal="${labelOf(q)}" aria-expanded="false">모범 답안 보기</button></p>` : ""}
           ${feedbackHtml(q)}
           <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(answerParts(q).explanation)}</div>
           ${q.rubric ? `<div class="ex-sec ex-rubric pp-md" lang="ko">${renderMd(q.rubric)}</div>` : ""}
@@ -326,6 +337,23 @@ function pageHtml(exam, questions, parts, topicTitle) {
     </section>`).join("")}
   </article>
 </div>`;
+}
+
+// 공부 화면은 시험 저장 상태나 타이머를 생성하거나 바꾸지 않는다.
+function wireStudy(root) {
+  root.setAttribute("data-phase", "study");
+  root.setAttribute("data-ko", "on");
+  root.querySelector(".pp-title").textContent = "Part D 모범 답안 공부";
+  root.querySelector("[data-ex-study]").hidden = false;
+  root.querySelector(".ex-paper-head").hidden = true;
+  root.querySelectorAll(".ex-part").forEach((part) => { part.hidden = part.id !== "part-D"; });
+  const ko = root.querySelector("[data-ex-study-ko]");
+  ko.addEventListener("click", () => {
+    const on = root.getAttribute("data-ko") !== "on";
+    root.setAttribute("data-ko", on ? "on" : "off");
+    ko.setAttribute("aria-pressed", String(on));
+  });
+  document.title = `Part D 모범 답안 공부 · ${meta.title}`;
 }
 
 function wire(root, exam, questions, topicTitle) {
@@ -587,7 +615,7 @@ function wire(root, exam, questions, topicTitle) {
       if (row) {
         row.hidden = !immediate;
         const btn = row.querySelector("button");
-        btn.textContent = revealed ? "정답 접기" : "정답 보기";
+        btn.textContent = revealed ? "모범 답안 접기" : "모범 답안 보기";
         btn.setAttribute("aria-expanded", String(revealed));
       }
     });
@@ -881,7 +909,8 @@ function wire(root, exam, questions, topicTitle) {
     document.title = `${exam.title} · ${meta.title} · AI Study Hub`;
     app.innerHTML = pageHtml(exam, questions, parts, topicTitle);
     typeset(app);
-    wire(app.querySelector(".ex"), exam, questions, topicTitle);
+    if (params.get("study") === "D" && questions.some((q) => q.part === "D")) wireStudy(app.querySelector(".ex"));
+    else wire(app.querySelector(".ex"), exam, questions, topicTitle);
   } catch (err) {
     console.error(err);
     app.innerHTML = `<div class="pp-empty"><h2>모의시험을 불러오지 못했습니다</h2><p>잠시 뒤 다시 열어 주세요. (${esc(err.message)})</p></div>`;
