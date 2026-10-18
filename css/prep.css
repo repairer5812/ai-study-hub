@@ -578,6 +578,24 @@
 .pr-reveal .ex-solution, .pr-reveal .ex-rubric { display: block; }
 .pr-key { font-weight: 800; color: var(--p-ink); }
 .pr-foot { margin: 8px 0 32px; }
+.pr-review-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.pr-review-tools [data-pr-wrong-count] { margin-left: 4px; font-variant-numeric: tabular-nums; }
+.pr-review-tools :disabled { opacity: 0.55; cursor: default; }
+.pr-progress, .pr-review-note { margin-top: 10px; font-size: 14px; color: var(--p-muted); line-height: 1.65; }
+.pr-status { flex: none; font-size: 12px; font-weight: 700; padding: 2px 7px; border: 1px solid var(--p-line); border-radius: 999px; color: var(--p-muted); }
+.pr-q[data-pr-status="right"] [data-pr-badge] { color: var(--p-ok); border-color: var(--p-ok); }
+.pr-q[data-pr-status="wrong"] [data-pr-badge] { color: var(--p-accent-ink); border-color: var(--p-accent-line); }
+.pr-result { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; font-size: 14px; color: var(--p-accent-ink); }
+.pr-q[data-pr-status="right"] .pr-result { color: var(--p-ok); }
+.pr-result [hidden], .pr-review-note[hidden], .pr-empty[hidden] { display: none; }
+.pr-empty { margin: 26px 0; padding: 22px; border: 1px solid var(--p-line); border-radius: var(--p-r); background: var(--p-surface); color: var(--p-muted); }
+.pr-self { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; font-size: 13px; color: var(--p-muted); }
+.pr .ex-pick-option[data-verdict="right"] .ex-pick-in { border-color: var(--p-ok); box-shadow: inset 0 0 0 1px var(--p-ok); }
+.pr .ex-pick-option[data-verdict="wrong"] .ex-pick-in { border-color: var(--p-accent-ink); border-style: dashed; }
+.pr .ex-q-head { flex-wrap: wrap; }
+.pr .ex-q-head .pr-status { margin-left: auto; }
+.pr .ex-q-head .ex-pts { margin-left: 0; }
+
 
 /* ───────── 과목 화면의 시험 준비 묶음 ───────── */
 .prep-list { margin: 8px 0 4px; }
@@ -725,9 +743,9 @@
 
 /* 넓은 시험지의 오른쪽 공간에 빈칸 보기를 둔다. 문제 영역 위로 겹치지 않는다. */
 @media screen and (min-width: 1100px) {
-  .prep-paper .container { max-width: 1320px; }
-  .prep-paper .ex-paper { max-width: none; }
-  .prep-paper .ex-q:not([data-type="blank"]) { max-width: 780px; }
+  .prep-paper .container, .prep-practice .container { max-width: 1320px; }
+  .prep-paper .ex-paper, .pr-topic { max-width: none; }
+  .prep-paper .ex-q:not([data-type="blank"]), .pr-q:not([data-type="blank"]) { max-width: 780px; }
   .bk-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: 24px; margin-top: 10px; }
   .bk-layout > .ex-stem { min-width: 0; margin-top: 0; }
   .bk-layout > .bk { position: sticky; top: var(--bk-top, var(--p-top)); bottom: auto; align-self: start; display: flex; flex-direction: column; min-height: 0; max-height: calc(100dvh - var(--bk-top, var(--p-top)) - 16px); margin-top: 0; padding: 12px; border: 1px solid var(--p-line-strong); border-radius: 10px; background: var(--p-surface); box-shadow: none; }
@@ -813,7 +831,7 @@
   .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
   .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
   .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
-  .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
+  .prep .pr-review-tools, .prep .pr-progress, .prep .pr-review-note, .prep .pr-status, .prep .pr-result, .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
   .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
   .prep .ex[data-phase] .ex-paper { display: block !important; }

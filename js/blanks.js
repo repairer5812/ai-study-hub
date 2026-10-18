@@ -10,7 +10,7 @@
 import { esc, renderMd, typeset } from "./prep.js";
 
 const MARK = ["①", "②", "③", "④", "⑤"];
-const STATE_KO = { empty: "", picked: "고름", right: "맞음", wrong: "틀림", missed: "안 고름" };
+const STATE_KO = { empty: "", picked: "고름", right: "✓ 맞음", wrong: "틀림", missed: "안 고름" };
 const LOOK = { fill: "\\blankfill", ok: "\\blankok", no: "\\blankno" };
 let seq = 0;
 
@@ -47,9 +47,10 @@ function filledStem(q, show) {
  * retry: 다시 풀기 기록 { open: [빈칸번호], picks: { 빈칸번호: 보기 순번 }, graded } 또는 null. 바뀔 때마다 onRetry 로 알린다.
  * recall: 보기 늦게 보기. concepts: 틀린 빈칸이 있을 때 보일 개념 링크 [{ href, title }].
  * retryNote: 다시 풀기 버튼 옆에 적을 한 줄(모의시험에서는 점수에 들어가지 않는다는 안내).
+ * lockAnswered: 연습에서 고른 빈칸을 잠근다. retryWrong으로 틀린 답만 비워 다시 푼다.
  */
 export function attachBlanks(item, q, {
-  picks = {}, retry = null, onChange = () => {}, onRetry = () => {}, recall = false, onRecall = null, concepts = [], retryNote = "", autoOpen = false,
+  picks = {}, retry = null, onChange = () => {}, onRetry = () => {}, recall = false, onRecall = null, concepts = [], retryNote = "", autoOpen = false, lockAnswered = false,
 } = {}) {
   const stem = item.querySelector(".ex-stem");
   const uid = `bk${++seq}`;
@@ -125,7 +126,7 @@ export function attachBlanks(item, q, {
   const retrying = () => graded && !!retry;
   const reopened = (n) => retrying() && retry.open.includes(n);
   /** 지금 답을 고를 수 있는 빈칸인가. 채점된 뒤에는 다시 푸는 빈칸만 고를 수 있다. */
-  const editable = (n) => !graded || (reopened(n) && !retry.graded);
+  const editable = (n) => !graded ? !(lockAnswered && valid(n, picks[n])) : (reopened(n) && !retry.graded);
   /** 지금 빈칸에 보이는 답(보기 순번). 없으면 undefined. */
   const shown = (n) => {
     let i = picks[n];
@@ -185,7 +186,8 @@ export function attachBlanks(item, q, {
         : `다시 푼 빈칸 ${n}개 가운데 ${right}개 맞음`;
       gradeBtn.disabled = done === 0;
     }
-    clearBtn.hidden = graded || s.picked === 0;
+    clearBtn.hidden = graded || (lockAnswered ? !q.blanks.some((b) => valid(b.n, picks[b.n]) && !b.options[picks[b.n]].ok) : s.picked === 0);
+    clearBtn.textContent = lockAnswered ? "틀린 빈칸만 다시 풀기" : "고른 답 지우기";
     panel.setAttribute("data-graded", graded ? "true" : "false");
 
     // 다시 풀기: 채점된 뒤 틀렸거나 안 고른 빈칸이 있을 때만 보인다.
@@ -283,6 +285,17 @@ export function attachBlanks(item, q, {
     numBtn(open[0])?.focus({ preventScroll: true });
   };
 
+  // 연습 문제는 맞은 빈칸을 보존한 채 틀린 답만 비운다.
+  const retryWrong = () => {
+    Object.keys(picks).forEach((n) => {
+      if (!byN.get(Number(n))?.options[picks[n]]?.ok) delete picks[n];
+    });
+    active = q.blanks.find((b) => !valid(b.n, picks[b.n]))?.n ?? null;
+    seen.clear();
+    onChange(picks);
+    paintAll();
+  };
+
   // 유도 안의 빈칸을 누르면 그 빈칸의 보기를 편다.
   stem.addEventListener("click", (e) => {
     const box = e.target.closest(".pp-blank");
@@ -307,6 +320,7 @@ export function attachBlanks(item, q, {
       return;
     }
     if (e.target.closest("[data-bk-clear]")) {
+      if (lockAnswered) return retryWrong();
       Object.keys(picks).forEach((k) => delete picks[k]);
       active = null;
       seen.clear();
@@ -353,6 +367,7 @@ export function attachBlanks(item, q, {
   paintOpts();
 
   return {
+    retryWrong,
     /** 선택한 빈칸만 즉시 채점한다. 미응답은 가리고, 선택은 계속 고칠 수 있다. */
     setFeedback(on) {
       if (feedback === !!on) return;
