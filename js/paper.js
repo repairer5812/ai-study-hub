@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018m";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018m";
+} from "./prep.js?v=20261018n";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018n";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -55,6 +55,34 @@ function selectableStem(q) {
           </span>
         </label>`).join("")}</div>
     </fieldset>`;
+}
+
+// 문항의 정답 요약과 설명을 나누어 정오 → 정답 → 해설 순서로 읽게 한다.
+function answerParts(q) {
+  if (q.type === "tf") return {
+    key: renderMd(q.answer === "T" ? "**T · 참**" : "**F · 거짓**"),
+    explanation: q.solution.replace(/^\*\*(?:참|거짓)\.\*\*\s*/, ""),
+  };
+  if (q.type === "mc") {
+    const body = q.stem.split("\n").find((line) => line.startsWith(`- (${q.answer}) `))?.slice(6) || "";
+    return { key: renderMd(`**(${q.answer})** ${body}`), explanation: q.solution.replace(/^\*\*\([a-z]\)\.\*\*\s*/, "") };
+  }
+  if (hasBlankChoices(q)) {
+    const [key, ...rest] = q.solution.split(/\n\s*\n/);
+    const count = (key.match(/^- \(\d+\)/gm) || []).length;
+    if (count === q.blanks.length && rest.length) return { key: renderMd(key), explanation: rest.join("\n\n") };
+    return { key: renderMd(q.blanks.map((b) => `- (${b.n}) $${b.options.find((o) => o.ok).tex}$`).join("\n")), explanation: q.solution };
+  }
+  return { key: "", explanation: q.solution };
+}
+
+function feedbackHtml(q) {
+  if (!["tf", "mc", "blank"].includes(q.type)) return "";
+  return `<div class="ex-feedback" data-ex-feedback lang="ko" hidden>
+    <p class="ex-q-verdict" data-q-verdict aria-live="polite"></p>
+    <div class="ex-answer-key"><strong>정답</strong><div class="pp-md">${answerParts(q).key}</div></div>
+    <p class="ex-answer-mine" data-q-mine></p>
+  </div>`;
 }
 
 function pageHtml(exam, questions, parts, topicTitle) {
@@ -286,10 +314,10 @@ function pageHtml(exam, questions, parts, topicTitle) {
           <div class="ex-sec ex-stem pp-md">${selectableStem(q)}</div>
           <div class="ex-sec ex-ko pp-md" lang="ko">${renderMd(q.ko)}</div>
           ${["calc", "essay"].includes(q.type) ? `<p class="ex-reveal-row" hidden data-ex-reveal-row><button type="button" class="btn btn-secondary btn-sm" data-ex-reveal="${labelOf(q)}" aria-expanded="false">정답 보기</button></p>` : ""}
-          <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(q.solution)}</div>
+          ${feedbackHtml(q)}
+          <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(answerParts(q).explanation)}</div>
           ${q.rubric ? `<div class="ex-sec ex-rubric pp-md" lang="ko">${renderMd(q.rubric)}</div>` : ""}
           <p class="ex-q-foot" lang="ko" data-ex-q-foot hidden>
-            <span class="ex-q-verdict" data-q-verdict aria-live="polite"></span>
             ${isWritten(q) ? `<button type="button" class="ex-link" data-ex-copy="${labelOf(q)}">이 문항만 채점 프롬프트 복사</button>` : ""}
             ${q.concepts[0] ? `<a class="ex-link" href="${mapBase}&n=${q.concepts[0]}">관련 개념 보기</a>` : ""}
           </p>
@@ -374,8 +402,6 @@ function wire(root, exam, questions, topicTitle) {
       ctrl.setGraded(done);
       ctrl.setFeedback(state.phase === "running" && state.feedback === "immediate");
       const s = ctrl.score();
-      const verdict = root.querySelector(`[data-q-item="${label}"] [data-q-verdict]`);
-      if (verdict) verdict.textContent = done && s.picked ? `화면에서 고른 빈칸 ${s.total}개 가운데 ${s.right}개 맞음, ${s.got} / ${s.max}점` : "";
       if (!done || !s.picked || !scoresForm) return;
       filled = true;
       const input = scoresForm.querySelector(`input[name="score-${label}"]`);
@@ -547,6 +573,15 @@ function wire(root, exam, questions, topicTitle) {
         else revealed = state.revealed[label] === true;
       }
       item.setAttribute("data-revealed", revealed ? "true" : "false");
+      const feedback = item.querySelector("[data-ex-feedback]");
+      if (feedback) feedback.hidden = !(revealed || (done && (q.type === "blank" || state.graded)));
+      if (hasBlankChoices(q)) {
+        const s = blankCtrl.get(label).score();
+        const show = done || revealed;
+        item.setAttribute("data-verdict", !show ? "" : s.right === s.total ? "right" : "wrong");
+        item.querySelector("[data-q-verdict]").textContent = !s.picked ? "미응답입니다." : s.right === s.total ? "✓ 모두 맞았습니다." : "✕ 틀린 빈칸이 있습니다.";
+        item.querySelector("[data-q-mine]").textContent = `${s.total}개 중 ${s.right}개 정답 · ${s.got} / ${s.max}점`;
+      }
       item.querySelector("[data-ex-q-foot]").hidden = !(done || revealed);
       const row = item.querySelector("[data-ex-reveal-row]");
       if (row) {
@@ -682,7 +717,9 @@ function wire(root, exam, questions, topicTitle) {
       row.querySelector("[data-card-verdict]").textContent = !state.graded ? "" : ok ? "맞음" : `틀림, 정답 ${q.answer}`;
       const item = root.querySelector(`[data-q-item="${label}"]`);
       item.setAttribute("data-verdict", verdict);
-      item.querySelector("[data-q-verdict]").textContent = !show ? "" : ok ? `맞음 (${q.answer})` : `틀림. 내 답 ${mine || "없음"}, 정답 ${q.answer}`;
+      item.querySelector("[data-ex-feedback]").hidden = !show;
+      item.querySelector("[data-q-verdict]").textContent = !show ? "" : !mine ? "미응답입니다." : ok ? "✓ 맞았습니다." : "✕ 틀렸습니다.";
+      item.querySelector("[data-q-mine]").textContent = show ? `내 답: ${mine || "없음"}` : "";
     });
     const max = autoQs.reduce((s, q) => s + q.points, 0);
     const got = autoQs.reduce((s, q) => s + (state.answers[labelOf(q)] === q.answer ? q.points : 0), 0);

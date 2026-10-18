@@ -469,6 +469,14 @@
 .ex:is([data-phase="grading"], [data-phase="result"])[data-graded="true"] .ex-q:is([data-type="tf"], [data-type="mc"]) .ex-solution { display: block; }
 
 .ex[data-phase="running"][data-feedback="immediate"] .ex-q[data-revealed="true"] :is(.ex-solution, .ex-rubric, .ck) { display: block; }
+.ex-feedback { max-width: 74ch; margin-top: 16px; padding: 13px 16px; border: 1px solid var(--p-line-strong); border-radius: var(--p-r-sm); background: var(--p-surface); }
+.ex-feedback[hidden] { display: none; }
+.ex-feedback .ex-q-verdict { font-size: 17px; }
+.ex-answer-key { margin-top: 8px; font-size: 14px; }
+.ex-answer-key > strong { display: block; margin-bottom: 4px; color: var(--p-muted); font-size: 12px; }
+.ex-answer-key .pp-md > p:first-child { margin-top: 0; }
+.ex-answer-mine { margin-top: 8px; font-size: 13px; color: var(--p-muted); }
+.ex .ex-q:is([data-type="tf"], [data-type="mc"], [data-type="blank"]) .ex-solution::before { content: "해설"; }
 .ex-q-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 12px; }
 .ex-q-foot[hidden] { display: none; }
 .ex-q-verdict { font-size: 14.5px; font-weight: 700; }
@@ -651,6 +659,13 @@
 .bk-opts { min-width: 0; margin: 0; padding: 0; border: 0; }
 .bk-opts[hidden] { display: none; }
 .bk-opts legend { padding: 0; margin-bottom: 6px; font-size: 13px; font-weight: 800; color: var(--p-ink); }
+.bk-feedback { margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid var(--p-line); }
+.bk-verdict { font-size: 13px; font-weight: 800; }
+.bk-verdict[data-verdict="right"] { color: var(--p-ok); }
+.bk-verdict[data-verdict="wrong"] { color: var(--p-accent-ink); }
+.bk-answer { margin-top: 4px; overflow-x: auto; font-size: 13px; }
+.bk-answer strong { margin-right: 6px; font-size: 12px; color: var(--p-muted); }
+.bk-answer .katex { font-size: 1em; }
 .bk-pts { margin-left: 6px; font-weight: 600; color: var(--p-muted); }
 .bk-opt { position: relative; display: block; cursor: pointer; }
 .bk-opt + .bk-opt { margin-top: 5px; }
@@ -697,7 +712,7 @@
 .bk-concepts[hidden] { display: none; }
 .bk-concepts .ex-link { font-size: 13.5px; }
 /* 다시 푸는 동안에는 그 문항의 모범 답안과 채점 기준을 가린다(답이 바로 아래에 보이면 다시 푸는 뜻이 없다). */
-.prep .ex-q[data-bk-retry="open"] :is(.ex-solution, .ex-rubric) { display: none !important; }
+.prep .ex-q[data-bk-retry="open"] :is(.ex-solution, .ex-rubric, .ex-feedback) { display: none !important; }
 
 /* ───────── 계산과 서술: 스스로 채점하는 체크리스트 (js/checks.js) ───────── */
 /* 글자 크기를 모범 답안 상자와 같게 두어 폭(74ch)이 맞는다. 한글이 섞인 점수는 mono 를 쓰지 않는다(자간이 벌어진다). */
@@ -830,7 +845,7 @@
   .prep .ex-print-note { display: block !important; }
   .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
   .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
-  .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
+  .prep .ex-feedback, .prep .ex-mode-dialog, .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-review-tools, .prep .pr-progress, .prep .pr-review-note, .prep .pr-status, .prep .pr-result, .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
   .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }

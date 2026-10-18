@@ -225,7 +225,13 @@ export function attachBlanks(item, q, {
       </div>`;
       return;
     }
-    optsBox.innerHTML = legend + b.options.map((o, i) => {
+    const showAnswer = !open || (feedback && !graded && mine !== undefined);
+    const correct = b.options.find((o) => o.ok);
+    const answer = !showAnswer ? "" : `<div class="bk-feedback" aria-live="polite">
+      <p class="bk-verdict" data-verdict="${mine !== undefined && b.options[mine].ok ? "right" : "wrong"}">${mine === undefined ? "미응답입니다." : b.options[mine].ok ? "✓ 맞았습니다." : "✕ 틀렸습니다."}</p>
+      <p class="bk-answer"><strong>정답</strong> $${esc(correct.tex)}$</p>
+    </div>`;
+    optsBox.innerHTML = legend + answer + b.options.map((o, i) => {
       const show = !open || (feedback && !graded && mine !== undefined);
       const verdict = !show ? "" : o.ok ? "right" : mine === i ? "wrong" : "";
       const tag = verdict === "right" ? '<span class="bk-tag bk-tag-ok">정답</span>'
