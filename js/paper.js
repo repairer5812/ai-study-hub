@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018h";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018h";
+} from "./prep.js?v=20261018i";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018i";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -120,6 +120,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <div class="ex-bar-actions">
         <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
         ${pickable ? '<button type="button" class="ex-chip" data-ex-recall aria-pressed="false" title="빈칸을 눌러도 보기를 바로 보이지 않습니다">보기 늦게 보기</button>' : ""}
+        <button type="button" class="ex-chip" data-ex-restart>재시험</button>
         <span class="ex-end">
           <button type="button" class="btn btn-secondary btn-sm" data-ex-end>시험 종료</button>
           <span class="ex-end-confirm" data-ex-end-confirm hidden>
@@ -136,6 +137,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
   <section class="ex-grade" data-ex-grade hidden aria-labelledby="ex-grade-h">
     <h2 id="ex-grade-h">채점</h2>
     <p class="ex-grade-time" data-ex-used></p>
+    <p class="pp-actions"><button type="button" class="btn btn-secondary" data-ex-restart>처음부터 재시험</button></p>
 
     <div class="ex-step"${auto.length ? "" : " hidden"}>
       <h3>1. 참거짓과 객관식 채점 결과 <span class="ex-step-pts">${pts(auto)}점</span></h3>
@@ -210,7 +212,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
     </div>
     <p class="ex-miss" data-ex-miss hidden></p>
     <p class="pp-actions">
-      <button type="button" class="btn btn-secondary" data-ex-reset>처음부터 다시 풀기</button>
+      <button type="button" class="btn btn-secondary" data-ex-reset data-ex-restart>처음부터 재시험</button>
       ${meta.prep.practice ? `<a class="btn btn-secondary" href="practice.html?s=${subjectId}">주제별 문제</a>` : ""}
     </p>
   </section>
@@ -428,13 +430,23 @@ function wire(root, exam, questions, topicTitle) {
 
   /* 시작과 종료 */
   $("[data-ex-print]").addEventListener("click", () => window.print());
-  $("[data-ex-start]").addEventListener("click", () => {
+  const startExam = () => {
+    clearInterval(timer);
     state = Object.assign(blank(), { ko: state.ko, startedAt: Date.now() });
     resetForms();
+    endConfirm.hidden = true;
+    endBtn.hidden = false;
+    announce.textContent = "";
+    paintUsed();
     setPhase("running", "paper");
     paintResume();
     run();
-  });
+  };
+  $("[data-ex-start]").addEventListener("click", startExam);
+  $$("[data-ex-restart]").forEach((btn) => btn.addEventListener("click", () => {
+    if (!window.confirm(`선택한 답과 점수를 지우고 ${exam.minutes}분 시험을 처음부터 다시 시작할까요?`)) return;
+    startExam();
+  }));
   const endBtn = $("[data-ex-end]");
   const endConfirm = $("[data-ex-end-confirm]");
   endBtn.addEventListener("click", () => { endBtn.hidden = true; endConfirm.hidden = false; $("[data-ex-end-yes]").focus(); });
@@ -614,12 +626,6 @@ function wire(root, exam, questions, topicTitle) {
 
   /* 되돌리기와 이어 하기 */
   const resetForms = () => { card.reset(); if (scoresForm) scoresForm.reset(); paintAuto(); };
-  $("[data-ex-reset]").addEventListener("click", () => {
-    state = Object.assign(blank(), { ko: state.ko });
-    resetForms();
-    setPhase("cover", "cover");
-    paintResume();
-  });
   const resume = $("[data-ex-resume]");
   const paintResume = () => {
     const has = state.total !== null && state.phase === "cover";

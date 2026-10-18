@@ -3,7 +3,7 @@ import * as mlModule from "./ml.js";
 import * as dlModule from "./dl.js";
 import * as dsModule from "./ds.js";
 import * as secModule from "./sec.js";
-import * as slModule from "./sl.js?v=20261018h";
+import * as slModule from "./sl.js?v=20261018i";
 
 const REGISTRY = {
   ml:  mlModule,
