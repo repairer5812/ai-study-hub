@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018j";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018j";
+} from "./prep.js?v=20261018k";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018k";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -92,7 +92,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
           <li>계산과 서술만 종이나 별도 노트에 풉니다. 시험지 인쇄는 선택 사항입니다.</li>
           ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
-          <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
+          <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다. 일시정지한 시간은 시험 시간에 포함하지 않습니다.</li>
           <li>정답을 바로 볼지, 종료 뒤 볼지 아래에서 선택하세요. 선택한 답은 자동 채점됩니다. 계산과 서술은 모범 답안이나 체크리스트로 채점할 수 있습니다.</li>
         </ul>
         <p class="ex-disclaimer">실제 기출이 아닙니다. 수업에서 다룬 내용과 강조된 부분을 바탕으로 만든 예상 문제이고, 실제 시험의 시간과 문항 수는 다를 수 있습니다.</p>
@@ -133,6 +133,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
       <div class="ex-bar-actions">
         <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
         ${pickable ? '<button type="button" class="ex-chip" data-ex-recall aria-pressed="false" title="빈칸을 눌러도 보기를 바로 보이지 않습니다">보기 늦게 보기</button>' : ""}
+        <button type="button" class="ex-chip" data-ex-pause aria-pressed="false">일시정지</button>
         <button type="button" class="ex-chip" data-ex-restart>재시험</button>
         <span class="ex-end">
           <button type="button" class="btn btn-secondary btn-sm" data-ex-end>시험 종료</button>
@@ -146,6 +147,12 @@ function pageHtml(exam, questions, parts, topicTitle) {
     </div>
     <p class="sr-only" aria-live="polite" data-ex-announce></p>
   </div>
+
+  <section class="ex-paused" data-ex-paused hidden aria-labelledby="ex-paused-h">
+    <h2 id="ex-paused-h">시험을 잠시 멈췄습니다</h2>
+    <p>쉬는 동안에는 시간이 줄어들지 않습니다. 선택한 답은 그대로 남아 있습니다.</p>
+    <button type="button" class="btn btn-primary" data-ex-resume-exam>이어서 풀기</button>
+  </section>
 
   <section class="ex-grade" data-ex-grade hidden aria-labelledby="ex-grade-h">
     <h2 id="ex-grade-h">채점</h2>
@@ -278,7 +285,7 @@ function wire(root, exam, questions, topicTitle) {
   // blanks: 처음 고른 빈칸의 답(점수에 들어간다). retry: 틀린 빈칸을 다시 푼 기록(점수에 들어가지 않는다).
   // checks: 체크리스트에서 체크한 항목. draft: 점수 칸에 적혀 있는 값(결과 보기를 누르기 전에도 남긴다).
   const blank = () => ({
-    phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {},
+    phase: "cover", startedAt: null, endedAt: null, pausedAt: null, pausedMs: 0, pauseY: 0, answers: {}, graded: false, scores: {},
     blanks: {}, retry: {}, checks: {}, draft: {}, revealed: {}, feedback: "immediate", ko: false, total: null,
   });
   const saved = store.get(KEY, {});
@@ -392,6 +399,7 @@ function wire(root, exam, questions, topicTitle) {
     syncChecks();
     syncChoices();
     paintFeedback();
+    paintPaused();
     if (!scroll) return;
     const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
     requestAnimationFrame(() => {
@@ -403,18 +411,37 @@ function wire(root, exam, questions, topicTitle) {
   /* 시계 */
   let timer = null;
   let said = {};
+  // 누적 휴식 시간과 현재 쉬는 시간을 빼서 남은 시간과 결과의 소요 시간을 같이 계산한다.
+  const elapsedMs = () => Math.max(0, (state.pausedAt ?? state.endedAt ?? Date.now()) - state.startedAt - state.pausedMs);
+  const settlePause = (now) => {
+    if (state.pausedAt === null) return;
+    state.pausedMs += Math.max(0, now - state.pausedAt);
+    state.pausedAt = null;
+  };
+  const paintPaused = () => {
+    const paused = state.phase === "running" && state.pausedAt !== null;
+    root.setAttribute("data-paused", String(paused));
+    $("[data-ex-paused]").hidden = !paused;
+    $("[data-ex-paper]").inert = paused;
+    $(".ex-jump").inert = paused;
+    [$("[data-ex-ko]"), $("[data-ex-recall]")].forEach((btn) => { if (btn) btn.disabled = paused; });
+    const btn = $("[data-ex-pause]");
+    btn.textContent = paused ? "이어서 풀기" : "일시정지";
+    btn.setAttribute("aria-pressed", String(paused));
+  };
   const tick = () => {
     if (state.phase !== "running" || !state.startedAt) return;
-    const left = limit - (Date.now() - state.startedAt) / 1000;
+    const left = limit - elapsedMs() / 1000;
     if (left >= 0) {
-      clockLabel.textContent = "남은 시간";
+      clockLabel.textContent = state.pausedAt !== null ? "일시정지 · 남은 시간" : "남은 시간";
       clock.textContent = mmss(left);
       bar.removeAttribute("data-over");
     } else {
-      clockLabel.textContent = "시간 종료, 넘긴 시간";
+      clockLabel.textContent = state.pausedAt !== null ? "일시정지 · 넘긴 시간" : "시간 종료, 넘긴 시간";
       clock.textContent = `+${mmss(-left)}`;
       bar.setAttribute("data-over", "true");
     }
+    if (state.pausedAt !== null) return;
     [[600, "10분 남았습니다."], [300, "5분 남았습니다."], [0, "제한 시간이 끝났습니다. 실제 시험이라면 여기서 펜을 놓습니다."]].forEach(([t, msg]) => {
       if (left <= t && !said[t]) {
         said[t] = true;
@@ -422,7 +449,37 @@ function wire(root, exam, questions, topicTitle) {
       }
     });
   };
-  const run = () => { clearInterval(timer); said = {}; tick(); timer = setInterval(tick, 1000); };
+  const run = () => {
+    clearInterval(timer);
+    said = {};
+    tick();
+    if (state.pausedAt === null) timer = setInterval(tick, 1000);
+  };
+  const togglePause = () => {
+    if (state.phase !== "running") return;
+    if (state.pausedAt === null) {
+      state.pauseY = window.scrollY;
+      state.pausedAt = Date.now();
+      clearInterval(timer);
+      save();
+      paintPaused();
+      tick();
+      announce.textContent = "시험을 일시정지했습니다.";
+      $("[data-ex-resume-exam]").focus({ preventScroll: true });
+    } else {
+      settlePause(Date.now());
+      save();
+      paintPaused();
+      run();
+      announce.textContent = "시험을 이어서 풉니다.";
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: state.pauseY, behavior: "instant" });
+        $("[data-ex-pause]").focus({ preventScroll: true });
+      });
+    }
+  };
+  $("[data-ex-pause]").addEventListener("click", togglePause);
+  $("[data-ex-resume-exam]").addEventListener("click", togglePause);
 
   /* 한국어 풀이 */
   const koBtn = $("[data-ex-ko]");
@@ -515,6 +572,7 @@ function wire(root, exam, questions, topicTitle) {
   $("[data-ex-end-yes]").addEventListener("click", () => {
     clearInterval(timer);
     state.endedAt = Date.now();
+    settlePause(state.endedAt);
     endConfirm.hidden = true;
     endBtn.hidden = false;
     paintUsed();
@@ -525,7 +583,7 @@ function wire(root, exam, questions, topicTitle) {
   const paintUsed = () => {
     const el = $("[data-ex-used]");
     if (!state.startedAt || !state.endedAt) { el.textContent = ""; return; }
-    const used = (state.endedAt - state.startedAt) / 1000;
+    const used = elapsedMs() / 1000;
     el.textContent = used <= limit
       ? `걸린 시간 ${span(used)}. 제한 시간은 ${exam.minutes}분입니다.`
       : `걸린 시간 ${span(used)}. 제한 시간 ${exam.minutes}분을 ${span(used - limit)} 넘겼습니다.`;
@@ -546,7 +604,7 @@ function wire(root, exam, questions, topicTitle) {
   };
   root.addEventListener("change", (e) => {
     const input = e.target.closest("[data-ex-pick]");
-    if (!input || state.phase !== "running") return;
+    if (!input || state.phase !== "running" || state.pausedAt !== null) return;
     state.answers[input.getAttribute("data-ex-pick")] = input.value;
     state.graded = false;
     save();

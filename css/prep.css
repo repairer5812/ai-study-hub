@@ -355,7 +355,11 @@
 .ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover > :not(.pp-back):not(.pp-title) { display: none; }
 .ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover { padding-bottom: 14px; border-bottom: 0; }
 .ex:is([data-phase="running"], [data-phase="grading"], [data-phase="result"]) .ex-cover .pp-title { font-size: clamp(22px, 2.8vw, 28px); }
-.ex[data-phase="cover"] .ex-paper { display: none; }
+.ex[data-phase="cover"] .ex-paper, .ex[data-paused="true"] .ex-paper { display: none; }
+.ex-paused { margin: 24px auto; padding: clamp(22px, 4vw, 40px); max-width: 680px; border: 1px solid var(--p-line-strong); border-radius: var(--p-r); background: var(--p-surface); }
+.ex-paused[hidden] { display: none; }
+.ex-paused h2 { font-size: 22px; }
+.ex-paused p { margin: 12px 0 20px; color: var(--p-muted); line-height: 1.7; }
 
 /* ───────── 모의시험: 시계 띠 ───────── */
 .ex-bar {
@@ -784,7 +788,7 @@
   .prep .ex-print-note { display: block !important; }
   .prep .ex-picks legend, .prep .ex-pick-option input { display: none !important; }
   .prep .ex-pick-option .ex-pick-in { border: 0 !important; padding: 2px 0; min-height: 0; background: transparent !important; box-shadow: none !important; }
-  .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
+  .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-paused, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
   .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
