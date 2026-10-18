@@ -309,6 +309,19 @@
 
 /* ───────── 모의시험: 표지 ───────── */
 .prep-paper .app-header { position: static; } /* 풀이 중에는 시계 띠가 위에 붙는다 */
+.ex-modes { min-width: 0; border: 0; padding: 0; margin: 28px 0 20px; }
+.ex-modes legend { padding: 0; margin-bottom: 10px; font-weight: 700; }
+.ex-mode-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 10px; }
+.ex-mode { display: flex; align-items: flex-start; gap: 10px; padding: 15px; border: 1.5px solid var(--p-line-strong); border-radius: 8px; cursor: pointer; }
+.ex-mode:has(input:checked) { border-color: var(--p-accent-ink); background: var(--p-accent-tint); }
+.ex-mode input { flex: none; margin-top: 5px; accent-color: var(--p-accent-ink); }
+.ex-mode strong, .ex-mode small { display: block; }
+.ex-mode small, .ex-modes > p { color: var(--p-muted); font-size: 13px; line-height: 1.6; }
+.ex-modes > p { margin-top: 8px; }
+.ex-mode-status { font-size: 12px; color: var(--p-muted); }
+.ex-reveal-row { margin-top: 14px; }
+.ex-reveal-row[hidden] { display: none; }
+.ex[data-phase="running"] .ck-note .ex-link { display: none; }
 .ex-cover-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(22px, 4vw, 48px); align-items: start; margin-top: 28px; }
 .ex-plan { width: 100%; border-collapse: collapse; font-size: 15px; }
 .ex-plan caption { text-align: left; font-size: 15.5px; font-weight: 800; letter-spacing: -0.015em; color: var(--p-ink); padding-bottom: 8px; }
@@ -445,6 +458,7 @@
 .ex:is([data-phase="grading"], [data-phase="result"]) .ex-q:is([data-type="blank"], [data-type="calc"], [data-type="essay"]) :is(.ex-solution, .ex-rubric) { display: block; }
 .ex:is([data-phase="grading"], [data-phase="result"])[data-graded="true"] .ex-q:is([data-type="tf"], [data-type="mc"]) .ex-solution { display: block; }
 
+.ex[data-phase="running"][data-feedback="immediate"] .ex-q[data-revealed="true"] :is(.ex-solution, .ex-rubric, .ck) { display: block; }
 .ex-q-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 12px; }
 .ex-q-foot[hidden] { display: none; }
 .ex-q-verdict { font-size: 14.5px; font-weight: 700; }
@@ -631,8 +645,8 @@
 .bk-opts[data-locked="true"] .bk-opt, .bk-opts[data-locked="true"] .bk-opt input { cursor: default; }
 .bk-opts[data-locked="true"] .bk-opt:hover .bk-opt-in { background: var(--p-surface); border-color: var(--p-line); }
 /* 채점 뒤: 정답은 실선, 내가 고른 틀린 답은 점선. 고른 표시(checked)보다 앞서야 해서 선택자를 길게 쓴다. */
-.bk-opts[data-locked="true"] .bk-opt[data-verdict="right"] input + .bk-opt-in { border-style: solid; border-color: var(--p-ok); box-shadow: inset 0 0 0 1px var(--p-ok); background: var(--p-surface); }
-.bk-opts[data-locked="true"] .bk-opt[data-verdict="wrong"] input + .bk-opt-in { border-style: dashed; border-color: var(--p-accent-ink); box-shadow: none; background: var(--p-surface); }
+.bk-opts:is([data-locked="true"], [data-feedback="true"]) .bk-opt[data-verdict="right"] input + .bk-opt-in { border-style: solid; border-color: var(--p-ok); box-shadow: inset 0 0 0 1px var(--p-ok); background: var(--p-surface); }
+.bk-opts:is([data-locked="true"], [data-feedback="true"]) .bk-opt[data-verdict="wrong"] input + .bk-opt-in { border-style: dashed; border-color: var(--p-accent-ink); box-shadow: none; background: var(--p-surface); }
 .bk-foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--p-muted); font-variant-numeric: tabular-nums; }
 .bk-foot [hidden] { display: none; }
 
@@ -773,7 +787,7 @@
   .prep .app-header, .prep .ex-cover, .prep .ex-bar, .prep .ex-grade, .prep .ex-result, .prep .ex-q-foot,
   .prep .pr-tools, .prep .pr-jump, .prep .pr-reveal, .prep .pr-foot, .prep .ct-rail, .prep .ct-drawer, .prep .bk, .prep .ck,
   .prep .cs-done, .prep .cs-step, .prep .pp-actions { display: none !important; }
-  .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
+  .prep .ex-reveal-row, .prep .ex .ex-q .ex-ko, .prep .ex .ex-q .ex-solution, .prep .ex .ex-q .ex-rubric { display: none !important; }
   .prep .ex[data-phase] .ex-paper { display: block !important; }
   .prep, .prep .ex-paper { background: #fff !important; color: #111 !important; }
   .prep .ex-paper { max-width: none; margin: 0; padding: 0; border: 0; box-shadow: none; }

@@ -6,8 +6,8 @@
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb, store,
-} from "./prep.js?v=20261018i";
-import { attachBlanks, hasBlankChoices } from "./blanks.js?v=20261018i";
+} from "./prep.js?v=20261018j";
+import { attachBlanks, hasBlankChoices } from "./blanks.js?v=20261018j";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();

@@ -58,6 +58,7 @@ export function attachBlanks(item, q, {
   const seen = new Set(); // 보기 늦게 보기에서 "보기 보기"를 누른 빈칸
   let active = autoOpen ? q.blanks[0]?.n ?? null : null;
   let graded = false;
+  let feedback = false; // 바로 보기에서도 미응답의 정답은 가리고, 고른 답은 고칠 수 있다.
 
   const panel = document.createElement("div");
   panel.className = "bk";
@@ -130,7 +131,7 @@ export function attachBlanks(item, q, {
   /** empty, picked(고칠 수 있는 동안) / right, wrong, missed(채점된 뒤) */
   const stateOf = (n) => {
     const i = shown(n);
-    if (editable(n)) return i === undefined ? "empty" : "picked";
+    if (editable(n) && !(feedback && !graded && i !== undefined)) return i === undefined ? "empty" : "picked";
     if (i === undefined) return "missed";
     return byN.get(n).options[i].ok ? "right" : "wrong";
   };
@@ -207,6 +208,7 @@ export function attachBlanks(item, q, {
     const open = editable(b.n);
     const legend = `<legend>빈칸 (${b.n}) <span class="bk-pts">${b.points}점</span></legend>`;
     optsBox.hidden = false;
+    optsBox.setAttribute("data-feedback", feedback && !graded && mine !== undefined ? "true" : "false");
     optsBox.setAttribute("data-locked", open ? "false" : "true"); // 잠긴 빈칸은 맞고 틀림만 보인다
     // 보기 늦게 보기: 아직 고르지 않은 빈칸은 먼저 떠올려 본 뒤에 보기를 연다.
     if (recall && open && mine === undefined && !seen.has(b.n)) {
@@ -218,7 +220,8 @@ export function attachBlanks(item, q, {
       return;
     }
     optsBox.innerHTML = legend + b.options.map((o, i) => {
-      const verdict = open ? "" : o.ok ? "right" : mine === i ? "wrong" : "";
+      const show = !open || (feedback && !graded && mine !== undefined);
+      const verdict = !show ? "" : o.ok ? "right" : mine === i ? "wrong" : "";
       const tag = verdict === "right" ? '<span class="bk-tag bk-tag-ok">정답</span>'
         : verdict === "wrong" ? '<span class="bk-tag bk-tag-no">내가 고른 답</span>' : "";
       return `
@@ -332,6 +335,10 @@ export function attachBlanks(item, q, {
     else { picks[active] = Number(input.value); onChange(picks); }
     paintStem();
     paintNums();
+    if (feedback && !graded) {
+      paintOpts();
+      optsBox.querySelector('input:checked')?.focus({ preventScroll: true });
+    }
   });
 
   paintStem();
@@ -339,6 +346,12 @@ export function attachBlanks(item, q, {
   paintOpts();
 
   return {
+    /** 선택한 빈칸만 즉시 채점한다. 미응답은 가리고, 선택은 계속 고칠 수 있다. */
+    setFeedback(on) {
+      if (feedback === !!on) return;
+      feedback = !!on;
+      paintAll();
+    },
     /** 채점 상태로 바꾼다(고칠 수 없고, 맞고 틀림과 정답이 보인다). 채점을 풀면 다시 풀기 기록도 버린다. */
     setGraded(on) {
       if (graded === !!on) return;

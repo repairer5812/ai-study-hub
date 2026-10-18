@@ -1,5 +1,5 @@
 // paper.js — 화면에서 답을 고르는 모의시험. 인쇄도 지원한다.
-// 참거짓, 객관식, 빈칸은 풀이 중에 고르고 종료 뒤 채점한다. 계산과 서술은 따로 풀이한다.
+// 참거짓, 객관식, 빈칸은 풀이 중에 고른다. 시작할 때 즉시 해설과 종료 뒤 해설 중 선택한다. 계산과 서술은 따로 풀이한다.
 // 빈칸도 다섯 보기 가운데 고른다(js/blanks.js). 고른 답은 종료 뒤 자동 채점해 점수 칸에 넣는다.
 // 채점된 뒤에는 틀린 빈칸만 다시 풀 수 있다. 다시 푼 결과는 점수에 넣지 않는다.
 // 계산과 서술은 모범 답안 아래의 체크리스트로 스스로 채점할 수도 있다(js/checks.js). 체크한 점수의 합이 점수 칸에 들어간다.
@@ -9,8 +9,8 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018i";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018i";
+} from "./prep.js?v=20261018j";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=20261018j";
 import { attachChecks, hasChecks } from "./checks.js";
 
 const meta = requireMeta();
@@ -93,12 +93,24 @@ function pageHtml(exam, questions, parts, topicTitle) {
           ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
-          <li>화면에서 선택한 답은 종료하면 자동 채점됩니다. 계산과 서술은 모범 답안이나 체크리스트로 채점할 수 있습니다.</li>
+          <li>정답을 바로 볼지, 종료 뒤 볼지 아래에서 선택하세요. 선택한 답은 자동 채점됩니다. 계산과 서술은 모범 답안이나 체크리스트로 채점할 수 있습니다.</li>
         </ul>
         <p class="ex-disclaimer">실제 기출이 아닙니다. 수업에서 다룬 내용과 강조된 부분을 바탕으로 만든 예상 문제이고, 실제 시험의 시간과 문항 수는 다를 수 있습니다.</p>
       </div>
     </div>
 
+    <fieldset class="ex-modes" data-ex-modes>
+      <legend>정답 확인 모드</legend>
+      <div class="ex-mode-options">
+        <label class="ex-mode"><input type="radio" name="feedback-mode" value="immediate" checked>
+          <span><strong>정답 바로 보기</strong><small>답을 고르면 정답과 해설을 바로 확인합니다.</small></span>
+        </label>
+        <label class="ex-mode"><input type="radio" name="feedback-mode" value="final">
+          <span><strong>최종 보기</strong><small>시험을 종료한 뒤 정답과 해설을 한꺼번에 확인합니다.</small></span>
+        </label>
+      </div>
+      <p>바로 보기에서 계산·서술형은 직접 푼 뒤 ‘정답 보기’를 누르세요. 재시험은 선택한 모드로 시작합니다.</p>
+    </fieldset>
     <div class="pp-actions">
       <button type="button" class="btn btn-primary btn-lg" data-ex-start>화면에서 시험 시작</button>
       <button type="button" class="btn btn-secondary" data-ex-print>시험지 인쇄</button>
@@ -116,6 +128,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <span class="ex-clock-label" data-ex-clock-label>남은 시간</span>
         <span class="ex-clock-time" data-ex-clock>${String(exam.minutes).padStart(2, "0")}:00</span>
       </p>
+      <span class="ex-mode-status" data-ex-mode-status></span>
       <nav class="ex-jump" aria-label="파트 이동">${parts.map((p) => `<a href="#part-${p.id}">${p.id}</a>`).join("")}</nav>
       <div class="ex-bar-actions">
         <button type="button" class="ex-chip" data-ex-ko aria-pressed="false">한국어 풀이</button>
@@ -243,10 +256,11 @@ function pageHtml(exam, questions, parts, topicTitle) {
           </div>
           <div class="ex-sec ex-stem pp-md">${selectableStem(q)}</div>
           <div class="ex-sec ex-ko pp-md" lang="ko">${renderMd(q.ko)}</div>
+          ${["calc", "essay"].includes(q.type) ? `<p class="ex-reveal-row" hidden data-ex-reveal-row><button type="button" class="btn btn-secondary btn-sm" data-ex-reveal="${labelOf(q)}" aria-expanded="false">정답 보기</button></p>` : ""}
           <div class="ex-sec ex-solution pp-md" lang="ko">${renderMd(q.solution)}</div>
           ${q.rubric ? `<div class="ex-sec ex-rubric pp-md" lang="ko">${renderMd(q.rubric)}</div>` : ""}
           <p class="ex-q-foot" lang="ko" data-ex-q-foot hidden>
-            <span class="ex-q-verdict" data-q-verdict></span>
+            <span class="ex-q-verdict" data-q-verdict aria-live="polite"></span>
             ${isWritten(q) ? `<button type="button" class="ex-link" data-ex-copy="${labelOf(q)}">이 문항만 채점 프롬프트 복사</button>` : ""}
             ${q.concepts[0] ? `<a class="ex-link" href="${mapBase}&n=${q.concepts[0]}">관련 개념 보기</a>` : ""}
           </p>
@@ -265,10 +279,13 @@ function wire(root, exam, questions, topicTitle) {
   // checks: 체크리스트에서 체크한 항목. draft: 점수 칸에 적혀 있는 값(결과 보기를 누르기 전에도 남긴다).
   const blank = () => ({
     phase: "cover", startedAt: null, endedAt: null, answers: {}, graded: false, scores: {},
-    blanks: {}, retry: {}, checks: {}, draft: {}, ko: false, total: null,
+    blanks: {}, retry: {}, checks: {}, draft: {}, revealed: {}, feedback: "immediate", ko: false, total: null,
   });
-  let state = Object.assign(blank(), store.get(KEY, {}));
-  ["answers", "scores", "blanks", "retry", "checks", "draft"].forEach((k) => {
+  const saved = store.get(KEY, {});
+  let state = Object.assign(blank(), saved);
+  // 진행 중인 예전 시험은 종료 뒤 보기로 이어 가며, 새 시험은 바로 보기가 기본이다.
+  if (!["immediate", "final"].includes(saved.feedback)) state.feedback = state.phase === "cover" ? "immediate" : "final";
+  ["answers", "scores", "blanks", "retry", "checks", "draft", "revealed"].forEach((k) => {
     if (!state[k] || typeof state[k] !== "object") state[k] = {};
   });
   const save = () => store.set(KEY, state);
@@ -303,7 +320,7 @@ function wire(root, exam, questions, topicTitle) {
     blankCtrl.set(label, attachBlanks(root.querySelector(`[data-q-item="${label}"]`), q, {
       picks: state.blanks[label],
       retry: state.retry[label] || null,
-      onChange: () => save(),
+      onChange: () => { save(); paintFeedback(); },
       // 다시 푼 기록은 처음 고른 답(state.blanks)과 따로 남긴다. 점수는 건드리지 않는다.
       onRetry: (r) => { if (r) state.retry[label] = r; else delete state.retry[label]; save(); },
       recall,
@@ -321,6 +338,7 @@ function wire(root, exam, questions, topicTitle) {
       state.blanks[label] = state.blanks[label] || {};
       ctrl.setPicks(state.blanks[label], state.retry[label] || null);
       ctrl.setGraded(done);
+      ctrl.setFeedback(state.phase === "running" && state.feedback === "immediate");
       const s = ctrl.score();
       const verdict = root.querySelector(`[data-q-item="${label}"] [data-q-verdict]`);
       if (verdict) verdict.textContent = done && s.picked ? `화면에서 고른 빈칸 ${s.total}개 가운데 ${s.right}개 맞음, ${s.got} / ${s.max}점` : "";
@@ -373,6 +391,7 @@ function wire(root, exam, questions, topicTitle) {
     syncBlanks();
     syncChecks();
     syncChoices();
+    paintFeedback();
     if (!scroll) return;
     const target = { paper: $("[data-ex-paper]"), grade, result, cover }[scroll];
     requestAnimationFrame(() => {
@@ -428,11 +447,53 @@ function wire(root, exam, questions, topicTitle) {
     paintRecall();
   });
 
+  /* 답을 고른 문항만 해설을 연다. 빈칸의 전체 유도는 모두 고른 뒤에 연다. */
+  const paintFeedback = () => {
+    const immediate = state.phase === "running" && state.feedback === "immediate";
+    const done = state.phase === "grading" || state.phase === "result";
+    root.setAttribute("data-feedback", state.feedback);
+    $("[data-ex-mode-status]").textContent = state.feedback === "immediate" ? "정답 바로 보기" : "최종 보기";
+    questions.forEach((q) => {
+      const label = labelOf(q);
+      const item = root.querySelector(`[data-q-item="${label}"]`);
+      let revealed = false;
+      if (immediate) {
+        if (["tf", "mc"].includes(q.type)) revealed = !!state.answers[label];
+        else if (hasBlankChoices(q)) revealed = blankCtrl.get(label).score().picked === q.blanks.length;
+        else revealed = state.revealed[label] === true;
+      }
+      item.setAttribute("data-revealed", revealed ? "true" : "false");
+      item.querySelector("[data-ex-q-foot]").hidden = !(done || revealed);
+      const row = item.querySelector("[data-ex-reveal-row]");
+      if (row) {
+        row.hidden = !immediate;
+        const btn = row.querySelector("button");
+        btn.textContent = revealed ? "정답 접기" : "정답 보기";
+        btn.setAttribute("aria-expanded", String(revealed));
+      }
+    });
+  };
+  $$("[data-ex-reveal]").forEach((btn) => btn.addEventListener("click", () => {
+    if (state.phase !== "running" || state.feedback !== "immediate") return;
+    const label = btn.getAttribute("data-ex-reveal");
+    state.revealed[label] = !state.revealed[label];
+    save();
+    paintFeedback();
+  }));
+  $$("[name=feedback-mode]").forEach((input) => {
+    input.checked = input.value === state.feedback;
+    input.addEventListener("change", () => {
+      if (state.phase !== "cover") return;
+      state.feedback = input.value;
+      save();
+    });
+  });
+
   /* 시작과 종료 */
   $("[data-ex-print]").addEventListener("click", () => window.print());
   const startExam = () => {
     clearInterval(timer);
-    state = Object.assign(blank(), { ko: state.ko, startedAt: Date.now() });
+    state = Object.assign(blank(), { ko: state.ko, feedback: state.feedback, startedAt: Date.now() });
     resetForms();
     endConfirm.hidden = true;
     endBtn.hidden = false;
@@ -490,6 +551,7 @@ function wire(root, exam, questions, topicTitle) {
     state.graded = false;
     save();
     paintAuto();
+    paintFeedback();
   });
   const readCard = () => {
     const out = {};
@@ -504,13 +566,14 @@ function wire(root, exam, questions, topicTitle) {
       const label = labelOf(q);
       const mine = state.answers[label];
       const ok = mine === q.answer;
-      const verdict = !state.graded ? "" : ok ? "right" : "wrong";
+      const show = state.graded || (state.phase === "running" && state.feedback === "immediate" && !!mine);
+      const verdict = !show ? "" : ok ? "right" : "wrong";
       const row = card.querySelector(`[data-card-row="${label}"]`);
       row.setAttribute("data-verdict", verdict);
       row.querySelector("[data-card-verdict]").textContent = !state.graded ? "" : ok ? "맞음" : `틀림, 정답 ${q.answer}`;
       const item = root.querySelector(`[data-q-item="${label}"]`);
       item.setAttribute("data-verdict", verdict);
-      item.querySelector("[data-q-verdict]").textContent = !state.graded ? "" : ok ? `맞음 (${q.answer})` : `틀림. 내 답 ${mine || "없음"}, 정답 ${q.answer}`;
+      item.querySelector("[data-q-verdict]").textContent = !show ? "" : ok ? `맞음 (${q.answer})` : `틀림. 내 답 ${mine || "없음"}, 정답 ${q.answer}`;
     });
     const max = autoQs.reduce((s, q) => s + q.points, 0);
     const got = autoQs.reduce((s, q) => s + (state.answers[labelOf(q)] === q.answer ? q.points : 0), 0);

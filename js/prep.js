@@ -3,7 +3,7 @@
 //   - 마크다운을 marked 로 그리고 수식은 KaTeX 로 그린다(review.js 와 같은 방식).
 //   - 개념 나무를 만들고, 다른 LLM 에 붙여 넣을 채점 프롬프트를 조립한다.
 
-import { getSubjectMeta } from "./subjects/index.js?v=20261018i";
+import { getSubjectMeta } from "./subjects/index.js?v=20261018j";
 
 export const params = new URLSearchParams(location.search);
 export const subjectId = params.get("s") || "sl";
