@@ -11,7 +11,7 @@
 export const META = {
   id: "sl",
   title: "통계적학습개론",
-  subtitle: "모의시험 2회: 필수 핵심 먼저, 추가 복습은 시간 있을 때",
+  subtitle: "모의시험 1회 · 90분 · 과제와 출제 핵심 14문항",
   emoji: "📈",
   color: "#8b1538",
   available: true,
@@ -21,12 +21,11 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261018e",
+    version: "20261018f",
     map: true,
     practice: true,
     exams: [
-      { set: "midterm-1", title: "1회: 필수 핵심", minutes: 60, points: 100, desc: "시간이 부족하면 이 회차부터. 시험에 포함되는 과제 1·2와 출제 예고·강조 내용을 모은 14문항입니다." },
-      { set: "midterm-2", title: "2회: 추가 복습", minutes: 60, points: 100, desc: "1회를 마친 뒤 시간이 남으면. ERM 서술·GD 계산 등 추가 응용 5문항입니다." },
+      { set: "midterm-1", title: "모의시험: 필수 핵심", minutes: 90, points: 100, desc: "시험에 포함되는 과제 1·2와 출제 예고·강조 내용을 모은 14문항입니다. 90분·100점입니다." },
     ],
     // 다른 곳에 있는 복습 자료. 시험 준비 목록 끝에 붙는다.
     links: [

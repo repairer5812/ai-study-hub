@@ -9,7 +9,7 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018e";
+} from "./prep.js?v=20261018f";
 import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js";
 import { attachChecks, hasChecks } from "./checks.js";
 
@@ -593,7 +593,7 @@ function wire(root, exam, questions, topicTitle) {
 }
 
 (async function init() {
-  if (subjectId === "sl" && setId === "midterm-3") {
+  if (subjectId === "sl" && ["midterm-2", "midterm-3"].includes(setId)) {
     location.replace("paper.html?s=sl&set=midterm-1");
     return;
   }

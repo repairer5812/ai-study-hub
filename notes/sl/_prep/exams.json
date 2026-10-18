@@ -1,11 +1,11 @@
 [
   {
     "set": "midterm-1",
-    "revision": "20261018-homework",
-    "title": "중간고사 모의시험 1회: 필수 핵심",
-    "minutes": 60,
+    "revision": "20261018-single90",
+    "title": "중간고사 모의시험: 필수 핵심",
+    "minutes": 90,
     "points": 100,
-    "lead": "출제 대상으로 안내된 이번 학기 과제 1·2와 수업에서 출제를 예고하거나 강조한 내용을 모은 회차입니다. 시간이 부족하면 이 회차부터 푸세요. 다른 과목 기출은 형식만 참고했습니다.",
+    "lead": "이번 학기 과제 1·2와 수업에서 출제를 예고하거나 강조한 내용을 모은 단일 모의시험입니다. 90분 동안 풀고 채점하세요. 다른 과목 기출은 형식만 참고했습니다.",
     "scope": "과제 1의 분포별 MLE, 과제 2의 다항회귀·NumPy 코드·과적합, 오차 분포와 손실, Ridge/Lasso MAP, -1/+1 Logistic MLE·MAP, 결정경계와 다항 특성. ERM·일반화·검정은 짧은 문항으로 확인합니다.",
     "parts": [
       {
@@ -31,23 +31,6 @@
         "en": "Problems",
         "ko": "계산과 서술",
         "guide": "Show the key reasoning and calculations. Write code on paper when asked."
-      }
-    ]
-  },
-  {
-    "set": "midterm-2",
-    "revision": "20261018-homework",
-    "title": "중간고사 모의시험 2회: 추가 복습",
-    "minutes": 60,
-    "points": 100,
-    "lead": "1회를 마친 뒤 시간이 남으면 푸는 추가 응용입니다. ERM의 긴 서술과 GD 계산, 계수 검정 및 정규화 응용을 연습합니다.",
-    "scope": "ERM의 불편성·일반화·오차 분해, GD 학습률·종료 조건, 계수 검정, 정규화 계수, Logistic GD/SGD. 시험 제외 안내가 있는 행렬 미분 유도는 포함하지 않습니다.",
-    "parts": [
-      {
-        "id": "D",
-        "en": "Problems",
-        "ko": "계산과 서술",
-        "guide": "Show the key reasoning and calculations."
       }
     ]
   }
