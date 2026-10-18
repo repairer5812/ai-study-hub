@@ -9,7 +9,7 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=20261018d";
+} from "./prep.js?v=20261018e";
 import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js";
 import { attachChecks, hasChecks } from "./checks.js";
 
