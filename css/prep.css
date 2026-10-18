@@ -116,6 +116,8 @@
 .pp-md ol li::marker { color: var(--p-muted); font-family: var(--p-mono); font-size: 0.9em; }
 .pp-md blockquote { padding: 10px 16px; background: var(--p-panel); border-radius: var(--p-r-sm); color: var(--p-ink-2); font-size: 15px; }
 .pp-md code { font-family: var(--p-mono); font-size: 0.9em; padding: 0.1em 0.35em; border-radius: 5px; background: var(--p-panel); }
+.pp-md pre { max-width: 100%; overflow-x: auto; margin: 14px 0; padding: 14px 16px; border: 1px solid var(--p-line); border-radius: var(--p-r-sm); background: var(--p-panel); }
+.pp-md pre code { display: block; padding: 0; border-radius: 0; background: none; white-space: pre; line-height: 1.65; }
 .pp-md hr { border: 0; border-top: 1px solid var(--p-line); margin: 1.6em 0; }
 .pp-table { position: relative; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .pp-md table { width: 100%; border-collapse: collapse; font-size: 14.5px; }

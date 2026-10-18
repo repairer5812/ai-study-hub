@@ -67,7 +67,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
           ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
-          <li>끝나면 참거짓과 객관식은 답을 옮겨 바로 채점하고, 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
+          <li>${auto.length ? "끝나면 참거짓과 객관식은 답을 옮겨 바로 채점합니다. " : "끝나면 "}손으로 쓴 유도와 서술은 모범 답안과 비교하거나 채점 프롬프트를 복사해 쓰시는 LLM에 답안 사진과 함께 넣습니다.</li>
         </ul>
         <p class="ex-disclaimer">실제 기출이 아닙니다. 수업에서 다룬 내용과 강조된 부분을 바탕으로 만든 예상 문제이고, 실제 시험의 시간과 문항 수는 다를 수 있습니다.</p>
       </div>
@@ -111,7 +111,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
     <h2 id="ex-grade-h">채점</h2>
     <p class="ex-grade-time" data-ex-used></p>
 
-    <div class="ex-step">
+    <div class="ex-step"${auto.length ? "" : " hidden"}>
       <h3>1. 참거짓과 객관식 답 옮기기 <span class="ex-step-pts">${pts(auto)}점</span></h3>
       <p class="ex-step-note">종이에 쓴 답을 그대로 눌러 옮깁니다. 비워 둔 문항은 0점으로 셉니다.</p>
       <form class="ex-card" data-ex-card>
@@ -136,7 +136,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
 
     ${written.length ? `
     <div class="ex-step">
-      <h3>2. 손으로 쓴 답 채점하기 <span class="ex-step-pts">${pts(written)}점</span></h3>
+      <h3>${auto.length ? "2. " : ""}손으로 쓴 답 채점하기 <span class="ex-step-pts">${pts(written)}점</span></h3>
       <ol class="ex-how">
         <li>답안지를 사진으로 찍습니다. 문항 번호가 보이게 찍으면 채점이 정확해집니다.</li>
         <li>아래 버튼으로 채점 프롬프트를 복사해 ChatGPT, Claude, Gemini 같은 LLM에 붙여 넣고 사진을 함께 올립니다. 문제, 모범 답안, 채점 기준이 프롬프트에 들어 있습니다.</li>
@@ -509,7 +509,7 @@ function wire(root, exam, questions, topicTitle) {
         }
         out[labelOf(q)] = v;
       }
-      if (!state.graded) {
+      if (autoQs.length && !state.graded) {
         msg.textContent = "먼저 1번에서 참거짓과 객관식 답을 채점해 주세요.";
         card.querySelector('button[type="submit"]').focus();
         return;

@@ -24,5 +24,26 @@
       { "id": "C", "en": "Fill in the Blanks", "ko": "빈칸 유도", "guide": "Complete each derivation by filling in the numbered blanks." },
       { "id": "D", "en": "Problems", "ko": "계산과 서술", "guide": "Show your reasoning. You will not get full points without it." }
     ]
+  },
+  {
+    "set": "midterm-3",
+    "title": "중간고사 모의시험 3회: 과제 기반 보충",
+    "minutes": 90,
+    "points": 100,
+    "scope": "Topic 1–4와 과제 1·2를 바탕으로 만든 보충 문제. 행렬 미분은 과제 복습이며 실제 시험 범위 확정을 뜻하지 않습니다.",
+    "parts": [
+      {
+        "id": "C",
+        "en": "Derivations",
+        "ko": "빈칸 유도",
+        "guide": "Complete the derivations. The matrix derivation in C3 is homework review."
+      },
+      {
+        "id": "D",
+        "en": "Written Problems",
+        "ko": "계산과 서술",
+        "guide": "Write your reasoning and complete the code on paper. These are supplementary questions, not official past-exam questions."
+      }
+    ]
   }
 ]
