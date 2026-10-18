@@ -27,7 +27,7 @@ export const META = {
     exams: [
       { set: "midterm-1", title: "중간고사 모의시험 1회", minutes: 75, points: 100 },
       { set: "midterm-2", title: "중간고사 모의시험 2회", minutes: 75, points: 100 },
-      { set: "midterm-3", title: "중간고사 모의시험 3회: 과제 기반 보충", minutes: 90, points: 100 },
+      { set: "midterm-3", title: "모의시험 3회 (보충)", minutes: 90, points: 100 },
     ],
     // 다른 곳에 있는 복습 자료. 시험 준비 목록 끝에 붙는다.
     links: [
