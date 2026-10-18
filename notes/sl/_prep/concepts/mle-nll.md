@@ -19,13 +19,13 @@ related: [dataset-iid]
 MLE는 우도를 가장 크게 하는 매개변수입니다.
 
 $$
-\hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} P(D ; \boldsymbol{\theta})
+\hat{\boldsymbol{\theta}}_{\text{MLE}} = \arg\max_{\boldsymbol{\theta}} p(D \mid \boldsymbol{\theta})
 $$
 
-음의 로그우도는 다음과 같이 정의합니다.
+수업 표기에 맞춰 전체 우도는 $p(D\mid\boldsymbol{\theta})$ 로 쓰고, 최소화할 음의 로그우도 손실은 다음과 같이 정의합니다.
 
 $$
-\mathcal{L}_D(\boldsymbol{\theta}) = -\log P(D ; \boldsymbol{\theta})
+\mathcal{L}_D(\boldsymbol{\theta}) = -\log p(D \mid \boldsymbol{\theta})
 $$
 
 아래 첨자 $D$ 는 데이터가 고정돼 있고 $\boldsymbol{\theta}$ 만 움직인다는 표시입니다. empirical risk $\mathcal{L}(h; D)$ 와 글자가 같아서 첨자로 구별합니다. 우도를 가장 크게 하는 매개변수는 음의 로그우도를 가장 작게 하는 매개변수와 같습니다.
@@ -49,10 +49,10 @@ $$
 $$
 \begin{aligned}
 \mathcal{L}_D(\boldsymbol{\theta})
-&= -\log P(D ; \boldsymbol{\theta}) \\
-&= -\log P\big((\mathbf{x}_1, y_1), \dots, (\mathbf{x}_n, y_n) ; \boldsymbol{\theta}\big) \\
-&= -\log \prod_{i=1}^{n} P(\mathbf{x}_i, y_i ; \boldsymbol{\theta}) \\
-&= -\sum_{i=1}^{n} \log P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})
+&= -\log p(D \mid \boldsymbol{\theta}) \\
+&= -\log p\big((\mathbf{x}_1, y_1), \dots, (\mathbf{x}_n, y_n) \mid \boldsymbol{\theta}\big) \\
+&= -\log \prod_{i=1}^{n} p(\mathbf{x}_i, y_i \mid \boldsymbol{\theta}) \\
+&= -\sum_{i=1}^{n} \log p(\mathbf{x}_i, y_i \mid \boldsymbol{\theta})
 \end{aligned}
 $$
 
@@ -61,7 +61,7 @@ $$
 3. 셋째 줄: 표본이 [i.i.d.](map.html?s=sl&n=dataset-iid) 라는 가정을 씁니다. 독립이므로 결합 확률이 표본별 확률의 곱으로 나뉩니다. 같은 분포에서 나왔으므로 모든 인수가 같은 함수이고 같은 $\boldsymbol{\theta}$ 를 씁니다.
 4. 넷째 줄: 로그의 성질로 곱을 합으로 바꿉니다.
 
-레이블이 없는 데이터 $D = \{x_i\}_{i=1}^{n}$ 에서도 똑같이 $\mathcal{L}_D(\theta) = -\sum_{i=1}^{n} \log P(x_i ; \theta)$ 입니다.
+레이블이 없는 데이터 $D = \{x_i\}_{i=1}^{n}$ 에서도 똑같이 $\mathcal{L}_D(\theta) = -\sum_{i=1}^{n} \log p(x_i \mid \theta)$ 입니다.
 
 수업 자료의 이 대목은 표본 수를 $N$ 으로, 표본 번호를 $n$ 으로 적습니다. 이 지도에서는 앞 가지와 맞춰 $n$ 과 $i$ 로 씁니다.
 
@@ -69,7 +69,7 @@ $$
 
 **가정이 쓰인 줄은 셋째 줄 하나입니다**
 
-i.i.d. 가 깨지면 셋째 줄로 넘어갈 수 없습니다. 한 시계열을 겹치게 잘라 만든 표본들은 서로 독립이 아니어서 결합 확률이 표본별 확률의 곱이 아닙니다. 나머지 세 줄은 정의와 로그의 성질이라 어떤 모형에서도 그대로입니다. 모형마다 달라지는 것은 넷째 줄의 $P(\mathbf{x}_i, y_i ; \boldsymbol{\theta})$ 자리에 무엇을 넣느냐입니다.
+i.i.d. 가 깨지면 셋째 줄로 넘어갈 수 없습니다. 한 시계열을 겹치게 잘라 만든 표본들은 서로 독립이 아니어서 결합 확률이 표본별 확률의 곱이 아닙니다. 나머지 세 줄은 정의와 로그의 성질이라 어떤 모형에서도 그대로입니다. 모형마다 달라지는 것은 넷째 줄의 $p(\mathbf{x}_i, y_i \mid \boldsymbol{\theta})$ 자리에 무엇을 넣느냐입니다.
 
 </div>
 

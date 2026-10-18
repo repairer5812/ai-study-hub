@@ -12,7 +12,7 @@ related: [lr-gaussian-noise-mse, lr-laplace-noise-mae]
 
 **과제 1에서 확인할 것**
 
-세 분포의 밀도를 넣고 우도, 로그우도, 미분, 추정값 순서로 직접 씁니다. Gaussian 분산의 분모 n, Laplace 척도의 부호, Exponential의 rate와 평균을 구분합니다. 짝수 개 표본에서는 Laplace 위치의 최적값이 구간일 수 있습니다. 모의시험 D1과 연결됩니다.
+세 분포의 밀도를 넣고 우도, 음의 로그우도 손실, 손실 미분, 추정값 순서로 직접 씁니다. Gaussian 분산의 분모 n, Laplace 척도의 부호, Exponential의 rate와 평균을 구분합니다. 짝수 개 표본에서는 Laplace 위치의 최적값이 구간일 수 있습니다. 모의시험 D1과 연결됩니다.
 
 </div>
 
@@ -27,17 +27,21 @@ related: [lr-gaussian-noise-mse, lr-laplace-noise-mae]
 데이터는 레이블이 없는 실수 표본 $D = \{x_1, \dots, x_n\}$ 이고 i.i.d. 라고 가정합니다. 어느 분포든 출발점은 [음의 로그우도](map.html?s=sl&n=mle-nll)의 넷째 줄입니다.
 
 $$
-\mathcal{L}_D(\theta) = -\sum_{i=1}^{n} \log P(x_i ; \theta)
+\begin{aligned}
+p(D\mid\theta)&=\prod_{i=1}^{n}p(x_i\mid\theta),\\
+\mathcal{L}_D(\theta)&=-\log p(D\mid\theta)\\
+&=-\sum_{i=1}^{n}\log p(x_i\mid\theta).
+\end{aligned}
 $$
 
-여기에 밀도의 식을 넣고 매개변수로 미분해서 0인 점을 찾습니다. 세 분포에서 달라지는 것은 밀도를 넣는 줄뿐입니다.
+우도는 $p(D\mid\theta)$, 손실은 $\mathcal L_D(\theta)$ 로 구분합니다. 손실에 밀도의 식을 넣고 매개변수로 미분해서 최소가 되는 점을 찾습니다. 세 분포에서 달라지는 것은 밀도를 넣는 줄뿐입니다.
 
 ### 가우시안: 평균과 분산
 
 밀도는 다음과 같습니다. 매개변수는 평균 $\mu$ 와 분산 $\sigma^{2}$ 둘입니다.
 
 $$
-P(x ; \mu, \sigma^{2}) = \frac{1}{\sqrt{2\pi\sigma^{2}}} \exp\!\left(-\frac{(x-\mu)^{2}}{2\sigma^{2}}\right)
+p(x \mid \mu, \sigma^{2}) = \frac{1}{\sqrt{2\pi\sigma^{2}}} \exp\!\left(-\frac{(x-\mu)^{2}}{2\sigma^{2}}\right)
 $$
 
 음의 로그우도를 전개합니다.
@@ -45,7 +49,7 @@ $$
 $$
 \begin{aligned}
 \mathcal{L}_D(\mu, \sigma^{2})
-&= -\sum_{i=1}^{n} \log P(x_i ; \mu, \sigma^{2}) \\
+&= -\sum_{i=1}^{n} \log p(x_i \mid \mu, \sigma^{2}) \\
 &= -\sum_{i=1}^{n} \left[ -\frac{1}{2}\log(2\pi\sigma^{2}) - \frac{(x_i-\mu)^{2}}{2\sigma^{2}} \right] \\
 &= \frac{n}{2}\log(2\pi\sigma^{2}) + \frac{1}{2\sigma^{2}}\sum_{i=1}^{n}(x_i-\mu)^{2}
 \end{aligned}
@@ -86,7 +90,7 @@ $$
 밀도는 다음과 같습니다. 매개변수는 위치 $\mu$ 와 척도 $b$ 입니다. 가우시안과 견주면 지수 안의 제곱이 절댓값으로 바뀌었습니다.
 
 $$
-P(x ; \mu, b) = \frac{1}{2b} \exp\!\left(-\frac{\lvert x-\mu\rvert}{b}\right)
+p(x \mid \mu, b) = \frac{1}{2b} \exp\!\left(-\frac{\lvert x-\mu\rvert}{b}\right)
 $$
 
 같은 순서로 전개합니다.
@@ -139,7 +143,7 @@ $$
 지수분포는 0 이상의 값에 정의되고 매개변수는 $\theta > 0$ 하나입니다.
 
 $$
-P(x ; \theta) = \theta e^{-\theta x}
+p(x \mid \theta) = \theta e^{-\theta x}
 $$
 
 $$

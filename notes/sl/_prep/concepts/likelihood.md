@@ -19,10 +19,12 @@ related: []
 매개변수가 $\boldsymbol{\theta}$ 인 확률 모형에서 데이터 $D$ 가 관측될 확률을 다음과 같이 씁니다. 연속인 값이면 확률 대신 밀도입니다.
 
 $$
-P(D ; \boldsymbol{\theta})
+p(D \mid \boldsymbol{\theta})
 $$
 
-세미콜론은 $\boldsymbol{\theta}$ 가 확률변수가 아니라 값을 정해 넣는 매개변수라는 표시입니다. 자료에 따라 $p(D \mid \boldsymbol{\theta})$ 처럼 소문자와 막대로 쓰기도 합니다. 이 지도에서는 대문자 $P$ 와 세미콜론으로 통일하고 두 표기의 차이는 [빈도주의와 베이지안](map.html?s=sl&n=frequentist-vs-bayesian)에서 다룹니다.
+수업 표기에 맞춰 우도는 $p(D\mid\boldsymbol{\theta})$ 로 씁니다. $D$ 는 전체 데이터이고, $\boldsymbol{\theta}$ 는 값을 바꾸어 볼 매개변수입니다. 막대를 썼다는 사실만으로 매개변수에 prior가 있다는 뜻은 아닙니다.
+
+최소화할 손실은 $\mathcal L_D(\boldsymbol{\theta})=-\log p(D\mid\boldsymbol{\theta})$ 입니다. 우도와 손실을 이 두 표기로 구분합니다.
 
 이 식은 읽는 방향이 둘입니다.
 
@@ -38,12 +40,12 @@ $$
 앞면 확률을 $\theta$ 라 하고 열 번 던져 앞면 4번과 뒷면 6번을 봤다고 합시다. 던지기가 서로 독립이면 전체 확률은 각 결과의 확률을 곱한 값입니다.
 
 $$
-P(D ; \theta) = \theta^{4}(1-\theta)^{6}
+p(D \mid \theta) = \theta^{4}(1-\theta)^{6}
 $$
 
 데이터는 그대로 두고 $\theta$ 에 세 값을 넣어 봅니다.
 
-| $\theta$ | $\theta^{4}$ | $(1-\theta)^{6}$ | $P(D ; \theta)$ |
+| $\theta$ | $\theta^{4}$ | $(1-\theta)^{6}$ | $p(D \mid \theta)$ |
 |---|---|---|---|
 | $0.1$ | $0.0001$ | $0.531441$ | $5.31 \times 10^{-5}$ |
 | $0.4$ | $0.0256$ | $0.046656$ | $1.19 \times 10^{-3}$ |
@@ -94,7 +96,7 @@ $\theta = 0.5$ 이면
 
 $$
 \begin{aligned}
-P(D ; 0.5) &= 0.5^{4} \times 0.5^{6} = 0.5^{10} \\
+p(D \mid 0.5) &= 0.5^{4} \times 0.5^{6} = 0.5^{10} \\
 &= \frac{1}{1024} \approx 9.77 \times 10^{-4}
 \end{aligned}
 $$

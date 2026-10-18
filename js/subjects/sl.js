@@ -21,7 +21,7 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261018o",
+    version: "20261018p",
     map: true,
     practice: true,
     exams: [
