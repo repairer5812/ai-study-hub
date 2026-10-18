@@ -31,7 +31,7 @@ if (meta.prep) {
   });
   (meta.prep.exams || []).forEach((e) => rows.push({
     href: `paper.html?s=${subjectId}&set=${e.set}`, name: e.title,
-    desc: "실제 시험처럼 종이에 풀고, 끝나면 화면에서 채점합니다. 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 LLM으로 채점합니다.",
+    desc: e.desc || "실제 시험처럼 종이에 풀고, 끝나면 화면에서 채점합니다. 손으로 쓴 유도와 서술은 채점 프롬프트를 복사해 LLM으로 채점합니다.",
     meta: `${e.minutes}분, ${e.points}점`,
   }));
   if (meta.prep.practice) rows.push({

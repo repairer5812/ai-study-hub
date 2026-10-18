@@ -1,48 +1,41 @@
 [
   {
     "set": "midterm-1",
-    "title": "중간고사 모의시험 1회",
-    "minutes": 75,
+    "revision": "20261018-compact",
+    "title": "중간고사 모의시험 1회: 필수 핵심",
+    "minutes": 60,
     "points": 100,
-    "scope": "Topic 1 Preliminaries부터 Topic 4 Logistic Regression까지",
-    "parts": [
-      { "id": "A", "en": "True or False", "ko": "참거짓", "guide": "Mark each statement True (T) or False (F)." },
-      { "id": "B", "en": "Multiple Choice", "ko": "객관식", "guide": "Choose the single best answer." },
-      { "id": "C", "en": "Fill in the Blanks", "ko": "빈칸 유도", "guide": "Complete each derivation by filling in the numbered blanks." },
-      { "id": "D", "en": "Problems", "ko": "계산과 서술", "guide": "Show your reasoning. You will not get full points without it." }
-    ]
-  },
-  {
-    "set": "midterm-2",
-    "title": "중간고사 모의시험 2회",
-    "minutes": 75,
-    "points": 100,
-    "scope": "Topic 1 Preliminaries부터 Topic 4 Logistic Regression까지",
-    "parts": [
-      { "id": "A", "en": "True or False", "ko": "참거짓", "guide": "Mark each statement True (T) or False (F)." },
-      { "id": "B", "en": "Multiple Choice", "ko": "객관식", "guide": "Choose the single best answer." },
-      { "id": "C", "en": "Fill in the Blanks", "ko": "빈칸 유도", "guide": "Complete each derivation by filling in the numbered blanks." },
-      { "id": "D", "en": "Problems", "ko": "계산과 서술", "guide": "Show your reasoning. You will not get full points without it." }
-    ]
-  },
-  {
-    "set": "midterm-3",
-    "title": "중간고사 모의시험 3회: 과제 기반 보충",
-    "minutes": 90,
-    "points": 100,
-    "scope": "Topic 1–4와 과제 1·2를 바탕으로 만든 보충 문제. 행렬 미분은 과제 복습이며 실제 시험 범위 확정을 뜻하지 않습니다.",
+    "lead": "시간이 부족하면 이 회차를 먼저 푸세요. 교재와 과제의 핵심 유형을 한 번에 점검합니다.",
+    "scope": "ERM, 분포 모수 추정, MLE/MAP, 다항회귀 코드와 과적합, Logistic Regression, GD. 실제 시험 범위를 확정하는 목록은 아닙니다.",
     "parts": [
       {
         "id": "C",
         "en": "Derivations",
         "ko": "빈칸 유도",
-        "guide": "Complete the derivations. The matrix derivation in C3 is homework review."
+        "guide": "Complete the main steps without looking at the options first."
       },
       {
         "id": "D",
         "en": "Written Problems",
         "ko": "계산과 서술",
-        "guide": "Write your reasoning and complete the code on paper. These are supplementary questions, not official past-exam questions."
+        "guide": "Show the key reasoning and calculations. Write code on paper."
+      }
+    ]
+  },
+  {
+    "set": "midterm-2",
+    "revision": "20261018-compact",
+    "title": "중간고사 모의시험 2회: 선택 응용",
+    "minutes": 60,
+    "points": 100,
+    "lead": "1회를 마친 뒤 시간이 남으면 푸세요. 정규화, 특성 변환, 실제 갱신 계산을 더 연습합니다.",
+    "scope": "정규화 비교, Ridge 계수, 특성 변환, Logistic GD/SGD. 행렬 미분 문항은 기존 범위 밖 표시를 유지한 과제 복습입니다.",
+    "parts": [
+      {
+        "id": "D",
+        "en": "Written Problems",
+        "ko": "계산과 서술",
+        "guide": "Show the key reasoning and calculations. Write code on paper."
       }
     ]
   }

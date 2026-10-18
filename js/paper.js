@@ -46,7 +46,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
   <header class="pp-head ex-cover">
     <a class="pp-back" href="subject.html?s=${subjectId}">${esc(meta.title)}</a>
     <h1 class="pp-title">${esc(exam.title)}</h1>
-    <p class="pp-lead">실제 시험처럼 종이에 풉니다. 화면은 시험지와 시계 역할만 하고, 끝난 뒤에 채점을 돕습니다.</p>
+    <p class="pp-lead">${esc(exam.lead || "실제 시험처럼 종이에 풉니다. 화면은 시험지와 시계 역할만 하고, 끝난 뒤에 채점을 돕습니다.")}</p>
     <dl class="pp-facts">
       <div><dt>시간</dt><dd>${exam.minutes}분</dd></div>
       <div class="pp-facts-wide"><dt>범위</dt><dd>${esc(exam.scope || "")}</dd></div>
@@ -63,7 +63,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <h2>시작하기 전에</h2>
         <ul>
           <li>종이와 펜을 준비합니다. 답은 종이에 씁니다.</li>
-          <li>빈칸 유도는 종이에 쓰는 대신 빈칸을 눌러 보기 다섯 개 가운데 고를 수도 있습니다. 고른 답은 끝난 뒤 자동으로 채점됩니다.</li>
+          ${pickable ? "<li>빈칸 유도는 종이에 쓰는 대신 빈칸을 눌러 보기 다섯 개 가운데 고를 수도 있습니다. 고른 답은 끝난 뒤 자동으로 채점됩니다.</li>" : ""}
           ${pickable ? "<li>보기를 보기 전에 답을 먼저 떠올리고 싶으면 위쪽 띠에서 보기 늦게 보기를 켭니다.</li>" : ""}
           <li>문제는 영어입니다. 막히면 위쪽 띠에서 한국어 풀이를 켤 수 있습니다.</li>
           <li>시작하면 시계가 돌고, 새로 고쳐도 이어집니다.</li>
@@ -197,7 +197,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
         <div><dt>Total</dt><dd>${total} points</dd></div>
         <div><dt>Name</dt><dd class="ex-paper-blank"></dd></div>
       </dl>
-      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write your answers on paper. In Part C you may instead click a blank and choose from five options.</p>
+      <p class="ex-paper-note">This is a practice exam written from the lecture topics. It is not a past exam. Write your answers on paper.${pickable ? " In Part C you may instead click a blank and choose from five options." : ""}</p>
     </header>
     ${parts.map((p) => `
     <section class="ex-part" id="part-${p.id}">
@@ -230,7 +230,7 @@ function pageHtml(exam, questions, parts, topicTitle) {
 function wire(root, exam, questions, topicTitle) {
   const $ = (sel) => root.querySelector(sel);
   const $$ = (sel) => Array.from(root.querySelectorAll(sel));
-  const KEY = `ai-study:${subjectId}:paper:${exam.set}`;
+  const KEY = `ai-study:${subjectId}:paper:${exam.set}${exam.revision ? `:${exam.revision}` : ""}`;
   // blanks: 처음 고른 빈칸의 답(점수에 들어간다). retry: 틀린 빈칸을 다시 푼 기록(점수에 들어가지 않는다).
   // checks: 체크리스트에서 체크한 항목. draft: 점수 칸에 적혀 있는 값(결과 보기를 누르기 전에도 남긴다).
   const blank = () => ({
@@ -593,6 +593,10 @@ function wire(root, exam, questions, topicTitle) {
 }
 
 (async function init() {
+  if (subjectId === "sl" && setId === "midterm-3") {
+    location.replace("paper.html?s=sl&set=midterm-1");
+    return;
+  }
   try {
     const [data] = await Promise.all([loadPrep(meta), whenMathReady()]);
     const exam = data.exams.find((e) => e.set === setId);
