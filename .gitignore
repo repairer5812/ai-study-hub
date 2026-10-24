@@ -18,3 +18,6 @@ _audit_report.md
 
 # 시험 준비 도구의 로컬 검사 목록(실명 등)
 tools/*.local.txt
+
+# 파이썬 캐시(tools/verify_site.py 등)
+__pycache__/
