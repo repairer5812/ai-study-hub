@@ -69,7 +69,7 @@ index.html                          ← 허브 (과목 카드 4개)
 
 ### 서버
 - 호스팅: GitHub Pages
-- LLM 채점 프록시: Cloudflare Worker (`../worker/`, 서술형 채점용)
+- LLM 채점 프록시: Cloudflare Worker (`worker/`, 서술형과 작업형 채점). 화면이 부르는 주소는 `js/config.js` 한 곳에 있다
 
 ## 로컬 실행
 

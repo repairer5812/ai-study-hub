@@ -1,8 +1,9 @@
 // work.js — 작업형·서술형 예상문제 1문제씩 풀이 + LLM 첨삭 채점
-import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=941d643cd9";
-import { renderViz } from "./viz.js?v=941d643cd9";
+import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=7de49de224";
+import { renderViz } from "./viz.js?v=7de49de224";
+import { GRADER_BASE } from "./config.js?v=7de49de224";
 
-const GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade";
+const GRADER_URL = `${GRADER_BASE}/grade`;
 // 저장 키와 돌아갈 과목은 문제 묶음의 WORK_META 에서 온다(지금은 ds 하나).
 const ANS_KEY = `ai-study:${WORK_META.subjectId}:work:answers`;
 

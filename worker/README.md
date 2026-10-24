@@ -6,17 +6,14 @@
 
 **1. 이 폴더로 이동**
 
-노트북 (Windows):
-```bash
-cd "c:/Users/User/Desktop/LLM_project/2. 계속관리/AI대학원/worker"
-```
+ai-study-hub 저장소(`repairer5812/ai-study-hub`)의 `worker/` 폴더다.
 
 데스크탑 (Linux):
 ```bash
-cd "$HOME/Nextcloud/2. 계속관리/AI대학원/worker"
+cd ~/dev/ai-study-hub/worker
 ```
 
-> 위치 변경 이력: 2026-04 PARA 정리로 `1. 단기 프로젝트/AI_Study/`에서 현재 위치로 이동.
+> 위치 변경 이력: 2026-04 PARA 정리로 `1. 단기 프로젝트/AI_Study/`에서 `2. 계속관리/[개인]_25_AI대학원/worker`로, 2026-10-24에 이 저장소의 `worker/`로 옮겼다. 화면이 부르는 워커 주소는 저장소의 `js/config.js` 에 있다.
 
 **2. Secret 3개 주입** — 터미널에서 한 줄씩 실행, 프롬프트에 값 붙여넣기
 

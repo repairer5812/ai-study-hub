@@ -1,14 +1,15 @@
 // exam.js — 시험 풀이 로직 (정기고사 + 주차별 확인문제, subject-aware)
 
-import { getSubjectModule, getSubjectMeta } from "./subjects/index.js?v=941d643cd9";
-import { grade, scoreSet, collectWrongIds } from "./scoring.js?v=941d643cd9";
+import { getSubjectModule, getSubjectMeta } from "./subjects/index.js?v=7de49de224";
+import { grade, scoreSet, collectWrongIds } from "./scoring.js?v=7de49de224";
 import {
   saveProgress, loadProgress, clearProgress,
   getWrongList, addWrong, removeWrong,
   saveWeeklyProgress, loadWeeklyProgress, clearWeeklyProgress,
   getWeeklyWrongList, addWeeklyWrong, removeWeeklyWrong
-} from "./storage.js?v=941d643cd9";
-import { recordAttempt, fetchQuestionStats } from "./leaderboard.js?v=941d643cd9";
+} from "./storage.js?v=7de49de224";
+import { recordAttempt, fetchQuestionStats } from "./leaderboard.js?v=7de49de224";
+import { GRADER_BASE } from "./config.js?v=7de49de224";
 
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
@@ -478,7 +479,7 @@ function confirmShortAnswer(q) {
 // ═══════════════════════════════════════════════════════════════
 // 서술형 (essay) — Cloudflare Worker /grade-text 채점
 // ═══════════════════════════════════════════════════════════════
-const ESSAY_GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade-text";
+const ESSAY_GRADER_URL = `${GRADER_BASE}/grade-text`;
 
 function renderEssay(q) {
   const wrap = document.createElement("div");

@@ -240,8 +240,8 @@ class Site:
                                        reduced_motion="reduce", device_scale_factor=1)
         self.contexts.append(ctx)
         ctx.add_init_script(SEED_RANDOM)
-        # Firebase(랭킹, 통계)는 막는다. 점검이 실제 랭킹에 쓰지 않게 한다.
-        ctx.route(re.compile(r"https://([a-z0-9-]+\.)*(googleapis\.com|firebaseio\.com|firebaseapp\.com)/"),
+        # Firebase(랭킹, 통계)와 채점 워커(LLM)는 막는다. 점검이 실제 랭킹에 쓰거나 채점을 부르지 않게 한다.
+        ctx.route(re.compile(r"https://([a-z0-9-]+\.)*(googleapis\.com|firebaseio\.com|firebaseapp\.com|workers\.dev)/"),
                   lambda route: route.abort() if "fonts.googleapis.com" not in route.request.url else route.continue_())
         pg = ctx.new_page()
         base = self.base
@@ -250,7 +250,7 @@ class Site:
             if msg.type != "error":
                 return
             text = msg.text
-            if re.search(r"firestore|firebase|googleapis|ERR_FAILED|net::ERR", text, re.I):
+            if re.search(r"firestore|firebase|googleapis|workers\.dev|ERR_FAILED|net::ERR", text, re.I):
                 return
             self.errors.append(f"console: {text[:300]} ({pg.url})")
 
@@ -1311,6 +1311,18 @@ def flow_smoke_exam(site):
     pg.locator("#answer-input").fill("점검용 답")
     saved = pg.evaluate("() => JSON.parse(localStorage.getItem('ai-study:ds:work:answers') || 'null')")
     check(saved and "점검용 답" in saved.values(), "작업형 답 저장 키")
+    # 채점 요청 주소(js/config.js). 워커는 부르지 않고 요청을 가로채 503 을 돌려준다.
+    seen = []
+
+    def fake(route):
+        seen.append(route.request.url)
+        route.fulfill(status=503, body="check")
+
+    pg.route(re.compile(r"https://[a-z0-9.-]+\.workers\.dev/"), fake)
+    fake_from = len(site.errors)
+    pg.locator("#grade-btn").click()
+    pg.wait_for_function("() => /채점 서버 오류/.test(document.body.innerText)")
+    check(seen == ["https://ai-study-grader.repairer5812.workers.dev/grade"], f"작업형 채점 주소 {seen}")
     pg.locator("#exit-btn").click()
     pg.wait_for_url("**/subject.html?s=ds")
     pg.wait_for_selector("#work-section")
@@ -1318,6 +1330,17 @@ def flow_smoke_exam(site):
     for sid in ("sl", "ml", "dl", "sec"):
         site.go(pg, f"subject.html?s={sid}")
         check(not pg.locator("#work-section").is_visible(), f"{sid} 과목 화면에 작업형 묶음이 보인다")
+    # 서술형(정기고사 essay 세트) 채점 주소
+    seen.clear()
+    site.go(pg, "exam.html?s=dl&set=1", wait="load")
+    pg.wait_for_selector(".short-answer-wrap textarea")
+    pg.locator(".short-answer-wrap textarea").first.fill("점검용 서술형 답안입니다. 서른 글자를 넘기려고 조금 더 씁니다.")
+    pg.get_by_role("button", name="LLM 채점받기").click()
+    pg.wait_for_function("() => !document.querySelector('.short-answer-wrap button[disabled]')")
+    check(seen == ["https://ai-study-grader.repairer5812.workers.dev/grade-text"], f"서술형 채점 주소 {seen}")
+    # 가짜 503 응답에 대한 예상된 기록(크롬의 자원 실패 줄, exam.js 의 오류 줄)은 뺀다.
+    site.errors[fake_from:] = [e for e in site.errors[fake_from:] if not re.search(r"status of 503|Essay grade error", e)]
+    pg.unroute(re.compile(r"https://[a-z0-9.-]+\.workers\.dev/"))
     # 없앤 회차의 옛 링크는 남은 회차로 넘어간다.
     for old in ("midterm-2", "midterm-3"):
         site.go(pg, f"paper.html?s=sl&set={old}")
