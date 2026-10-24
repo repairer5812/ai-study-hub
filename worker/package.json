@@ -1,0 +1,11 @@
+{
+  "name": "ai-study-grader",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for LLM-based essay grading (Upstage Solar)",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  }
+}
