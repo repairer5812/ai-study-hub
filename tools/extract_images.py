@@ -9,12 +9,12 @@ extract_images.py — 기계학습 강의 PDF에서 페이지별 이미지 추�
 이후 사람(또는 AI)이 필요한 페이지를 골라 assets/images/로 이동하고
 의미 있는 파일명으로 리네이밍하면 된다.
 
-- 입력: C:\\Users\\User\\AppData\\Roaming\\alt\\data\\storage\\slides\\BRI507_IntroML_{2~7}_*.pdf
+- 입력: C:\\Users\\User\\AppData\\Roaming\\alt\\data\\storage\\slides\\*_IntroML_{2~7}_*.pdf
+  (파일 이름 앞의 과목 코드는 공개 저장소에 적지 않는다. 뒷부분이 같은 파일을 찾는다)
 - 출력: mock-exam/assets/images/_raw/{week}_pNN.png
 - DPI: 150 (적당한 해상도와 파일 크기 균형)
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -30,15 +30,21 @@ SLIDES_DIR = Path(r"C:\Users\User\AppData\Roaming\alt\data\storage\slides")
 SCRIPT_DIR = Path(__file__).resolve().parent
 OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "images" / "_raw"
 
-# ── PDF → 주차 매핑 ───────────────────────────────────────
+# ── PDF → 주차 매핑 (파일 이름의 뒷부분) ─────────────────────
 PDFS = {
-    "BRI507_IntroML_2_Intro.pdf":          "week2",
-    "BRI507_IntroML_3_Discriminative-1.pdf": "week3",
-    "BRI507_IntroML_4_Generative-2.pdf":   "week4",
-    "BRI507_IntroML_5_Nonparametric.pdf":  "week5",
-    "BRI507_IntroML_6_SVM.pdf":            "week6",
-    "BRI507_IntroML_7_Evaluation.pdf":     "week7",
+    "_IntroML_2_Intro.pdf":          "week2",
+    "_IntroML_3_Discriminative-1.pdf": "week3",
+    "_IntroML_4_Generative-2.pdf":   "week4",
+    "_IntroML_5_Nonparametric.pdf":  "week5",
+    "_IntroML_6_SVM.pdf":            "week6",
+    "_IntroML_7_Evaluation.pdf":     "week7",
 }
+
+
+def find_pdf(suffix: str) -> "Path | None":
+    """SLIDES_DIR 에서 이름이 suffix 로 끝나는 PDF 를 찾는다(여럿이면 이름순 첫째)."""
+    hits = sorted(SLIDES_DIR.glob(f"*{suffix}"))
+    return hits[0] if hits else None
 
 DPI = 150
 
@@ -78,14 +84,14 @@ def main() -> None:
     total_pages = 0
     missing = []
 
-    for pdf_name, tag in PDFS.items():
-        pdf_path = SLIDES_DIR / pdf_name
-        if not pdf_path.exists():
-            print(f"[!] File not found: {pdf_name}")
-            missing.append(pdf_name)
+    for suffix, tag in PDFS.items():
+        pdf_path = find_pdf(suffix)
+        if pdf_path is None:
+            print(f"[!] File not found: *{suffix}")
+            missing.append(suffix)
             continue
 
-        print(f"[+] {pdf_name} -> {tag}")
+        print(f"[+] {pdf_path.name} -> {tag}")
         pages = extract_pdf_pages(pdf_path, tag, OUTPUT_DIR)
         total_pages += pages
         print(f"    [OK] {pages} pages saved")

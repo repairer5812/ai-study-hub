@@ -1,8 +1,8 @@
-# BRI516 — 다층 퍼셉트론 (MLP) · 역전파 (Backpropagation)
+# 다층 퍼셉트론 (MLP) · 역전파 (Backpropagation)
 
-> **과목**: BRI516 Introduction to Neural Networks (Ph.D. Hojin Jang)
-> **⚠️ 주의**: 이 내용은 BRI507 기말 범위 외(reference용). BRI516 별도 수강 참고자료.
-> **연결**: BRI507 13주차 단층 NN의 한계(XOR) → 이를 해결하는 MLP 아키텍처
+> **과목**: Introduction to Neural Networks
+> **⚠️ 주의**: 이 내용은 기계학습 기말 범위 외(reference용). 신경망 과목 별도 수강 참고자료.
+> **연결**: 기계학습 13주차 단층 NN의 한계(XOR) → 이를 해결하는 MLP 아키텍처
 
 ---
 
@@ -142,4 +142,4 @@ $$\frac{\partial a}{\partial z} = a(1-a)$$
 
 ---
 
-> 출처: BRI516 Introduction to Neural Networks, "Multi-Layer Perceptrons and Backpropagation" (Ph.D. Hojin Jang). BRI507 기말 범위 외 — 참고용.
+> 출처: Introduction to Neural Networks, "Multi-Layer Perceptrons and Backpropagation". 기계학습 기말 범위 외, 참고용.

@@ -273,4 +273,4 @@ $$\frac{\partial L}{\partial w_{21}} = \Big(\frac{\partial L}{\partial\hat{y}_1}
 
 - **핵심 대비표**: McCulloch-Pitts↔Perceptron(가중치 학습) / Perceptron↔Adaline(에러 시점) / MSE↔BCE(분류 페널티) / BCE↔NLL(동일) / Softmax(지수·정규화) / 단층 한계(XOR).
 
-> 출처: BRI507 Introduction to Machine Learning, Neural Networks 슬라이드(67p, Ph.D. Hojin Jang) 전 범위 + 강의 전사.
+> 출처: 기계학습 Neural Networks 슬라이드(67p) 전 범위 + 강의 전사.
