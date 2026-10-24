@@ -9,9 +9,12 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=7de49de224";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=7de49de224";
-import { attachChecks, hasChecks } from "./checks.js?v=7de49de224";
+} from "./prep.js?v=b62c1c4c48";
+import { attachBlanks, hasBlankChoices } from "./blanks.js?v=b62c1c4c48";
+import { attachChecks, hasChecks } from "./checks.js?v=b62c1c4c48";
+import { examKey, recallKey, loadState, saveState, freshState } from "./paper-state.js?v=b62c1c4c48";
+import { createTimer, settlePause } from "./paper-timer.js?v=b62c1c4c48";
+import { createResult } from "./paper-result.js?v=b62c1c4c48";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -22,16 +25,6 @@ const mapBase = `map.html?s=${subjectId}`;
 const studyUrl = `paper.html?s=${subjectId}&set=${encodeURIComponent(setId)}&study=D#part-D`;
 const goMap = document.getElementById("go-map");
 if (goMap) { goMap.href = mapBase; goMap.style.display = ""; }
-const num = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
-const mmss = (sec) => {
-  const s = Math.max(0, Math.floor(sec));
-  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-};
-const span = (sec) => {
-  const s = Math.max(0, Math.round(sec));
-  const m = Math.floor(s / 60);
-  return m ? `${m}분 ${s % 60}초` : `${s}초`;
-};
 
 // 원본의 객관식 보기와 수식을 그대로 사용해 문항 안에서 선택하게 한다.
 function selectableStem(q) {
@@ -359,26 +352,14 @@ function wireStudy(root) {
 function wire(root, exam, questions, topicTitle) {
   const $ = (sel) => root.querySelector(sel);
   const $$ = (sel) => Array.from(root.querySelectorAll(sel));
-  const KEY = `ai-study:${subjectId}:paper:${exam.set}${exam.revision ? `:${exam.revision}` : ""}`;
-  // blanks: 처음 고른 빈칸의 답(점수에 들어간다). retry: 틀린 빈칸을 다시 푼 기록(점수에 들어가지 않는다).
-  // checks: 체크리스트에서 체크한 항목. draft: 점수 칸에 적혀 있는 값(결과 보기를 누르기 전에도 남긴다).
-  const blank = () => ({
-    phase: "cover", startedAt: null, endedAt: null, pausedAt: null, pausedMs: 0, pauseY: 0, answers: {}, graded: false, scores: {},
-    blanks: {}, retry: {}, checks: {}, draft: {}, revealed: {}, feedback: "immediate", ko: false, total: null,
-  });
-  const saved = store.get(KEY, {});
-  let state = Object.assign(blank(), saved);
-  // 진행 중인 예전 시험은 종료 뒤 보기로 이어 가며, 새 시험은 바로 보기가 기본이다.
-  if (!["immediate", "final"].includes(saved.feedback)) state.feedback = state.phase === "cover" ? "immediate" : "final";
-  ["answers", "scores", "blanks", "retry", "checks", "draft", "revealed"].forEach((k) => {
-    if (!state[k] || typeof state[k] !== "object") state[k] = {};
-  });
-  const save = () => store.set(KEY, state);
-  const RECALL_KEY = `ai-study:${subjectId}:paper:${exam.set}:recall`;
+  // 저장 상태의 키와 구조는 js/paper-state.js 에 있다(바꾸면 방문자의 풀이가 사라진다).
+  const KEY = examKey(subjectId, exam);
+  let state = loadState(KEY);
+  const save = () => saveState(KEY, state);
+  const RECALL_KEY = recallKey(subjectId, exam);
   let recall = store.get(RECALL_KEY, false) === true;
   let setRecall = () => {};
 
-  const total = questions.reduce((s, q) => s + q.points, 0);
   const autoQs = questions.filter((q) => !isWritten(q));
   const writtenQs = questions.filter(isWritten);
   const prompts = { all: gradingPrompt(meta.title, writtenQs.map((q) => promptItem(q))) };
@@ -489,16 +470,7 @@ function wire(root, exam, questions, topicTitle) {
     });
   };
 
-  /* 시계 */
-  let timer = null;
-  let said = {};
-  // 누적 휴식 시간과 현재 쉬는 시간을 빼서 남은 시간과 결과의 소요 시간을 같이 계산한다.
-  const elapsedMs = () => Math.max(0, (state.pausedAt ?? state.endedAt ?? Date.now()) - state.startedAt - state.pausedMs);
-  const settlePause = (now) => {
-    if (state.pausedAt === null) return;
-    state.pausedMs += Math.max(0, now - state.pausedAt);
-    state.pausedAt = null;
-  };
+  /* 시계(js/paper-timer.js) */
   const paintPaused = () => {
     const paused = state.phase === "running" && state.pausedAt !== null;
     root.setAttribute("data-paused", String(paused));
@@ -510,57 +482,13 @@ function wire(root, exam, questions, topicTitle) {
     btn.textContent = paused ? "이어서 풀기" : "일시정지";
     btn.setAttribute("aria-pressed", String(paused));
   };
-  const tick = () => {
-    if (state.phase !== "running" || !state.startedAt) return;
-    const left = limit - elapsedMs() / 1000;
-    if (left >= 0) {
-      clockLabel.textContent = state.pausedAt !== null ? "일시정지 · 남은 시간" : "남은 시간";
-      clock.textContent = mmss(left);
-      bar.removeAttribute("data-over");
-    } else {
-      clockLabel.textContent = state.pausedAt !== null ? "일시정지 · 넘긴 시간" : "시간 종료, 넘긴 시간";
-      clock.textContent = `+${mmss(-left)}`;
-      bar.setAttribute("data-over", "true");
-    }
-    if (state.pausedAt !== null) return;
-    [[600, "10분 남았습니다."], [300, "5분 남았습니다."], [0, "제한 시간이 끝났습니다. 실제 시험이라면 여기서 펜을 놓습니다."]].forEach(([t, msg]) => {
-      if (left <= t && !said[t]) {
-        said[t] = true;
-        if (left > t - 3) announce.textContent = msg; // 다시 열었을 때 이미 지난 구간은 알리지 않는다
-      }
-    });
-  };
-  const run = () => {
-    clearInterval(timer);
-    said = {};
-    tick();
-    if (state.pausedAt === null) timer = setInterval(tick, 1000);
-  };
-  const togglePause = () => {
-    if (state.phase !== "running") return;
-    if (state.pausedAt === null) {
-      state.pauseY = window.scrollY;
-      state.pausedAt = Date.now();
-      clearInterval(timer);
-      save();
-      paintPaused();
-      tick();
-      announce.textContent = "시험을 일시정지했습니다.";
-      $("[data-ex-resume-exam]").focus({ preventScroll: true });
-    } else {
-      settlePause(Date.now());
-      save();
-      paintPaused();
-      run();
-      announce.textContent = "시험을 이어서 풉니다.";
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: state.pauseY, behavior: "instant" });
-        $("[data-ex-pause]").focus({ preventScroll: true });
-      });
-    }
-  };
-  $("[data-ex-pause]").addEventListener("click", togglePause);
-  $("[data-ex-resume-exam]").addEventListener("click", togglePause);
+  const timer = createTimer({
+    getState: () => state, save, limit, paintPaused,
+    els: { clock, clockLabel, bar, announce, pauseBtn: $("[data-ex-pause]"), resumeBtn: $("[data-ex-resume-exam]") },
+  });
+  const run = timer.run;
+  $("[data-ex-pause]").addEventListener("click", timer.togglePause);
+  $("[data-ex-resume-exam]").addEventListener("click", timer.togglePause);
 
   /* 한국어 풀이 */
   const koBtn = $("[data-ex-ko]");
@@ -639,8 +567,8 @@ function wire(root, exam, questions, topicTitle) {
   /* 시작과 종료 */
   $("[data-ex-print]").addEventListener("click", () => window.print());
   const startExam = () => {
-    clearInterval(timer);
-    state = Object.assign(blank(), { ko: state.ko, feedback: state.feedback, startedAt: Date.now() });
+    timer.stop();
+    state = freshState(state, Date.now());
     resetForms();
     endConfirm.hidden = true;
     endBtn.hidden = false;
@@ -684,9 +612,9 @@ function wire(root, exam, questions, topicTitle) {
   endBtn.addEventListener("click", () => { endBtn.hidden = true; endConfirm.hidden = false; $("[data-ex-end-yes]").focus(); });
   $("[data-ex-end-no]").addEventListener("click", () => { endConfirm.hidden = true; endBtn.hidden = false; endBtn.focus(); });
   $("[data-ex-end-yes]").addEventListener("click", () => {
-    clearInterval(timer);
+    timer.stop();
     state.endedAt = Date.now();
-    settlePause(state.endedAt);
+    settlePause(state, state.endedAt);
     endConfirm.hidden = true;
     endBtn.hidden = false;
     paintUsed();
@@ -694,14 +622,6 @@ function wire(root, exam, questions, topicTitle) {
     paintAuto();
     setPhase("grading", "grade");
   });
-  const paintUsed = () => {
-    const el = $("[data-ex-used]");
-    if (!state.startedAt || !state.endedAt) { el.textContent = ""; return; }
-    const used = elapsedMs() / 1000;
-    el.textContent = used <= limit
-      ? `걸린 시간 ${span(used)}. 제한 시간은 ${exam.minutes}분입니다.`
-      : `걸린 시간 ${span(used)}. 제한 시간 ${exam.minutes}분을 ${span(used - limit)} 넘겼습니다.`;
-  };
 
   /* 답안 카드: 참거짓과 객관식 */
   const syncChoices = () => {
@@ -826,49 +746,14 @@ function wire(root, exam, questions, topicTitle) {
     });
   }
 
-  /* 결과 */
-  const earnedOf = (q) => (isWritten(q) ? state.scores[labelOf(q)] || 0 : state.answers[labelOf(q)] === q.answer ? q.points : 0);
-  const paintResult = () => {
-    const sum = questions.reduce((s, q) => s + earnedOf(q), 0);
-    state.total = sum;
-    $("[data-ex-total]").textContent = num(sum);
-    $$("[data-part-row]").forEach((row) => {
-      const part = row.getAttribute("data-part-row");
-      row.querySelector("[data-earned]").textContent = num(questions.filter((q) => q.part === part).reduce((s, q) => s + earnedOf(q), 0));
-    });
-    const topics = [...new Set(questions.map((q) => q.topic))].map((slug) => {
-      const qs = questions.filter((q) => q.topic === slug);
-      const max = qs.reduce((s, q) => s + q.points, 0);
-      const got = qs.reduce((s, q) => s + earnedOf(q), 0);
-      return { slug, title: topicTitle(slug), got, max, ratio: max ? got / max : 1 };
-    }).sort((a, b) => a.ratio - b.ratio);
-    $("[data-ex-weak]").innerHTML = topics.map((t) => `
-      <li${t.ratio < 0.6 ? ' data-weak="true"' : ""}>
-        <a href="${mapBase}&n=${t.slug}">${esc(t.title)}</a>
-        ${t.ratio < 0.6 ? '<span class="ct-sig ct-sig-emph">먼저 보기</span>' : ""}
-        <span class="ex-weak-score">${num(t.got)} / ${t.max}</span>
-      </li>`).join("");
-    // 화면에서 고른 빈칸 가운데 틀리거나 비운 것이 있는 문항으로 바로 간다(거기서 틀린 빈칸만 다시 풀 수 있다).
-    const missed = blankQs
-      .map((q) => ({ label: labelOf(q), s: scoreBlanks(q, state.blanks[labelOf(q)] || {}) }))
-      .filter(({ s }) => s.picked > 0 && s.right < s.total);
-    const miss = $("[data-ex-miss]");
-    miss.hidden = !missed.length;
-    miss.innerHTML = !missed.length ? "" : `
-      <strong>빈칸이 틀린 문항</strong>
-      <span>${missed.map(({ label, s }) => `<a class="ex-link" href="#q-${label}">${label}번 ${s.total - s.right}개</a>`).join(", ")}</span>
-      <span>문항으로 가면 틀린 빈칸만 다시 풀 수 있습니다.</span>`;
-  };
+  /* 결과(js/paper-result.js) */
+  const { paint: paintResult, paintUsed, paintResume } = createResult({
+    root, exam, questions, blankQs, topicTitle, mapBase, getState: () => state,
+  });
   const finish = () => { paintResult(); setPhase("result", "result"); paintResume(); };
 
   /* 되돌리기와 이어 하기 */
   const resetForms = () => { card.reset(); if (scoresForm) scoresForm.reset(); paintAuto(); };
-  const resume = $("[data-ex-resume]");
-  const paintResume = () => {
-    const has = state.total !== null && state.phase === "cover";
-    resume.hidden = !has;
-    if (has) $("[data-ex-resume-score]").textContent = `${num(state.total)} / ${total}점`;
-  };
   $("[data-ex-review]").addEventListener("click", () => { paintResult(); setPhase("result", "result"); paintResume(); });
 
   /* 처음 그리기 */

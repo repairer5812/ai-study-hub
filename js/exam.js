@@ -1,15 +1,15 @@
 // exam.js — 시험 풀이 로직 (정기고사 + 주차별 확인문제, subject-aware)
 
-import { getSubjectModule, getSubjectMeta } from "./subjects/index.js?v=7de49de224";
-import { grade, scoreSet, collectWrongIds } from "./scoring.js?v=7de49de224";
+import { getSubjectModule, getSubjectMeta } from "./subjects/index.js?v=b62c1c4c48";
+import { grade, scoreSet, collectWrongIds } from "./scoring.js?v=b62c1c4c48";
 import {
   saveProgress, loadProgress, clearProgress,
   getWrongList, addWrong, removeWrong,
   saveWeeklyProgress, loadWeeklyProgress, clearWeeklyProgress,
   getWeeklyWrongList, addWeeklyWrong, removeWeeklyWrong
-} from "./storage.js?v=7de49de224";
-import { recordAttempt, fetchQuestionStats } from "./leaderboard.js?v=7de49de224";
-import { GRADER_BASE } from "./config.js?v=7de49de224";
+} from "./storage.js?v=b62c1c4c48";
+import { recordAttempt, fetchQuestionStats } from "./leaderboard.js?v=b62c1c4c48";
+import { GRADER_BASE } from "./config.js?v=b62c1c4c48";
 
 // ── 설정 ────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);

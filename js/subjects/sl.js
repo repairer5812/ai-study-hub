@@ -21,7 +21,7 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "7de49de224",
+    version: "b62c1c4c48",
     map: true,
     practice: true,
     // 없앤 회차의 옛 링크는 남은 회차로 넘긴다.

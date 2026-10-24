@@ -7,7 +7,8 @@
 // 따로 둔다(retry). 처음 고른 답과 그 점수는 바뀌지 않는다.
 // "보기 늦게 보기"를 켜면 빈칸을 눌러도 보기를 바로 보이지 않고, 먼저 떠올려 보게 한다.
 
-import { esc, renderMd, typeset } from "./prep.js?v=7de49de224";
+import { esc, renderMd, typeset } from "./prep.js?v=b62c1c4c48";
+import { validPick, cleanRetry, isRetrying, isReopened, isEditable, shownPick, blankState, notRightBlanks } from "./blank-state.js?v=b62c1c4c48";
 
 const MARK = ["①", "②", "③", "④", "⑤"];
 const STATE_KO = { empty: "", picked: "고름", right: "✓ 맞음", wrong: "틀림", missed: "안 고름" };
@@ -111,36 +112,17 @@ export function attachBlanks(item, q, {
   paintRecallBtn();
   const numBtn = (n) => panel.querySelector(`[data-bk-num="${n}"]`);
 
-  const valid = (n, i) => i !== undefined && i !== null && !!byN.get(n)?.options[i];
-  /** 저장돼 있던 다시 풀기 기록을 지금의 문항에 맞춘다. 쓸 수 없으면 null. */
-  const cleanRetry = (r) => {
-    if (!r || !Array.isArray(r.open)) return null;
-    r.open = r.open.filter((n) => byN.has(n));
-    if (!r.open.length) return null;
-    r.picks = r.picks && typeof r.picks === "object" ? r.picks : {};
-    r.graded = !!r.graded;
-    return r;
-  };
-  retry = cleanRetry(retry);
+  // 빈칸의 상태 계산은 js/blank-state.js 에 있다. 부를 때마다 지금의 값을 묶어 넘긴다.
+  const cx = () => ({ byN, picks, retry, graded, feedback, lockAnswered });
+  const valid = (n, i) => validPick(byN, n, i);
+  retry = cleanRetry(byN, retry);
 
-  const retrying = () => graded && !!retry;
-  const reopened = (n) => retrying() && retry.open.includes(n);
-  /** 지금 답을 고를 수 있는 빈칸인가. 채점된 뒤에는 다시 푸는 빈칸만 고를 수 있다. */
-  const editable = (n) => !graded ? !(lockAnswered && valid(n, picks[n])) : (reopened(n) && !retry.graded);
-  /** 지금 빈칸에 보이는 답(보기 순번). 없으면 undefined. */
-  const shown = (n) => {
-    let i = picks[n];
-    if (retrying()) i = valid(n, retry.picks[n]) ? retry.picks[n] : reopened(n) ? undefined : picks[n];
-    return valid(n, i) ? i : undefined;
-  };
-  /** empty, picked(고칠 수 있는 동안) / right, wrong, missed(채점된 뒤) */
-  const stateOf = (n) => {
-    const i = shown(n);
-    if (editable(n) && !(feedback && !graded && i !== undefined)) return i === undefined ? "empty" : "picked";
-    if (i === undefined) return "missed";
-    return byN.get(n).options[i].ok ? "right" : "wrong";
-  };
-  const notRight = () => q.blanks.map((b) => b.n).filter((n) => ["wrong", "missed"].includes(stateOf(n)));
+  const retrying = () => isRetrying(cx());
+  const reopened = (n) => isReopened(cx(), n);
+  const editable = (n) => isEditable(cx(), n);
+  const shown = (n) => shownPick(cx(), n);
+  const stateOf = (n) => blankState(cx(), n);
+  const notRight = () => notRightBlanks(q, cx());
 
   const markActive = () => {
     stem.querySelectorAll(".pp-blank-active").forEach((el) => el.classList.remove("pp-blank-active"));
@@ -391,7 +373,7 @@ export function attachBlanks(item, q, {
     setPicks(next, nextRetry = null) {
       if (next === picks && (nextRetry || null) === retry) return;
       picks = next;
-      retry = cleanRetry(nextRetry);
+      retry = cleanRetry(byN, nextRetry);
       active = autoOpen ? q.blanks[0]?.n ?? null : null;
       seen.clear();
       paintAll();
