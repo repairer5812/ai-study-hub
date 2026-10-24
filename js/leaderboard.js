@@ -10,13 +10,15 @@ import {
   increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { firebaseConfig } from "../firebase-config.js?v=1c0b0c838e";
+import { firebaseConfig } from "../firebase-config.js?v=941d643cd9";
+import { LEADERBOARD_SUBJECTS } from "./subjects/index.js?v=941d643cd9";
 
 let _app = null;
 let _db = null;
 
 const NICK_RE = /^[가-힣a-zA-Z0-9_]{1,16}$/;
-const VALID_SUBJECTS = ["ml", "ds", "dl", "sec"];
+// 과목 META 의 leaderboard 플래그에서 온다(js/subjects/index.js).
+const VALID_SUBJECTS = LEADERBOARD_SUBJECTS;
 
 // 리더보드 경로 키: ml(또는 미지정)은 레거시 그대로 "{setId}",
 // 나머지 과목은 "{subjectId}_{setId}" 로 분리해 기존 ML 데이터를 보존한다.

@@ -6,9 +6,9 @@
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, isWritten, gradingPrompt, promptItem, copyText, TYPE_KO, fillCrumb, store,
-} from "./prep.js?v=1c0b0c838e";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=1c0b0c838e";
-import { attachChecks, hasChecks } from "./checks.js?v=1c0b0c838e";
+} from "./prep.js?v=941d643cd9";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=941d643cd9";
+import { attachChecks, hasChecks } from "./checks.js?v=941d643cd9";
 
 const meta = requireMeta();
 const app = document.getElementById("app");

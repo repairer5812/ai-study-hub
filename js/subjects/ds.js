@@ -4870,6 +4870,8 @@ const ALL = [...set1, ...set2, ...set3, ...set4, ...set5, ...set6, ...set7, ...s
 
 export const META = {
   id: "ds",
+  leaderboard: true,     // 랭킹(Firestore)에 점수를 올린다. firestore.rules 의 과목 목록과 같아야 한다.
+  work: true,            // 작업형 예상문제(work.html, js/subjects/ds-work.js)
   title: "자료구조",
   subtitle: "1~14차시 · 정기고사 중간4·기말5세트 + 주차별 확인문제(9~14차시)",
   emoji: "📊",

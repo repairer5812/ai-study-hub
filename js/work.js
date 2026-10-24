@@ -1,9 +1,10 @@
 // work.js — 작업형·서술형 예상문제 1문제씩 풀이 + LLM 첨삭 채점
-import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=1c0b0c838e";
-import { renderViz } from "./viz.js?v=1c0b0c838e";
+import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=941d643cd9";
+import { renderViz } from "./viz.js?v=941d643cd9";
 
 const GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade";
-const ANS_KEY = "ai-study:ds:work:answers";
+// 저장 키와 돌아갈 과목은 문제 묶음의 WORK_META 에서 온다(지금은 ds 하나).
+const ANS_KEY = `ai-study:${WORK_META.subjectId}:work:answers`;
 
 const $ = (id) => document.getElementById(id);
 const el = {
@@ -203,7 +204,7 @@ el.prev.addEventListener("click", () => go(idx - 1));
 el.next.addEventListener("click", () => go(idx + 1));
 el.jump.addEventListener("change", () => go(Number(el.jump.value)));
 el.input.addEventListener("input", () => { answers[problems[idx].id] = el.input.value; saveAnswers(); });
-el.exit.addEventListener("click", () => { location.href = "subject.html?s=ds"; });
+el.exit.addEventListener("click", () => { location.href = `subject.html?s=${WORK_META.subjectId}`; });
 
 // ── init ──
 buildJump();

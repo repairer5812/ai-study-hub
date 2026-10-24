@@ -1,6 +1,6 @@
 // subjects/ml.js — 기계학습 과목 메타 + 문제 로드 래퍼
-import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js?v=1c0b0c838e";
-import { FINAL_SETS, FINAL_META } from "./ml-final.js?v=1c0b0c838e";
+import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js?v=941d643cd9";
+import { FINAL_SETS, FINAL_META } from "./ml-final.js?v=941d643cd9";
 
 // 중간고사 = 기존 5세트(Week 2~7). 기말고사 = 전범위(9~13) 균형 SET 1~4 + 전범위 종합 1세트(ml-final.js).
 const ML_MID = ML_SETS.map(s => ({ ...s, exam: "midterm" }));
@@ -8,6 +8,7 @@ const ML_FINAL = FINAL_META;
 
 export const META = {
   id: "ml",
+  leaderboard: true,     // 랭킹(Firestore)에 점수를 올린다. firestore.rules 의 과목 목록과 같아야 한다.
   title: "기계학습",
   subtitle: "중간 5세트(150문제) · 주차별 9~13 · 기말 4세트+종합(130문제)",
   emoji: "🤖",

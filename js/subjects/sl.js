@@ -21,9 +21,11 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "1c0b0c838e",
+    version: "941d643cd9",
     map: true,
     practice: true,
+    // 없앤 회차의 옛 링크는 남은 회차로 넘긴다.
+    retiredSets: { "midterm-2": "midterm-1", "midterm-3": "midterm-1" },
     exams: [
       { set: "midterm-1", title: "모의시험: 필수 핵심", minutes: 90, points: 100, desc: "시험에 포함되는 과제 1·2와 출제 예고·강조 내용을 모은 14문항입니다. 90분·100점입니다." },
     ],

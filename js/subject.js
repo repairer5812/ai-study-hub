@@ -1,6 +1,6 @@
 // subject.js — 과목 랜딩 페이지 (복습/시험 분기 + 세트 그리드 + 주차별 확인문제)
-import { getSubjectMeta } from "./subjects/index.js?v=1c0b0c838e";
-import { getBest, getWeeklyBest } from "./storage.js?v=1c0b0c838e";
+import { getSubjectMeta } from "./subjects/index.js?v=941d643cd9";
+import { getBest, getWeeklyBest } from "./storage.js?v=941d643cd9";
 
 const params = new URLSearchParams(location.search);
 const subjectId = params.get("s") || "ml";
@@ -55,8 +55,8 @@ if (meta.prep) {
 document.getElementById("link-wrong").href = `exam.html?s=${subjectId}&mode=wrong&all=1&review=1`;
 document.getElementById("link-ranking").href = `result.html?s=${subjectId}&view=ranking`;
 
-// 작업형·서술형 예상문제 (LLM 첨삭) — 현재 ds(자료구조)만 제공
-if (subjectId === "ds") {
+// 작업형·서술형 예상문제 (LLM 첨삭): META.work 가 있는 과목만
+if (meta.work) {
   const ws = document.getElementById("work-section");
   if (ws) ws.style.display = "";
 }

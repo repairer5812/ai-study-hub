@@ -6,7 +6,7 @@
 import {
   subjectId, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, pathTo, subtree, SIGNAL, sigChip, store, fillCrumb,
-} from "./prep.js?v=1c0b0c838e";
+} from "./prep.js?v=941d643cd9";
 
 const meta = requireMeta();
 const app = document.getElementById("app");

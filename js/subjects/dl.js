@@ -295,6 +295,7 @@ const ALL = [...set1, ...set2, ...set3, ...set4, ...set5, ...set6, ...set7, ...s
 
 export const META = {
   id: "dl",
+  leaderboard: true,     // 랭킹(Firestore)에 점수를 올린다. firestore.rules 의 과목 목록과 같아야 한다.
   title: "딥러닝",
   subtitle: "서술형 8세트 · 문제당 1세트 · LLM 채점",
   emoji: "💻",

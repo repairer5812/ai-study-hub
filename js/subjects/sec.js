@@ -1,6 +1,7 @@
 // subjects/sec.js — 인공지능 보안기술 (자료 수집 예정)
 export const META = {
   id: "sec",
+  leaderboard: true,     // 랭킹(Firestore)에 점수를 올린다. firestore.rules 의 과목 목록과 같아야 한다.
   title: "인공지능 보안기술",
   subtitle: "자료 수집 예정",
   emoji: "🔒",

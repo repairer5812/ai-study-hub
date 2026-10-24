@@ -1305,6 +1305,23 @@ def flow_smoke_exam(site):
         site.snap(pg, "smoke/" + re.sub(r"[^\w]+", "-", path), "#question-area")
     site.go(pg, "result.html?s=ml&view=ranking", wait="load")
     pg.wait_for_timeout(800)
+    # 작업형: 답은 과목별 키에 남고, 나가기는 그 과목 화면으로 간다.
+    site.go(pg, "work.html?s=ds", wait="load")
+    pg.wait_for_function("() => (document.querySelector('#q-text')?.textContent || '').trim().length > 0")
+    pg.locator("#answer-input").fill("점검용 답")
+    saved = pg.evaluate("() => JSON.parse(localStorage.getItem('ai-study:ds:work:answers') || 'null')")
+    check(saved and "점검용 답" in saved.values(), "작업형 답 저장 키")
+    pg.locator("#exit-btn").click()
+    pg.wait_for_url("**/subject.html?s=ds")
+    pg.wait_for_selector("#work-section")
+    check(pg.locator("#work-section").is_visible(), "자료구조 과목 화면의 작업형 묶음")
+    for sid in ("sl", "ml", "dl", "sec"):
+        site.go(pg, f"subject.html?s={sid}")
+        check(not pg.locator("#work-section").is_visible(), f"{sid} 과목 화면에 작업형 묶음이 보인다")
+    # 없앤 회차의 옛 링크는 남은 회차로 넘어간다.
+    for old in ("midterm-2", "midterm-3"):
+        site.go(pg, f"paper.html?s=sl&set={old}")
+        check(pg.url.endswith("paper.html?s=sl&set=midterm-1"), f"옛 링크 {old}: {pg.url}")
 
 
 def run(rep, name, fn, site, *args):

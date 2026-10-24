@@ -9,9 +9,9 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=1c0b0c838e";
-import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=1c0b0c838e";
-import { attachChecks, hasChecks } from "./checks.js?v=1c0b0c838e";
+} from "./prep.js?v=941d643cd9";
+import { attachBlanks, hasBlankChoices, scoreBlanks } from "./blanks.js?v=941d643cd9";
+import { attachChecks, hasChecks } from "./checks.js?v=941d643cd9";
 
 const meta = requireMeta();
 const app = document.getElementById("app");
@@ -893,8 +893,9 @@ function wire(root, exam, questions, topicTitle) {
 }
 
 (async function init() {
-  if (subjectId === "sl" && ["midterm-2", "midterm-3"].includes(setId)) {
-    location.replace("paper.html?s=sl&set=midterm-1");
+  const moved = meta.prep.retiredSets?.[setId]; // 없앤 회차의 옛 링크
+  if (moved) {
+    location.replace(`paper.html?s=${subjectId}&set=${encodeURIComponent(moved)}`);
     return;
   }
   try {
