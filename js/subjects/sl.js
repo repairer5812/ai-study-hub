@@ -6,7 +6,7 @@
 //   paper.html     화면에서 선택하는 모의시험 (자동 채점, 계산과 서술은 자기 채점)
 //   practice.html  주제별 문제
 // 내용은 notes/sl/_prep/ 의 마크다운이 원본이고, `node tools/build-prep.mjs sl` 이 notes/sl/prep.json 으로 묶는다.
-// 내용을 고쳐 다시 묶었으면 prep.version 을 올려야 방문자의 브라우저가 새 파일을 받는다.
+// prep.version 은 손으로 고치지 않는다. 묶을 때 tools/build-prep.mjs 가 내용 해시로 채운다(모든 화면의 ?v= 와 같은 값).
 
 export const META = {
   id: "sl",
@@ -21,7 +21,7 @@ export const META = {
   weekCount: 0,
   noteIndex: [],     // 주차별 복습 노트 대신 개념 지도를 쓴다
   prep: {
-    version: "20261018p",
+    version: "1c0b0c838e",
     map: true,
     practice: true,
     exams: [

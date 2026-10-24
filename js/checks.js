@@ -4,7 +4,7 @@
 // 자료는 문항의 <section data-q="checks"> 에서 온다(tools/build-prep.mjs 가 q.checks 로 묶는다).
 // checks 가 없는 문항에는 아무것도 그리지 않는다(hasChecks 로 먼저 거른다).
 
-import { renderMd, typeset } from "./prep.js";
+import { renderMd, typeset } from "./prep.js?v=1c0b0c838e";
 
 let seq = 0;
 const num = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));

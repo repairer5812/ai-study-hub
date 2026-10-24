@@ -1,6 +1,6 @@
 // work.js — 작업형·서술형 예상문제 1문제씩 풀이 + LLM 첨삭 채점
-import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js";
-import { renderViz } from "./viz.js";
+import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=1c0b0c838e";
+import { renderViz } from "./viz.js?v=1c0b0c838e";
 
 const GRADER_URL = "https://ai-study-grader.repairer5812.workers.dev/grade";
 const ANS_KEY = "ai-study:ds:work:answers";

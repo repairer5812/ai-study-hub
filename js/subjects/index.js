@@ -1,9 +1,9 @@
 // subjects/index.js — 과목 레지스트리 및 동적 로더
-import * as mlModule from "./ml.js";
-import * as dlModule from "./dl.js";
-import * as dsModule from "./ds.js";
-import * as secModule from "./sec.js";
-import * as slModule from "./sl.js?v=20261018p";
+import * as mlModule from "./ml.js?v=1c0b0c838e";
+import * as dlModule from "./dl.js?v=1c0b0c838e";
+import * as dsModule from "./ds.js?v=1c0b0c838e";
+import * as secModule from "./sec.js?v=1c0b0c838e";
+import * as slModule from "./sl.js?v=1c0b0c838e";
 
 const REGISTRY = {
   ml:  mlModule,

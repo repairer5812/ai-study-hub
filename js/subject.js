@@ -1,6 +1,6 @@
 // subject.js — 과목 랜딩 페이지 (복습/시험 분기 + 세트 그리드 + 주차별 확인문제)
-import { getSubjectMeta } from "./subjects/index.js?v=20261018p";
-import { getBest, getWeeklyBest } from "./storage.js";
+import { getSubjectMeta } from "./subjects/index.js?v=1c0b0c838e";
+import { getBest, getWeeklyBest } from "./storage.js?v=1c0b0c838e";
 
 const params = new URLSearchParams(location.search);
 const subjectId = params.get("s") || "ml";

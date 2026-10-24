@@ -160,14 +160,37 @@ node tools/build-prep.mjs sl           # 검사하고 notes/sl/prep.json 을 다
 - 1 | $\dfrac{\theta^{10} e^{-5\theta}}{288}$ 로 정리했다
 ```
 
-묶음을 다시 만들었으면 `js/subjects/sl.js` 의 `prep.version` 을 올려야 방문자의 브라우저가 새 파일을 받는다.
+묶을 때 캐시 버전도 저절로 바뀐다(아래 "캐시 버전"). `prep.version` 을 손으로 고치지 않는다.
 원본 폴더 이름이 밑줄로 시작하는 것은 GitHub Pages(Jekyll)가 frontmatter 있는 마크다운을 변환하거나 수식의 중괄호를 템플릿 문법으로 읽지 않게 하려는 것이다.
 
 ### 과목을 더하는 법
 
-1. `js/subjects/<과목>.js` 의 `META` 에 `prep: { version, map, practice, exams: [...] }` 를 넣는다(`sl.js` 참고).
+1. `js/subjects/<과목>.js` 의 `META` 에 `prep: { version: "", map, practice, exams: [...] }` 를 넣는다(`sl.js` 참고). `version` 은 맨 앞에 빈 값으로 두면 묶을 때 채워진다.
 2. `notes/<과목>/_prep/` 에 개념과 문항을 쓰고 `node tools/build-prep.mjs <과목>` 을 돌린다.
 3. 과목 화면(`subject.html`)에 "시험 준비" 묶음이 자동으로 나온다.
+
+## 캐시 버전
+
+화면이 부르는 로컬 js, css 와 묶음(`prep.json`)의 주소 끝에는 모두 같은 `?v=<버전>` 이 붙는다. 버전은 부르는 파일들과 묶음의 내용 해시라서, 내용이 바뀌면 저절로 바뀌고 그대로면 그대로다. 배포 직후 옛 모듈과 새 모듈이 한 화면에 섞이지 않게 하고, 같은 모듈을 서로 다른 주소로 불러 두 번 실행하는 일을 막는다.
+
+```bash
+node tools/build-prep.mjs --stamp          # js, css, HTML 을 고친 뒤: 버전을 다시 계산해 모든 자리에 쓴다
+node tools/build-prep.mjs --stamp --check  # 쓰지 않고 검사만(맞지 않으면 실패)
+```
+
+과목 묶음을 쓸 때(`node tools/build-prep.mjs sl`)도 마지막에 저절로 쓴다. `--check` 는 버전이 맞지 않으면 오류로 센다.
+
+## 점검
+
+```bash
+python3 tools/verify_site.py                       # 정적 검사와 화면 흐름 검사 전부(127.0.0.1:8931 에 서버를 띄운다)
+python3 tools/verify_site.py --only exam,practice   # 일부만(static smoke exam study practice map)
+python3 tools/verify_site.py --shots /tmp/shots    # 1280 폭과 390 폭 캡처를 남긴다
+python3 tools/verify_site.py --trace before.json   # 고치기 전 기록
+python3 tools/verify_site.py --trace after.json --compare before.json   # 고친 뒤 화면, 입력값, 저장값이 같은지
+```
+
+정적 검사는 묶음 형식, 캐시 버전, 같은 모듈의 다른 주소, 공개 규칙(실명, 연구실, 과목 코드)을 본다. 실명 목록은 커밋하지 않는 `tools/leak.local.txt` 에 둔다. 화면 흐름은 모의시험의 시작, 일시정지와 재개, 즉시와 최종 보기, 채점, 틀린 빈칸 다시 풀기, 재시험, 빈칸 5지선다, Part D 공부, 주제별 문제, 개념 지도, 모든 과목 화면과 복습 노트를 누른다. 파이썬 playwright 와 `/usr/bin/google-chrome` 이 필요하다. 점검 중에는 Firebase 요청을 막는다.
 
 ## 주차별 확인문제 추가 방법
 

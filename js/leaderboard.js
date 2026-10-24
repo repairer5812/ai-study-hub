@@ -10,7 +10,7 @@ import {
   increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { firebaseConfig } from "../firebase-config.js";
+import { firebaseConfig } from "../firebase-config.js?v=1c0b0c838e";
 
 let _app = null;
 let _db = null;

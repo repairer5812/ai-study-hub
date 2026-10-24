@@ -3,8 +3,8 @@
 //   - 본문: 선택한 md 파일을 fetch하여 marked로 렌더 → KaTeX로 수식 렌더
 //   - 체크리스트: md의 `- [ ]` 문법을 checkbox로 렌더하고 localStorage에 진행도 저장
 
-import { getSubjectMeta } from "./subjects/index.js";
-import { SLIDE_MAP, CURATED_SLUGS } from "./slide-map.js";
+import { getSubjectMeta } from "./subjects/index.js?v=1c0b0c838e";
+import { SLIDE_MAP, CURATED_SLUGS } from "./slide-map.js?v=1c0b0c838e";
 
 const params = new URLSearchParams(location.search);
 const subjectId = params.get("s") || "ml";

@@ -1332,8 +1332,9 @@ def compare(before, after):
         for part in ("url", "controls", "store"):
             if a[part] != b[part]:
                 diffs.append(f"{name}: {part} 가 다르다\n    전: {json.dumps(a[part], ensure_ascii=False)[:400]}\n    후: {json.dumps(b[part], ensure_ascii=False)[:400]}")
-        if a["html"] != b["html"]:
-            x, y = a["html"], b["html"]
+        # 캐시 버전(?v=)은 내용이 바뀌면 바뀌는 것이 정상이라 비교에서 뺀다.
+        x, y = (re.sub(r"\?v=[\w.-]+", "?v=", h) for h in (a["html"], b["html"]))
+        if x != y:
             i = next((k for k in range(min(len(x), len(y))) if x[k] != y[k]), min(len(x), len(y)))
             diffs.append(f"{name}: 화면(DOM)이 {i}번째 글자부터 다르다\n    전: …{x[max(0, i - 80):i + 120]}\n    후: …{y[max(0, i - 80):i + 120]}")
     return diffs

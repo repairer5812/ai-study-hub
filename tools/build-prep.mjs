@@ -27,18 +27,107 @@
 //   - 수식 안의 한글, 유도 옆 주석(&&), 금지 기호
 //   - HTML 태그와 마크다운 사이의 빈 줄, 빈칸 번호와 답의 짝, 없는 slug 참조
 //   - 실명과 발언 인용처럼 공개 사이트에 올리면 안 되는 표현
+//
+// 캐시 버전(모든 화면 공통)
+//   node tools/build-prep.mjs --stamp           버전을 계산해 모든 자리에 쓴다
+//   node tools/build-prep.mjs --stamp --check   쓰지 않고, 모든 자리가 지금 버전인지 본다
+// 화면이 부르는 로컬 js, css 의 주소와 묶음(prep.json)의 주소 끝에 같은 ?v=<버전> 을 붙인다. 버전은 부르는
+// 파일들과 묶음의 내용 해시라서 내용이 바뀌면 저절로 바뀌고, 그대로면 그대로다. 사람이 버전을 올리지 않는다.
+// 과목 묶음을 쓸 때도 마지막에 저절로 쓰고, --check 는 버전이 맞지 않으면 오류로 센다.
+// 같은 모듈을 한 화면에서 서로 다른 주소(?v= 가 있고 없고)로 부르면 두 번 실행되므로, 모든 자리를 같은 값으로 맞춘다.
 import { readdirSync, readFileSync, writeFileSync, statSync, existsSync } from 'node:fs';
-import { join, relative, basename, dirname } from 'node:path';
+import { join, relative, basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const subject = process.argv[2];
+const stampOnly = process.argv[2] === '--stamp';
+const subject = stampOnly ? null : process.argv[2];
 const checkOnly = process.argv.includes('--check');
 const force = process.argv.includes('--force'); // 오류가 있어도 묶음 파일을 쓴다(화면 개발용)
-if (!subject) {
-  console.error('사용: node tools/build-prep.mjs <과목 id> [--check]');
+if (!subject && !stampOnly) {
+  console.error('사용: node tools/build-prep.mjs <과목 id> [--check]   또는   node tools/build-prep.mjs --stamp [--check]');
   process.exit(2);
 }
+
+/* ---------- 캐시 버전 ---------- */
+const HTML_REF = /(<(?:script|link)\b[^>]*?\b(?:src|href)=")((?:\.\/)?(?:js|css)\/[^"?]+\.(?:js|css))(?:\?v=[^"]*)?(")/g;
+const MODULE_BLOCK = /(<script\b[^>]*type="module"[^>]*>)([\s\S]*?)(<\/script>)/g;
+const JS_REF = /(\b(?:from|import)\s*["'])(\.{1,2}\/[^"'?]+\.js)(?:\?v=[^"']*)?(["'])/g;
+const PREP_VERSION = /(\bprep:\s*\{\s*version:\s*")[^"]*(")/;
+const walkExt = (dir, ext) =>
+  !existsSync(dir)
+    ? []
+    : readdirSync(dir).flatMap((n) => {
+        const p = join(dir, n);
+        return statSync(p).isDirectory() ? walkExt(p, ext) : p.endsWith(ext) ? [p] : [];
+      });
+
+function siteFiles() {
+  const html = readdirSync(ROOT).filter((n) => n.endsWith('.html')).map((n) => join(ROOT, n)).sort();
+  const js = walkExt(join(ROOT, 'js'), '.js').sort();
+  return { html, js };
+}
+
+/** 화면이 부르는 로컬 파일(절대 경로)을 모두 모은다. */
+function referencedFiles({ html, js }) {
+  const out = new Set();
+  const add = (from, spec) => out.add(resolve(dirname(from), spec));
+  for (const f of html) {
+    const text = readFileSync(f, 'utf8');
+    for (const m of text.matchAll(HTML_REF)) add(f, m[2]);
+    for (const block of text.matchAll(MODULE_BLOCK)) for (const m of block[2].matchAll(JS_REF)) add(f, m[2]);
+  }
+  for (const f of js) for (const m of readFileSync(f, 'utf8').matchAll(JS_REF)) add(f, m[2]);
+  return out;
+}
+
+/** 부르는 파일과 묶음의 내용 해시. 버전 문자열 자체는 빼고 계산해서 다시 써도 값이 같다. */
+function assetVersion(files) {
+  const missing = [...files].filter((f) => !existsSync(f));
+  if (missing.length) throw new Error(`없는 파일을 부른다: ${missing.map((f) => relative(ROOT, f)).join(', ')}`);
+  const bundles = readdirSync(join(ROOT, 'notes')).map((d) => join(ROOT, 'notes', d, 'prep.json')).filter(existsSync);
+  const h = createHash('sha256');
+  for (const f of [...new Set([...files, ...bundles])].sort()) {
+    // ?v= 를 통째로 빼고 계산한다. 버전이 붙기 전과 뒤의 해시가 같아야 다시 써도 값이 바뀌지 않는다.
+    const text = readFileSync(f, 'utf8').replace(/\?v=[^"'\s)]*/g, '').replace(PREP_VERSION, '$1$2');
+    h.update(`${relative(ROOT, f).replace(/\\/g, '/')}\0${text}\0`);
+  }
+  return h.digest('hex').slice(0, 10);
+}
+
+/** 모든 자리에 버전을 쓴다(write=false 면 고쳐야 할 파일만 돌려준다). */
+function stamp(write) {
+  const files = siteFiles();
+  const ver = assetVersion(referencedFiles(files));
+  const changed = [];
+  const put = (f, next) => {
+    if (next === readFileSync(f, 'utf8')) return;
+    changed.push(relative(ROOT, f).replace(/\\/g, '/'));
+    if (write) writeFileSync(f, next, 'utf8');
+  };
+  for (const f of files.html) {
+    put(f, readFileSync(f, 'utf8')
+      .replace(HTML_REF, `$1$2?v=${ver}$3`)
+      .replace(MODULE_BLOCK, (_, open, body, close) => open + body.replace(JS_REF, `$1$2?v=${ver}$3`) + close));
+  }
+  for (const f of files.js) {
+    let text = readFileSync(f, 'utf8').replace(JS_REF, `$1$2?v=${ver}$3`);
+    if (f.includes(`${join('js', 'subjects')}`)) text = text.replace(PREP_VERSION, `$1${ver}$2`);
+    put(f, text);
+  }
+  return { ver, changed };
+}
+
+function reportStamp(write) {
+  const { ver, changed } = stamp(write);
+  if (!changed.length) console.log(`캐시 버전 ${ver}: 모든 자리가 맞다`);
+  else if (write) console.log(`캐시 버전 ${ver}: ${changed.length}개 파일에 썼다 (${changed.join(', ')})`);
+  else console.log(`캐시 버전 ${ver}: 맞지 않는 파일 ${changed.length}개 (${changed.join(', ')}). node tools/build-prep.mjs --stamp 를 돌린다`);
+  return changed.length === 0 || write;
+}
+
+if (stampOnly) process.exit(reportStamp(!checkOnly) ? 0 : 1);
 const SRC = join(ROOT, 'notes', subject, '_prep');
 const OUT = join(ROOT, 'notes', subject, 'prep.json');
 
@@ -360,6 +449,11 @@ console.log(`[${subject}] 개념 ${nodes.size}개(가지 ${branches.length}), �
 if (okPos.some(Boolean)) console.log(`[${subject}] 빈칸 ${okPos.reduce((a, b) => a + b, 0)}개의 보기에서 정답 자리: ${okPos.map((n, i) => `${i + 1}번째 ${n}`).join(', ')}`);
 if (selfGradedCount) console.log(`[${subject}] 계산과 서술 ${selfGradedCount}문항 가운데 체크리스트가 있는 문항 ${selfGradedCount - noChecks}개`);
 
+if (checkOnly) {
+  const { ver, changed } = stamp(false);
+  if (changed.length) err('캐시 버전', `${changed.join(', ')} 의 ?v= 가 지금 내용의 버전(${ver})과 다르다. node tools/build-prep.mjs --stamp 를 돌린다`);
+}
+
 warns.forEach((w) => console.log('  경고  ' + w));
 errors.forEach((e) => console.log('  오류  ' + e));
 console.log(`\n오류 ${errors.length}건, 경고 ${warns.length}건`);
@@ -384,4 +478,5 @@ if (!checkOnly) {
   };
   writeFileSync(OUT, JSON.stringify(bundle), 'utf8');
   console.log(`쓴 파일: ${relative(ROOT, OUT).replace(/\\/g, '/')} (${(JSON.stringify(bundle).length / 1024).toFixed(0)} KB)`);
+  reportStamp(true); // 묶음이 바뀌면 버전도 바뀐다. 모든 자리에 새 버전을 쓴다.
 }

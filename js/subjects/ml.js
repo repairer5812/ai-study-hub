@@ -1,6 +1,6 @@
 // subjects/ml.js — 기계학습 과목 메타 + 문제 로드 래퍼
-import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js";
-import { FINAL_SETS, FINAL_META } from "./ml-final.js";
+import { getSetQuestions as mlGetSet, ALL_QUESTIONS as ML_ALL, SETS_META as ML_SETS } from "../questions.js?v=1c0b0c838e";
+import { FINAL_SETS, FINAL_META } from "./ml-final.js?v=1c0b0c838e";
 
 // 중간고사 = 기존 5세트(Week 2~7). 기말고사 = 전범위(9~13) 균형 SET 1~4 + 전범위 종합 1세트(ml-final.js).
 const ML_MID = ML_SETS.map(s => ({ ...s, exam: "midterm" }));
