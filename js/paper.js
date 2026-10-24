@@ -9,12 +9,12 @@
 import {
   subjectId, params, requireMeta, loadPrep, esc, renderMd, typeset, whenMathReady,
   buildTree, sortQuestions, labelOf, isWritten, gradingPrompt, promptItem, copyText, store, fillCrumb,
-} from "./prep.js?v=b62c1c4c48";
-import { attachBlanks, hasBlankChoices } from "./blanks.js?v=b62c1c4c48";
-import { attachChecks, hasChecks } from "./checks.js?v=b62c1c4c48";
-import { examKey, recallKey, loadState, saveState, freshState } from "./paper-state.js?v=b62c1c4c48";
-import { createTimer, settlePause } from "./paper-timer.js?v=b62c1c4c48";
-import { createResult } from "./paper-result.js?v=b62c1c4c48";
+} from "./prep.js?v=d1bffc1d6d";
+import { attachBlanks, hasBlankChoices } from "./blanks.js?v=d1bffc1d6d";
+import { attachChecks, hasChecks } from "./checks.js?v=d1bffc1d6d";
+import { examKey, recallKey, loadState, saveState, freshState } from "./paper-state.js?v=d1bffc1d6d";
+import { createTimer, settlePause } from "./paper-timer.js?v=d1bffc1d6d";
+import { createResult } from "./paper-result.js?v=d1bffc1d6d";
 
 const meta = requireMeta();
 const app = document.getElementById("app");

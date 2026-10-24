@@ -1,7 +1,7 @@
 // work.js — 작업형·서술형 예상문제 1문제씩 풀이 + LLM 첨삭 채점
-import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=b62c1c4c48";
-import { renderViz } from "./viz.js?v=b62c1c4c48";
-import { GRADER_BASE } from "./config.js?v=b62c1c4c48";
+import { WORK_PROBLEMS, WORK_META } from "./subjects/ds-work.js?v=d1bffc1d6d";
+import { renderViz } from "./viz.js?v=d1bffc1d6d";
+import { GRADER_BASE } from "./config.js?v=d1bffc1d6d";
 
 const GRADER_URL = `${GRADER_BASE}/grade`;
 // 저장 키와 돌아갈 과목은 문제 묶음의 WORK_META 에서 온다(지금은 ds 하나).

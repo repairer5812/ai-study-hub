@@ -1,7 +1,7 @@
-// paper-result.js — 모의시험 결과: 문항별 득점, 파트별 합계, 약한 가지, 빈칸이 틀린 문항, 걸린 시간, 지난 결과 줄.
-import { esc, isWritten, labelOf } from "./prep.js?v=b62c1c4c48";
-import { scoreBlanks } from "./blanks.js?v=b62c1c4c48";
-import { elapsedMs, span } from "./paper-timer.js?v=b62c1c4c48";
+// paper-result.js: 모의시험 결과. 문항별 득점, 파트별 합계, 약한 가지, 빈칸이 틀린 문항, 걸린 시간, 지난 결과 줄.
+import { esc, isWritten, labelOf } from "./prep.js?v=d1bffc1d6d";
+import { scoreBlanks } from "./blanks.js?v=d1bffc1d6d";
+import { elapsedMs, span } from "./paper-timer.js?v=d1bffc1d6d";
 
 export const num = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 

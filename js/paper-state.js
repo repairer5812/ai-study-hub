@@ -1,6 +1,6 @@
-// paper-state.js — 모의시험 한 회분의 저장 상태(localStorage).
+// paper-state.js: 모의시험 한 회분의 저장 상태(localStorage).
 // 키와 구조를 바꾸면 방문자의 풀이와 점수가 사라진다. 이름과 순서를 그대로 둔다.
-import { store } from "./prep.js?v=b62c1c4c48";
+import { store } from "./prep.js?v=d1bffc1d6d";
 
 /** 풀이 기록의 키. exams.json 의 revision 이 바뀌면 새 시험으로 친다. */
 export const examKey = (subjectId, exam) => `ai-study:${subjectId}:paper:${exam.set}${exam.revision ? `:${exam.revision}` : ""}`;

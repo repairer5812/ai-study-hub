@@ -5,13 +5,13 @@ extract_images.py — 기계학습 강의 PDF에서 페이지별 이미지 추�
     pip install pymupdf
     python extract_images.py
 
-결과: mock-exam/assets/images/_raw/ 폴더에 weekN_pXX.png 형태로 저장됨.
+결과: 저장소의 assets/images/_raw/ 폴더에 weekN_pXX.png 형태로 저장됨.
 이후 사람(또는 AI)이 필요한 페이지를 골라 assets/images/로 이동하고
 의미 있는 파일명으로 리네이밍하면 된다.
 
 - 입력: C:\\Users\\User\\AppData\\Roaming\\alt\\data\\storage\\slides\\*_IntroML_{2~7}_*.pdf
   (파일 이름 앞의 과목 코드는 공개 저장소에 적지 않는다. 뒷부분이 같은 파일을 찾는다)
-- 출력: mock-exam/assets/images/_raw/{week}_pNN.png
+- 출력: assets/images/_raw/{week}_pNN.png (저장소 기준, .gitignore 로 커밋하지 않음)
 - DPI: 150 (적당한 해상도와 파일 크기 균형)
 """
 

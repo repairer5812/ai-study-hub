@@ -10,8 +10,8 @@ import {
   increment,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { firebaseConfig } from "../firebase-config.js?v=b62c1c4c48";
-import { LEADERBOARD_SUBJECTS } from "./subjects/index.js?v=b62c1c4c48";
+import { firebaseConfig } from "../firebase-config.js?v=d1bffc1d6d";
+import { LEADERBOARD_SUBJECTS } from "./subjects/index.js?v=d1bffc1d6d";
 
 let _app = null;
 let _db = null;

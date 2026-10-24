@@ -1,4 +1,4 @@
-// paper-timer.js — 모의시험의 시계: 남은 시간, 일시정지와 재개, 남은 시간 알림.
+// paper-timer.js: 모의시험의 시계. 남은 시간, 일시정지와 재개, 남은 시간 알림.
 // 일시정지한 시간은 푼 시간에 넣지 않는다(state.pausedMs 에 쌓는다).
 
 export const mmss = (sec) => {

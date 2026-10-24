@@ -5,11 +5,11 @@
 //                      firestore.rules 의 과목 목록(ml|ds|dl|sec)과 같아야 한다. 규칙은 따로 배포한다.
 //   work: true         작업형 예상문제(work.html) 묶음을 과목 화면에 보인다.
 //   prep: { ... }      시험 준비 화면(개념 지도, 모의시험, 주제별 문제). prep.retiredSets 는 없앤 회차의 옛 링크를 넘길 곳.
-import * as mlModule from "./ml.js?v=b62c1c4c48";
-import * as dlModule from "./dl.js?v=b62c1c4c48";
-import * as dsModule from "./ds.js?v=b62c1c4c48";
-import * as secModule from "./sec.js?v=b62c1c4c48";
-import * as slModule from "./sl.js?v=b62c1c4c48";
+import * as mlModule from "./ml.js?v=d1bffc1d6d";
+import * as dlModule from "./dl.js?v=d1bffc1d6d";
+import * as dsModule from "./ds.js?v=d1bffc1d6d";
+import * as secModule from "./sec.js?v=d1bffc1d6d";
+import * as slModule from "./sl.js?v=d1bffc1d6d";
 
 const REGISTRY = {
   sl:  slModule,

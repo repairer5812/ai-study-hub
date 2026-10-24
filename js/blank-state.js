@@ -1,4 +1,4 @@
-// blank-state.js — 빈칸 유도 문항에서 빈칸 하나하나의 상태를 계산한다. 화면은 그리지 않는다(js/blanks.js 가 그린다).
+// blank-state.js: 빈칸 유도 문항에서 빈칸 하나하나의 상태를 계산한다. 화면은 그리지 않는다(js/blanks.js 가 그린다).
 // 함수는 모두 지금의 값 묶음 c 를 받는다.
 //   c = { byN: Map(빈칸 번호 → 빈칸), picks: 처음 고른 답 { 번호: 보기 순번 }, retry: 다시 풀기 기록 또는 null,
 //         graded: 채점됐는가, feedback: 바로 보기인가, lockAnswered: 연습처럼 고른 빈칸을 잠그는가 }

@@ -7,8 +7,8 @@
 // 따로 둔다(retry). 처음 고른 답과 그 점수는 바뀌지 않는다.
 // "보기 늦게 보기"를 켜면 빈칸을 눌러도 보기를 바로 보이지 않고, 먼저 떠올려 보게 한다.
 
-import { esc, renderMd, typeset } from "./prep.js?v=b62c1c4c48";
-import { validPick, cleanRetry, isRetrying, isReopened, isEditable, shownPick, blankState, notRightBlanks } from "./blank-state.js?v=b62c1c4c48";
+import { esc, renderMd, typeset } from "./prep.js?v=d1bffc1d6d";
+import { validPick, cleanRetry, isRetrying, isReopened, isEditable, shownPick, blankState, notRightBlanks } from "./blank-state.js?v=d1bffc1d6d";
 
 const MARK = ["①", "②", "③", "④", "⑤"];
 const STATE_KO = { empty: "", picked: "고름", right: "✓ 맞음", wrong: "틀림", missed: "안 고름" };
