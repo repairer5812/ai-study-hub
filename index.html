@@ -149,6 +149,25 @@
       </div>`;
   }).join("");
 
+  // 별도로 운영하는 텍스트마이닝 자료를 이번 학기 과목 옆에 연결한다.
+  const textMiningCard = `
+    <div class="hub-card" data-review="https://kc-text-mining-midterm.vercel.app/" role="group" aria-label="텍스트마이닝">
+      <div class="card-head">
+        <span class="emoji" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v5h4M8 12h8M8 16h6"/></svg>
+        </span>
+        <div class="title">텍스트마이닝</div>
+      </div>
+      <div class="sub">1~8강 · 객관식·OX 즉시 해설 · 최종 모의고사 40문항 · 서술형 모범답안 10문항</div>
+      <div class="actions">
+        <a class="ghost" href="https://kc-text-mining-midterm.vercel.app/" aria-label="텍스트마이닝 핵심 정리와 연습문제 열기">핵심 정리·연습</a>
+        <a class="primary" href="https://kc-text-mining-midterm.vercel.app/#final-exam" aria-label="텍스트마이닝 최종 모의고사 40문항 열기">최종 모의고사</a>
+      </div>
+    </div>`;
+  const firstSubject = grid.querySelector('.hub-card');
+  if (firstSubject) firstSubject.insertAdjacentHTML('afterend', textMiningCard);
+  else grid.insertAdjacentHTML('beforeend', textMiningCard);
+
   // 카드 본체(버튼 외 영역) 클릭 시 복습으로 이동
   grid.querySelectorAll(".hub-card").forEach(card => {
     card.addEventListener("click", (e) => {
